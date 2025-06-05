@@ -4,12 +4,14 @@
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "Does this video meet the rules?" %}
+{% set journeyName = "Sign up for remote check-in" %}
+{% set pageTitle = "Does this photo meet the rules?" %}
+
 
 {% block beforeContent %}
 {{ govukBackLink({
-  text: "Back",
-  href: "/check-in/video/record"
+text: "Back",
+href: "/register/photo/capture"
 }) }}
 {% endblock %}
 
@@ -17,37 +19,35 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Does this video meet the rules?</h1>
-    <p>Review your video to check you have included all required information before submitting it to your probation practitioner. </p>
-    <h2 class="govuk-heading-s">In your video you must state:</h2>
+    <h1 class="govuk-heading-l">Does this photo meet the rules?</h1>
+    <p>Make sure: </p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>today's day {{ todayDay }} </li>
-      <li>today's date {{ todayDate }}</li>
+      <li>your photo is well lit</li>
+      <li>you are in front of a plain background</li>
+      <li>your face is in the frame</li>
     </ul>
-
     {{ govukRadios({
-    name: "video-meets-rules",
+    name: "photoMeetsRules",
     fieldset: {
     legend: {
-    text: "Does this video meet the rules?",
+    text: "Does this photo meet the rules?",
     classes: "govuk-visually-hidden"
     }
     },
     items: [
     {
       value: "yes",
-      text: "Yes, this video meets the rules"
+      text: "Yes, this photo meets the rules"
     },
     {
       value: "no",
-      text: "No, I want to record a new video"
+      text: "No, I want to take another photo"
     }
   ]
     }) }}
-
     {{ govukButton({
     text: "Continue",
-    href: "/check-in/questions/circumstances"
+    href: "/register/contact-details"
     }) }}
   </div>
 </div>

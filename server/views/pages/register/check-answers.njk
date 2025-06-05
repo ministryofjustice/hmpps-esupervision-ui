@@ -1,0 +1,159 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+
+{% extends "../../partials/layout.njk" %}
+
+{% set journeyName = "Sign up for remote check-in" %}
+{% set pageTitle = "Check your answers" %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+  text: "Back",
+  href: "/register/contact-details"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class ="govuk-heading-l">Check your answers</h1>
+
+    <h2 class="govuk-heading-m">Personal details</h2>
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "First name"
+          },
+          value: {
+            text: "answer"
+          },
+          actions: {
+              items: [
+                {
+                  href: "/register/personal-details",
+                  text: "Change",
+                  visuallyHiddenText: "your first name"
+                }
+              ]
+          }
+        },
+    {
+    key: {
+    text: "Last name"
+    },
+    value: {
+    text: "answer"
+    },
+    actions: {
+    items: [
+                {
+                  href: "/register/personal-details",
+                  text: "Change",
+                  visuallyHiddenText: "your last name"
+                }
+              ]
+    }
+    },
+    {
+    key: {
+    text: "Date of birth"
+    },
+    value: {
+    text: "answer"
+    },
+    actions: {
+    items: [
+                {
+                  href: "/register/personal-details",
+                  text: "Change",
+                  visuallyHiddenText: "your date of birth"
+                }
+              ]
+    }
+    }
+      ]
+    }) }}
+
+    <h2 class="govuk-heading-m">Photo</h2>
+
+    {{ govukSummaryList({
+    rows: [
+        {
+          key: {
+            text: "Photo"
+          },
+          value: {
+            text: "photo"
+          },
+          actions: {
+              items: [
+                {
+                  href: "/register/photo/capture",
+                  text: "Change",
+                  visuallyHiddenText: "photo"
+                }
+              ]
+        }
+      }
+    ]
+    }) }}
+
+    <h2 class="govuk-heading-m">Contact details</h2>
+
+    {{ govukSummaryList({
+    rows: [
+        {
+          key: {
+            text: "How would you like to be notified when to submit a remote check-in?"
+          },
+          value: {
+            text: "Email/Text/Both"
+          },
+          actions: {
+              items: [
+                {
+                  href: "/register/contact-details",
+                  text: "Change",
+                  visuallyHiddenText: "contact details notification preference"
+                }
+              ]
+    }
+    }
+    ]
+    }) }}
+
+    {{ govukCheckboxes({
+    name: "checkAnswers",
+    fieldset: {
+    legend: {
+    classes: "govuk-fieldset__legend--m",
+    text: "Now submit your information"
+    }
+    },
+    items: [
+    {
+      value: "confirm",
+      text: "I confirm that, to be best of my knowledge, the details I have provided are correct."
+    }
+  ]
+    }) }}
+
+
+    {{ govukButton({
+    text: "Submit your information",
+    href: "/register/confirmation"
+    }) }}
+
+  </div>
+</div>
+
+
+{% endblock %}

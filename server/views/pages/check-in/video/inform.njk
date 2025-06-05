@@ -1,0 +1,40 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+
+{% extends "../../../partials/layout.njk" %}
+
+{% set pageTitle = "Check in" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+  text: "Back",
+  href: "/check-in/verify"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Record a check-in video</h1>
+    <p>You’ll be asked to record a video of yourself on this device. We will use this video to verify your identity and your location. </p>
+    <p>You will be asked to accept permissions to record a video on your device.</p>
+    <h2 class="govuk-heading-s">Before you record your video, make sure: </h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>you are in a well lit area</li>
+      <li>you are in front of a plain background</li>
+      <li>your face is in the frame</li>
+    </ul>
+    {{ govukButton({
+    text: "Continue",
+    href: "/check-in/video/record"
+    }) }}
+  </div>
+</div>
+
+
+{% endblock %}

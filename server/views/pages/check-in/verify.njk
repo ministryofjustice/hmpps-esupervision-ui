@@ -1,0 +1,72 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = "Check in" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+  text: "Back",
+  href: "/check-in"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class ="govuk-heading-l">Personal details</h1>
+    <p>We will use your personal details to match you to your profile. It is important you give us correct information.</p>
+    <form method="post" action="/check-in/verify">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      {{ govukInput({
+        label: {
+          text: "First name",
+          classes: "govuk-label--m"
+        },
+        classes: "govuk-!-width-two-thirds",
+        id: "first-name",
+        name: "firstName"
+      }) }}
+
+      {{ govukInput({
+      label: {
+        text: "Last name",
+      classes: "govuk-label--m"
+      },
+      classes: "govuk-!-width-two-thirds",
+      id: "last-name",
+      name: "lastName"
+      }) }}
+
+
+      {{ govukDateInput({
+      id: "date-of-birth",
+      namePrefix: "dob",
+      fieldset: {
+      legend: {
+      text: "Date of birth",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--m"
+      }
+      }
+      }) }}
+
+
+      {{ govukButton({
+      text: "Continue",
+      href: "/check-in/video/inform"
+      }) }}
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}

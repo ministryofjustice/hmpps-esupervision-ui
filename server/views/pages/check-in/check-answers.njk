@@ -1,0 +1,201 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = "Check your answers" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+  text: "Back",
+  href: "/check-in/questions/callback"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class ="govuk-heading-l">Check your answers</h1>
+
+    <h2 class="govuk-heading-m">Video check-in</h2>
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "Video check-in"
+          },
+          value: {
+            text: "recorded"
+          },
+          actions: {
+              items: [
+                {
+                  href: "/check-in/video/record",
+                  text: "Change",
+                  visuallyHiddenText: "recording"
+                }
+              ]
+          }
+        }
+      ]
+    }) }}
+
+    <h2 class="govuk-heading-m">About you</h2>
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "Have any of these details changed since your last check-in?"
+          },
+          value: {
+            text: "Answer"
+          },
+          actions: {
+              items: [
+                {
+                  href: "/check-in/questions/circumstances",
+                  text: "Change",
+                  visuallyHiddenText: "answer given"
+                }
+              ]
+          }
+        },
+    {
+    key: {
+    text: "Have you had contact with the Police since your last check-in?"
+    },
+    value: {
+    text: "Answer"
+    },
+    actions: {
+    items: [
+                {
+                  href: "/check-in/questions/police-contact",
+                  text: "Change",
+                  visuallyHiddenText: "answer given"
+                }
+              ]
+    }
+    },
+    {
+    key: {
+    text: "Have you had used alcohol since your last check-in?"
+    },
+    value: {
+    text: "Answer"
+    },
+    actions: {
+    items: [
+                {
+                  href: "/check-in/questions/alcohol",
+                  text: "Change",
+                  visuallyHiddenText: "answer given"
+                }
+              ]
+    }
+    },
+    {
+    key: {
+    text: "Have you had used drugs since your last check-in?"
+    },
+    value: {
+    text: "Answer"
+    },
+    actions: {
+    items: [
+                {
+                  href: "/check-in/questions/drugs",
+                  text: "Change",
+                  visuallyHiddenText: "answer given"
+                }
+              ]
+    }
+    },
+    {
+    key: {
+    text: "How are you feeling physically?"
+    },
+    value: {
+    text: "Answer"
+    },
+    actions: {
+    items: [
+                {
+                  href: "/check-in/questions/physical-health",
+                  text: "Change",
+                  visuallyHiddenText: "answer given"
+                }
+              ]
+    }
+    },
+    {
+    key: {
+    text: "How are you feeling mentally?"
+    },
+    value: {
+    text: "Answer"
+    },
+    actions: {
+    items: [
+                {
+                  href: "/check-in/questions/mental-health",
+                  text: "Change",
+                  visuallyHiddenText: "answer given"
+                }
+              ]
+    }
+    },
+        {
+          key: {
+            text: "Would you like to request a callback from your probation practitioner?"
+          },
+          value: {
+            text: "Answer"
+          },
+          actions: {
+              items: [
+                {
+                  href: "/check-in/questions/callback",
+                  text: "Change",
+                  visuallyHiddenText: "answer given"
+                }
+              ]
+          }
+        }
+      ]
+    }) }}
+
+    {{ govukCheckboxes({
+    name: "checkAnswers",
+    fieldset: {
+    legend: {
+    classes: "govuk-fieldset__legend--m",
+    text: "Submit your remote check-in"
+    }
+    },
+    items: [
+    {
+      value: "confirm",
+      text: "I confirm that, to be best of my knowledge, the details I have provided are correct."
+    }
+  ]
+    }) }}
+
+    {{ govukButton({
+    text: "Submit remote check-in",
+    href: "/check-in/confirmation"
+    }) }}
+
+  </div>
+</div>
+
+
+{% endblock %}

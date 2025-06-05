@@ -1,5 +1,5 @@
 generic-service:
-  nameOverride: hmpps-template-typescript
+  nameOverride: hmpps-esupervision-ui
   productId: 'UNASSIGNED' # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
   # the IRSA service account name for accessing AWS resources
@@ -8,14 +8,14 @@ generic-service:
   replicaCount: 4
 
   image:
-    repository: ghcr.io/ministryofjustice/hmpps-template-typescript
+    repository: ghcr.io/ministryofjustice/hmpps-esupervision-ui
     tag: app_version # override at deployment time
     port: 3000
 
   ingress:
     enabled: true
     host: app-hostname.local # override per environment
-    tlsSecretName: hmpps-template-typescript-cert
+    tlsSecretName: hmpps-esupervision-ui-cert
 
   livenessProbe:
     httpGet:
@@ -64,4 +64,4 @@ generic-service:
       - internal
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-template-typescript
+  targetApplication: hmpps-esupervision-ui

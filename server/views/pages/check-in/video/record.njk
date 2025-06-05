@@ -1,0 +1,37 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+
+{% extends "../../../partials/layout.njk" %}
+
+{% set pageTitle = "Record your check-in video" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+  text: "Back",
+  href: "/check-in/video/inform"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Record your check-in video</h1>
+    <p>In your video you must state:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>today's day {{ todayDay }} </li>
+      <li>today's date {{ todayDate }}</li>
+    </ul>
+    {{ govukButton({
+    text: "Continue",
+    href: "/check-in/video/review"
+    }) }}
+  </div>
+</div>
+
+
+{% endblock %}

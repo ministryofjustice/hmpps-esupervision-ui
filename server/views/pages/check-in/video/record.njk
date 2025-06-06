@@ -22,12 +22,17 @@
     <h1 class="govuk-heading-l">Record your check-in video</h1>
     <p>In your video you must state:</p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>today's day {{ todayDay }} </li>
-      <li>today's date {{ todayDate }}</li>
+      <li>today's day <strong>{{ todayDay }}</strong></li>
+      <li>today's date <strong>{{ todayDate }}</strong></li>
     </ul>
+    <div class="es-video">
+    <video class="es-video__video" id="es-video-check-in">
+
+    </video>
+    </div>
     {{ govukButton({
-    text: "Continue",
-    href: "/check-in/video/review"
+      text: "Continue",
+      href: "/check-in/video/review"
     }) }}
   </div>
 </div>

@@ -21,9 +21,15 @@
     <p>Review your video to check you have included all required information before submitting it to your probation practitioner. </p>
     <h2 class="govuk-heading-s">In your video you must state:</h2>
     <ul class="govuk-list govuk-list--bullet">
-      <li>today's day {{ todayDay }} </li>
-      <li>today's date {{ todayDate }}</li>
+      <li>today's day <strong>{{ todayDay }}</strong></li>
+      <li>today's date <strong>{{ todayDate }}</strong></li>
     </ul>
+
+    <div class="es-video">
+      <video class="es-video__video" controls>
+
+      </video>
+    </div>
 
     {{ govukRadios({
     name: "video-meets-rules",

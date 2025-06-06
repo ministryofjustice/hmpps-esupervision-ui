@@ -6,12 +6,13 @@
 
 {% extends "../../partials/layout.njk" %}
 
+{% set journeyName = "Sign up for remote check-in" %}
 {% set pageTitle = "Personal details" %}
 
 {% block beforeContent %}
 {{ govukBackLink({
   text: "Back",
-  href: "/check-in"
+  href: "/register"
 }) }}
 {% endblock %}
 
@@ -22,7 +23,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class ="govuk-heading-l">Personal details</h1>
-    <p>We will use your personal details to match you to your profile. It is important you give us correct information.</p>
+    <p>We will use your personal details to sign you up to this service and send you a link to complete each remote check-in.</p>
     <form method="post" action="/check-in/verify">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ govukInput({
@@ -61,7 +62,7 @@
 
       {{ govukButton({
       text: "Continue",
-      href: "/check-in/video/inform"
+      href: "/register/photo/inform"
       }) }}
     </form>
   </div>

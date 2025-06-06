@@ -18,6 +18,7 @@ import setUpWebSession from './middleware/setUpWebSession'
 
 import routes from './routes'
 import checkInRoutes from './routes/checkInRoutes'
+import registerRoutes from './routes/registerRoutes'
 
 import type { Services } from './services'
 
@@ -42,6 +43,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use(routes(services))
   app.use('/check-in', checkInRoutes())
+  app.use('/register', registerRoutes())
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

@@ -1,0 +1,56 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% extends "../../../partials/layout.njk" %}
+
+{% set journeyName = "Sign up for remote check-in" %}
+{% set pageTitle = "Does this photo meet the rules?" %}
+
+
+{% block beforeContent %}
+{{ govukBackLink({
+text: "Back",
+href: "/register/photo/capture"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Does this photo meet the rules?</h1>
+    <p>Make sure: </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>your photo is well lit</li>
+      <li>you are in front of a plain background</li>
+      <li>your face is in the frame</li>
+    </ul>
+    {{ govukRadios({
+    name: "photoMeetsRules",
+    fieldset: {
+    legend: {
+    text: "Does this photo meet the rules?",
+    classes: "govuk-visually-hidden"
+    }
+    },
+    items: [
+    {
+      value: "yes",
+      text: "Yes, this photo meets the rules"
+    },
+    {
+      value: "no",
+      text: "No, I want to take another photo"
+    }
+  ]
+    }) }}
+    {{ govukButton({
+    text: "Continue",
+    href: "/register/contact-details"
+    }) }}
+  </div>
+</div>
+
+
+{% endblock %}

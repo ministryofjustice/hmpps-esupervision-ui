@@ -3,12 +3,14 @@
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "Record a check-in video" %}
+{% set journeyName = "Sign up for remote check-in" %}
+{% set pageTitle = "Take a photo of your face" %}
+
 
 {% block beforeContent %}
 {{ govukBackLink({
-  text: "Back",
-  href: "/check-in/verify"
+text: "Back",
+href: "/register/photo/inform"
 }) }}
 {% endblock %}
 
@@ -16,10 +18,8 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Record a check-in video</h1>
-    <p>You’ll be asked to record a video of yourself on this device. We will use this video to verify your identity and your location. </p>
-    <p>You will be asked to accept permissions to record a video on your device.</p>
-    <h2 class="govuk-heading-s">Before you record your video, make sure: </h2>
+    <h1 class="govuk-heading-l">Take a photo of your face</h1>
+    <p>Before you take your photo, make sure: </p>
     <ul class="govuk-list govuk-list--bullet">
       <li>you are in a well lit area</li>
       <li>you are in front of a plain background</li>
@@ -27,7 +27,7 @@
     </ul>
     {{ govukButton({
     text: "Continue",
-    href: "/check-in/video/record"
+    href: "/register/photo/review"
     }) }}
   </div>
 </div>

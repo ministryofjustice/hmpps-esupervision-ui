@@ -42,7 +42,7 @@ export default function createApp(services: Services): express.Application {
   // app.use(setUpCurrentUser())
 
   app.use(populateValidationErrors())
-  app.use(routes(services))
+  app.use(routes())
   app.use('/check-in', checkInRoutes())
   app.use('/register', registerRoutes())
 

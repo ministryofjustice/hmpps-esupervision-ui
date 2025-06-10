@@ -1,3 +1,5 @@
+import { format, isValid, parseISO } from 'date-fns'
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -20,4 +22,33 @@ export const initialiseName = (fullName?: string): string | null => {
 
   const array = fullName.split(' ')
   return `${array[0][0]}. ${array.reverse()[0]}`
+}
+
+export const formatDate = (date?: string | Date, fmt = 'd MMMM yyyy') => {
+  if (!date) return undefined
+  const richDate = typeof date === 'string' ? parseISO(date) : date
+  if (!isValid(richDate)) return undefined
+  return format(richDate, fmt)
+}
+
+const isLowerCase = (val: string): boolean => /^[a-z]*$/.test(val)
+
+const lowercaseExceptAcronym = (val: string): string => {
+  if (val.includes('-')) {
+    return val
+      .split('-')
+      .map(part => (Array.from(part).some(isLowerCase) ? part.toLowerCase() : part))
+      .join('-')
+  }
+
+  if (val.length < 2 || Array.from(val).some(isLowerCase)) {
+    return val.toLowerCase()
+  }
+  return val
+}
+
+export const sentenceCase = (val: string, startsWithUppercase: boolean = true): string => {
+  const words = val.split(/\s+/)
+  const sentence = words.map(lowercaseExceptAcronym).join(' ')
+  return startsWithUppercase ? sentence.charAt(0).toUpperCase() + sentence.slice(1) : sentence
 }

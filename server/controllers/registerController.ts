@@ -10,6 +10,7 @@ export const renderIndex: RequestHandler = async (req, res, next) => {
 
 export const renderPersonalDetails: RequestHandler = async (req, res, next) => {
   try {
+    // const validationErrors = req.flash('validationErrors') || []
     res.render('pages/register/personal-details')
   } catch (error) {
     next(error)

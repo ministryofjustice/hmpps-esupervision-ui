@@ -74,18 +74,18 @@ export default function setupAuthentication() {
     res.redirect(`${authUrl}/account-details?${authParameters}`)
   })
 
-  router.use(async (req, res, next) => {
-    if (req.isAuthenticated() && (await tokenVerificationClient.verifyToken(req as unknown as AuthenticatedRequest))) {
-      return next()
-    }
-    req.session.returnTo = req.originalUrl
-    return res.redirect('/sign-in')
-  })
+  // router.use(async (req, res, next) => {
+  //   if (req.isAuthenticated() && (await tokenVerificationClient.verifyToken(req as unknown as AuthenticatedRequest))) {
+  //     return next()
+  //   }
+  //   req.session.returnTo = req.originalUrl
+  //   return res.redirect('/sign-in')
+  // })
 
-  router.use((req, res, next) => {
-    res.locals.user = req.user as HmppsUser
-    next()
-  })
+  // router.use((req, res, next) => {
+  //   res.locals.user = req.user as HmppsUser
+  //   next()
+  // })
 
   return router
 }

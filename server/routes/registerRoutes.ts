@@ -1,4 +1,5 @@
 import { type RequestHandler, Router } from 'express'
+import validateFormData from '../middleware/validateFormData'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import {
   renderCheckAnswers,
@@ -11,15 +12,22 @@ import {
   renderPhotoReview,
 } from '../controllers/registerController'
 
+import { personalDetailsSchema, photoReviewSchema } from '../schemas/registerSchemas'
+
 export default function routes(): Router {
   const router = Router({ mergeParams: true })
   const get = (routePath: string | string[], handler: RequestHandler) => router.get(routePath, asyncMiddleware(handler))
 
   get('/', renderIndex)
+
   get('/personal-details', renderPersonalDetails)
+  router.post('/personal-details', validateFormData(personalDetailsSchema), renderPhotoInform)
+
   get('/photo/inform', renderPhotoInform)
   get('/photo/capture', renderPhotoCapture)
+
   get('/photo/review', renderPhotoReview)
+  router.post('/photo/review', validateFormData(photoReviewSchema), renderContactDetails)
 
   get('/contact-details', renderContactDetails)
 

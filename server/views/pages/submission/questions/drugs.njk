@@ -1,11 +1,12 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "../../../partials/errorSummary.njk" import errorSummary %}
 
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "Have you used drugs since your last check-in?" %}
+{% set pageTitle = "Has your drug use changed since your last check-in?" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -20,34 +21,48 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <span class="govuk-caption-l">About you</span>
+  {{ errorSummary(validationErrors) }}
 
-    {{ govukRadios({
-      name: "drugs",
-      fieldset: {
-        legend: {
-          text: "Have you used drugs since your last check-in?",
-          isPageHeading: true,
-          classes: "govuk-fieldset__legend--l"
-        }
-      },
-      items: [
-        {
-          value: "yes",
-          text: "Yes"
-        },
-        {
-          value: "no",
-          text: "No"
-        }
-      ]
-    }) }}
 
-    {{ govukButton({
-    text: "Continue",
-    href: "/submission/questions/physical-health"
-    }) }}
+    <form method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukRadios({
+          name: "drugsUse",
+          errorMessage: validationErrors | findError("drugsUse"),
+          fieldset: {
+            legend: {
+              text: "Has your drug use changed since your last check-in?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: [
+              {
+                value: "increased",
+                text: "It has increased"
+              },
+              {
+                value: "same",
+                text: "It has stayed the same"
+              },
+              {
+                value: "decreased",
+                text: "It has decreased"
+              },
+              {
+                divider: "or"
+              },
+              {
+                value: "no",
+                text: "I do not take drugs"
+              }
+            ]
+        }) }}
 
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+    </form>
   </div>
 </div>
 

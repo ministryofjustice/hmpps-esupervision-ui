@@ -1,10 +1,13 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "../../../partials/errorSummary.njk" import errorSummary %}
+
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "How are you feeling physically?" %}
+{% set pageTitle = "Do you have any physical health concerns?" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -19,44 +22,57 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <span class="govuk-caption-l">About you</span>
+
+    {{ errorSummary(validationErrors) }}
+
+    {% set physicalHealthDetails %}
+    {{ govukTextarea({
+      name: "physicalHealthDetails",
+      id: "physicalHealthDetails",
+      errorMessage: validationErrors | findError("physicalHealthDetails"),
+      label: {
+        text: "Tell us about your health concern"
+      }
+    }) }}
+    {% endset -%}
+
+
+    <form method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
     {{ govukRadios({
       name: "physicalHealth",
+      errorMessage: validationErrors | findError("physicalHealth"),
+      hint: {
+        text: "For example, a new health concern or a health condition that is getting worse. "
+      },
       fieldset: {
         legend: {
-          text: "How are you feeling physically?",
+          text: "Do you have any physical health concerns?",
           isPageHeading: true,
           classes: "govuk-fieldset__legend--l"
         }
       },
       items: [
-        {
-          value: "veryWell",
-          text: "Very well"
-        },
-        {
-          value: "well",
-          text: "Well"
-        },
-        {
-          value: "ok",
-          text: "OK"
-        },
-        {
-          value: "notGreat",
-          text: "Not great"
-        },
-        {
-          value: "struggling",
-          text: "Struggling"
-        }
-      ]
+          {
+            value: "yes",
+            text: "Yes",
+            conditional: {
+              html: physicalHealthDetails
+            }
+          },
+          {
+            value: "no",
+            text: "No"
+          }
+        ]
     }) }}
 
     {{ govukButton({
-    text: "Continue",
-    href: "/submission/questions/mental-health"
+      text: "Continue"
     }) }}
+
+    </form>
   </div>
 </div>
 

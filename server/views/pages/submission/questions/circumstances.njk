@@ -5,7 +5,7 @@
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "Have any of these details changed since your last check-in?" %}
+{% set pageTitle = "Have any of these circumstances changed since your last check-in?" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -22,7 +22,6 @@
 
 {{ errorSummary(validationErrors) }}
 
-    <span class="govuk-caption-l">About you</span>
 
     {% set homeAddressChanges %}
     {{ govukTextarea({
@@ -46,11 +45,11 @@
     }) }}
     {% endset -%}
 
-    {% set supportNetworkChanges %}
+    {% set supportSystemChanges %}
     {{ govukTextarea({
-      name: "supportNetworkChanges",
-      id: "supportNetworkChanges",
-      errorMessage: validationErrors | findError("supportNetworkChanges"),
+      name: "supportSystemChanges",
+      id: "supportSystemChanges",
+      errorMessage: validationErrors | findError("supportSystemChanges"),
       label: {
         text: "Tell us how your support system changed"
       }
@@ -73,12 +72,13 @@
 
     {{ govukCheckboxes({
     name: "circumstances",
+    errorMessage: validationErrors | findError("circumstances"),
     fieldset: {
-    legend: {
-    text: "Have any of these details changed since your last check-in?",
-    isPageHeading: true,
-    classes: "govuk-fieldset__legend--l"
-    }
+      legend: {
+        text: "Have any of these circumstances changed since your last check-in?",
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      }
     },
     items: [
     {
@@ -96,10 +96,10 @@
       }
     },
     {
-      value: "supportNetwork",
+      value: "supportSystem",
       text: "Support system (family, relationships, friends)",
       conditional: {
-        html: supportNetworkChanges
+        html: supportSystemChanges
       }
     },
     {

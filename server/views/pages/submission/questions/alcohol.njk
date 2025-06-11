@@ -5,13 +5,13 @@
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "Have you had contact with the police since your last check-in?" %}
+{% set pageTitle = "Have you used alcohol since your last check-in?" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
 {{ govukBackLink({
   text: "Back",
-  href: "/check-in/questions/circumstances"
+  href: "/submission/questions/police-contact"
 }) }}
 {% endblock %}
 
@@ -21,14 +21,13 @@
   <div class="govuk-grid-column-two-thirds">
 
     <span class="govuk-caption-l">About you</span>
-
     {{ govukRadios({
-    name: "policeContact",
+    name: "alcohol",
     fieldset: {
     legend: {
-      text: "Have you had contact with the police since your last check-in?",
-      isPageHeading: true,
-      classes: "govuk-fieldset__legend--l"
+    text: "Have you used alcohol since your last check-in?",
+    isPageHeading: true,
+    classes: "govuk-fieldset__legend--l"
     }
     },
     items: [
@@ -46,7 +45,7 @@
 
     {{ govukButton({
     text: "Continue",
-    href: "/check-in/questions/alcohol"
+    href: "/submission/questions/drugs"
     }) }}
   </div>
 </div>

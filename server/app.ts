@@ -17,7 +17,7 @@ import setUpWebSession from './middleware/setUpWebSession'
 import populateValidationErrors from './middleware/populateValidationErrors'
 
 import routes from './routes'
-import checkInRoutes from './routes/checkInRoutes'
+import submissionRoutes from './routes/submissionRoutes'
 import registerRoutes from './routes/registerRoutes'
 
 import type { Services } from './services'
@@ -43,7 +43,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use(populateValidationErrors())
   app.use(routes())
-  app.use('/check-in', checkInRoutes())
+  app.use('/submission', submissionRoutes())
   app.use('/register', registerRoutes())
 
   app.use((req, res, next) => next(createError(404, 'Not found')))

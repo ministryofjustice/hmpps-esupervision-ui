@@ -1,5 +1,6 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
+import validateFormData from '../middleware/validateFormData'
 import {
   renderCheckAnswers,
   renderConfirmation,
@@ -15,7 +16,9 @@ import {
   renderVideoInform,
   renderVideoRecord,
   renderVideoReview,
-} from '../controllers/checkInController'
+} from '../controllers/submissionController'
+
+import { personalDetailsSchema, videoReviewSchema, circumstancesSchema } from '../schemas/submissionSchemas'
 
 export default function routes(): Router {
   const router = Router({ mergeParams: true })
@@ -23,12 +26,20 @@ export default function routes(): Router {
 
   get('/', renderIndex)
   get('/verify', renderVerify)
+  router.post('/verify', validateFormData(personalDetailsSchema), renderVideoInform)
 
   get('/video/inform', renderVideoInform)
   get('/video/record', renderVideoRecord)
   get('/video/review', renderVideoReview)
+  router.post('/video/review', validateFormData(videoReviewSchema), (req, res) => {
+    res.redirect('/submission/questions/circumstances')
+  })
 
   get('/questions/circumstances', renderQuestionsCircumstances)
+  router.post('/questions/circumstances', validateFormData(circumstancesSchema), (req, res) => {
+    res.redirect('/submission/questions/police-contact')
+  })
+
   get('/questions/police-contact', renderQuestionsPoliceContact)
   get('/questions/alcohol', renderQuestionsAlcohol)
   get('/questions/drugs', renderQuestionsDrugs)

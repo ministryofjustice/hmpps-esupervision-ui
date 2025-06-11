@@ -2,15 +2,16 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
+
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "How are you feeling mentally?" %}
+{% set pageTitle = "Have you had contact with the police since your last check-in?" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
 {{ govukBackLink({
   text: "Back",
-  href: "/check-in/questions/physical-health"
+  href: "/submission/questions/circumstances"
 }) }}
 {% endblock %}
 
@@ -20,41 +21,32 @@
   <div class="govuk-grid-column-two-thirds">
 
     <span class="govuk-caption-l">About you</span>
+
     {{ govukRadios({
-    name: "mentalHealth",
+    name: "policeContact",
     fieldset: {
     legend: {
-    text: "How are you feeling mentally?",
-    isPageHeading: true,
-    classes: "govuk-fieldset__legend--l"
+      text: "Have you had contact with the police since your last check-in?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
     }
     },
     items: [
-        {
-          value: "veryWell",
-          text: "Very well"
-        },
-        {
-          value: "well",
-          text: "Well"
-        },
-        {
-          value: "ok",
-          text: "OK"
-        },
-        {
-          value: "notGreat",
-          text: "Not great"
-        },
-        {
-          value: "struggling",
-          text: "Struggling"
-        }
-      ]
+    {
+      value: "yes",
+      text: "Yes"
+    },
+    {
+      value: "no",
+      text: "No"
+    }
+  ]
     }) }}
+
+
     {{ govukButton({
     text: "Continue",
-    href: "/check-in/questions/callback"
+    href: "/submission/questions/alcohol"
     }) }}
   </div>
 </div>

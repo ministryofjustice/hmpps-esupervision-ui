@@ -19,7 +19,6 @@ This update has allowed us to significantly streamline and simplify the existing
 For more details, see PR [#525](https://github.com/ministryofjustice/hmpps-template-typescript/pull/525),
 or the [@ministryofjustice/hmpps-auth-clients](https://github.com/ministryofjustice/hmpps-typescript-lib/tree/main/packages/auth-clients) package
 
-
 **March 7th 2025** - Fix issue with AppInsights
 
 Requests for routes that define multiple patterns were failing to be processed by appinsights and were not being exported e.g:

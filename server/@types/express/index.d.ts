@@ -5,6 +5,7 @@ export declare module 'express-session' {
   interface SessionData {
     returnTo: string
     nowInMinutes: number
+    formData?: Record<string, unknown>
   }
 }
 
@@ -25,6 +26,7 @@ export declare global {
 
     interface Locals {
       user: HmppsUser
+      formData?: Record<string, unknown>
     }
   }
 }

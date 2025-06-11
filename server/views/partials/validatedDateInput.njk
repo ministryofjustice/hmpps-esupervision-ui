@@ -10,17 +10,19 @@
   {% set year = opts.year %}
 
   {% if opts.validationErrors %}
-    {% set dayError = opts.validationErrors['day'] if opts.validationErrors['day'] else '' %}
-    {% set monthError = opts.validationErrors['month'] if opts.validationErrors['month'] else '' %}
-    {% set yearError = opts.validationErrors['year']  if opts.validationErrors['year'] else '' %}
+    {% set dayError = opts.validationErrors | findError("day") if opts.validationErrors | findError("day") else '' %}
+    {% set monthError = opts.validationErrors | findError("month") if opts.validationErrors | findError("month") else '' %}
+    {% set yearError = opts.validationErrors | findError("year")  if opts.validationErrors | findError("year") else '' %}
+    {% set dateError = opts.validationErrors | findError(id)  if opts.validationErrors | findError(id) else '' %}
   {% endif %}
 
   {% macro joinErrors(errors) %}
-    {% if errors %}{% for error in errors %}{% if error and error.length > 0 %}{{ error }}{% endif %}{% endfor %}{% endif %}
+    {% if errors %}{{ errors.text  }}{% endif %}
   {% endmacro %}
 
   {{ govukDateInput({
     id: id,
+    name: id,
     fieldset: {
       legend: {
         text: title.text,
@@ -32,31 +34,35 @@
       text: hintText
     } if hintText else undefined,
     errorMessage: {
-      html: '<span id="day-error" class="govuk-error-message">' + joinErrors(dayError) + '</span>
-                            <span id="month-error" class="govuk-error-message">' + joinErrors(monthError) + '</span>
-                            <span id="year-error" class="govuk-error-message">' + joinErrors(yearError) + '</span>'
-    } if dayError or monthError or yearError,
+      html: '<span id="date-error" class="govuk-error-message">' + joinErrors(dayError) | trim  + '</span>
+            <span id="day-error" class="govuk-error-message">' + joinErrors(monthError) | trim  + '</span>
+            <span id="month-error" class="govuk-error-message">' + joinErrors(yearError) | trim  + '</span>
+            <span id="year-error" class="govuk-error-message">' + joinErrors(dateError) | trim  + '</span>'
+    } if dayError or monthError or yearError or dateError else undefined,
     items: [
       {
         id: 'day',
         label: 'Day',
         name: "day",
         classes: 'govuk-input--width-2' + (' govuk-input--error' if dayError),
-        value: day
+        value: day,
+        autocomplete: 'bday-day'
       },
       {
         id: 'month',
         label: 'Month',
         name: "month",
         classes: 'govuk-input--width-2' + (' govuk-input--error' if monthError),
-        value: month
+        value: month,
+        autocomplete: 'bday-month'
       },
       {
         id: 'year',
         label: 'Year',
         name: "year",
         classes: 'govuk-input--width-4' + (' govuk-input--error' if yearError),
-        value: year
+        value: year,
+        autocomplete: 'bday-year'
       }
     ]
   }) }}

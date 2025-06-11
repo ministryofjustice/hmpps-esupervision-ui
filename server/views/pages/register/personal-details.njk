@@ -37,7 +37,9 @@
         classes: "govuk-!-width-two-thirds",
         id: "firstName",
         name: "firstName",
-        errorMessage: validationErrors | findError("firstName")
+        autocomplete: "given-name",
+        errorMessage: validationErrors | findError("firstName"),
+        value: formData["firstName"]
       }) }}
 
       {{ govukInput({
@@ -48,27 +50,28 @@
         classes: "govuk-!-width-two-thirds",
         id: "lastName",
         name: "lastName",
-        errorMessage: validationErrors | findError("lastName")
+        autocomplete: "family-name",
+        errorMessage: validationErrors | findError("lastName"),
+        value: formData["lastName"]
       }) }}
-
 
        {{ validatedDateInput({
-            id: "dob",
-            title: {
-              text:  "Date of birth",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--m"
-            },
-            validationErrors: validationErrors,
-            day: day,
-            month: month,
-            year: year
-          }) }}
+          id: "dob",
+          title: {
+            text:  "Date of birth",
+            isPageHeading: false,
+            classes: "govuk-fieldset__legend--m"
+          },
+          validationErrors: validationErrors,
+          day: formData["day"],
+          month: formData["month"],
+          year: formData["year"]
+        }) }}
 
-
-      {{ govukButton({
-        text: "Continue"
-      }) }}
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+        
     </form>
   </div>
 </div>

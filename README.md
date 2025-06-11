@@ -190,8 +190,8 @@ for the in-memory DB used by Auth
 
 ### Run linter
 
-* `npm run lint` runs `eslint`.
-* `npm run typecheck` runs the TypeScript compiler `tsc`.
+- `npm run lint` runs `eslint`.
+- `npm run typecheck` runs the TypeScript compiler `tsc`.
 
 ### Run unit tests
 

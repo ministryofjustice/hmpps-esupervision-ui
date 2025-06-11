@@ -7,6 +7,6 @@ export const personalDetailsSchema = z.object({
 
 export const photoReviewSchema = z.object({
   photoMeetsRules: z.string({
-    required_error: 'Confirm if this photo meet the rules',
+    required_error: 'Confirm if this photo meets the rules',
   }),
 })

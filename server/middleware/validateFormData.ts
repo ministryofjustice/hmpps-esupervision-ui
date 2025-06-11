@@ -20,6 +20,8 @@ export default function validateFormData(schema: z.ZodTypeAny) {
         }
       })
 
+      console.log('Validation errors:', validationResult.error.errors)
+
       req.flash('validationErrors', JSON.stringify(errorMessages))
       res.redirect(req.originalUrl)
     }

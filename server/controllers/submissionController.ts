@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 
 export const renderIndex: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/index')
+    res.render('pages/submission/index')
   } catch (error) {
     next(error)
   }
@@ -11,7 +11,7 @@ export const renderIndex: RequestHandler = async (req, res, next) => {
 
 export const renderVerify: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/verify')
+    res.render('pages/submission/verify')
   } catch (error) {
     next(error)
   }
@@ -19,7 +19,7 @@ export const renderVerify: RequestHandler = async (req, res, next) => {
 
 export const renderVideoInform: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/video/inform')
+    res.render('pages/submission/video/inform')
   } catch (error) {
     next(error)
   }
@@ -31,7 +31,7 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
     const todayDay = format(now, 'EEEE')
     const todayDate = format(now, 'do MMMM yyyy')
 
-    res.render('pages/check-in/video/record', { todayDate, todayDay })
+    res.render('pages/submission/video/record', { todayDate, todayDay })
   } catch (error) {
     next(error)
   }
@@ -42,7 +42,7 @@ export const renderVideoReview: RequestHandler = async (req, res, next) => {
     const now = new Date()
     const todayDay = format(now, 'EEEE')
     const todayDate = format(now, 'do MMMM yyyy')
-    res.render('pages/check-in/video/review', { todayDate, todayDay })
+    res.render('pages/submission/video/review', { todayDate, todayDay })
   } catch (error) {
     next(error)
   }
@@ -50,7 +50,7 @@ export const renderVideoReview: RequestHandler = async (req, res, next) => {
 
 export const renderQuestionsCircumstances: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/questions/circumstances')
+    res.render('pages/submission/questions/circumstances')
   } catch (error) {
     next(error)
   }
@@ -58,7 +58,7 @@ export const renderQuestionsCircumstances: RequestHandler = async (req, res, nex
 
 export const renderQuestionsPoliceContact: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/questions/police-contact')
+    res.render('pages/submission/questions/police-contact')
   } catch (error) {
     next(error)
   }
@@ -66,7 +66,7 @@ export const renderQuestionsPoliceContact: RequestHandler = async (req, res, nex
 
 export const renderQuestionsAlcohol: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/questions/alcohol')
+    res.render('pages/submission/questions/alcohol')
   } catch (error) {
     next(error)
   }
@@ -74,7 +74,7 @@ export const renderQuestionsAlcohol: RequestHandler = async (req, res, next) => 
 
 export const renderQuestionsDrugs: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/questions/drugs')
+    res.render('pages/submission/questions/drugs')
   } catch (error) {
     next(error)
   }
@@ -82,7 +82,7 @@ export const renderQuestionsDrugs: RequestHandler = async (req, res, next) => {
 
 export const renderQuestionsPhysicalHealth: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/questions/physical-health')
+    res.render('pages/submission/questions/physical-health')
   } catch (error) {
     next(error)
   }
@@ -90,7 +90,7 @@ export const renderQuestionsPhysicalHealth: RequestHandler = async (req, res, ne
 
 export const renderQuestionsMentalHealth: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/questions/mental-health')
+    res.render('pages/submission/questions/mental-health')
   } catch (error) {
     next(error)
   }
@@ -98,7 +98,7 @@ export const renderQuestionsMentalHealth: RequestHandler = async (req, res, next
 
 export const renderQuestionsCallback: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/questions/callback')
+    res.render('pages/submission/questions/callback')
   } catch (error) {
     next(error)
   }
@@ -106,7 +106,7 @@ export const renderQuestionsCallback: RequestHandler = async (req, res, next) =>
 
 export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/check-answers')
+    res.render('pages/submission/check-answers')
   } catch (error) {
     next(error)
   }
@@ -114,7 +114,7 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
 
 export const renderConfirmation: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/check-in/confirmation')
+    res.render('pages/submission/confirmation')
   } catch (error) {
     next(error)
   }

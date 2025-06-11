@@ -2,7 +2,8 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
-
+{% from "../../partials/errorSummary.njk" import errorSummary %}
+{% from "../../partials/validatedDateInput.njk" import validatedDateInput %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -11,7 +12,7 @@
 {% block beforeContent %}
 {{ govukBackLink({
   text: "Back",
-  href: "/check-in"
+  href: "/submission"
 }) }}
 {% endblock %}
 
@@ -21,9 +22,12 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+
+ {{ errorSummary(validationErrors) }}
+
     <h1 class ="govuk-heading-l">Personal details</h1>
     <p>We will use your personal details to match you to your profile. It is important you give us correct information.</p>
-    <form method="post" action="/check-in/verify">
+    <form method="POST">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ govukInput({
         label: {
@@ -31,8 +35,9 @@
           classes: "govuk-label--m"
         },
         classes: "govuk-!-width-two-thirds",
-        id: "first-name",
-        name: "firstName"
+        id: "firstName",
+        name: "firstName",
+        errorMessage: validationErrors | findError("firstName")
       }) }}
 
       {{ govukInput({
@@ -41,27 +46,27 @@
       classes: "govuk-label--m"
       },
       classes: "govuk-!-width-two-thirds",
-      id: "last-name",
-      name: "lastName"
+      id: "lastName",
+      name: "lastName",
+      errorMessage: validationErrors | findError("lastName")
       }) }}
 
 
-      {{ govukDateInput({
-      id: "date-of-birth",
-      namePrefix: "dob",
-      fieldset: {
-      legend: {
-      text: "Date of birth",
-      isPageHeading: true,
-      classes: "govuk-fieldset__legend--m"
-      }
-      }
-      }) }}
-
+       {{ validatedDateInput({
+            id: "dob",
+            title: {
+              text:  "Date of birth",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--m"
+            },
+            validationErrors: validationErrors,
+            day: day,
+            month: month,
+            year: year
+          }) }}
 
       {{ govukButton({
-      text: "Continue",
-      href: "/check-in/video/inform"
+      text: "Continue"
       }) }}
     </form>
   </div>

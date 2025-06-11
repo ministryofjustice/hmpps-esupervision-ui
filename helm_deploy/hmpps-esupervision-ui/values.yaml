@@ -1,6 +1,6 @@
 generic-service:
   nameOverride: hmpps-esupervision-ui
-  productId: 'UNASSIGNED' # productId for the product that this belongs too, i.e. DPS001, see README.md for details
+  productId: 'HMPPS9999' # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
   # the IRSA service account name for accessing AWS resources
   # serviceAccountName: "hmpps-template-typescript"

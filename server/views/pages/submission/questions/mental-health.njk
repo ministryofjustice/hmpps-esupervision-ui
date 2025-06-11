@@ -1,10 +1,13 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% from "../../../partials/errorSummary.njk" import errorSummary %}
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "How are you feeling mentally?" %}
+{% set pageTitle = "How are you feeling?" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -19,12 +22,20 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <span class="govuk-caption-l">About you</span>
+    {{ errorSummary(validationErrors) }}
+
+    <form method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
     {{ govukRadios({
     name: "mentalHealth",
+    errorMessage: validationErrors | findError("mentalHealth"),
+    hint: {
+      text: "Think about things like if you have noticed a change in your mood. "
+    },
     fieldset: {
     legend: {
-    text: "How are you feeling mentally?",
+    text: "How are you feeling?",
     isPageHeading: true,
     classes: "govuk-fieldset__legend--l"
     }
@@ -52,10 +63,14 @@
         }
       ]
     }) }}
-    {{ govukButton({
-    text: "Continue",
-    href: "/submission/questions/callback"
+    {{ govukInsetText({
+      html: 'If you need to speak to someone urgently about how you are feeling, check the <a href="https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/behaviours/help-for-suicidal-thoughts/" class="govuk-link" target="_blank">NHS website for help (opens in new tab)</a>.'
     }) }}
+    {{ govukButton({
+      text: "Continue"
+    }) }}
+    </form>
+
   </div>
 </div>
 

@@ -18,14 +18,13 @@ export const circumstancesSchema = z
   })
   .refine(
     data => {
-      console.log('Circumstances data:', data.circumstances)
       if (data.circumstances) {
         return typeof data.homeAddressChanges === 'string' && data.homeAddressChanges.trim() !== ''
       }
       return true
     },
     {
-      message: 'Home address is required when circumstances is checked.',
+      message: 'Tell us how your home address has changed',
       path: ['homeAddressChanges'],
     },
   )

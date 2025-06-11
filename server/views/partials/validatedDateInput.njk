@@ -45,21 +45,24 @@
         label: 'Day',
         name: "day",
         classes: 'govuk-input--width-2' + (' govuk-input--error' if dayError),
-        value: day
+        value: day,
+        autocomplete: 'bday-day'
       },
       {
         id: 'month',
         label: 'Month',
         name: "month",
         classes: 'govuk-input--width-2' + (' govuk-input--error' if monthError),
-        value: month
+        value: month,
+        autocomplete: 'bday-month'
       },
       {
         id: 'year',
         label: 'Year',
         name: "year",
         classes: 'govuk-input--width-4' + (' govuk-input--error' if yearError),
-        value: year
+        value: year,
+        autocomplete: 'bday-year'
       }
     ]
   }) }}

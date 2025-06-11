@@ -1,7 +1,6 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "../../partials/errorSummary.njk" import errorSummary %}
 {% from "../../partials/validatedDateInput.njk" import validatedDateInput %}
 
@@ -37,37 +36,39 @@
         classes: "govuk-!-width-two-thirds",
         id: "firstName",
         name: "firstName",
+        autocomplete: "given-name",
         errorMessage: validationErrors | findError("firstName")
       }) }}
 
       {{ govukInput({
-      label: {
-        text: "Last name",
-      classes: "govuk-label--m"
-      },
-      classes: "govuk-!-width-two-thirds",
-      id: "lastName",
-      name: "lastName",
-      errorMessage: validationErrors | findError("lastName")
+        label: {
+          text: "Last name",
+          classes: "govuk-label--m"
+        },
+        classes: "govuk-!-width-two-thirds",
+        id: "lastName",
+        name: "lastName",
+        autocomplete: "family-name",
+        errorMessage: validationErrors | findError("lastName")
       }) }}
-
 
        {{ validatedDateInput({
-            id: "dob",
-            title: {
-              text:  "Date of birth",
-              isPageHeading: false,
-              classes: "govuk-fieldset__legend--m"
-            },
-            validationErrors: validationErrors,
-            day: day,
-            month: month,
-            year: year
-          }) }}
+          id: "dob",
+          title: {
+            text:  "Date of birth",
+            isPageHeading: false,
+            classes: "govuk-fieldset__legend--m"
+          },
+          validationErrors: validationErrors,
+          day: day,
+          month: month,
+          year: year
+        }) }}
 
-      {{ govukButton({
-      text: "Continue"
-      }) }}
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+        
     </form>
   </div>
 </div>

@@ -17,6 +17,18 @@ export const renderVerify: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const handleVerify: RequestHandler = async (req, res, next) => {
+  const { firstName, lastName, day, month, year } = req.body
+  const dateOfBirth = `${day}/${month}/${year}`
+
+  // Check if details match
+  if (firstName === 'John') {
+    return res.render('pages/submission/no-match-found', { firstName, lastName, dateOfBirth })
+  }
+
+  return res.redirect('/submission/video/inform')
+}
+
 export const renderVideoInform: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/submission/video/inform')

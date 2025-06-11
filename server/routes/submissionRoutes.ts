@@ -2,6 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import validateFormData from '../middleware/validateFormData'
 import {
+  handleVerify,
   renderCheckAnswers,
   renderConfirmation,
   renderIndex,
@@ -37,7 +38,7 @@ export default function routes(): Router {
 
   get('/', renderIndex)
   get('/verify', renderVerify)
-  router.post('/verify', validateFormData(personalDetailsSchema), renderVideoInform)
+  router.post('/verify', validateFormData(personalDetailsSchema), handleVerify)
 
   get('/video/inform', renderVideoInform)
   get('/video/record', renderVideoRecord)

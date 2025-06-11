@@ -15,7 +15,7 @@
   }) }}
   {{ govukServiceNavigation({
   serviceName: journeyName | default(applicationName),
-  serviceUrl: "#"
+  serviceUrl: "/register" if journeyName == "Sign up for remote check-in" else "/submission"
   }) }}
 {% endblock %}
 

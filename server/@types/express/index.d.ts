@@ -5,7 +5,17 @@ export declare module 'express-session' {
   interface SessionData {
     returnTo: string
     nowInMinutes: number
-    formData?: Record<string, unknown>
+    formData?: {
+      circumstances?: string | string[]
+      policeContact?: string
+      alcoholUse?: string
+      alcoholUnits?: string
+      drugsUse?: string
+      physicalHealth?: string
+      mentalHealth?: string
+      callback?: string
+      [key: string]: unknown
+    } | null
   }
 }
 
@@ -26,7 +36,17 @@ export declare global {
 
     interface Locals {
       user: HmppsUser
-      formData?: Record<string, unknown>
+      formData?: {
+        circumstances?: string | string[]
+        policeContact?: string
+        alcoholUse?: string
+        alcoholUnits?: string
+        drugsUse?: string
+        physicalHealth?: string
+        mentalHealth?: string
+        callback?: string
+        [key: string]: unknown
+      } | null
     }
   }
 }

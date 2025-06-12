@@ -67,4 +67,16 @@ export default function nunjucksSetup(app: express.Express): void {
     }
     return checked
   })
+
+  njkEnv.addGlobal('showIfExists', function doesItExist(item: string, answer: string | string[]): string {
+    if (typeof answer === 'string') {
+      return answer === item ? '' : 'govuk-visually-hidden'
+    }
+
+    if (Array.isArray(answer)) {
+      return answer.includes(item) ? '' : 'govuk-visually-hidden'
+    }
+
+    return ''
+  })
 }

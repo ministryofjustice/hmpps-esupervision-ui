@@ -28,6 +28,7 @@
       name: "homeAddressChanges",
       id: "homeAddressChanges",
       errorMessage: validationErrors | findError("homeAddressChanges"),
+      value: formData["homeAddressChanges"], 
       label: {
         text: "Tell us how your home address changed"
       }
@@ -39,6 +40,7 @@
       name: "employmentStatusChanges",
       id: "employmentStatusChanges",
       errorMessage: validationErrors | findError("employmentStatusChanges"),
+      value: formData["employmentStatusChanges"], 
       label: {
         text: "Tell us how your employment status changed"
       }
@@ -50,6 +52,7 @@
       name: "supportSystemChanges",
       id: "supportSystemChanges",
       errorMessage: validationErrors | findError("supportSystemChanges"),
+      value: formData["supportSystemChanges"], 
       label: {
         text: "Tell us how your support system changed"
       }
@@ -61,6 +64,7 @@
       name: "contactDetailsChanges",
       id: "contactDetailsChanges",
       errorMessage: validationErrors | findError("contactDetailsChanges"),
+      value: formData["contactDetailsChanges"], 
       label: {
         text: "Tell us how your contact details changed"
       }
@@ -84,6 +88,7 @@
     {
       value: "homeAddress",
       text: "Home address",
+      checked: checked("circumstances", "homeAddress"),
       conditional: {
         html: homeAddressChanges
       }
@@ -91,6 +96,7 @@
     {
       value: "employmentStatus",
       text: "Employment status",
+      checked: checked("circumstances", "employmentStatus"),
       conditional: {
         html: employmentStatusChanges
       }
@@ -98,6 +104,7 @@
     {
       value: "supportSystem",
       text: "Support system (family, relationships, friends)",
+      checked: checked("circumstances", "supportSystem"),
       conditional: {
         html: supportSystemChanges
       }
@@ -105,6 +112,7 @@
     {
       value: "contactDetails",
       text: "Contact details",
+      checked: checked("circumstances", "contactDetails"),
       conditional: {
         html: contactDetailsChanges
       }
@@ -114,6 +122,7 @@
     },
     {
       value: "none",
+      checked: checked("circumstances", "none"),
       text: "None of my circumstances have changed",
       behaviour: "exclusive"
     }

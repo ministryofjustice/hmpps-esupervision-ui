@@ -84,6 +84,24 @@ export const renderQuestionsAlcohol: RequestHandler = async (req, res, next) => 
   }
 }
 
+export const handleAlcohol: RequestHandler = async (req, res, next) => {
+  const { alcoholUse } = req.body
+
+  if (alcoholUse === 'no') {
+    return res.redirect('/submission/questions/drugs')
+  }
+
+  return res.redirect('/submission/questions/alcohol-units')
+}
+
+export const renderQuestionsAlcoholUnits: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/submission/questions/alcohol-units')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const renderQuestionsDrugs: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/submission/questions/drugs')

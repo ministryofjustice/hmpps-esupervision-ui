@@ -4,7 +4,8 @@
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "Does this video meet the rules?" %}
+{% set title = "We have confirmed this is you" %}
+{% set pageTitle = title %}
 
 {% block beforeContent %}
 {{ govukBackLink({
@@ -18,46 +19,21 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-{{ errorSummary(validationErrors) }}
+    {{ errorSummary(validationErrors) }}
 
-    <h1 class="govuk-heading-l">Does this video meet the rules?</h1>
-    <p>Review your video to check you have included all required information before submitting it to your probation practitioner. </p>
-    <h2 class="govuk-heading-s">In your video you must state:</h2>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>today's day <strong>{{ todayDay }}</strong></li>
-      <li>today's date <strong>{{ todayDate }}</strong></li>
-    </ul>
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+    <p>We have confirmed this is you. You can now continue to fill in your remote check-in. </p>
     <div class="es-video">
-      <video class="es-video__video" controls>
-
+      <video class="es-video__video" id="es-video-playback" controls>
       </video>
     </div>
-    <form method="POST">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        {{ govukRadios({
-          name: "videoMeetsRules",
-          errorMessage: validationErrors | findError("videoMeetsRules") | default(null),
-          fieldset: {
-            legend: {
-              text: "Does this video meet the rules?",
-              classes: "govuk-visually-hidden"
-            }
-          },
-          items: [
-            {
-              value: "yes",
-              text: "Yes, this video meets the rules"
-            },
-            {
-              value: "no",
-              text: "No, I want to record a new video"
-            }
-          ]
-        }) }}
-        {{ govukButton({
-          text: "Continue"
-        }) }}
-    </form>
+
+    {{ govukButton({
+      text: "Continue",
+      href: "/submission/questions/circumstances"
+    }) }}
+
   </div>
 </div>
 

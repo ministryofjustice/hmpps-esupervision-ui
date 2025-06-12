@@ -12,7 +12,7 @@
 {% block beforeContent %}
 {{ govukBackLink({
   text: "Back",
-  href: "/submission/questions/alcohol"
+  href: "/submission/questions/alcohol" if formData['alcoholUse'] == "no" else "/submission/questions/alcohol-units" 
 }) }}
 {% endblock %}
 
@@ -29,6 +29,7 @@
         {{ govukRadios({
           name: "drugsUse",
           errorMessage: validationErrors | findError("drugsUse"),
+          value: formData["drugsUse"], 
           fieldset: {
             legend: {
               text: "Has your drug use changed since your last check-in?",

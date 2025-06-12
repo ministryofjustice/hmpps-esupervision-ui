@@ -29,6 +29,7 @@
     {{ govukRadios({
         name: "callback",
         errorMessage: validationErrors | findError("callback"),
+        value: formData["callback"],
         hint: {
           text: "There may be a delay in your probation practitioner contacting you. "
         },

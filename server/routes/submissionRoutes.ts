@@ -2,11 +2,13 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import validateFormData from '../middleware/validateFormData'
 import {
+  handleAlcohol,
   handleVerify,
   renderCheckAnswers,
   renderConfirmation,
   renderIndex,
   renderQuestionsAlcohol,
+  renderQuestionsAlcoholUnits,
   renderQuestionsCallback,
   renderQuestionsCircumstances,
   renderQuestionsDrugs,
@@ -21,10 +23,10 @@ import {
 
 import {
   personalDetailsSchema,
-  videoReviewSchema,
   circumstancesSchema,
   policeSchema,
   alcoholSchema,
+  alcoholUnitsSchema,
   drugsSchema,
   physicalHealthSchema,
   mentalHealthSchema,
@@ -43,9 +45,6 @@ export default function routes(): Router {
   get('/video/inform', renderVideoInform)
   get('/video/record', renderVideoRecord)
   get('/video/review', renderVideoReview)
-  router.post('/video/review', validateFormData(videoReviewSchema), (req, res) => {
-    res.redirect('/submission/questions/circumstances')
-  })
 
   get('/questions/circumstances', renderQuestionsCircumstances)
   router.post('/questions/circumstances', validateFormData(circumstancesSchema), (req, res) => {
@@ -58,7 +57,10 @@ export default function routes(): Router {
   })
 
   get('/questions/alcohol', renderQuestionsAlcohol)
-  router.post('/questions/alcohol', validateFormData(alcoholSchema), (req, res) => {
+  router.post('/questions/alcohol', validateFormData(alcoholSchema), handleAlcohol)
+
+  get('/questions/alcohol-units', renderQuestionsAlcoholUnits)
+  router.post('/questions/alcohol-units', validateFormData(alcoholUnitsSchema), (req, res) => {
     res.redirect('/submission/questions/drugs')
   })
 

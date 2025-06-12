@@ -29,6 +29,7 @@
     {{ govukTextarea({
       name: "physicalHealthDetails",
       id: "physicalHealthDetails",
+      value: formData["physicalHealthDetails"],
       errorMessage: validationErrors | findError("physicalHealthDetails"),
       label: {
         text: "Tell us about your health concern"
@@ -43,6 +44,7 @@
     {{ govukRadios({
       name: "physicalHealth",
       errorMessage: validationErrors | findError("physicalHealth"),
+      value: formData["physicalHealth"],
       hint: {
         text: "For example, a new health concern or a health condition that is getting worse. "
       },

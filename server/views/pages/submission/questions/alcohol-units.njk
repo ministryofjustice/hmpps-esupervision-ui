@@ -6,13 +6,12 @@
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "Has your alcohol consumption changed since your last check-in?" %}
-{% set mainClasses = "app-container govuk-body" %}
+{% set pageTitle = "How many units of alcohol do you drink in a week?" %}
 
 {% block beforeContent %}
 {{ govukBackLink({
   text: "Back",
-  href: "/submission/questions/police-contact"
+  href: "/submission/questions/alcohol"
 }) }}
 {% endblock %}
 
@@ -27,39 +26,37 @@
   <input type="hidden" name="_csrf" value="{{ csrfToken }}">  
 
     {{ govukRadios({
-        name: "alcoholUse",
-        errorMessage: validationErrors | findError("alcoholUse"),
-        value: formData["alcoholUse"], 
+        name: "alcoholUnits",
+        errorMessage: validationErrors | findError("alcoholUnits"),
+        value: formData["alcoholUnits"], 
         fieldset: {
           legend: {
-            text: "Has your alcohol consumption changed since your last check-in?",
+            text: "How many units of alcohol do you drink in a week?",
             isPageHeading: true,
             classes: "govuk-fieldset__legend--l"
           }
         },
         items: [
           {
-            value: "increased",
-            text: "It has increased"
+            value: "1to4",
+            text: "1 to 4 units"
           },
           {
-            value: "same",
-            text: "It has stayed the same"
+            value: "5to8",
+            text: "5 to 8 units"
           },
           {
-            value: "decreased",
-            text: "It has decreased"
+            value: "9to13",
+            text: "9 to 13 units"
           },
           {
-            divider: "or"
-          },
-          {
-            value: "no",
-            text: "I do not drink alcohol"
+            value: "14ormore",
+            text: "14 or more units"
           }
         ]
     }) }}
 
+    <p class="govuk-body"><a href="https://alcoholchange.org.uk/alcohol-facts/interactive-tools/unit-calculator" rel="nofollow" class="govuk-link" target="_blank">Calculate how many units you drink in a week (opens in new tab)</a></p> 
 
     {{ govukButton({
       text: "Continue"

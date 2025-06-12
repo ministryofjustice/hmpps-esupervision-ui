@@ -27,6 +27,7 @@
     {{ govukTextarea({
       name: "policeContactDetails",
       id: "policeContactDetails",
+      value: formData["policeContactDetails"], 
       errorMessage: validationErrors | findError("policeContactDetails"),
       label: {
         text: "Tell us what kind of contact, for example, ‘stop and search’ or ‘I reported a crime’"
@@ -41,6 +42,7 @@
         {{ govukRadios({
         name: "policeContact",
         errorMessage: validationErrors | findError("policeContact"),
+        value: formData["policeContact"], 
         fieldset: {
         legend: {
           text: "Have you had contact with the police since your last check-in?",

@@ -3,6 +3,7 @@ import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
 import fs from 'fs'
+import { get as getKeypath } from 'lodash'
 import { initialiseName } from './utils'
 import config from '../config'
 import logger from '../../logger'
@@ -42,4 +43,28 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
+
+  njkEnv.addGlobal('checked', function isChecked(name: string, value: string) {
+    if (this.ctx.formData === undefined) {
+      return ''
+    }
+
+    name = !name.match(/[.[]/g) ? `['${name}']` : name
+    const storedValue = getKeypath(this.ctx.formData, name)
+
+    if (storedValue === undefined) {
+      return ''
+    }
+
+    let checked = ''
+
+    if (Array.isArray(storedValue)) {
+      if (storedValue.indexOf(value) !== -1) {
+        checked = 'checked'
+      }
+    } else if (storedValue === value) {
+      checked = 'checked'
+    }
+    return checked
+  })
 }

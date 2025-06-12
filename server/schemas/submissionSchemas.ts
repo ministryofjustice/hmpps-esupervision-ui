@@ -31,12 +31,6 @@ export const personalDetailsSchema = z
     },
   )
 
-export const videoReviewSchema = z.object({
-  videoMeetsRules: z.string({
-    required_error: 'Confirm if this video meets the rules',
-  }),
-})
-
 const validCircumstances = ['homeAddress', 'employmentStatus', 'supportSystem', 'contactDetails', 'none'] as const
 
 export const circumstancesSchema = z
@@ -101,9 +95,15 @@ export const alcoholSchema = z.object({
   }),
 })
 
+export const alcoholUnitsSchema = z.object({
+  alcoholUnits: z.enum(['1to4', '5to8', '9to13', '14ormore'], {
+    required_error: 'Select how many units of alcohol you drink in a week',
+  }),
+})
+
 export const drugsSchema = z.object({
   drugsUse: z.enum(['increased', 'same', 'decreased', 'no'], {
-    required_error: 'Select if your drug use changed since your last check-in',
+    required_error: 'Select if your drug use changed',
   }),
 })
 

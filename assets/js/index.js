@@ -53,8 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const blob = new Blob(recordedChunks, { type: 'video/mp4' })
         video.style.display = 'none'
 
-        console.log(blob)
-
         const formData = new FormData()
         formData.append('video', blob, 'check-in-video.mp4')
 

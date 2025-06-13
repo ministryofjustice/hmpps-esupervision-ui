@@ -1,13 +1,12 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
-
 {% extends "../../../partials/layout.njk" %}
 
 {% set pageTitle = "Record your check-in video" %}
 
 {% block beforeContent %}
-{{ govukBackLink({
+  {{ govukBackLink({
   text: "Back",
   href: "/submission/video/inform"
 }) }}
@@ -15,27 +14,37 @@
 
 {% block content %}
 
-
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Record your check-in video</h1>
-    <p>In your video you must state:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>today's day <strong>{{ todayDay }}</strong></li>
-      <li>today's date <strong>{{ todayDate }}</strong></li>
-    </ul>
-    <div class="es-video">
-      <video class="es-video__video" id="es-video-check-in">
-
-      </video>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Record your check-in video</h1>
+      <p>In your video you must state:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>today's day
+          <strong>{{ todayDay }}</strong>
+        </li>
+        <li>today's date
+          <strong>{{ todayDate }}</strong>
+        </li>
+      </ul>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <div class="es-video" id="es-video-check-in">
+          <div class="es-video__video-wrap">
+            <video class="es-video__video" id="es-video-check-in__video"></video>
+            <video class="es-video__video" id="es-video-check-in__preview"></video>
+            <div class="govuk-tag es-video__tag" id="es-video-check-in__status"></div>
+          </div>
+          <div class="govuk-button-group es-video__controls" id="es-video-check-in__controls">
+            <button id="start-recording" class="govuk-button">Start recording</button>
+            <button id="stop-recording" class="govuk-button govuk-button--secondary">Stop recording</button>
+          </div>
+          <div class="govuk-button-group es-video__navigation" id="es-video-check-in__navigation">
+            <a class="govuk-button" href="/submission/video/review">Continue</a>
+            <a class="govuk-button govuk-button--secondary" href="/submission/video/record">Re-record your video</a>
+          </div>
+        </div>
+      </form>
     </div>
-    {{ govukButton({
-      text: "Continue",
-      href: "/submission/video/review"
-    }) }}
   </div>
-</div>
-
 
 {% endblock %}

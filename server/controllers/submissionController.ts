@@ -2,6 +2,16 @@ import { RequestHandler } from 'express'
 import { format } from 'date-fns'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
 
+export const handleRedirect = (url: string): RequestHandler => {
+  let redirectUrl = url
+  return (req, res) => {
+    if (req.query.checkAnswers === 'true') {
+      redirectUrl = '/submission/check-your-answers'
+    }
+    res.redirect(redirectUrl)
+  }
+}
+
 export const renderIndex: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/submission/index')

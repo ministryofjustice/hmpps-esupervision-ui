@@ -26,12 +26,12 @@
           <strong>{{ todayDate }}</strong>
         </li>
       </ul>
-      <form method="POST">
+      <form method="POST" id="video-check-in">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <div class="es-video" id="es-video-check-in">
           <div class="es-video__video-wrap">
-            <video class="es-video__video" id="es-video-check-in__video"></video>
-            <video class="es-video__video" id="es-video-check-in__preview"></video>
+            <video class="es-video__video" id="es-video-check-in__video">Your browser does not support video</video>
+            <video class="es-video__video" id="es-video-check-in__preview">Your browser does not support video</video>
             <div class="govuk-tag es-video__tag" id="es-video-check-in__status"></div>
           </div>
           <div class="govuk-button-group es-video__controls" id="es-video-check-in__controls">

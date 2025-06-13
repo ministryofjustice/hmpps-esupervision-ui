@@ -90,7 +90,7 @@ export const policeSchema = z
   })
 
 export const alcoholSchema = z.object({
-  alcoholUse: z.enum(['increased', 'same', 'decreased', 'no'], {
+  alcoholUse: z.enum(['increased', 'same', 'decreased', 'no-alcohol'], {
     required_error: 'Select if your alcohol consumption has changed',
   }),
 })
@@ -102,7 +102,7 @@ export const alcoholUnitsSchema = z.object({
 })
 
 export const drugsSchema = z.object({
-  drugsUse: z.enum(['increased', 'same', 'decreased', 'no'], {
+  drugsUse: z.enum(['increased', 'same', 'decreased', 'no-drugs'], {
     required_error: 'Select if your drug use changed',
   }),
 })

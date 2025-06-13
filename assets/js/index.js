@@ -50,11 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       mediaRecorder.onstop = async () => {
-        const blob = new Blob(recordedChunks, { type: 'video/webm' })
+        const blob = new Blob(recordedChunks, { type: 'video/mp4' })
         video.style.display = 'none'
 
+        console.log(blob)
+
         const formData = new FormData()
-        formData.append('video', blob, 'recorded-video.webm')
+        formData.append('video', blob, 'check-in-video.mp4')
 
         const url = URL.createObjectURL(blob)
 

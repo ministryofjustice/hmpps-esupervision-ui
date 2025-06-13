@@ -1,5 +1,16 @@
 import { RequestHandler } from 'express'
 import { format } from 'date-fns'
+import userFriendlyStrings from '../utils/userFriendlyStrings'
+
+export const handleRedirect = (url: string): RequestHandler => {
+  let redirectUrl = url
+  return (req, res) => {
+    if (req.query.checkAnswers === 'true') {
+      redirectUrl = '/submission/check-your-answers'
+    }
+    res.redirect(redirectUrl)
+  }
+}
 
 export const renderIndex: RequestHandler = async (req, res, next) => {
   try {
@@ -87,7 +98,7 @@ export const renderQuestionsAlcohol: RequestHandler = async (req, res, next) => 
 export const handleAlcohol: RequestHandler = async (req, res, next) => {
   const { alcoholUse } = req.body
 
-  if (alcoholUse === 'no') {
+  if (alcoholUse === 'no-alcohol') {
     return res.redirect('/submission/questions/drugs')
   }
 
@@ -135,6 +146,18 @@ export const renderQuestionsCallback: RequestHandler = async (req, res, next) =>
 }
 
 export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
+  const { circumstances, policeContact, alcoholUse, alcoholUnits, drugsUse, physicalHealth, mentalHealth, callback } =
+    res.locals.formData
+
+  res.locals.circumstancesList = extractListItems(circumstances)
+  res.locals.policeContact = userFriendlyStrings(policeContact)
+  res.locals.alcoholUse = userFriendlyStrings(alcoholUse)
+  res.locals.alcoholUnits = extractListItems(alcoholUnits)
+  res.locals.drugsUse = userFriendlyStrings(drugsUse)
+  res.locals.physicalHealth = userFriendlyStrings(physicalHealth)
+  res.locals.mentalHealth = userFriendlyStrings(mentalHealth)
+  res.locals.callback = userFriendlyStrings(callback)
+
   try {
     res.render('pages/submission/check-answers')
   } catch (error) {
@@ -148,4 +171,17 @@ export const renderConfirmation: RequestHandler = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+}
+
+function extractListItems(formItem: string | string[]): string {
+  if (typeof formItem === 'string') {
+    return userFriendlyStrings(formItem)
+  }
+
+  if (Array.isArray(formItem)) {
+    formItem.map(item => userFriendlyStrings(item))
+    return formItem.join(',<br />')
+  }
+
+  return ''
 }

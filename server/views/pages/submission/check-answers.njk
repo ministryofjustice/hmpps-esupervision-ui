@@ -48,91 +48,190 @@
         rows: [
           {
             key: { text: "Have any of these circumstances changed since your last check-in?" },
-            value: { text: "Answer" },
+            value: { html: circumstancesList },
             actions: {
               items: [
                 {
                   href: "/submission/questions/circumstances?checkAnswers=true",
                   text: "Change",
-                  visuallyHiddenText: "answer given"
+                  visuallyHiddenText: "how your circumstances have changed"
                 }
               ]
             }
           },
           {
-            key: { text: "Have you had contact with the Police since your last check-in?" },
-            value: { text: "Answer" },
+            key: { text: "Tell us how your home address changed" },
+            value: { text: formData['homeAddressChanges'] },
+            classes: showIfExists('homeAddress', formData['circumstances']),
             actions: {
               items: [
                 {
-                  href: "/submission/questions/police-contact",
+                  href: "/submission/questions/circumstances?checkAnswers=true",
                   text: "Change",
-                  visuallyHiddenText: "answer given"
+                  visuallyHiddenText: "how your home address has changed"
                 }
               ]
             }
           },
           {
-            key: { text: "Have you had used alcohol since your last check-in?" },
-            value: { text: "Answer" },
+            key: { text: "Tell us how your employment status changed" },
+            value: { text: formData['employmentStatusChanges'] },
+            classes: showIfExists('employmentStatus', formData['circumstances']),
             actions: {
               items: [
                 {
-                  href: "/submission/questions/alcohol",
+                  href: "/submission/questions/circumstances?checkAnswers=true",
                   text: "Change",
-                  visuallyHiddenText: "answer given"
+                  visuallyHiddenText: "how your employment status has changed"
                 }
               ]
             }
           },
           {
-            key: { text: "Have you had used drugs since your last check-in?" },
-            value: { text: "Answer" },
+            key: { text: "Tell us how your support system changed" },
+            value: { text: formData['supportSystemChanges'] },
+            classes: showIfExists('supportSystem', formData['circumstances']),
             actions: {
               items: [
                 {
-                  href: "/submission/questions/drugs",
+                  href: "/submission/questions/circumstances?checkAnswers=true",
                   text: "Change",
-                  visuallyHiddenText: "answer given"
+                  visuallyHiddenText: "how your support system has changed"
                 }
               ]
             }
           },
           {
-            key: { text: "How are you feeling physically?" },
-            value: { text: "Answer" },
+            key: { text: "Tell us how your contact details changed" },
+            value: { text: formData['contactDetailsChanges'] },
+            classes: showIfExists('contactDetails', formData['circumstances']),
             actions: {
               items: [
                 {
-                  href: "/submission/questions/physical-health",
+                  href: "/submission/questions/circumstances?checkAnswers=true",
                   text: "Change",
-                  visuallyHiddenText: "answer given"
+                  visuallyHiddenText: "how your contact details have changed"
                 }
               ]
             }
           },
           {
-            key: { text: "How are you feeling mentally?" },
-            value: { text: "Answer" },
+            key: { text: "Have you had contact with the police since your last check-in?" },
+            value: { text: policeContact },
             actions: {
               items: [
                 {
-                  href: "/submission/questions/mental-health",
+                  href: "/submission/questions/police-contact?checkAnswers=true",
                   text: "Change",
-                  visuallyHiddenText: "answer given"
+                  visuallyHiddenText: "how your contact with the police has changed"
                 }
               ]
             }
           },
           {
-            key: { text: "Would you like to request a callback from your probation practitioner?" },
-            value: { text: "Answer" },
+            key: { text: "Tell us what kind of contact, for example, ‘stop and search’ or ‘I reported a crime’" },
+            value: { text: formData['policeContactDetails'] },
+            classes: showIfExists('Yes', policeContact),
             actions: {
               items: [
                 {
-                  href: "/submission/questions/callback",
+                  href: "/submission/questions/police-contact?checkAnswers=true",
                   text: "Change",
-                  visuallyHiddenText: "answer given"
+                  visuallyHiddenText: "what contact you had with the police"
+                }
+              ]
+            }
+          },
+          {
+            key: { text: "Has your alcohol consumption changed since your last check-in?" },
+            value: { text: alcoholUse },
+        
+            actions: {
+              items: [
+                {
+                  href: "/submission/questions/alcohol?checkAnswers=true",
+                  text: "Change",
+                  visuallyHiddenText: "how your alcohol consumption has changed"
+                }
+              ]
+            }
+          },
+          {
+            key: { text: "How many units of alcohol do you drink in a week?" },
+            classes: showIfExists(formData['alcoholUse'], ['increased', 'same', 'decreased']),
+            value: { text: alcoholUnits },
+            actions: {
+              items: [
+                {
+                  href: "/submission/questions/alcohol-units?checkAnswers=true",
+                  text: "Change",
+                  visuallyHiddenText: "how many units of alcohol you drink in a week"
+                }
+              ]
+            }
+          },
+          {
+            key: { text: "Has your drug use changed since your last check-in?" },
+            value: { text: drugsUse },
+            actions: {
+              items: [
+                {
+                  href: "/submission/questions/drugs?checkAnswers=true",
+                  text: "Change",
+                  visuallyHiddenText: "how your drug use has changed"
+                }
+              ]
+            }
+          },
+          {
+            key: { text: "Do you have any physical health concerns?" },
+            value: { text: physicalHealth },
+            actions: {
+              items: [
+                {
+                  href: "/submission/questions/physical-health?checkAnswers=true",
+                  text: "Change",
+                  visuallyHiddenText: "how your physical health has changed"
+                }
+              ]
+            }
+          },
+          {
+            key: { text: "Tell us about your health concern" },
+            value: { text: formData['physicalHealthDetails'] },
+            classes: showIfExists('Yes', physicalHealth),
+            actions: {
+              items: [
+                {
+                  href: "/submission/questions/physical-health?checkAnswers=true",
+                  text: "Change",
+                  visuallyHiddenText: "how your physical health has changed"
+                }
+              ]
+            }
+          },
+          {
+            key: { text: "How are you feeling?" },
+            value: { text: mentalHealth },
+            actions: {
+              items: [
+                {
+                  href: "/submission/questions/mental-health?checkAnswers=true",
+                  text: "Change",
+                  visuallyHiddenText: "how you are feeling"
+                }
+              ]
+            }
+          },
+          {
+            key: { text: "Do you need to speak to your probation practitioner?" },
+            value: { text: callback },
+            actions: {
+              items: [
+                {
+                  href: "/submission/questions/callback?checkAnswers=true",
+                  text: "Change",
+                  visuallyHiddenText: "whether you need to speak to your probation practitioner"
                 }
               ]
             }

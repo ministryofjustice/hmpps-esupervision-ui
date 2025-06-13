@@ -2,6 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import validateFormData from '../middleware/validateFormData'
 import {
+  handleRedirect,
   handleAlcohol,
   handleVerify,
   renderCheckAnswers,
@@ -47,36 +48,49 @@ export default function routes(): Router {
   get('/video/review', renderVideoReview)
 
   get('/questions/circumstances', renderQuestionsCircumstances)
-  router.post('/questions/circumstances', validateFormData(circumstancesSchema), (req, res) => {
-    res.redirect('/submission/questions/police-contact')
-  })
+  router.post(
+    '/questions/circumstances',
+    validateFormData(circumstancesSchema),
+    handleRedirect('/submission/questions/police-contact'),
+  )
 
   get('/questions/police-contact', renderQuestionsPoliceContact)
-  router.post('/questions/police-contact', validateFormData(policeSchema), (req, res) => {
-    res.redirect('/submission/questions/alcohol')
-  })
+  router.post(
+    '/questions/police-contact',
+    validateFormData(policeSchema),
+    handleRedirect('/submission/questions/alcohol'),
+  )
 
   get('/questions/alcohol', renderQuestionsAlcohol)
   router.post('/questions/alcohol', validateFormData(alcoholSchema), handleAlcohol)
 
   get('/questions/alcohol-units', renderQuestionsAlcoholUnits)
-  router.post('/questions/alcohol-units', validateFormData(alcoholUnitsSchema), (req, res) => {
-    res.redirect('/submission/questions/drugs')
-  })
+  router.post(
+    '/questions/alcohol-units',
+    validateFormData(alcoholUnitsSchema),
+    handleRedirect('/submission/questions/drugs'),
+  )
 
   get('/questions/drugs', renderQuestionsDrugs)
-  router.post('/questions/drugs', validateFormData(drugsSchema), (req, res) => {
-    res.redirect('/submission/questions/physical-health')
-  })
+  router.post(
+    '/questions/drugs',
+    validateFormData(drugsSchema),
+    handleRedirect('/submission/questions/physical-health'),
+  )
 
   get('/questions/physical-health', renderQuestionsPhysicalHealth)
-  router.post('/questions/physical-health', validateFormData(physicalHealthSchema), (req, res) => {
-    res.redirect('/submission/questions/mental-health')
-  })
+  router.post(
+    '/questions/physical-health',
+    validateFormData(physicalHealthSchema),
+    handleRedirect('/submission/questions/mental-health'),
+  )
+
   get('/questions/mental-health', renderQuestionsMentalHealth)
-  router.post('/questions/mental-health', validateFormData(mentalHealthSchema), (req, res) => {
-    res.redirect('/submission/questions/callback')
-  })
+  router.post(
+    '/questions/mental-health',
+    validateFormData(mentalHealthSchema),
+    handleRedirect('/submission/questions/callback'),
+  )
 
   get('/questions/callback', renderQuestionsCallback)
   router.post('/questions/callback', validateFormData(callbackSchema), (req, res) => {

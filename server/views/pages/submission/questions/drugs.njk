@@ -12,7 +12,7 @@
 {% block beforeContent %}
 {{ govukBackLink({
   text: "Back",
-  href: "/submission/questions/alcohol" if formData['alcoholUse'] == "no" else "/submission/questions/alcohol-units" 
+  href: "/submission/questions/alcohol" if formData['alcoholUse'] == "no-alcohol" else "/submission/questions/alcohol-units" 
 }) }}
 {% endblock %}
 
@@ -54,7 +54,7 @@
                 divider: "or"
               },
               {
-                value: "no",
+                value: "no-drugs",
                 text: "I do not take drugs"
               }
             ]

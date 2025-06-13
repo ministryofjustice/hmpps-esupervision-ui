@@ -28,7 +28,7 @@ export default function storeFormDataInSession(): RequestHandler {
       req.session.formData[i] = val
     })
 
-    Object.assign(res.locals.formData, req.session.formData)
+    Object.assign(res.locals.formData || {}, req.session.formData)
 
     next()
   }

@@ -2,6 +2,11 @@ import { RequestHandler } from 'express'
 import { format } from 'date-fns'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
 
+export const handleStart: RequestHandler = async (req, res, next) => {
+  req.session.formData = {}
+  res.redirect('/submission/verify')
+}
+
 export const handleRedirect = (url: string): RequestHandler => {
   let redirectUrl = url
   return (req, res) => {

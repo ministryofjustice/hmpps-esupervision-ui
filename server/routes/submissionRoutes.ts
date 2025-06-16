@@ -2,6 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import validateFormData from '../middleware/validateFormData'
 import {
+  handleStart,
   handleRedirect,
   handleAlcohol,
   handleVerify,
@@ -38,6 +39,8 @@ import {
 export default function routes(): Router {
   const router = Router({ mergeParams: true })
   const get = (routePath: string | string[], handler: RequestHandler) => router.get(routePath, asyncMiddleware(handler))
+
+  router.post('/start', handleStart)
 
   get('/', renderIndex)
   get('/verify', renderVerify)

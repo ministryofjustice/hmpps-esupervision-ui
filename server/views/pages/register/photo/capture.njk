@@ -21,7 +21,7 @@ href: "/register/photo/inform"
     <h1 class="govuk-heading-l">Take a photo of your face</h1>
     <p>Before you take your photo, make sure: </p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>you are in a well lit area</li>
+      <li>you are in a well lit area</li> 
       <li>you are in front of a plain background</li>
       <li>your face is in the frame</li>
     </ul>
@@ -29,6 +29,21 @@ href: "/register/photo/inform"
     text: "Continue",
     href: "/register/photo/review"
     }) }}
+
+    <div class="es-photo-capture" id="video-container">
+      <video id="video" class="es-photo-capture__video"></video>
+      <span class="es-photo-capture__frame"></span>
+    </div>
+
+
+     {{ govukButton({
+        text: "Capture",
+        type: "button",
+        id: "take-photo",
+        classes: "govuk-!-margin-top-4"
+      }) }}
+
+
   </div>
 </div>
 

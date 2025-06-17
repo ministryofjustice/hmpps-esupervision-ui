@@ -20,11 +20,13 @@
       <li>give us your contact details so we can send you future remote check in links </li>
       <li>take a photo of your face</li>
     </ul>
-    {{ govukButton({
-    text: "Start now",
-    href: "/register/personal-details",
-    isStartButton: true
+    <form action="/register/start" method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      {{ govukButton({
+      text: "Start now",
+      isStartButton: true
     }) }}
+      </form>
     <h2 class="govuk-heading-m">If you need help</h2>
     <p>If you have difficulty using this service, or you do not have access to everything you need, you should contact your probation practitioner and let them know. </p>
   </div>

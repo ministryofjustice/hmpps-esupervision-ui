@@ -94,3 +94,46 @@ document.addEventListener('DOMContentLoaded', () => {
     startVideoStream()
   }
 })
+
+document.addEventListener('DOMContentLoaded', () => {
+  async function openCamera() {
+    const videoContainer = document.getElementById('video-container')
+
+    if (videoContainer) {
+      try {
+        const video = document.getElementById('video')
+        const canvas = document.createElement('canvas')
+        const context = canvas.getContext('2d')
+        const constraints = { video: { width: 350, height: 450 } }
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints)
+        video.srcObject = stream
+        video.play()
+
+        // videoContainer.appendChild(video)
+        canvas.width = 350
+        canvas.height = 450
+        videoContainer.appendChild(canvas)
+
+        const takePhotoButton = document.getElementById('take-photo')
+        if (takePhotoButton) {
+          takePhotoButton.addEventListener('click', async () => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+            const dataUrl = canvas.toDataURL('image/jpeg')
+
+            const img = document.createElement('img')
+            img.src = dataUrl
+            videoContainer.innerHTML = ''
+            videoContainer.appendChild(img)
+          })
+        }
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error('Error accessing camera: ', err)
+      }
+    }
+  }
+
+  openCamera()
+})

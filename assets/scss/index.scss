@@ -1,8 +1,8 @@
-$govuk-global-styles: true;
-$path: '/assets/images/';
 
-@import 'govuk-frontend/dist/govuk/index';
-@import '@ministryofjustice/frontend/moj/all';
+@use 'govuk-frontend/dist/govuk/index' with (
+    $govuk-global-styles: true,
+    $govuk-assets-path: '/assets/'
+);
 
-@import './components/all';
-@import './overrides/local';
+@use './components/all';
+@use './overrides/local';

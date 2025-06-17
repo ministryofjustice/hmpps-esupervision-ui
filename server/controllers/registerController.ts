@@ -1,5 +1,20 @@
 import { RequestHandler } from 'express'
 
+export const handleStart: RequestHandler = async (req, res, next) => {
+  req.session.formData = {}
+  res.redirect('/register/personal-details')
+}
+
+export const handleRedirect = (url: string): RequestHandler => {
+  let redirectUrl = url
+  return (req, res) => {
+    if (req.query.checkAnswers === 'true') {
+      redirectUrl = '/register/check-your-answers'
+    }
+    res.redirect(redirectUrl)
+  }
+}
+
 export const renderIndex: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/register/index')
@@ -14,6 +29,10 @@ export const renderPersonalDetails: RequestHandler = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+}
+
+export const handlePersonalDetails: RequestHandler = async (req, res, next) => {
+  return res.redirect('/register/photo/inform')
 }
 
 export const renderPhotoInform: RequestHandler = async (req, res, next) => {

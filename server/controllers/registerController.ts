@@ -10,7 +10,6 @@ export const handleRedirect = (url: string): RequestHandler => {
   let redirectUrl = url
   return (req, res) => {
     if (req.query.checkAnswers === 'true') {
-      console.log(req.query)
       redirectUrl = '/register/check-your-answers'
     }
     res.redirect(redirectUrl)

@@ -2,69 +2,76 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
-
-
 {% extends "../../../partials/layout.njk" %}
 
 {% set pageTitle = "How many units of alcohol do you drink in a week?" %}
 
 {% block beforeContent %}
-{{ govukBackLink({
-  text: "Back",
-  href: "/submission/questions/alcohol"
-}) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/submission/questions/alcohol"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-  {{ errorSummary(validationErrors) }}
+        {{
+          govukRadios({
+              name: "alcoholUnits",
+              errorMessage: validationErrors | findError("alcoholUnits"),
+              value: formData["alcoholUnits"],
+              fieldset: {
+                legend: {
+                  text: "How many units of alcohol do you drink in a week?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--l"
+                }
+              },
+              items: [
+                {
+                  value: "1to4",
+                  text: "1 to 4 units"
+                },
+                {
+                  value: "5to8",
+                  text: "5 to 8 units"
+                },
+                {
+                  value: "9to13",
+                  text: "9 to 13 units"
+                },
+                {
+                  value: "14ormore",
+                  text: "14 or more units"
+                }
+              ]
+          })
+        }}
 
-  <form method="POST">
-  <input type="hidden" name="_csrf" value="{{ csrfToken }}">  
+        <p class="govuk-body">
+          <a
+            href="https://alcoholchange.org.uk/alcohol-facts/interactive-tools/unit-calculator"
+            rel="nofollow"
+            class="govuk-link"
+            target="_blank"
+            >Calculate how many units you drink in a week (opens in new tab)</a
+          >
+        </p>
 
-    {{ govukRadios({
-        name: "alcoholUnits",
-        errorMessage: validationErrors | findError("alcoholUnits"),
-        value: formData["alcoholUnits"], 
-        fieldset: {
-          legend: {
-            text: "How many units of alcohol do you drink in a week?",
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend--l"
-          }
-        },
-        items: [
-          {
-            value: "1to4",
-            text: "1 to 4 units"
-          },
-          {
-            value: "5to8",
-            text: "5 to 8 units"
-          },
-          {
-            value: "9to13",
-            text: "9 to 13 units"
-          },
-          {
-            value: "14ormore",
-            text: "14 or more units"
-          }
-        ]
-    }) }}
-
-    <p class="govuk-body"><a href="https://alcoholchange.org.uk/alcohol-facts/interactive-tools/unit-calculator" rel="nofollow" class="govuk-link" target="_blank">Calculate how many units you drink in a week (opens in new tab)</a></p> 
-
-    {{ govukButton({
-      text: "Continue"
-    }) }}
-
-    </form>
+        {{
+          govukButton({
+            text: "Continue"
+          })
+        }}
+      </form>
+    </div>
   </div>
-</div>
-
-
 {% endblock %}

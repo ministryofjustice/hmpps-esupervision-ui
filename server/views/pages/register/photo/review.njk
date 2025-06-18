@@ -7,57 +7,58 @@
 {% set journeyName = "Sign up for remote check-in" %}
 {% set pageTitle = "Does this photo meet the rules?" %}
 
-
 {% block beforeContent %}
-{{ govukBackLink({
-  text: "Back",
-  href: "/register/photo/capture"
-}) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/register/photo/capture"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-
-    {{ errorSummary(validationErrors) }}
-
-    <h1 class="govuk-heading-l">Does this photo meet the rules?</h1>
-    <p>Make sure: </p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>your photo is well lit</li>
-      <li>you are in front of a plain background</li>
-      <li>your face is in the frame</li>
-    </ul>
-    <form method="POST">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        {{ govukRadios({
-        name: "photoMeetsRules",
-        value: formData["photoMeetsRules"], 
-        errorMessage: validationErrors | findError("photoMeetsRules") | default(null),
-        fieldset: {
-        legend: {
-        text: "Does this photo meet the rules?",
-        classes: "govuk-visually-hidden"
-        }
-        },
-        items: [
-        {
-          value: "yes",
-          text: "Yes, this photo meets the rules"
-        },
-        {
-          value: "no",
-          text: "No, I want to take another photo"
-        }
-      ]
-        }) }}
-        {{ govukButton({
-        text: "Continue"
-    }) }}
-    </form>
+      <h1 class="govuk-heading-l">Does this photo meet the rules?</h1>
+      <p>Make sure:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>your photo is well lit</li>
+        <li>you are in front of a plain background</li>
+        <li>your face is in the frame</li>
+      </ul>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukRadios({
+            name: "photoMeetsRules",
+            value: formData["photoMeetsRules"],
+            errorMessage: validationErrors | findError("photoMeetsRules") | default(null),
+            fieldset: {
+            legend: {
+            text: "Does this photo meet the rules?",
+            classes: "govuk-visually-hidden"
+            }
+            },
+            items: [
+            {
+              value: "yes",
+              text: "Yes, this photo meets the rules"
+            },
+            {
+              value: "no",
+              text: "No, I want to take another photo"
+            }
+          ]
+            })
+        }}
+        {{
+          govukButton({
+              text: "Continue"
+          })
+        }}
+      </form>
+    </div>
   </div>
-</div>
-
-
 {% endblock %}

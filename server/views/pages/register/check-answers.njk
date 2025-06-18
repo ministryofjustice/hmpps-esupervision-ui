@@ -3,162 +3,158 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "../../partials/errorSummary.njk" import errorSummary %}
-
 {% extends "../../partials/layout.njk" %}
 
 {% set journeyName = "Sign up for remote check-in" %}
 {% set pageTitle = "Check your answers" %}
 
 {% block beforeContent %}
-  {{ govukBackLink({
-    text: "Back",
-    href: "/register/contact-details"
-  }) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/register/contact-details"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
-     {{ errorSummary(validationErrors) }}
+      {{ errorSummary(validationErrors) }}
 
       <h1 class="govuk-heading-l">Check your answers</h1>
 
       <h2 class="govuk-heading-m">Personal details</h2>
-      {{ govukSummaryList({
-        rows: [
-          {
-            key: { text: "First name" },
-            value: { text: formData['firstName'] },
-            actions: {
-              items: [
-                {
-                  href: "/register/personal-details?checkAnswers=true",
-                  text: "Change",
-                  visuallyHiddenText: "your first name"
-                }
-              ]
+      {{
+        govukSummaryList({
+          rows: [
+            {
+              key: { text: "First name" },
+              value: { text: formData['firstName'] },
+              actions: {
+                items: [
+                  {
+                    href: "/register/personal-details?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: "your first name"
+                  }
+                ]
+              }
+            },
+            {
+              key: { text: "Last name" },
+              value: { text: formData['lastName'] },
+              actions: {
+                items: [
+                  {
+                    href: "/register/personal-details?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: "your last name"
+                  }
+                ]
+              }
+            },
+            {
+              key: { text: "Date of birth" },
+              value: { text: dateOfBirth },
+              actions: {
+                items: [
+                  {
+                    href: "/register/personal-details?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: "your date of birth"
+                  }
+                ]
+              }
             }
-          },
-          {
-            key: { text: "Last name" },
-            value: { text: formData['lastName'] },
-            actions: {
-              items: [
-                {
-                  href: "/register/personal-details?checkAnswers=true",
-                  text: "Change",
-                  visuallyHiddenText: "your last name"
-                }
-              ]
-            }
-          },
-          {
-            key: { text: "Date of birth" },
-            value: { text: dateOfBirth },
-            actions: {
-              items: [
-                {
-                  href: "/register/personal-details?checkAnswers=true",
-                  text: "Change",
-                  visuallyHiddenText: "your date of birth"
-                }
-              ]
-            }
-          }
-        ]
-      }) }}
+          ]
+        })
+      }}
 
       <h2 class="govuk-heading-m">Photo</h2>
-      {{ govukSummaryList({
-        rows: [
-          {
-            key: { text: "Photo" },
-            value: { text: "[photo]" },
-            actions: {
-              items: [
-                {
-                  href: "/register/photo/capture",
-                  text: "Change",
-                  visuallyHiddenText: "your photo"
-                }
-              ]
+      {{
+        govukSummaryList({
+          rows: [
+            {
+              key: { text: "Photo" },
+              value: { text: "[photo]" },
+              actions: {
+                items: [
+                  {
+                    href: "/register/photo/capture",
+                    text: "Change",
+                    visuallyHiddenText: "your photo"
+                  }
+                ]
+              }
             }
-          }
-        ]
-      }) }}
+          ]
+        })
+      }}
 
       <h2 class="govuk-heading-m">Contact details</h2>
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            How would you like us to send a link to submit your remote check-in?
-          </dt>
-          <dd class="govuk-summary-list__value">
-            {{ contactPreference }}
-          </dd>
+          <dt class="govuk-summary-list__key">How would you like us to send a link to submit your remote check-in?</dt>
+          <dd class="govuk-summary-list__value">{{ contactPreference }}</dd>
           <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="/register/contact-details?checkAnswers=true">Change<span class="govuk-visually-hidden">
-                contact details notification preference</span></a>
+            <a class="govuk-link" href="/register/contact-details?checkAnswers=true"
+              >Change<span class="govuk-visually-hidden"> contact details notification preference</span></a
+            >
           </dd>
         </div>
         {% if formData['contactPreference'] == 'both' or formData['contactPreference'] == 'text' %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Mobile number
-          </dt>
-          <dd class="govuk-summary-list__value">
-            {{ formData['mobile'] }}
-          </dd>
-          <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="/register/contact-details/mobile?checkAnswers=true">Change<span class="govuk-visually-hidden">
-                your mobile number</span></a>
-          </dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Mobile number</dt>
+            <dd class="govuk-summary-list__value">{{ formData['mobile'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/register/contact-details/mobile?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mobile number</span></a
+              >
+            </dd>
+          </div>
         {% endif %}
 
         {% if formData['contactPreference'] == 'both' or formData['contactPreference'] == 'email' %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Email address
-          </dt>
-          <dd class="govuk-summary-list__value">
-            {{ formData['email'] }}
-          </dd>
-          <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="/register/contact-details/email?checkAnswers=true">Change<span class="govuk-visually-hidden">
-                your email address</span></a>
-          </dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Email address</dt>
+            <dd class="govuk-summary-list__value">{{ formData['email'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/register/contact-details/email?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your email address</span></a
+              >
+            </dd>
+          </div>
         {% endif %}
-
       </dl>
 
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-    <form method="POST">  
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{
+          govukCheckboxes({
+            name: "checkAnswers",
+            errorMessage: validationErrors | findError("checkAnswers"),
+            fieldset: {
+              legend: {
+                classes: "govuk-fieldset__legend--m",
+                text: "Submit your information"
+              }
+            },
+            items: [
+              {
+                value: "confirm",
+                text: "I confirm that, to the best of my knowledge, the details I have provided are correct. I understand that this information will be shared with my probation practitioner."
+              }
+            ]
+          })
+        }}
 
-        {{ govukCheckboxes({
-          name: "checkAnswers",
-          errorMessage: validationErrors | findError("checkAnswers"),
-          fieldset: {
-            legend: {
-              classes: "govuk-fieldset__legend--m",
-              text: "Submit your information"
-            }
-          },
-          items: [
-            {
-              value: "confirm",
-              text: "I confirm that, to the best of my knowledge, the details I have provided are correct. I understand that this information will be shared with my probation practitioner."
-            }
-          ]
-        }) }}
-
-        {{ govukButton({
-          text: "Sign up to remote check-in"
-        }) }}
-
+        {{
+          govukButton({
+            text: "Sign up to remote check-in"
+          })
+        }}
       </form>
     </div>
   </div>

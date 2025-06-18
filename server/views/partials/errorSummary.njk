@@ -3,11 +3,11 @@
 {% macro errorSummary(errorList, errorTitle) %}
 
   {% if errorList | length %}
-    {{ govukErrorSummary({
-      titleText: errorTitle if errorTitle else "There is a problem",
-      errorList: errorList
-    }) }}
+    {{
+      govukErrorSummary({
+        titleText: errorTitle if errorTitle else "There is a problem",
+        errorList: errorList
+      })
+    }}
   {% endif %}
-
-
 {% endmacro %}

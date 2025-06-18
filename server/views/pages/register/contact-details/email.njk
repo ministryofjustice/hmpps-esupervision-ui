@@ -1,8 +1,6 @@
-preference.njk
-{% from "govuk/components/button/macro.njk" import govukButton %}
+preference.njk {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../../partials/layout.njk" %}
 
@@ -10,47 +8,48 @@ preference.njk
 {% set title = "What is your email address?" %}
 {% set pageTitle = title %}
 
-
 {% block beforeContent %}
-{{ govukBackLink({
-  text: "Back",
-  href: "/register/contact-details" if formData['contactPreference'] == "email" else "/register/contact-details/mobile" 
-}) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/register/contact-details" if formData['contactPreference'] == "email" else "/register/contact-details/mobile"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      {{ errorSummary(validationErrors) }}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-half">
+      <form method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukInput({
+          label: {
+              text: title,
+              classes: "govuk-label--l",
+              isPageHeading: true
+          },
+          id: "email",
+          name: "email",
+          errorMessage: validationErrors | findError("email") | default(null),
+          value: formData["email"],
+          type: "email",
+          autocomplete: "email",
+          spellcheck: false,
+          hint: {
+              text: "We will use this email address to send you a link each time you need to check in."
+          }
+          })
+        }}
 
-    {{ errorSummary(validationErrors) }}
-
-    <form method="POST" novalidate>
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        {{ govukInput({
-            label: {
-                text: title,
-                classes: "govuk-label--l",
-                isPageHeading: true
-            },
-            id: "email",
-            name: "email",
-            errorMessage: validationErrors | findError("email") | default(null),
-            value: formData["email"],
-            type: "email",
-            autocomplete: "email",
-            spellcheck: false,
-            hint: {
-                text: "We will use this email address to send you a link each time you need to check in."
-            }
-            }) }}
-
-        {{ govukButton({
-        text: "Continue"
-    }) }}
-    </form>
+        {{
+          govukButton({
+              text: "Continue"
+          })
+        }}
+      </form>
+    </div>
   </div>
-</div>
-
-
 {% endblock %}

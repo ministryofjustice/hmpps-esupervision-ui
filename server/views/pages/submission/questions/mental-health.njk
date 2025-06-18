@@ -2,78 +2,79 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
-
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
-
 {% extends "../../../partials/layout.njk" %}
 
 {% set pageTitle = "How are you feeling?" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-{{ govukBackLink({
-  text: "Back",
-  href: "/submission/questions/physical-health"
-}) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/submission/questions/physical-health"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-    {{ errorSummary(validationErrors) }}
-
-    <form method="POST">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
-    {{ govukRadios({
-    name: "mentalHealth",
-    errorMessage: validationErrors | findError("mentalHealth"),
-    value: formData["mentalHealth"],
-    hint: {
-      text: "Think about things like if you have noticed a change in your mood. "
-    },
-    fieldset: {
-    legend: {
-    text: "How are you feeling?",
-    isPageHeading: true,
-    classes: "govuk-fieldset__legend--l"
-    }
-    },
-    items: [
-        {
-          value: "veryWell",
-          text: "Very well"
-        },
-        {
-          value: "well",
-          text: "Well"
-        },
-        {
-          value: "ok",
-          text: "OK"
-        },
-        {
-          value: "notGreat",
-          text: "Not great"
-        },
-        {
-          value: "struggling",
-          text: "Struggling"
-        }
-      ]
-    }) }}
-    {{ govukInsetText({
-      html: 'If you need to speak to someone urgently about how you are feeling, check the <a href="https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/behaviours/help-for-suicidal-thoughts/" class="govuk-link" target="_blank">NHS website for help (opens in new tab)</a>.'
-    }) }}
-    {{ govukButton({
-      text: "Continue"
-    }) }}
-    </form>
-
+        {{
+          govukRadios({
+          name: "mentalHealth",
+          errorMessage: validationErrors | findError("mentalHealth"),
+          value: formData["mentalHealth"],
+          hint: {
+            text: "Think about things like if you have noticed a change in your mood. "
+          },
+          fieldset: {
+          legend: {
+          text: "How are you feeling?",
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+          }
+          },
+          items: [
+              {
+                value: "veryWell",
+                text: "Very well"
+              },
+              {
+                value: "well",
+                text: "Well"
+              },
+              {
+                value: "ok",
+                text: "OK"
+              },
+              {
+                value: "notGreat",
+                text: "Not great"
+              },
+              {
+                value: "struggling",
+                text: "Struggling"
+              }
+            ]
+          })
+        }}
+        {{
+          govukInsetText({
+            html: 'If you need to speak to someone urgently about how you are feeling, check the <a href="https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/behaviours/help-for-suicidal-thoughts/" class="govuk-link" target="_blank">NHS website for help (opens in new tab)</a>.'
+          })
+        }}
+        {{
+          govukButton({
+            text: "Continue"
+          })
+        }}
+      </form>
+    </div>
   </div>
-</div>
-
-
 {% endblock %}

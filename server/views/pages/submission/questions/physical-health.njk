@@ -3,80 +3,80 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
-
-
 {% extends "../../../partials/layout.njk" %}
 
 {% set pageTitle = "Do you have any physical health concerns?" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-{{ govukBackLink({
-  text: "Back",
-  href: "/submission/questions/drugs"
-}) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/submission/questions/drugs"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-
-
-    {{ errorSummary(validationErrors) }}
-
-    {% set physicalHealthDetails %}
-    {{ govukTextarea({
-      name: "physicalHealthDetails",
-      id: "physicalHealthDetails",
-      value: formData["physicalHealthDetails"],
-      errorMessage: validationErrors | findError("physicalHealthDetails"),
-      label: {
-        text: "Tell us about your health concern"
-      }
-    }) }}
-    {% endset -%}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
 
 
-    <form method="POST">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
-    {{ govukRadios({
-      name: "physicalHealth",
-      errorMessage: validationErrors | findError("physicalHealth"),
-      value: formData["physicalHealth"],
-      hint: {
-        text: "For example, a new health concern or a health condition that is getting worse. "
-      },
-      fieldset: {
-        legend: {
-          text: "Do you have any physical health concerns?",
-          isPageHeading: true,
-          classes: "govuk-fieldset__legend--l"
-        }
-      },
-      items: [
-          {
-            value: "yes",
-            text: "Yes",
-            conditional: {
-              html: physicalHealthDetails
+      {% set physicalHealthDetails %}
+        {{
+          govukTextarea({
+            name: "physicalHealthDetails",
+            id: "physicalHealthDetails",
+            value: formData["physicalHealthDetails"],
+            errorMessage: validationErrors | findError("physicalHealthDetails"),
+            label: {
+              text: "Tell us about your health concern"
             }
-          },
-          {
-            value: "no",
-            text: "No"
-          }
-        ]
-    }) }}
+          })
+        }}
+      {% endset -%}
 
-    {{ govukButton({
-      text: "Continue"
-    }) }}
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-    </form>
+        {{
+          govukRadios({
+            name: "physicalHealth",
+            errorMessage: validationErrors | findError("physicalHealth"),
+            value: formData["physicalHealth"],
+            hint: {
+              text: "For example, a new health concern or a health condition that is getting worse. "
+            },
+            fieldset: {
+              legend: {
+                text: "Do you have any physical health concerns?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+                {
+                  value: "yes",
+                  text: "Yes",
+                  conditional: {
+                    html: physicalHealthDetails
+                  }
+                },
+                {
+                  value: "no",
+                  text: "No"
+                }
+              ]
+          })
+        }}
+
+        {{
+          govukButton({
+            text: "Continue"
+          })
+        }}
+      </form>
+    </div>
   </div>
-</div>
-
-
 {% endblock %}

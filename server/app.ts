@@ -1,13 +1,10 @@
 import express from 'express'
 import createError from 'http-errors'
-
 import bodyParser from 'body-parser'
-
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
 // import authorisationMiddleware from './middleware/authorisationMiddleware'
-
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
 // import setUpCurrentUser from './middleware/setUpCurrentUser'
@@ -18,7 +15,6 @@ import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSession from './middleware/setUpWebSession'
 import populateValidationErrors from './middleware/populateValidationErrors'
 import storeFormDataInSession from './middleware/storeFormDataInSession'
-
 import routes from './routes'
 import submissionRoutes from './routes/submissionRoutes'
 import registerRoutes from './routes/registerRoutes'
@@ -48,7 +44,7 @@ export default function createApp(services: Services): express.Application {
   app.use(storeFormDataInSession())
   app.use(populateValidationErrors())
 
-  app.use(routes())
+  app.use(routes(services))
   app.use('/submission', submissionRoutes())
   app.use('/register', registerRoutes())
 

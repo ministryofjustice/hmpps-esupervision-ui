@@ -1,1 +1,56 @@
 preference.njk
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% from "../../../partials/errorSummary.njk" import errorSummary %}
+{% extends "../../../partials/layout.njk" %}
+
+{% set journeyName = "Sign up for remote check-in" %}
+{% set title = "What is your mobile number?" %}
+{% set pageTitle = title %}
+
+
+{% block beforeContent %}
+{{ govukBackLink({
+  text: "Back",
+  href: "/register/contact-details"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {{ errorSummary(validationErrors) }}
+
+    <form method="POST" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukInput({
+            label: {
+                text: title,
+                classes: "govuk-label--l",
+                isPageHeading: true
+            },
+            id: "mobile",
+            name: "mobile",
+            errorMessage: validationErrors | findError("mobile") | default(null),
+            value: formData["mobile"],
+            type: "tel",
+            autocomplete: "tel",
+            classes: "govuk-input--width-20",
+            hint: {
+                text: "We will use this mobile number to send you a link each time you need to check-in."
+            }
+            }) }}
+
+        {{ govukButton({
+        text: "Continue"
+    }) }}
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}

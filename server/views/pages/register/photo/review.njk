@@ -33,6 +33,7 @@
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ govukRadios({
         name: "photoMeetsRules",
+        value: formData["photoMeetsRules"], 
         errorMessage: validationErrors | findError("photoMeetsRules") | default(null),
         fieldset: {
         legend: {

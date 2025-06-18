@@ -3,7 +3,10 @@ import validateFormData from '../middleware/validateFormData'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import {
   handleStart,
-  handlePersonalDetails,
+  handleContactPreferences,
+  handleMobile,
+  handleRedirect,
+  handlePhotoReview,
   renderCheckAnswers,
   renderConfirmation,
   renderContactDetails,
@@ -12,9 +15,18 @@ import {
   renderPhotoCapture,
   renderPhotoInform,
   renderPhotoReview,
+  renderMobile,
+  renderEmail,
 } from '../controllers/registerController'
 
-import { personalDetailsSchema, photoReviewSchema } from '../schemas/registerSchemas'
+import {
+  personalDetailsSchema,
+  photoReviewSchema,
+  contactPreferenceSchema,
+  emailSchema,
+  mobileSchema,
+  checkAnswersSchema,
+} from '../schemas/registerSchemas'
 
 export default function routes(): Router {
   const router = Router({ mergeParams: true })
@@ -24,17 +36,29 @@ export default function routes(): Router {
   router.post('/start', handleStart)
 
   get('/personal-details', renderPersonalDetails)
-  router.post('/personal-details', validateFormData(personalDetailsSchema), handlePersonalDetails)
+  router.post('/personal-details', validateFormData(personalDetailsSchema), handleRedirect('/register/photo/inform'))
 
   get('/photo/inform', renderPhotoInform)
   get('/photo/capture', renderPhotoCapture)
 
   get('/photo/review', renderPhotoReview)
-  router.post('/photo/review', validateFormData(photoReviewSchema), renderContactDetails)
+  router.post('/photo/review', validateFormData(photoReviewSchema), handlePhotoReview)
 
   get('/contact-details', renderContactDetails)
+  router.post('/contact-details', validateFormData(contactPreferenceSchema), handleContactPreferences)
+
+  get('/contact-details/mobile', renderMobile)
+  router.post('/contact-details/mobile', validateFormData(mobileSchema), handleMobile)
+
+  get('/contact-details/email', renderEmail)
+  router.post('/contact-details/email', validateFormData(emailSchema), handleRedirect('/register/check-your-answers'))
 
   get('/check-your-answers', renderCheckAnswers)
+  router.post('/check-your-answers', validateFormData(checkAnswersSchema), (req, res) => {
+    // API call to save submission data would go here
+    // For now, we just redirect to confirmation
+    res.redirect('/register/confirmation')
+  })
   get('/confirmation', renderConfirmation)
 
   return router

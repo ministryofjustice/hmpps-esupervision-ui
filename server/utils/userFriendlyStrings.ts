@@ -42,6 +42,12 @@ export default function userFriendlyStrings(input: string): string {
       return 'Not great'
     case 'struggling':
       return 'Struggling'
+    case 'email':
+      return 'Email'
+    case 'text':
+      return 'Text message'
+    case 'both':
+      return 'Both'
     default:
       return input
   }

@@ -9,17 +9,22 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Sign up for remote check-in</h1>
     <p>You can use this service to sign up for remote check-in as part of your probation. You can only use this service if you have been sent a link by your probation practitioner.</p>
+    <h2 class="govuk-heading-m">Before you start</h2>
     <p>You will need:</p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>a device with a camera and access to the internet</li>
+      <li>access to the internet</li>
+      <li>a device with a camera </li>
       <li>your name and date of birth</li>
-      <li>an email address or phone number</li>
+      <li>a mobile number or email address</li>
     </ul>
-    <p>As part of this service you will be required to: </p>
+    <h2 class="govuk-heading-m">What you need to do</h2>
+    <p>As part of this service you will need to:  </p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>give us your contact details so we can send you future remote check in links </li>
+      <li>give permission to access your device’s camera </li>
       <li>take a photo of your face</li>
+      <li>choose how we will contact you when it’s time to submit a remote check-in</li>
     </ul>
+    <p>Your probation practitioner will check your photo is you. </p>
     <form action="/register/start" method="POST">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ govukButton({

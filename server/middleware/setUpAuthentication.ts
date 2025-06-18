@@ -4,7 +4,7 @@ import { Router } from 'express'
 import { Strategy } from 'passport-oauth2'
 // import { VerificationClient, AuthenticatedRequest } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
-// import { HmppsUser } from '../interfaces/hmppsUser'
+import { HmppsUser } from '../interfaces/hmppsUser'
 import generateOauthClientToken from '../utils/clientCredentials'
 // import logger from '../../logger'
 
@@ -82,10 +82,10 @@ export default function setupAuthentication() {
   //   return res.redirect('/sign-in')
   // })
 
-  // router.use((req, res, next) => {
-  //   res.locals.user = req.user as HmppsUser
-  //   next()
-  // })
+  router.use((req, res, next) => {
+    res.locals.user = req.user as HmppsUser
+    next()
+  })
 
   return router
 }

@@ -3,55 +3,59 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-
 {% extends "../../partials/layout.njk" %}
 
 {% set title = "No match found" %}
 {% set pageTitle = title %}
 
 {% block beforeContent %}
-  {{ govukBackLink({
-    text: "Back",
-    href: "/submission/verify"
-  }) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/submission/verify"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ title }}</h1>
-      <p>
-        We were unable to verify your identity on our system. Check your information for any errors and try again.
-      </p>
+      <p>We were unable to verify your identity on our system. Check your information for any errors and try again.</p>
 
-      {{ govukTable({
-        caption: "Details that were used to verify your identity",
-        captionClasses: "govuk-visually-hidden",
-        firstCellIsHeader: true,
-        rows: [
-          [
-            { text: "First name" },
-            { text: firstName | default("Not provided") }
-          ],
-          [
-            { text: "Last name" },
-            { text: lastName | default("Not provided") }
-          ],
-          [
-            { text: "Date of birth" },
-            { text: dateOfBirth | default("Not provided") }
+      {{
+        govukTable({
+          caption: "Details that were used to verify your identity",
+          captionClasses: "govuk-visually-hidden",
+          firstCellIsHeader: true,
+          rows: [
+            [
+              { text: "First name" },
+              { text: firstName | default("Not provided") }
+            ],
+            [
+              { text: "Last name" },
+              { text: lastName | default("Not provided") }
+            ],
+            [
+              { text: "Date of birth" },
+              { text: dateOfBirth | default("Not provided") }
+            ]
           ]
-        ]
-      }) }}
+        })
+      }}
 
-      {{ govukButton({
-        text: "Try again",
-        href: "/submission/verify"
-      }) }}
+      {{
+        govukButton({
+          text: "Try again",
+          href: "/submission/verify"
+        })
+      }}
 
       <h2 class="govuk-heading-m">Need help?</h2>
       <p>
-        If your information is correct and you are still unable to verify your identity, you must contact your probation practitioner.
+        If your information is correct and you are still unable to verify your identity, you must contact your probation
+        practitioner.
       </p>
     </div>
   </div>

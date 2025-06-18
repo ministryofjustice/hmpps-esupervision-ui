@@ -1,51 +1,48 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-
 {% extends "../../../partials/layout.njk" %}
 
 {% set journeyName = "Sign up for remote check-in" %}
 {% set pageTitle = "Take a photo of your face" %}
 
-
 {% block beforeContent %}
-{{ govukBackLink({
-text: "Back",
-href: "/register/photo/inform"
-}) }}
+  {{
+    govukBackLink({
+    text: "Back",
+    href: "/register/photo/inform"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Take a photo of your face</h1>
+      <p>Before you take your photo, make sure:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>you are in a well lit area</li>
+        <li>you are in front of a plain background</li>
+        <li>your face is in the frame</li>
+      </ul>
+      {{
+        govukButton({
+        text: "Continue",
+        href: "/register/photo/review"
+        })
+      }}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Take a photo of your face</h1>
-    <p>Before you take your photo, make sure: </p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>you are in a well lit area</li> 
-      <li>you are in front of a plain background</li>
-      <li>your face is in the frame</li>
-    </ul>
-    {{ govukButton({
-    text: "Continue",
-    href: "/register/photo/review"
-    }) }}
+      <div class="es-photo-capture" id="video-container">
+        <video id="video" class="es-photo-capture__video"></video>
+        <span class="es-photo-capture__frame"></span>
+      </div>
 
-    <div class="es-photo-capture" id="video-container">
-      <video id="video" class="es-photo-capture__video"></video>
-      <span class="es-photo-capture__frame"></span>
+      {{
+        govukButton({
+          text: "Take photo",
+          type: "button",
+          id: "take-photo"
+        })
+      }}
     </div>
-
-
-     {{ govukButton({
-        text: "Capture",
-        type: "button",
-        id: "take-photo",
-        classes: "govuk-!-margin-top-4"
-      }) }}
-
-
   </div>
-</div>
-
-
 {% endblock %}

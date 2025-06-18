@@ -11,5 +11,6 @@
         "parser": "jinja-template"
       }
     }
-  ]
+  ],
+  "plugins": ["prettier-plugin-jinja-template"]
 }

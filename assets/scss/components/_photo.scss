@@ -1,14 +1,15 @@
 .es-photo-capture {
-  background-color: #000;
-  height: 450px;
-  width: 350px;
-  position: relative;
-  &__video-wrap {
+  &__wrap {
     position: relative;
+    height: 444px;
+    width: 345px;
+    position: relative;
+    background-color: #000;
+    margin-bottom: 1rem;
   }
   &__video {
-    height: 450px;
-    width: 350px;
+    height: 100%;
+    width: 100%;
     z-index: 1;
     display: block;
     object-fit: cover;
@@ -24,5 +25,8 @@
     background-image: url(/assets/images/frame.svg);
     background-repeat: no-repeat;
     background-size: contain;
+  }
+  canvas {
+    display: none;
   }
 }

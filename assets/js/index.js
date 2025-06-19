@@ -96,44 +96,71 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-  async function openCamera() {
-    const videoContainer = document.getElementById('video-container')
+  async function capturePhoto(v) {
+    const videoContainer = document.getElementById('es-photo-capture')
+    const videoError = document.getElementById('es-photo-capture__error')
+    const video = v
 
-    if (videoContainer) {
+    if (videoContainer && video) {
       try {
-        const video = document.getElementById('video')
+        hide(videoError)
+        show(videoContainer)
+
+        const w = 345
+        const h = 444
+
         const canvas = document.createElement('canvas')
         const context = canvas.getContext('2d')
-        const constraints = { video: { width: 350, height: 450 } }
-
+        const constraints = { video: { width: w, height: h } }
         const stream = await navigator.mediaDevices.getUserMedia(constraints)
+        const takePhotoButton = document.getElementById('take-photo')
+
         video.srcObject = stream
         video.play()
 
-        // videoContainer.appendChild(video)
-        canvas.width = 350
-        canvas.height = 450
+        canvas.width = w
+        canvas.height = h
+
         videoContainer.appendChild(canvas)
 
-        const takePhotoButton = document.getElementById('take-photo')
         if (takePhotoButton) {
           takePhotoButton.addEventListener('click', async () => {
-            context.drawImage(video, 0, 0, canvas.width, canvas.height)
-
+            context.drawImage(video, 0, 0, w, h)
             const dataUrl = canvas.toDataURL('image/jpeg')
-
             const img = document.createElement('img')
             img.src = dataUrl
             videoContainer.innerHTML = ''
             videoContainer.appendChild(img)
+
+            window.location.href = '/register/photo/review'
           })
         }
       } catch (err) {
         // eslint-disable-next-line no-console
-        console.error('Error accessing camera: ', err)
+        console.error(err)
+        show(videoError)
+        hide(videoContainer)
       }
     }
   }
 
-  openCamera()
+  const video = document.getElementById('es-photo-capture__video')
+
+  if (video) {
+    capturePhoto(video)
+  }
 })
+
+const show = el => {
+  const element = el
+  element.classList.remove('es-hidden')
+  element.classList.add('es-show')
+  element.ariaHidden = false
+}
+
+const hide = el => {
+  const element = el
+  element.classList.remove('es-show')
+  element.classList.add('es-hidden')
+  element.ariaHidden = true
+}

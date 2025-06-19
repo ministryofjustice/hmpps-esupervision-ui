@@ -3,64 +3,66 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
-
 {% extends "../../../partials/layout.njk" %}
 
 {% set pageTitle = "Do you need to speak to your probation practitioner?" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-{{ govukBackLink({
-  text: "Back",
-  href: "/submission/questions/mental-health"
-}) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/submission/questions/mental-health"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-    {{ errorSummary(validationErrors) }}
-
-    <form method="POST">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
-    {{ govukRadios({
-        name: "callback",
-        errorMessage: validationErrors | findError("callback"),
-        value: formData["callback"],
-        hint: {
-          text: "There may be a delay in your probation practitioner contacting you. "
-        },
-        fieldset: {
-          legend: {
-            text: "Do you need to speak to your probation practitioner?",
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend--l"
-          }
-        },
-        items: [
-        {
-          value: "yes",
-          text: "Yes"
-        },
-        {
-          value: "no",
-          text: "No"
-        }
-      ]
-    }) }}
-    {{ govukInsetText({
-      text: 'If this is urgent, you should contact your probation practitioner yourself. If there is an emergency, call 999.'
-    }) }}
-    {{ govukButton({
-      text: "Continue"
-    }) }}
-
-    </form>
+        {{
+          govukRadios({
+              name: "callback",
+              errorMessage: validationErrors | findError("callback"),
+              value: formData["callback"],
+              hint: {
+                text: "There may be a delay in your probation practitioner contacting you. "
+              },
+              fieldset: {
+                legend: {
+                  text: "Do you need to speak to your probation practitioner?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--l"
+                }
+              },
+              items: [
+              {
+                value: "yes",
+                text: "Yes"
+              },
+              {
+                value: "no",
+                text: "No"
+              }
+            ]
+          })
+        }}
+        {{
+          govukInsetText({
+            text: 'If this is urgent, you should contact your probation practitioner yourself. If there is an emergency, call 999.'
+          })
+        }}
+        {{
+          govukButton({
+            text: "Continue"
+          })
+        }}
+      </form>
+    </div>
   </div>
-</div>
-
-
 {% endblock %}

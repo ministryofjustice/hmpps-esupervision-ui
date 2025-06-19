@@ -2,158 +2,160 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-
-
+{% from "../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../partials/layout.njk" %}
 
 {% set journeyName = "Sign up for remote check-in" %}
 {% set pageTitle = "Check your answers" %}
 
 {% block beforeContent %}
-{{ govukBackLink({
-  text: "Back",
-  href: "/register/contact-details"
-}) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/register/contact-details"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
 
+      <h1 class="govuk-heading-l">Check your answers</h1>
 
+      <h2 class="govuk-heading-m">Personal details</h2>
+      {{
+        govukSummaryList({
+          rows: [
+            {
+              key: { text: "First name" },
+              value: { text: formData['firstName'] },
+              actions: {
+                items: [
+                  {
+                    href: "/register/personal-details?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: "your first name"
+                  }
+                ]
+              }
+            },
+            {
+              key: { text: "Last name" },
+              value: { text: formData['lastName'] },
+              actions: {
+                items: [
+                  {
+                    href: "/register/personal-details?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: "your last name"
+                  }
+                ]
+              }
+            },
+            {
+              key: { text: "Date of birth" },
+              value: { text: dateOfBirth },
+              actions: {
+                items: [
+                  {
+                    href: "/register/personal-details?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: "your date of birth"
+                  }
+                ]
+              }
+            }
+          ]
+        })
+      }}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class ="govuk-heading-l">Check your answers</h1>
+      <h2 class="govuk-heading-m">Photo</h2>
+      {{
+        govukSummaryList({
+          rows: [
+            {
+              key: { text: "Photo" },
+              value: { text: "[photo]" },
+              actions: {
+                items: [
+                  {
+                    href: "/register/photo/capture",
+                    text: "Change",
+                    visuallyHiddenText: "your photo"
+                  }
+                ]
+              }
+            }
+          ]
+        })
+      }}
 
-    <h2 class="govuk-heading-m">Personal details</h2>
+      <h2 class="govuk-heading-m">Contact details</h2>
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">How would you like us to send a link to submit your remote check-in?</dt>
+          <dd class="govuk-summary-list__value">{{ contactPreference }}</dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/register/contact-details?checkAnswers=true"
+              >Change<span class="govuk-visually-hidden"> contact details notification preference</span></a
+            >
+          </dd>
+        </div>
+        {% if formData['contactPreference'] == 'both' or formData['contactPreference'] == 'text' %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Mobile number</dt>
+            <dd class="govuk-summary-list__value">{{ formData['mobile'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/register/contact-details/mobile?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mobile number</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
 
-    {{ govukSummaryList({
-      rows: [
-        {
-          key: {
-            text: "First name"
-          },
-          value: {
-            text: "answer"
-          },
-          actions: {
-              items: [
-                {
-                  href: "/register/personal-details",
-                  text: "Change",
-                  visuallyHiddenText: "your first name"
-                }
-              ]
-          }
-        },
-    {
-    key: {
-    text: "Last name"
-    },
-    value: {
-    text: "answer"
-    },
-    actions: {
-    items: [
-                {
-                  href: "/register/personal-details",
-                  text: "Change",
-                  visuallyHiddenText: "your last name"
-                }
-              ]
-    }
-    },
-    {
-    key: {
-    text: "Date of birth"
-    },
-    value: {
-    text: "answer"
-    },
-    actions: {
-    items: [
-                {
-                  href: "/register/personal-details",
-                  text: "Change",
-                  visuallyHiddenText: "your date of birth"
-                }
-              ]
-    }
-    }
-      ]
-    }) }}
+        {% if formData['contactPreference'] == 'both' or formData['contactPreference'] == 'email' %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Email address</dt>
+            <dd class="govuk-summary-list__value">{{ formData['email'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/register/contact-details/email?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your email address</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+      </dl>
 
-    <h2 class="govuk-heading-m">Photo</h2>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-    {{ govukSummaryList({
-    rows: [
-        {
-          key: {
-            text: "Photo"
-          },
-          value: {
-            text: "photo"
-          },
-          actions: {
-              items: [
-                {
-                  href: "/register/photo/capture",
-                  text: "Change",
-                  visuallyHiddenText: "photo"
-                }
-              ]
-        }
-      }
-    ]
-    }) }}
+        {{
+          govukCheckboxes({
+            name: "checkAnswers",
+            errorMessage: validationErrors | findError("checkAnswers"),
+            fieldset: {
+              legend: {
+                classes: "govuk-fieldset__legend--m",
+                text: "Submit your information"
+              }
+            },
+            items: [
+              {
+                value: "confirm",
+                text: "I confirm that, to the best of my knowledge, the details I have provided are correct. I understand that this information will be shared with my probation practitioner."
+              }
+            ]
+          })
+        }}
 
-    <h2 class="govuk-heading-m">Contact details</h2>
-
-    {{ govukSummaryList({
-    rows: [
-        {
-          key: {
-            text: "How would you like to be notified when to submit a remote check-in?"
-          },
-          value: {
-            text: "Email/Text/Both"
-          },
-          actions: {
-              items: [
-                {
-                  href: "/register/contact-details",
-                  text: "Change",
-                  visuallyHiddenText: "contact details notification preference"
-                }
-              ]
-    }
-    }
-    ]
-    }) }}
-
-    {{ govukCheckboxes({
-    name: "checkAnswers",
-    fieldset: {
-    legend: {
-    classes: "govuk-fieldset__legend--m",
-    text: "Now submit your information"
-    }
-    },
-    items: [
-    {
-      value: "confirm",
-      text: "I confirm that, to be best of my knowledge, the details I have provided are correct."
-    }
-  ]
-    }) }}
-
-
-    {{ govukButton({
-    text: "Submit your information",
-    href: "/register/confirmation"
-    }) }}
-
+        {{
+          govukButton({
+            text: "Sign up to remote check-in"
+          })
+        }}
+      </form>
+    </div>
   </div>
-</div>
-
-
 {% endblock %}

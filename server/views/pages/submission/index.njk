@@ -8,32 +8,36 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">Submit a remote check-in</h1>
-      <p>You can use this service to submit remote check-ins as part of your probation. You can only use this service if you have signed up to remote check-ins.</p>
+      <p>
+        You can use this service to submit remote check-ins as part of your probation. You can only use this service if
+        you have signed up to remote check-ins.
+      </p>
       <p>To submit your remote check in, you will need:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>a device with a camera and access to the internet</li>
         <li>your name and date of birth</li>
         <li>an email address or phone number</li>
       </ul>
-      <p>As part of this service you will be required to:
-      </p>
+      <p>As part of this service you will be required to:</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>give permission to access your device’s camera, microphone and location
-        </li>
+        <li>give permission to access your device’s camera, microphone and location</li>
         <li>record a short video of yourself</li>
         <li>answer a set of questions relating to your probation</li>
       </ul>
       <form action="/submission/start" method="POST">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-      {{ govukButton({
-      text: "Start now",
-      isStartButton: true
-    }) }}
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukButton({
+            text: "Start now",
+            isStartButton: true
+          })
+        }}
       </form>
       <h2 class="govuk-heading-m">If you need help</h2>
-      <p>If you have difficulty using this service, or you do not have access to everything you need, you should contact your probation practitioner and let them know.
+      <p>
+        If you have difficulty using this service, or you do not have access to everything you need, you should contact
+        your probation practitioner and let them know.
       </p>
     </div>
   </div>
-
 {% endblock %}

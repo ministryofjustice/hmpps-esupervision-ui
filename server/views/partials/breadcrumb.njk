@@ -2,35 +2,41 @@
 
 {% macro breadcrumb(pageTitle, breadcrumbList, displayCurrentPageTitle="true") %}
 
-  {% set rows = [ {
+  {%
+    set rows = [ {
     text: "Home",
     href: '/'
     } ]
   %}
 
   {% for item in breadcrumbList %}
-    {% set rows = (rows.push(
-      {
-        text: item.title,
-        href: item.href
-      }
-    ), rows) %}
+    {%
+      set rows = (rows.push(
+        {
+          text: item.title,
+          href: item.href
+        }
+      ), rows)
+    %}
   {% endfor %}
 
   {% if displayCurrentPageTitle %}
-    {% set completedRows = (rows.push(
-      {
-        text: pageTitle
-      }
-    ), rows) %}
+    {%
+      set completedRows = (rows.push(
+        {
+          text: pageTitle
+        }
+      ), rows)
+    %}
   {% else %}
     {% set completedRows = rows %}
   {% endif %}
 
-{{ govukBreadcrumbs({
-  collapseOnMobile: true,
-  items: completedRows,
-  classes: "govuk-!-display-none-print"
-}) }}
-
+  {{
+    govukBreadcrumbs({
+      collapseOnMobile: true,
+      items: completedRows,
+      classes: "govuk-!-display-none-print"
+    })
+  }}
 {% endmacro %}

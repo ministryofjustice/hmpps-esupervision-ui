@@ -10,71 +10,77 @@
 {% set pageTitle = "Personal details" %}
 
 {% block beforeContent %}
-{{ govukBackLink({
-  text: "Back",
-  href: "/register"
-}) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/register"
+    })
+  }}
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
 
+      <h1 class="govuk-heading-l">Personal details</h1>
+      <p>
+        We will use your personal details to sign you up to this service and send you a link to complete each remote
+        check-in.
+      </p>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukInput({
+            label: {
+              text: "First name",
+              classes: "govuk-label--m"
+            },
+            classes: "govuk-!-width-two-thirds",
+            id: "firstName",
+            name: "firstName",
+            autocomplete: "given-name",
+            errorMessage: validationErrors | findError("firstName"),
+            value: formData["firstName"]
+          })
+        }}
 
+        {{
+          govukInput({
+            label: {
+              text: "Last name",
+              classes: "govuk-label--m"
+            },
+            classes: "govuk-!-width-two-thirds",
+            id: "lastName",
+            name: "lastName",
+            autocomplete: "family-name",
+            errorMessage: validationErrors | findError("lastName"),
+            value: formData["lastName"]
+          })
+        }}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+        {{
+          validatedDateInput({
+            id: "dob",
+            title: {
+              text:  "Date of birth",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--m"
+            },
+            validationErrors: validationErrors,
+            day: formData["day"],
+            month: formData["month"],
+            year: formData["year"]
+          })
+        }}
 
-  {{ errorSummary(validationErrors) }}
-
-    <h1 class ="govuk-heading-l">Personal details</h1>
-    <p>We will use your personal details to sign you up to this service and send you a link to complete each remote check-in.</p>
-    <form method="POST">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-      {{ govukInput({
-        label: {
-          text: "First name",
-          classes: "govuk-label--m"
-        },
-        classes: "govuk-!-width-two-thirds",
-        id: "firstName",
-        name: "firstName",
-        autocomplete: "given-name",
-        errorMessage: validationErrors | findError("firstName"),
-        value: formData["firstName"]
-      }) }}
-
-      {{ govukInput({
-        label: {
-          text: "Last name",
-          classes: "govuk-label--m"
-        },
-        classes: "govuk-!-width-two-thirds",
-        id: "lastName",
-        name: "lastName",
-        autocomplete: "family-name",
-        errorMessage: validationErrors | findError("lastName"),
-        value: formData["lastName"]
-      }) }}
-
-       {{ validatedDateInput({
-          id: "dob",
-          title: {
-            text:  "Date of birth",
-            isPageHeading: false,
-            classes: "govuk-fieldset__legend--m"
-          },
-          validationErrors: validationErrors,
-          day: formData["day"],
-          month: formData["month"],
-          year: formData["year"]
-        }) }}
-
-        {{ govukButton({
-          text: "Continue"
-        }) }}
-        
-    </form>
+        {{
+          govukButton({
+            text: "Continue"
+          })
+        }}
+      </form>
+    </div>
   </div>
-</div>
-
-
 {% endblock %}

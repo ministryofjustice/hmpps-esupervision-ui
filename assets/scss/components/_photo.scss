@@ -1,28 +1,32 @@
 .es-photo-capture {
-    background-color: #000;
-    height: 450px;
-    width: 350px;
+  &__wrap {
     position: relative;
-    &__video-wrap {
-        position: relative;
-    }
-    &__video {
-        height: 450px;
-        width: 350px;
-        z-index: 1;
-        display: block;
-        object-fit: cover;
-    }
-    &__frame {
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 2;
-        background-image: url(/assets/images/frame.svg);
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
+    height: 444px;
+    width: 345px;
+    position: relative;
+    background-color: #000;
+    margin-bottom: 1rem;
+  }
+  &__video {
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    display: block;
+    object-fit: cover;
+  }
+  &__frame {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background-image: url(/assets/images/frame.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  canvas {
+    display: none;
+  }
 }

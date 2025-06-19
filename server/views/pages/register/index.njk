@@ -5,37 +5,44 @@
 {% set pageTitle = "Sign up for remote check-in" %}
 
 {% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-  {{ currentDateTime }}
-    <h1 class="govuk-heading-l">Sign up for remote check-in</h1>
-    <p>You can use this service to sign up for remote check-in as part of your probation. You can only use this service if you have been sent a link by your probation practitioner.</p>
-    <h2 class="govuk-heading-m">Before you start</h2>
-    <p>You will need:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>access to the internet</li>
-      <li>a device with a camera </li>
-      <li>your name and date of birth</li>
-      <li>a mobile number or email address</li>
-    </ul>
-    <h2 class="govuk-heading-m">What you need to do</h2>
-    <p>As part of this service you will need to:  </p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>give permission to access your device’s camera </li>
-      <li>take a photo of your face</li>
-      <li>choose how we will contact you when it’s time to submit a remote check-in</li>
-    </ul>
-    <p>Your probation practitioner will check your photo is you. </p>
-    <form action="/register/start" method="POST">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-      {{ govukButton({
-      text: "Start now",
-      isStartButton: true
-    }) }}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ currentDateTime }}
+      <h1 class="govuk-heading-l">Sign up for remote check-in</h1>
+      <p>
+        You can use this service to sign up for remote check-in as part of your probation. You can only use this service
+        if you have been sent a link by your probation practitioner.
+      </p>
+      <h2 class="govuk-heading-m">Before you start</h2>
+      <p>You will need:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>access to the internet</li>
+        <li>a device with a camera</li>
+        <li>your name and date of birth</li>
+        <li>a mobile number or email address</li>
+      </ul>
+      <h2 class="govuk-heading-m">What you need to do</h2>
+      <p>As part of this service you will need to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>give permission to access your device’s camera</li>
+        <li>take a photo of your face</li>
+        <li>choose how we will contact you when it’s time to submit a remote check-in</li>
+      </ul>
+      <p>Your probation practitioner will check your photo is you.</p>
+      <form action="/register/start" method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukButton({
+            text: "Start now",
+            isStartButton: true
+          })
+        }}
       </form>
-    <h2 class="govuk-heading-m">If you need help</h2>
-    <p>If you have difficulty using this service, or you do not have access to everything you need, you should contact your probation practitioner and let them know. </p>
+      <h2 class="govuk-heading-m">If you need help</h2>
+      <p>
+        If you have difficulty using this service, or you do not have access to everything you need, you should contact
+        your probation practitioner and let them know.
+      </p>
+    </div>
   </div>
-</div>
-
 {% endblock %}

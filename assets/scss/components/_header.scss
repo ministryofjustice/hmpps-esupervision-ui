@@ -1,0 +1,148 @@
+@use 'govuk-frontend/dist/govuk/index' as gds;
+
+.hmpps-header {
+  @include gds.govuk-responsive-padding(3, 'top');
+  @include gds.govuk-responsive-padding(3, 'bottom');
+  background-color: gds.govuk-colour('black');
+
+  &__container {
+    @include gds.govuk-width-container;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__logo {
+    @include gds.govuk-responsive-margin(2, 'right');
+    position: relative;
+    top: -2px;
+    fill: gds.govuk-colour('white');
+  }
+
+  &__title {
+    @include gds.govuk-responsive-padding(3, 'right');
+    display: flex;
+    align-items: center;
+
+    &__organisation-name {
+      @include gds.govuk-responsive-margin(2, 'right');
+      @include gds.govuk-font($size: 24, $weight: 'bold');
+      display: flex;
+      align-items: center;
+    }
+
+    &__service-name {
+      display: none;
+      @include gds.govuk-font(24);
+
+      @include gds.govuk-media-query($from: desktop) {
+        display: inline-block;
+      }
+    }
+  }
+
+  &__link {
+    @include gds.govuk-link-common;
+    @include gds.govuk-link-style-default;
+
+    &:link,
+    &:visited,
+    &:active {
+      color: gds.govuk-colour('white');
+      text-decoration: none;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus {
+      color: gds.govuk-colour('black');
+
+      svg {
+        fill: gds.govuk-colour('black');
+      }
+    }
+
+    &__sub-text {
+      @include gds.govuk-font(16);
+      display: none;
+
+      @include gds.govuk-media-query($from: tablet) {
+        display: block;
+      }
+    }
+  }
+
+  &__navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @include gds.govuk-media-query($from: tablet) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    &__item {
+      @include gds.govuk-font(19);
+      margin-bottom: govuk-spacing(1);
+      text-align: right;
+
+      @include gds.govuk-media-query($from: tablet) {
+        @include gds.govuk-responsive-margin(4, 'right');
+        @include gds.govuk-responsive-padding(4, 'right');
+        margin-bottom: 0;
+        border-right: 1px solid gds.govuk-colour('white');
+      }
+
+      a {
+        display: inline-block;
+      }
+
+      &:last-child {
+        margin-right: 0;
+        border-right: 0;
+        padding-right: 0;
+      }
+    }
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.location-bar {
+  @include gds.govuk-width-container;
+  @include gds.govuk-responsive-margin(3, 'bottom');
+  @include gds.govuk-responsive-padding(3, 'top');
+  @include gds.govuk-responsive-padding(3, 'bottom');
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid gds.$govuk-border-colour;
+
+  &__location {
+    @include gds.govuk-font($size: 19, $weight: 'bold');
+    @include gds.govuk-responsive-margin(3, 'right');
+  }
+
+  &__link {
+    @include gds.govuk-link-common;
+    @include gds.govuk-link-style-default;
+    @include gds.govuk-font($size: 19, $weight: 'normal');
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.govuk-phase-banner {
+  @include gds.govuk-width-container;
+  border: none;
+}

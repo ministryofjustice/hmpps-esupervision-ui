@@ -1,4 +1,6 @@
 import { RequestHandler } from 'express'
+import { format } from 'date-fns/format'
+import userFriendlyStrings from '../utils/userFriendlyStrings'
 
 export const handleRedirect = (url: string): RequestHandler => {
   let redirectUrl = url
@@ -104,6 +106,16 @@ export const renderFrequency: RequestHandler = async (req, res, next) => {
 
 export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   try {
+    const { day, month, year, contactPreference, startDateDay, startDateMonth, startDateYear } = res.locals.formData
+
+    res.locals.dateOfBirth = `${day}/${month}/${year}`
+    res.locals.contactPreference = userFriendlyStrings(contactPreference?.toString())
+
+    if (startDateYear) {
+      const startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
+      res.locals.startDate = format(startDate, 'do MMMM yyyy')
+    }
+
     res.render('pages/practitioners/register/check-answers')
   } catch (error) {
     next(error)

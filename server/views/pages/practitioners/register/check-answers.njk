@@ -5,6 +5,11 @@
 {% set section = "register" %}
 
 {% set title = "Persons details" %}
+{%
+  set name = [
+    formData['firstName'], ' ', formData['lastName']
+  ] | join
+%}
 
 {% block beforeContent %}
   {{
@@ -65,6 +70,101 @@
           ]
         })
       }}
+
+      <h2 class="govuk-heading-m">Photo</h2>
+      {{
+        govukSummaryList({
+          rows: [
+            {
+              key: { text: "Photo" },
+              value: { text: "[photo]" },
+              actions: {
+                items: [
+                  {
+                    href: "/practitioners/register/photo",
+                    text: "Change",
+                    visuallyHiddenText: "your photo"
+                  }
+                ]
+              }
+            }
+          ]
+        })
+      }}
+
+      <h2 class="govuk-heading-m">Contact details</h2>
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">How does {{ name }} want us to send a link to submit their remote check-in?</dt>
+          <dd class="govuk-summary-list__value">{{ contactPreference }}</dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/practitioners/register/contact?checkAnswers=true"
+              >Change<span class="govuk-visually-hidden"> contact details notification preference</span></a
+            >
+          </dd>
+        </div>
+        {% if formData['contactPreference'] == 'both' or formData['contactPreference'] == 'text' %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Mobile number</dt>
+            <dd class="govuk-summary-list__value">{{ formData['mobile'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/practitioners/register/contact/mobile?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mobile number</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+
+        {% if formData['contactPreference'] == 'both' or formData['contactPreference'] == 'email' %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Email address</dt>
+            <dd class="govuk-summary-list__value">{{ formData['email'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/practitioners/register/contact/email?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your email address</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+      </dl>
+
+      <h2 class="govuk-heading-m">Check-in settings</h2>
+
+        {{
+        govukSummaryList({
+          rows: [
+            {
+              key: { text: "Start date" },
+              value: { text: startDate },
+              actions: {
+                items: [
+                  {
+                    href: "/practitioners/register/start-date?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: " start date"
+                  }
+                ]
+              }
+            },
+            {
+              key: { text: "Frequency" },
+              value: { text: formData['frequency'] },
+              actions: {
+                items: [
+                  {
+                    href: "/practitioners/register/frequency?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: " frequency"
+                  }
+                ]
+              }
+            }
+          ]
+        })
+      }}
+
+      <a href="/practitioners/dashboard" class="govuk-button">Set up person for remote check-in</a>
+
     </div>
   </div>
 {% endblock %}

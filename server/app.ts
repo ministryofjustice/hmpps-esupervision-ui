@@ -17,7 +17,6 @@ import populateValidationErrors from './middleware/populateValidationErrors'
 import storeFormDataInSession from './middleware/storeFormDataInSession'
 import routes from './routes'
 import submissionRoutes from './routes/submissionRoutes'
-import registerRoutes from './routes/registerRoutes'
 import practitionersRoutes from './routes/practitionersRoutes'
 
 import type { Services } from './services'
@@ -47,7 +46,6 @@ export default function createApp(services: Services): express.Application {
 
   app.use(routes(services))
   app.use('/submission', submissionRoutes())
-  app.use('/register', registerRoutes(services))
   app.use('/practitioners', practitionersRoutes())
 
   app.use((req, res, next) => next(createError(404, 'Not found')))

@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
             videoContainer.innerHTML = ''
             videoContainer.appendChild(img)
 
-            window.location.href = '/register/photo/review'
+            window.location.href = '/practitioners/register/photo/review'
           })
         }
       } catch (err) {

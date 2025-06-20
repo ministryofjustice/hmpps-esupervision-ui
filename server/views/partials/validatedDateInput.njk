@@ -3,16 +3,21 @@
 {% macro validatedDateInput(opts) %}
   {% set id = opts.id %}
   {% set title = opts.title %}
+  {% set prefix = opts.prefix %}
   {% set hintText = opts.hintText %}
 
   {% set day = opts.day %}
   {% set month = opts.month %}
   {% set year = opts.year %}
 
+  {% set dayLabel = prefix + "Day" if prefix  else "day" %}
+  {% set monthLabel = prefix + "Month" if prefix  else "month" %}
+  {% set yearLabel = prefix + "Year" if prefix  else "year" %}
+
   {% if opts.validationErrors %}
-    {% set dayError = opts.validationErrors | findError("day") if opts.validationErrors | findError("day") else '' %}
-    {% set monthError = opts.validationErrors | findError("month") if opts.validationErrors | findError("month") else '' %}
-    {% set yearError = opts.validationErrors | findError("year")  if opts.validationErrors | findError("year") else '' %}
+    {% set dayError = opts.validationErrors | findError(dayLabel) if opts.validationErrors | findError(dayLabel) else '' %}
+    {% set monthError = opts.validationErrors | findError(monthLabel) if opts.validationErrors | findError(monthLabel) else '' %}
+    {% set yearError = opts.validationErrors | findError(yearLabel)  if opts.validationErrors | findError(yearLabel) else '' %}
     {% set dateError = opts.validationErrors | findError(id)  if opts.validationErrors | findError(id) else '' %}
   {% endif %}
 
@@ -42,25 +47,25 @@
       } if dayError or monthError or yearError or dateError else undefined,
       items: [
         {
-          id: 'day',
+          id: dayLabel,
           label: 'Day',
-          name: "day",
+          name: dayLabel,
           classes: 'govuk-input--width-2' + (' govuk-input--error' if dayError),
           value: day,
           autocomplete: 'bday-day'
         },
         {
-          id: 'month',
+          id: monthLabel,
           label: 'Month',
-          name: "month",
+          name: monthLabel,
           classes: 'govuk-input--width-2' + (' govuk-input--error' if monthError),
           value: month,
           autocomplete: 'bday-month'
         },
         {
-          id: 'year',
+          id: yearLabel,
           label: 'Year',
-          name: "year",
+          name: yearLabel,
           classes: 'govuk-input--width-4' + (' govuk-input--error' if yearError),
           value: year,
           autocomplete: 'bday-year'

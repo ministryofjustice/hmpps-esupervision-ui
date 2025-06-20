@@ -1,6 +1,72 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "../../../partials/errorSummary.njk" import errorSummary %}
+{% from "../../../partials/validatedDateInput.njk" import validatedDateInput %}
 {% extends "../layout.njk" %}
 {% set section = "register" %}
 
+{% set title = "Persons details" %}
+
 {% block content %}
-  <h1 class="govuk-heading-l">Register</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <p>We will use the persons details for them to access the remote check-in service.</p>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukInput({
+            label: {
+              text: "First name",
+              classes: "govuk-label--m"
+            },
+            classes: "govuk-!-width-two-thirds",
+            id: "firstName",
+            name: "firstName",
+            errorMessage: validationErrors | findError("firstName"),
+            value: formData["firstName"]
+          })
+        }}
+
+        {{
+          govukInput({
+            label: {
+              text: "Last name",
+              classes: "govuk-label--m"
+            },
+            classes: "govuk-!-width-two-thirds",
+            id: "lastName",
+            name: "lastName",
+            errorMessage: validationErrors | findError("lastName"),
+            value: formData["lastName"]
+          })
+        }}
+
+        {{
+          validatedDateInput({
+            id: "dob",
+            title: {
+              text:  "Date of birth",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--m"
+            },
+            hintText: "For example, 27 3 1995",
+            validationErrors: validationErrors,
+            day: formData["day"],
+            month: formData["month"],
+            year: formData["year"]
+          })
+        }}
+
+        {{
+          govukButton({
+            text: "Continue"
+          })
+        }}
+      </form>
+    </div>
+  </div>
 {% endblock %}

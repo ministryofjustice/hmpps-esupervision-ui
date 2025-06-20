@@ -1,0 +1,70 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% extends "../layout.njk" %}
+{% set section = "register" %}
+
+{% set title = "Persons details" %}
+
+{% block beforeContent %}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/practitioners/register/frequency"
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Check your answers</h1>
+      <h2 class="govuk-heading-m">Personal details</h2>
+      {{
+        govukSummaryList({
+          rows: [
+            {
+              key: { text: "First name" },
+              value: { text: formData['firstName'] },
+              actions: {
+                items: [
+                  {
+                    href: "/practitioners/register?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: " first name"
+                  }
+                ]
+              }
+            },
+            {
+              key: { text: "Last name" },
+              value: { text: formData['lastName'] },
+              actions: {
+                items: [
+                  {
+                    href: "/practitioners/register?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: " last name"
+                  }
+                ]
+              }
+            },
+            {
+              key: { text: "Date of birth" },
+              value: { text: dateOfBirth },
+              actions: {
+                items: [
+                  {
+                    href: "/practitioners/register?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: " date of birth"
+                  }
+                ]
+              }
+            }
+          ]
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}

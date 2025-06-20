@@ -1,0 +1,54 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "../../../partials/errorSummary.njk" import errorSummary %}
+{% from "../../../partials/validatedDateInput.njk" import validatedDateInput %}
+{% extends "../layout.njk" %}
+{% set section = "register" %}
+
+{%
+  set name = [
+    formData['firstName'], ' ', formData['lastName']
+  ] | join
+%}
+{% set title = "When would you like " + name + " to start remote check-ins?" %}
+
+{% block beforeContent %}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/practitioners/register/contact"
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          validatedDateInput({
+            id: "startDate",
+            prefix: "startDate",
+            title: {
+              text: title,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            },
+            hintText: "The person will be sent a notification to submit a remote check-in from this date.",
+            validationErrors: validationErrors,
+            day: formData["startDateDay"],
+            month: formData["startDateMonth"],
+            year: formData["startDateYear"]
+          })
+        }}
+        {{
+          govukButton({
+            text: "Continue"
+          })
+        }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

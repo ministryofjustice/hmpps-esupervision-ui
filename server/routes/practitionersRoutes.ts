@@ -32,7 +32,6 @@ import {
   frequencySchema,
 } from '../schemas/practitionersSchemas'
 
-
 export default function routes(): Router {
   const router = Router({ mergeParams: true })
 

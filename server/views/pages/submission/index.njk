@@ -24,7 +24,7 @@
         <li>record a short video of yourself</li>
         <li>answer a set of questions relating to your probation</li>
       </ul>
-      <form action="/submission/start" method="POST">
+      <form action="/submission/{{submissionId}}/start" method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{
           govukButton({

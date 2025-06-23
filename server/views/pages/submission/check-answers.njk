@@ -28,10 +28,19 @@
 
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Mental health</dt>
+          <dd class="govuk-summary-list__value">{{ formData['mentalHealth'] }}</dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/submission/{{ submissionId }}/questions/mental-health?checkAnswers=true"
+              >Change<span class="govuk-visually-hidden"> your answer on your mental health</span></a
+            >
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Is there anything you need help with?</dt>
           <dd class="govuk-summary-list__value">{{ formData['assistance'] }}</dd>
           <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+            <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
               >Change<span class="govuk-visually-hidden"> if there anything you need help with</span></a
             >
           </dd>
@@ -41,7 +50,7 @@
             <dt class="govuk-summary-list__key">Mental health</dt>
             <dd class="govuk-summary-list__value">{{ formData['mentalHealthSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
               >
             </dd>
@@ -53,7 +62,7 @@
             <dt class="govuk-summary-list__key">Alcohol</dt>
             <dd class="govuk-summary-list__value">{{ formData['alcoholSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
               >
             </dd>
@@ -64,7 +73,7 @@
             <dt class="govuk-summary-list__key">Drugs</dt>
             <dd class="govuk-summary-list__value">{{ formData['drugsSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
               >
             </dd>
@@ -75,7 +84,7 @@
             <dt class="govuk-summary-list__key">Money</dt>
             <dd class="govuk-summary-list__value">{{ formData['moneySupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
               >
             </dd>
@@ -86,7 +95,7 @@
             <dt class="govuk-summary-list__key">Housing</dt>
             <dd class="govuk-summary-list__value">{{ formData['housingSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
               >
             </dd>
@@ -98,7 +107,7 @@
             <dt class="govuk-summary-list__key">Support system</dt>
             <dd class="govuk-summary-list__value">{{ formData['supportSystemSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
               >
             </dd>
@@ -110,7 +119,7 @@
             <dt class="govuk-summary-list__key">Other</dt>
             <dd class="govuk-summary-list__value">{{ formData['otherSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
               >
             </dd>
@@ -121,7 +130,7 @@
           <dt class="govuk-summary-list__key">Contact with practitioner requested</dt>
           <dd class="govuk-summary-list__value">{{ formData['callback'] }}</dd>
           <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="/submission/questions/callback?checkAnswers=true"
+            <a class="govuk-link" href="/submission/{{ submissionId }}/questions/callback?checkAnswers=true"
               >Change<span class="govuk-visually-hidden"> if there anything you need help with</span></a
             >
           </dd>
@@ -132,7 +141,7 @@
             <dt class="govuk-summary-list__key">What needs to be discussed</dt>
             <dd class="govuk-summary-list__value">{{ formData['callbackDetails'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/submission/questions/callback?checkAnswers=true"
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/callback?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
               >
             </dd>

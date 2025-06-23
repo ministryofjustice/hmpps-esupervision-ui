@@ -7,6 +7,7 @@ import {
   handleVerify,
   handleSubmission,
   renderAssistance,
+  renderQuestionsMentalHealth,
   renderCheckAnswers,
   renderConfirmation,
   renderIndex,
@@ -19,6 +20,7 @@ import {
 
 import {
   personalDetailsSchema,
+  mentalHealthSchema,
   assistanceSchema,
   callbackSchema,
   checkAnswersSchema,
@@ -33,6 +35,9 @@ export default function routes(): Router {
   get('/', renderIndex)
   get('/verify', renderVerify)
   router.post('/verify', validateFormData(personalDetailsSchema), handleVerify)
+
+  get('/questions/mental-health', renderQuestionsMentalHealth)
+  router.post('/questions/mental-health', validateFormData(mentalHealthSchema), handleRedirect('/questions/assistance'))
 
   get('/questions/assistance', renderAssistance)
   router.post('/questions/assistance', validateFormData(assistanceSchema), handleRedirect('/questions/callback'))

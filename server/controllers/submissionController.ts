@@ -55,7 +55,7 @@ export const handleVerify: RequestHandler = async (req, res, next) => {
     return res.render('pages/submission/no-match-found', { firstName, lastName, dateOfBirth, submissionId })
   }
 
-  return res.redirect(`/submission/${submissionId}/questions/assistance`)
+  return res.redirect(`/submission/${submissionId}/questions/mental-health`)
 }
 
 export const renderVideoInform: RequestHandler = async (req, res, next) => {
@@ -87,6 +87,14 @@ export const renderVideoReview: RequestHandler = async (req, res, next) => {
     const submissionId = getSubmissionId(req)
 
     res.render('pages/submission/video/review', { todayDate, todayDay, submissionId })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderQuestionsMentalHealth: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/submission/questions/mental-health', pageParams(req))
   } catch (error) {
     next(error)
   }

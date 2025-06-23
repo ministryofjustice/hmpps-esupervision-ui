@@ -4,6 +4,12 @@ import * as mojFrontend from '@ministryofjustice/frontend'
 govukFrontend.initAll()
 mojFrontend.initAll()
 
+// const videoRecorder = document.querySelector('[data-module="videoRecorder"]')
+
+// if (videoRecorder) {
+//   new VideoRecorder(videoRecorder).init()
+// }
+
 document.addEventListener('DOMContentLoaded', () => {
   const videoWrap = document.getElementById('es-video-check-in')
   const video = document.getElementById('es-video-check-in__video')
@@ -31,12 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
     preview.style.display = 'none'
     status.style.display = 'none'
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
       video.srcObject = stream
       video.muted = true
       video.autoplay = true
 
-      mediaRecorder = new MediaRecorder(stream)
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9,opus' })
       mediaRecorder.ondataavailable = event => {
         if (event.data.size > 0) {
           recordedChunks.push(event.data)
@@ -50,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       mediaRecorder.onstop = async () => {
-        const blob = new Blob(recordedChunks, { type: 'video/mp4' })
+        const blob = new Blob(recordedChunks, { type: 'video/webm' })
         video.style.display = 'none'
 
         const formData = new FormData()

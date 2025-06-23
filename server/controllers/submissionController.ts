@@ -42,7 +42,7 @@ export const handleVerify: RequestHandler = async (req, res, next) => {
     return res.render('pages/submission/no-match-found', { firstName, lastName, dateOfBirth })
   }
 
-  return res.redirect('/submission/video/inform')
+  return res.redirect('/submission/questions/assistance')
 }
 
 export const renderVideoInform: RequestHandler = async (req, res, next) => {
@@ -76,67 +76,9 @@ export const renderVideoReview: RequestHandler = async (req, res, next) => {
   }
 }
 
-export const renderQuestionsCircumstances: RequestHandler = async (req, res, next) => {
+export const renderAssistance: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/submission/questions/circumstances')
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const renderQuestionsPoliceContact: RequestHandler = async (req, res, next) => {
-  try {
-    res.render('pages/submission/questions/police-contact')
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const renderQuestionsAlcohol: RequestHandler = async (req, res, next) => {
-  try {
-    res.render('pages/submission/questions/alcohol')
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const handleAlcohol: RequestHandler = async (req, res, next) => {
-  const { alcoholUse } = req.body
-
-  if (alcoholUse === 'no-alcohol') {
-    return res.redirect('/submission/questions/drugs')
-  }
-
-  return res.redirect('/submission/questions/alcohol-units')
-}
-
-export const renderQuestionsAlcoholUnits: RequestHandler = async (req, res, next) => {
-  try {
-    res.render('pages/submission/questions/alcohol-units')
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const renderQuestionsDrugs: RequestHandler = async (req, res, next) => {
-  try {
-    res.render('pages/submission/questions/drugs')
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const renderQuestionsPhysicalHealth: RequestHandler = async (req, res, next) => {
-  try {
-    res.render('pages/submission/questions/physical-health')
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const renderQuestionsMentalHealth: RequestHandler = async (req, res, next) => {
-  try {
-    res.render('pages/submission/questions/mental-health')
+    res.render('pages/submission/questions/assistance')
   } catch (error) {
     next(error)
   }

@@ -31,105 +31,26 @@ export const personalDetailsSchema = z
     },
   )
 
-const validCircumstances = ['homeAddress', 'employmentStatus', 'supportSystem', 'contactDetails', 'none'] as const
+const validCircumstances = [
+  'mentalHealth',
+  'alcohol',
+  'drugs',
+  'money',
+  'housing',
+  'supportSystem',
+  'other',
+  'none',
+] as const
 
-export const circumstancesSchema = z
-  .object({
-    circumstances: z.preprocess(
-      val => {
-        if (typeof val === 'string') return [val]
-        if (Array.isArray(val)) return val
-        return []
-      },
-      z.array(z.enum(validCircumstances)).min(1, 'Select if any of these circumstances have changed'),
-    ),
-    homeAddressChanges: z.string().optional(),
-    employmentStatusChanges: z.string().optional(),
-    supportSystemChanges: z.string().optional(),
-    contactDetailsChanges: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    const { circumstances } = data
-
-    const hasNone = circumstances.includes('none')
-    const selectedOthers = circumstances.filter(c => c !== 'none')
-
-    if (!hasNone) {
-      for (const key of selectedOthers) {
-        const fieldName = `${key}Changes` as keyof typeof data
-        const value = data[fieldName].toString()
-
-        if (!value || value.trim() === '') {
-          ctx.addIssue({
-            path: [fieldName],
-            code: z.ZodIssueCode.custom,
-            message: `Enter how your ${key.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase()} changed`,
-          })
-        }
-      }
-    }
-  })
-
-export const policeSchema = z
-  .object({
-    policeContact: z.enum(['yes', 'no'], {
-      required_error: 'Select yes if you have had contact with the police',
-    }),
-    policeContactDetails: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.policeContact === 'yes') {
-      if (!data.policeContactDetails || data.policeContactDetails.trim() === '') {
-        ctx.addIssue({
-          path: ['policeContactDetails'],
-          code: z.ZodIssueCode.custom,
-          message: 'Enter what kind of contact you have had with the police',
-        })
-      }
-    }
-  })
-
-export const alcoholSchema = z.object({
-  alcoholUse: z.enum(['increased', 'same', 'decreased', 'no-alcohol'], {
-    required_error: 'Select if your alcohol consumption has changed',
-  }),
-})
-
-export const alcoholUnitsSchema = z.object({
-  alcoholUnits: z.enum(['1to4', '5to8', '9to13', '14ormore'], {
-    required_error: 'Select how many units of alcohol you drink in a week',
-  }),
-})
-
-export const drugsSchema = z.object({
-  drugsUse: z.enum(['increased', 'same', 'decreased', 'no-drugs'], {
-    required_error: 'Select if your drug use changed',
-  }),
-})
-
-export const physicalHealthSchema = z
-  .object({
-    physicalHealth: z.enum(['yes', 'no'], {
-      required_error: 'Select yes if you have any physical health concerns',
-    }),
-    physicalHealthDetails: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.physicalHealth === 'yes') {
-      if (!data.physicalHealthDetails || data.physicalHealthDetails.trim() === '') {
-        ctx.addIssue({
-          path: ['physicalHealthDetails'],
-          code: z.ZodIssueCode.custom,
-          message: 'Enter your health concern',
-        })
-      }
-    }
-  })
-
-export const mentalHealthSchema = z.object({
-  mentalHealth: z.enum(['veryWell', 'well', 'ok', 'notGreat', 'struggling'], {
-    required_error: 'Select how you are feeling',
-  }),
+export const assistanceSchema = z.object({
+  assistance: z.preprocess(
+    val => {
+      if (typeof val === 'string') return [val]
+      if (Array.isArray(val)) return val
+      return []
+    },
+    z.array(z.enum(validCircumstances)).min(1, 'Select if you need assistance'),
+  ),
 })
 
 export const callbackSchema = z.object({

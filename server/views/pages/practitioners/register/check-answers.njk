@@ -95,7 +95,9 @@
       <h2 class="govuk-heading-m">Contact details</h2>
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">How does {{ name }} want us to send a link to submit their remote check-in?</dt>
+          <dt class="govuk-summary-list__key">
+            How does {{ name }} want us to send a link to submit their remote check-in?
+          </dt>
           <dd class="govuk-summary-list__value">{{ contactPreference }}</dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/practitioners/register/contact?checkAnswers=true"
@@ -130,7 +132,7 @@
 
       <h2 class="govuk-heading-m">Check-in settings</h2>
 
-        {{
+      {{
         govukSummaryList({
           rows: [
             {
@@ -164,7 +166,6 @@
       }}
 
       <a href="/practitioners/dashboard" class="govuk-button">Set up person for remote check-in</a>
-
     </div>
   </div>
 {% endblock %}

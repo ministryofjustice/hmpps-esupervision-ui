@@ -12,7 +12,7 @@
   {{
     govukBackLink({
       text: "Back",
-      href: "/submission/questions/callback"
+      href: "/submission/video/review"
     })
   }}
 {% endblock %}
@@ -24,224 +24,121 @@
 
       <h1 class="govuk-heading-l">Check your answers</h1>
 
-      <h2 class="govuk-heading-m">Video check-in</h2>
-      {{
-        govukSummaryList({
-          rows: [
-            {
-              key: { text: "Video check" },
-              value: { text: "Identity confirmed" },
-              actions: {
-                items: [
-                  {
-                    href: "/submission/video/review?checkAnswers=true",
-                    text: "View",
-                    visuallyHiddenText: "your video check-in"
-                  }
-                ]
-              }
-            }
-          ]
-        })
-      }}
-
       <h2 class="govuk-heading-m">About you</h2>
-      {{
-        govukSummaryList({
-          rows: [
-            {
-              key: { text: "Have any of these circumstances changed since your last check-in?" },
-              value: { html: circumstancesList },
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/circumstances?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how your circumstances have changed"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Tell us how your home address changed" },
-              value: { text: formData['homeAddressChanges'] },
-              classes: showIfExists('homeAddress', formData['circumstances']),
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/circumstances?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how your home address has changed"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Tell us how your employment status changed" },
-              value: { text: formData['employmentStatusChanges'] },
-              classes: showIfExists('employmentStatus', formData['circumstances']),
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/circumstances?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how your employment status has changed"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Tell us how your support system changed" },
-              value: { text: formData['supportSystemChanges'] },
-              classes: showIfExists('supportSystem', formData['circumstances']),
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/circumstances?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how your support system has changed"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Tell us how your contact details changed" },
-              value: { text: formData['contactDetailsChanges'] },
-              classes: showIfExists('contactDetails', formData['circumstances']),
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/circumstances?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how your contact details have changed"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Have you had contact with the police since your last check-in?" },
-              value: { text: policeContact },
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/police-contact?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how your contact with the police has changed"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Tell us what kind of contact, for example, ‘stop and search’ or ‘I reported a crime’" },
-              value: { text: formData['policeContactDetails'] },
-              classes: showIfExists('Yes', policeContact),
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/police-contact?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "what contact you had with the police"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Has your alcohol consumption changed since your last check-in?" },
-              value: { text: alcoholUse },
 
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/alcohol?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how your alcohol consumption has changed"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "How many units of alcohol do you drink in a week?" },
-              classes: showIfExists(formData['alcoholUse'], ['increased', 'same', 'decreased']),
-              value: { text: alcoholUnits },
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/alcohol-units?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how many units of alcohol you drink in a week"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Has your drug use changed since your last check-in?" },
-              value: { text: drugsUse },
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/drugs?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how your drug use has changed"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Do you have any physical health concerns?" },
-              value: { text: physicalHealth },
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/physical-health?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how your physical health has changed"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Tell us about your health concern" },
-              value: { text: formData['physicalHealthDetails'] },
-              classes: showIfExists('Yes', physicalHealth),
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/physical-health?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how your physical health has changed"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "How are you feeling?" },
-              value: { text: mentalHealth },
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/mental-health?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "how you are feeling"
-                  }
-                ]
-              }
-            },
-            {
-              key: { text: "Do you need to speak to your probation practitioner?" },
-              value: { text: callback },
-              actions: {
-                items: [
-                  {
-                    href: "/submission/questions/callback?checkAnswers=true",
-                    text: "Change",
-                    visuallyHiddenText: "whether you need to speak to your probation practitioner"
-                  }
-                ]
-              }
-            }
-          ]
-        })
-      }}
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Is there anything you need help with?</dt>
+          <dd class="govuk-summary-list__value">{{ formData['assistance'] }}</dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+              >Change<span class="govuk-visually-hidden"> if there anything you need help with</span></a
+            >
+          </dd>
+        </div>
+        {% if formData['mentalHealthSupport'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Mental health</dt>
+            <dd class="govuk-summary-list__value">{{ formData['mentalHealthSupport'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+
+        {% if formData['alcoholSupport'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Alcohol</dt>
+            <dd class="govuk-summary-list__value">{{ formData['alcoholSupport'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+        {% if formData['drugsSupport'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Drugs</dt>
+            <dd class="govuk-summary-list__value">{{ formData['drugsSupport'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+        {% if formData['moneySupport'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Money</dt>
+            <dd class="govuk-summary-list__value">{{ formData['moneySupport'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+        {% if formData['housingSupport'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Housing</dt>
+            <dd class="govuk-summary-list__value">{{ formData['housingSupport'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+
+        {% if formData['supportSystemSupport'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Support system</dt>
+            <dd class="govuk-summary-list__value">{{ formData['supportSystemSupport'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+
+        {% if formData['otherSupport'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Other</dt>
+            <dd class="govuk-summary-list__value">{{ formData['otherSupport'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/questions/assistance?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Contact with practitioner requested</dt>
+          <dd class="govuk-summary-list__value">{{ formData['callback'] }}</dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/submission/questions/callback?checkAnswers=true"
+              >Change<span class="govuk-visually-hidden"> if there anything you need help with</span></a
+            >
+          </dd>
+        </div>
+
+        {% if formData['callbackDetails'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">What needs to be discussed</dt>
+            <dd class="govuk-summary-list__value">{{ formData['callbackDetails'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/questions/callback?checkAnswers=true"
+                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+              >
+            </dd>
+          </div>
+        {% endif %}
+      </dl>
 
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />

@@ -4,6 +4,7 @@ import nunjucks from 'nunjucks'
 import express from 'express'
 import fs from 'fs'
 import { get as getKeypath } from 'lodash'
+import { format } from 'date-fns/format'
 import { initialiseName } from './utils'
 import config from '../config'
 import logger from '../../logger'
@@ -43,6 +44,22 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
+
+  njkEnv.addFilter('gdsDate', (date: string) => {
+    if (!date) {
+      return ''
+    }
+    const d = new Date(date)
+    return format(d, 'd MMMM yyyy')
+  })
+
+  njkEnv.addFilter('gdsDateTime', (date: string) => {
+    if (!date) {
+      return ''
+    }
+    const d = new Date(date)
+    return format(d, "d MMMM yyyy 'at' h:mmaaa")
+  })
 
   njkEnv.addGlobal('checked', function isChecked(name: string, value: string) {
     if (this.ctx.formData === undefined) {

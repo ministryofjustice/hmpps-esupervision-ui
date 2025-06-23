@@ -7,28 +7,40 @@
 
   &__container {
     @include gds.govuk-width-container;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+    & {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 
   &__logo {
     @include gds.govuk-responsive-margin(2, 'right');
-    position: relative;
-    top: -2px;
-    fill: gds.govuk-colour('white');
+
+    & {
+      position: relative;
+      top: -2px;
+      fill: gds.govuk-colour('white');
+    }
   }
 
   &__title {
     @include gds.govuk-responsive-padding(3, 'right');
-    display: flex;
-    align-items: center;
+
+    & {
+      display: flex;
+      align-items: center;
+    }
 
     &__organisation-name {
       @include gds.govuk-responsive-margin(2, 'right');
       @include gds.govuk-font($size: 24, $weight: 'bold');
-      display: flex;
-      align-items: center;
+
+      & {
+        display: flex;
+        align-items: center;
+      }
     }
 
     &__service-name {
@@ -66,7 +78,10 @@
 
     &__sub-text {
       @include gds.govuk-font(16);
-      display: none;
+
+      & {
+        display: none;
+      }
 
       @include gds.govuk-media-query($from: tablet) {
         display: block;
@@ -89,8 +104,11 @@
 
     &__item {
       @include gds.govuk-font(19);
-      margin-bottom: govuk-spacing(1);
-      text-align: right;
+
+      & {
+        margin-bottom: govuk-spacing(1);
+        text-align: right;
+      }
 
       @include gds.govuk-media-query($from: tablet) {
         @include gds.govuk-responsive-margin(4, 'right');
@@ -121,10 +139,13 @@
   @include gds.govuk-responsive-margin(3, 'bottom');
   @include gds.govuk-responsive-padding(3, 'top');
   @include gds.govuk-responsive-padding(3, 'bottom');
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  border-bottom: 1px solid gds.$govuk-border-colour;
+
+  & {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid gds.$govuk-border-colour;
+  }
 
   &__location {
     @include gds.govuk-font($size: 19, $weight: 'bold');
@@ -144,5 +165,8 @@
 
 .govuk-phase-banner {
   @include gds.govuk-width-container;
-  border: none;
+
+  & {
+    border: none;
+  }
 }

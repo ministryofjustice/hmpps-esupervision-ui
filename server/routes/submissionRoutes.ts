@@ -41,9 +41,7 @@ export default function routes(): Router {
   )
 
   get('/questions/callback', renderQuestionsCallback)
-  router.post('/questions/callback', validateFormData(callbackSchema), (req, res) => {
-    res.redirect('/submission/video/inform')
-  })
+  router.post('/questions/callback', validateFormData(callbackSchema), handleRedirect('/submission/video/inform'))
 
   get('/video/inform', renderVideoInform)
   get('/video/record', renderVideoRecord)

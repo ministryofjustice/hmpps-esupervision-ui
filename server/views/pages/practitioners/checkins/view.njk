@@ -1,0 +1,10 @@
+{% extends "../layout.njk" %}
+{% set section = "dashboard" %}
+
+{% set title = "Check-in details" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">{{ checkInId }}</div>
+  </div>
+{% endblock %}

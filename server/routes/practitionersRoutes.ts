@@ -17,6 +17,7 @@ import {
   renderFrequency,
   renderCheckAnswers,
   handleRegister,
+  renderCheckInDetail,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -33,6 +34,7 @@ export default function routes(): Router {
 
   get('/', renderDashboard)
   get('/dashboard', renderDashboard)
+  get('/checkin/:checkInId', renderCheckInDetail)
 
   get('/register', renderRegisterDetails)
   router.post('/register', validateFormData(personsDetailsSchema), handleRedirect('/practitioners/register/photo'))

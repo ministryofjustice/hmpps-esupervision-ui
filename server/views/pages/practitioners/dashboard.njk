@@ -3,4 +3,34 @@
 
 {% block content %}
   <h1 class="govuk-heading-l">Dashboard</h1>
+  {% if checkIns %}
+    <table class="govuk-table">
+      <caption class="govuk-table__caption govuk-table__caption--m">
+        Check-ins
+      </caption>
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header" scope="col">Name</th>
+          <th class="govuk-table__header" scope="col">Check-in date</th>
+          <th class="govuk-table__header" scope="col">Status</th>
+          <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for checkin in checkIns %}
+          <tr>
+            <td class="govuk-table__cell">{{ checkin.offender.firstName }} {{ checkin.offender.lastName }}</td>
+            <td class="govuk-table__cell">{{ checkin.submittedOn | gdsDateTime }}</td>
+            <td class="govuk-table__cell"><span class="govuk-tag">{{ checkin.status }}</span></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">
+              <a href="/practitioners/checkin/{{ checkin.uuid }}" class="govuk-link">View</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <h2 class="govuk-heading-m">Check-ins</h2>
+    <p class="govuk-body">No check-ins found</p>
+  {% endif %}
 {% endblock %}

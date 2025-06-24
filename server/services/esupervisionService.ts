@@ -5,8 +5,8 @@ import Checkin from '../data/models/checkin'
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
 
-  getCheckins(practitionerId: string): Promise<Page<Checkin>> {
-    return this.esupervisionApiClient.getCheckins(practitionerId)
+  getCheckins(): Promise<Page<Checkin>> {
+    return this.esupervisionApiClient.getCheckins()
   }
 
   getCheckin(submissionId: string): Promise<Checkin> {

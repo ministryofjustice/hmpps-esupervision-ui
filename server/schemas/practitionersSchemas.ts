@@ -39,11 +39,14 @@ export const mobileSchema = z.object({
     }),
 })
 
-export const startDateSchema = z
+export const setUpSchema = z
   .object({
     startDateDay: z.coerce.number({ message: 'Enter a valid day' }).positive({ message: 'Enter day' }),
     startDateMonth: z.coerce.number({ message: 'Enter a valid month' }).positive({ message: 'Enter month' }),
     startDateYear: z.coerce.number({ message: 'Enter a valid year' }).positive({ message: 'Enter year' }),
+    frequency: z.string({
+      required_error: 'Choose how often they should submit a check-in',
+    }),
   })
   .refine(
     ({ startDateDay, startDateMonth, startDateYear }) => {
@@ -69,9 +72,3 @@ export const startDateSchema = z
       path: ['startDate'],
     },
   )
-
-export const frequencySchema = z.object({
-  frequency: z.string({
-    required_error: 'Choose how often they should submit a check-in',
-  }),
-})

@@ -1,5 +1,5 @@
 import { RequestHandler, Request } from 'express'
-import { format, isEqual } from 'date-fns'
+import { isEqual } from 'date-fns'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
 
 const getSubmissionId = (req: Request): string => req.params.submissionId
@@ -75,12 +75,7 @@ export const renderVideoInform: RequestHandler = async (req, res, next) => {
 
 export const renderVideoRecord: RequestHandler = async (req, res, next) => {
   try {
-    const now = new Date()
-    const todayDay = format(now, 'EEEE')
-    const todayDate = format(now, 'do MMMM yyyy')
-    const submissionId = getSubmissionId(req)
-
-    res.render('pages/submission/video/record', { todayDate, todayDay, submissionId })
+    res.render('pages/submission/video/record', pageParams(req))
   } catch (error) {
     next(error)
   }
@@ -88,12 +83,7 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
 
 export const renderVideoReview: RequestHandler = async (req, res, next) => {
   try {
-    const now = new Date()
-    const todayDay = format(now, 'EEEE')
-    const todayDate = format(now, 'do MMMM yyyy')
-    const submissionId = getSubmissionId(req)
-
-    res.render('pages/submission/video/review', { todayDate, todayDay, submissionId })
+    res.render('pages/submission/video/review', pageParams(req))
   } catch (error) {
     next(error)
   }
@@ -152,7 +142,7 @@ export const handleSubmission: RequestHandler = (req, res) => {
 
 export const renderConfirmation: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/submission/confirmation')
+    res.render('pages/submission/confirmation', pageParams(req))
   } catch (error) {
     next(error)
   }

@@ -6,7 +6,7 @@
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet" />
 {% endblock %}
 
-{% block pageTitle %}{{ pageTitle | default("Manage remote check-ins") }}{% endblock %}
+{% block pageTitle %}{{ pageTitle | default("Manage online wellbeing checks") }}{% endblock %}
 
 {% block header %}
   <header class="hmpps-header" role="banner">
@@ -72,7 +72,7 @@
 
   {{
     govukServiceNavigation({
-      serviceName: "Manage remote check-ins",
+      serviceName: "Manage online wellbeing checks",
       serviceUrl: "/practitioners",
       navigation: [
         {

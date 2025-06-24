@@ -2,7 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "Record your check-in video" %}
+{% set pageTitle = "Confirm your identity" %}
 
 {% block beforeContent %}
   {{
@@ -16,17 +16,13 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">Record your check-in video</h1>
-      <p>In your video you must state:</p>
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+      <p>In your video:</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>
-          today's day
-          <strong>{{ todayDay }}</strong>
-        </li>
-        <li>
-          today's date
-          <strong>{{ todayDate }}</strong>
-        </li>
+        <li>you do not need to speak</li>
+        <li>don’t worry about how you look</li>
+        <li>make sure your whole face is visible and well lit</li>
+        <li>make sure you are not wearing a hat or sunglasses</li>
       </ul>
       <form method="POST" id="video-check-in">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />

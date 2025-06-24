@@ -14,7 +14,7 @@
     <div class="govuk-grid-column-two-thirds">
       {{ errorSummary(validationErrors) }}
       <h1 class="govuk-heading-l">{{ title }}</h1>
-      <p>We will use the persons details for them to access the remote check-in service.</p>
+      <p>We will use these details to verify the person when they access the service.</p>
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{
@@ -53,7 +53,7 @@
               isPageHeading: false,
               classes: "govuk-fieldset__legend--m"
             },
-            hintText: "For example, 27 3 1995",
+            hintText: "For example, 31 3 1980",
             validationErrors: validationErrors,
             day: formData["day"],
             month: formData["month"],

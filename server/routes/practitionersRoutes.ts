@@ -18,19 +18,18 @@ import {
   renderEmail,
   renderMobile,
   handleMobile,
-  renderStartDate,
-  renderFrequency,
+  renderSetUp,
   renderCheckAnswers,
   handleRegister,
   renderCheckInDetail,
+  renderDashboardFiltered,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
   contactPreferenceSchema,
   mobileSchema,
   emailSchema,
-  startDateSchema,
-  frequencySchema,
+  setUpSchema,
 } from '../schemas/practitionersSchemas'
 
 export default function routes(): Router {
@@ -53,6 +52,7 @@ export default function routes(): Router {
 
   get('/', renderDashboard)
   get('/dashboard', renderDashboard)
+  get('/dashboard/:filter', renderDashboardFiltered)
   get('/checkin/:checkInId', renderCheckInDetail)
 
   get('/register', renderRegisterDetails)
@@ -71,20 +71,13 @@ export default function routes(): Router {
   router.post(
     '/register/contact/email',
     validateFormData(emailSchema),
-    handleRedirect('/practitioners/register/start-date'),
+    handleRedirect('/practitioners/register/set-up'),
   )
 
-  get('/register/start-date', renderStartDate)
+  get('/register/set-up', renderSetUp)
   router.post(
-    '/register/start-date',
-    validateFormData(startDateSchema),
-    handleRedirect('/practitioners/register/frequency'),
-  )
-
-  get('/register/frequency', renderFrequency)
-  router.post(
-    '/register/frequency',
-    validateFormData(frequencySchema),
+    '/register/set-up',
+    validateFormData(setUpSchema),
     handleRedirect('/practitioners/register/check-answers'),
   )
 

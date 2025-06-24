@@ -1,27 +1,48 @@
 {% extends "./layout.njk" %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {% set section = "dashboard" %}
 
 {% block content %}
-  <h1 class="govuk-heading-l">Dashboard</h1>
+  <h1 class="govuk-heading-l">Check-ins</h1>
+  {{
+    mojSubNavigation({
+    label: "Sub navigation",
+    items: [{
+        text: "Need attention",
+        href: "/practitioners/dashboard",
+        active: true if filter == null else false
+      }, {
+        text: "Sent",
+        href: "/practitioners/dashboard/sent",
+        active: true if filter == "sent" else false
+      }, {
+        text: "Reviewed",
+        href: "/practitioners/dashboard/reviewed",
+        active: true if filter == "reviewed" else false
+      }]
+    })
+  }}
   {% if checkIns %}
-    <table class="govuk-table">
+    <table class="govuk-table" data-module="moj-sortable-table">
       <caption class="govuk-table__caption govuk-table__caption--m">
         Check-ins
       </caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-          <th class="govuk-table__header" scope="col">Name</th>
-          <th class="govuk-table__header" scope="col">Check-in date</th>
-          <th class="govuk-table__header" scope="col">Status</th>
+          <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
+          <th class="govuk-table__header" scope="col" aria-sort="none">Received on</th>
+          <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
+          <th class="govuk-table__header" scope="col" aria-sort="none">Flagged</th>
           <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
         </tr>
       </thead>
       <tbody class="govuk-table__body">
-        {% for checkin in checkIns %}
+        {% for checkin in checkIns.content %}
           <tr>
             <td class="govuk-table__cell">{{ checkin.offender.firstName }} {{ checkin.offender.lastName }}</td>
             <td class="govuk-table__cell">{{ checkin.submittedOn | gdsDateTime }}</td>
             <td class="govuk-table__cell"><span class="govuk-tag">{{ checkin.status }}</span></td>
+            <td class="govuk-table__cell"></td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
               <a href="/practitioners/checkin/{{ checkin.uuid }}" class="govuk-link">View</a>
             </td>

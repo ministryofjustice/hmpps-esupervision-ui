@@ -6,8 +6,8 @@
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "Do you need to speak to your probation practitioner?" %}
-{% set mainClasses = "app-container govuk-body" %}
+{% set title = "Is there anything else you need to speak with your probation practitioner about?" %}
+{% set pageTitle = title %}
 
 {% block beforeContent %}
   {{
@@ -47,11 +47,11 @@
               errorMessage: validationErrors | findError("callback"),
               value: formData["callback"],
               hint: {
-                text: "There may be a delay in your probation practitioner contacting you. "
+                text: "There may be a delay in your probation practitioner contacting you. They may refer you to support services if you have asked for help. "
               },
               fieldset: {
                 legend: {
-                  text: "Do you need to speak to your probation practitioner?",
+                  text: title,
                   isPageHeading: true,
                   classes: "govuk-fieldset__legend--l"
                 }

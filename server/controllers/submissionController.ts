@@ -1,15 +1,9 @@
 import { RequestHandler, Request } from 'express'
-import { format } from 'date-fns'
+import { format, isEqual } from 'date-fns'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
 import { services } from '../services'
 
 const { esupervisionService } = services()
-const getSubmissionId = (req: Request): string => req.params.submissionId
-const pageParams = (req: Request): Record<string, string> => {
-  return {
-    submissionId: getSubmissionId(req),
-  }
-}
 
 const getSubmissionId = (req: Request): string => req.params.submissionId
 const pageParams = (req: Request): Record<string, string> => {
@@ -55,18 +49,22 @@ export const renderVerify: RequestHandler = async (req, res, next) => {
 }
 
 export const handleVerify: RequestHandler = async (req, res, next) => {
+  const { submissionId } = req.params
   const { firstName, lastName, day, month, year } = req.body
-  const dateOfBirth = `${day}/${month}/${year}`
-  const { submissionId } = req.params
+  const dateOfBirth = new Date(`${year}-${month}-${day} 00:00 UTC`)
 
-  const { submissionId } = req.params
-  const response = await esupervisionService.getCheckin(submissionId)
+  const checkIn = await esupervisionService.getCheckin(submissionId)
 
-  // Check if details match
-  if (firstName === 'John') {
+  const { offender } = checkIn
+  const offDob = new Date(`${offender.dateOfBirth} 00:00 UTC`)
+  const isMatch =
+    offender.firstName.toLocaleLowerCase() === firstName.toLocaleLowerCase() &&
+    offender.lastName.toLocaleLowerCase() === lastName.toLocaleLowerCase() &&
+    isEqual(offDob, dateOfBirth)
+
+  if (!isMatch) {
     return res.render('pages/submission/no-match-found', { firstName, lastName, dateOfBirth, submissionId })
   }
-
   return res.redirect(`/submission/${submissionId}/questions/mental-health`)
 }
 

@@ -25,6 +25,7 @@
         <li>the person is in front of a plain background</li>
         <li>the persons face is in the frame</li>
         <li>there is no other person in the photo</li>
+        <li>the person is not wearing a hat or sunglasses</li>
       </ul>
 
       <div class="es-photo-capture es-hidden" id="es-photo-capture">
@@ -34,7 +35,7 @@
         </div>
         {{
           govukButton({
-            text: "Take photo",
+            text: "Continue to take photo",
             type: "button",
             id: "take-photo"
           })
@@ -46,7 +47,7 @@
           <h2 class="govuk-heading-m es-heading--error">Permissions</h2>
           <p>We are unable to access your camera to take a photo. Check your browser settings and permissions.</p>
         </div>
-        <button class="govuk-button" disabled>Take photo</button>
+        <button class="govuk-button" disabled>Continue to take photo</button>
       </div>
     </div>
   </div>

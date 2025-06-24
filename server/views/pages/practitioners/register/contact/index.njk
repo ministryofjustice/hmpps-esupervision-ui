@@ -6,7 +6,7 @@
 {% set section = "register" %}
 
 {% set name = [formData['firstName'], ' ', formData['lastName']]  | join %}
-{% set title = "How does " + name + " want us to send a link to submit their remote check-in?" %}
+{% set title = "How should we send the link to the service?" %}
 
 {% block beforeContent %}
   {{
@@ -37,7 +37,7 @@
               }
             },
             hint: {
-              text: "We will use these details to send a link to " + name + " when they are due to submit a remote check-in, and to them send confirmation that they have submitted a remote check-in. "
+              text: "We will use these details to send a link to " + name + " each time they need to submit an online wellness check."
             },
             items: [
               {

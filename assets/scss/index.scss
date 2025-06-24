@@ -3,5 +3,7 @@
   $govuk-assets-path: '/assets/'
 );
 
+@use '@ministryofjustice/frontend/moj/all' as moj;
+
 @use './components/all';
 @use './overrides/local';

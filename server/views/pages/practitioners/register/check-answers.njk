@@ -15,7 +15,7 @@
   {{
     govukBackLink({
       text: "Back",
-      href: "/practitioners/register/frequency"
+      href: "/practitioners/register/set-up"
     })
   }}
 {% endblock %}
@@ -95,9 +95,7 @@
       <h2 class="govuk-heading-m">Contact details</h2>
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            How does {{ name }} want us to send a link to submit their remote check-in?
-          </dt>
+          <dt class="govuk-summary-list__key">How does {{ name }} want us to send a link?</dt>
           <dd class="govuk-summary-list__value">{{ contactPreference }}</dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/practitioners/register/contact?checkAnswers=true"
@@ -111,7 +109,7 @@
             <dd class="govuk-summary-list__value">{{ formData['mobile'] }}</dd>
             <dd class="govuk-summary-list__actions">
               <a class="govuk-link" href="/practitioners/register/contact/mobile?checkAnswers=true"
-                >Change<span class="govuk-visually-hidden"> your mobile number</span></a
+                >Change<span class="govuk-visually-hidden"> the mobile number</span></a
               >
             </dd>
           </div>
@@ -123,7 +121,7 @@
             <dd class="govuk-summary-list__value">{{ formData['email'] }}</dd>
             <dd class="govuk-summary-list__actions">
               <a class="govuk-link" href="/practitioners/register/contact/email?checkAnswers=true"
-                >Change<span class="govuk-visually-hidden"> your email address</span></a
+                >Change<span class="govuk-visually-hidden"> the email address</span></a
               >
             </dd>
           </div>
@@ -141,7 +139,7 @@
               actions: {
                 items: [
                   {
-                    href: "/practitioners/register/start-date?checkAnswers=true",
+                    href: "/practitioners/register/set-up?checkAnswers=true",
                     text: "Change",
                     visuallyHiddenText: " start date"
                   }
@@ -154,7 +152,7 @@
               actions: {
                 items: [
                   {
-                    href: "/practitioners/register/frequency?checkAnswers=true",
+                    href: "/practitioners/register/set-up?checkAnswers=true",
                     text: "Change",
                     visuallyHiddenText: " frequency"
                   }
@@ -165,7 +163,7 @@
         })
       }}
 
-      <a href="/practitioners/dashboard" class="govuk-button">Set up person for remote check-in</a>
+      <a href="/practitioners/dashboard" class="govuk-button">Confirm and sign-up</a>
     </div>
   </div>
 {% endblock %}

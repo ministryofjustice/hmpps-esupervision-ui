@@ -1,18 +1,73 @@
 {% extends "./layout.njk" %}
 {% set section = "dashboard" %}
 
+{%
+  set checkIns = [
+  {
+        "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "status": "CREATED",
+        "dueDate": "2025-06-24T18:29:27.582Z",
+        "offender": {
+          "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "firstName": "string",
+          "lastName": "string",
+          "dateOfBirth": "2025-06-24",
+          "status": "INITIAL",
+          "createdAt": "2025-06-24T18:29:27.582Z",
+          "email": "string",
+          "phoneNumber": "string",
+          "photoUrl": "string"
+        },
+        "submittedOn": "2025-06-24T18:29:27.582Z",
+        "questions": "string",
+        "answers": "string",
+        "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "createdAt": "2025-06-24T18:29:27.582Z",
+        "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "videoUrl": "string",
+        "autoIdCheck": "MATCH",
+        "manualIdCheck": "MATCH"
+      },
+      {
+            "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "status": "CREATED",
+            "dueDate": "2025-06-24T18:29:27.582Z",
+            "offender": {
+              "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+              "firstName": "string",
+              "lastName": "string",
+              "dateOfBirth": "2025-06-24",
+              "status": "INITIAL",
+              "createdAt": "2025-06-24T18:29:27.582Z",
+              "email": "string",
+              "phoneNumber": "string",
+              "photoUrl": "string"
+            },
+            "submittedOn": "2025-05-12T18:29:27.582Z",
+            "questions": "string",
+            "answers": "string",
+            "createdBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "createdAt": "2025-06-24T18:29:27.582Z",
+            "reviewedBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "videoUrl": "string",
+            "autoIdCheck": "MATCH",
+            "manualIdCheck": "MATCH"
+          }
+  ]
+%}
+
 {% block content %}
   <h1 class="govuk-heading-l">Dashboard</h1>
   {% if checkIns %}
-    <table class="govuk-table">
+    <table class="govuk-table" data-module="moj-sortable-table">
       <caption class="govuk-table__caption govuk-table__caption--m">
         Check-ins
       </caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-          <th class="govuk-table__header" scope="col">Name</th>
-          <th class="govuk-table__header" scope="col">Check-in date</th>
-          <th class="govuk-table__header" scope="col">Status</th>
+          <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
+          <th class="govuk-table__header" scope="col" aria-sort="none">Check-in date</th>
+          <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
           <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
         </tr>
       </thead>

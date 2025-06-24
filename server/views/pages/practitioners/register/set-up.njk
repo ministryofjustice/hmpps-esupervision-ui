@@ -1,5 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
 {% from "../../../partials/validatedDateInput.njk" import validatedDateInput %}
 {% extends "../layout.njk" %}
@@ -10,7 +11,7 @@
     formData['firstName'], ' ', formData['lastName']
   ] | join
 %}
-{% set title = "When would you like " + name + " to start remote check-ins?" %}
+{% set title = "Set up online wellbeing checks" %}
 
 {% block beforeContent %}
   {{
@@ -25,6 +26,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ errorSummary(validationErrors) }}
+      <h1 class="govuk-heading-l">{{ title }}</h1>
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{
@@ -32,15 +34,43 @@
             id: "startDate",
             prefix: "startDate",
             title: {
-              text: title,
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--l"
+              text: "When would you like " + name + " to start remote check-ins?",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--m"
             },
-            hintText: "The person will be sent a notification to submit a remote check-in from this date.",
+            hintText: "The person will be sent a notification to use the service from this date.",
             validationErrors: validationErrors,
             day: formData["startDateDay"],
             month: formData["startDateMonth"],
             year: formData["startDateYear"]
+          })
+        }}
+        {{
+          govukRadios({
+            name: "frequency",
+            errorMessage: validationErrors | findError("frequency") | default(null),
+            value: formData["frequency"],
+            fieldset: {
+              legend: {
+                text: "How often would you like " + name + " to submit an online wellbeing check?",
+                isPageHeading: false,
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            items: [
+              {
+                value: "weekly",
+                text: "Every weekly"
+              },
+              {
+                value: "2weeks",
+                text: "Every 2 weeks"
+              },
+              {
+                value: "4weeks",
+                text: "Every 4 weeks"
+              }
+            ]
           })
         }}
         {{

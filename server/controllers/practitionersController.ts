@@ -1,6 +1,9 @@
 import { RequestHandler } from 'express'
 import { format } from 'date-fns/format'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
+import { services } from '../services'
+
+// const { esupervisionService } = services()
 
 export const handleRedirect = (url: string): RequestHandler => {
   let redirectUrl = url
@@ -13,6 +16,7 @@ export const handleRedirect = (url: string): RequestHandler => {
 }
 
 export const renderDashboard: RequestHandler = async (req, res, next) => {
+  // const checkIns = await esupervisionService.getCheckins()
   try {
     res.render('pages/practitioners/dashboard')
   } catch (error) {
@@ -97,17 +101,9 @@ export const renderEmail: RequestHandler = async (req, res, next) => {
   }
 }
 
-export const renderStartDate: RequestHandler = async (req, res, next) => {
+export const renderSetUp: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/start-date')
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const renderFrequency: RequestHandler = async (req, res, next) => {
-  try {
-    res.render('pages/practitioners/register/frequency')
+    res.render('pages/practitioners/register/set-up')
   } catch (error) {
     next(error)
   }

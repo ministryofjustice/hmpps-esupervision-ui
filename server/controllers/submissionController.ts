@@ -1,6 +1,15 @@
-import { RequestHandler } from 'express'
+import { RequestHandler, Request } from 'express'
 import { format } from 'date-fns'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
+import { services } from '../services'
+
+const { esupervisionService } = services()
+const getSubmissionId = (req: Request): string => req.params.submissionId
+const pageParams = (req: Request): Record<string, string> => {
+  return {
+    submissionId: getSubmissionId(req),
+  }
+}
 
 export const handleStart: RequestHandler = async (req, res, next) => {
   req.session.formData = {}
@@ -27,7 +36,7 @@ export const renderIndex: RequestHandler = async (req, res, next) => {
 
 export const renderVerify: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/submission/verify')
+    res.render('pages/submission/verify', pageParams(req))
   } catch (error) {
     next(error)
   }
@@ -36,6 +45,9 @@ export const renderVerify: RequestHandler = async (req, res, next) => {
 export const handleVerify: RequestHandler = async (req, res, next) => {
   const { firstName, lastName, day, month, year } = req.body
   const dateOfBirth = `${day}/${month}/${year}`
+
+  const { submissionId } = req.params
+  const response = await esupervisionService.getCheckin(submissionId)
 
   // Check if details match
   if (firstName === 'John') {

@@ -17,7 +17,7 @@
   {{
     govukServiceNavigation({
     serviceName: journeyName | default(applicationName),
-    serviceUrl: "/register" if journeyName == "Sign up for remote check-in" else "/submission"
+    serviceUrl: "/register" if journeyName == "Sign up for remote check-in" else "/submission/" + submissionId
     })
   }}
 {% endblock %}

@@ -4,22 +4,24 @@
 
 {% block content %}
   <h1 class="govuk-heading-l">Check-ins</h1>
-  {{ mojSubNavigation({
-  label: "Sub navigation",
-  items: [{
-      text: "Need attention",
-      href: "/practitioners/dashboard",
-      active: true if filter == null else false
-    }, {
-      text: "Sent",
-      href: "/practitioners/dashboard/sent",
-      active: true if filter == "sent" else false
-    }, {
-      text: "Reviewed",
-      href: "/practitioners/dashboard/reviewed",
-      active: true if filter == "reviewed" else false
-    }]
-  }) }}
+  {{
+    mojSubNavigation({
+    label: "Sub navigation",
+    items: [{
+        text: "Need attention",
+        href: "/practitioners/dashboard",
+        active: true if filter == null else false
+      }, {
+        text: "Sent",
+        href: "/practitioners/dashboard/sent",
+        active: true if filter == "sent" else false
+      }, {
+        text: "Reviewed",
+        href: "/practitioners/dashboard/reviewed",
+        active: true if filter == "reviewed" else false
+      }]
+    })
+  }}
   {% if checkIns %}
     <table class="govuk-table" data-module="moj-sortable-table">
       <caption class="govuk-table__caption govuk-table__caption--m">

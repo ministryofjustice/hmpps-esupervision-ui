@@ -1,8 +1,7 @@
 import { RequestHandler } from 'express'
 import { format } from 'date-fns/format'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
-import { services } from '../services'
-
+// import { services } from '../services'
 // const { esupervisionService } = services()
 
 export const handleRedirect = (url: string): RequestHandler => {

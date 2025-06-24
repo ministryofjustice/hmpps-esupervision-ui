@@ -7,23 +7,30 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">Submit a remote check-in</h1>
+      <h1 class="govuk-heading-l">Submit an online wellbeing check</h1>
       <p>
-        You can use this service to submit remote check-ins as part of your probation. You can only use this service if
-        you have signed up to remote check-ins.
+        You can use this service to submit online wellbeing checks as part of your probation. Your probation
+        practitioner will have signed you up for this service during a face to face appointment.
       </p>
-      <p>To submit your remote check in, you will need:</p>
+      <h2 class="govuk-heading-m">Before you start</h2>
+      <p>You will need:</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>a device with a camera and access to the internet</li>
+        <li>access to the internet</li>
+        <li>a device with a camera</li>
         <li>your name and date of birth</li>
-        <li>an email address or phone number</li>
       </ul>
-      <p>As part of this service you will be required to:</p>
+      <h2 class="govuk-heading-m">What you need to do</h2>
+      <p>As part of this service you will need to:</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>give permission to access your device’s camera, microphone and location</li>
-        <li>record a short video of yourself</li>
-        <li>answer a set of questions relating to your probation</li>
+        <li>answer a set of questions relating to your wellbeing</li>
+        <li>give permission to access your device’s camera</li>
+        <li>record a short video of yourself so we can check it’s you using the service</li>
       </ul>
+      <p>
+        We will use your video to confirm who you are. We will do this by comparing it with the photo your probation
+        practitioner took when they signed you up.
+      </p>
+      <p>The answers to your questions will be sent to your probation practitioner to review.</p>
       <form action="/submission/{{ submissionId }}/start" method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{

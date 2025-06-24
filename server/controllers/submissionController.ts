@@ -1,9 +1,6 @@
 import { RequestHandler, Request } from 'express'
 import { format, isEqual } from 'date-fns'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
-import { services } from '../services'
-
-const { esupervisionService } = services()
 
 const getSubmissionId = (req: Request): string => req.params.submissionId
 const pageParams = (req: Request): Record<string, string> => {

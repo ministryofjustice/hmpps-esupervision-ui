@@ -1,9 +1,6 @@
 import { RequestHandler } from 'express'
 import { format } from 'date-fns/format'
-import { services } from '../services'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
-
-const { esupervisionService } = services()
 
 export const handleRedirect = (url: string): RequestHandler => {
   let redirectUrl = url
@@ -17,8 +14,7 @@ export const handleRedirect = (url: string): RequestHandler => {
 
 export const renderDashboard: RequestHandler = async (req, res, next) => {
   try {
-    const time = await esupervisionService.getCurrentTime()
-    res.render('pages/practitioners/dashboard', { time })
+    res.render('pages/practitioners/dashboard')
   } catch (error) {
     next(error)
   }

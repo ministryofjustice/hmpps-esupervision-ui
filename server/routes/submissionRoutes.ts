@@ -34,25 +34,32 @@ export default function routes({ esupervisionService }: Services): Router {
 
   // all submission routes require a valid submission
   // fetch from the API and return a 404 if the submission doesn't exist
-  router.use((req, res, next) => {
-    const { submissionId } = req.params
-    if (submissionId) {
-      // lookup submission from the API
-      const submissionPromise = esupervisionService.getCheckin(submissionId)
-      submissionPromise.then(
-        checkin => {
-          res.locals.submission = checkin
+  router.use(
+    asyncMiddleware(async (req, res, next) => {
+      const { submissionId } = req.params
+      const notFound = () => {
+        // TODO: render 'not found page'
+        res.status(404).send('Submission not found')
+      }
+
+      if (submissionId) {
+        // lookup submission from the API
+        try {
+          const submission = await esupervisionService.getCheckin(submissionId)
+          res.locals.submission = submission
           next()
-        },
-        err => {
-          // TODO: handle 404 explicitly
-          res.status(404).send('Submission not found')
-        },
-      )
-    } else {
-      res.status(404).send('Submission not found')
-    }
-  })
+        } catch (err) {
+          if (err.responseStatus === 404) {
+            notFound()
+          } else {
+            throw err
+          }
+        }
+      } else {
+        notFound()
+      }
+    }),
+  )
 
   router.post('/start', handleStart)
 

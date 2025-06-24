@@ -38,15 +38,13 @@ export default function routes({ esupervisionService }: Services): Router {
     asyncMiddleware(async (req, res, next) => {
       const { submissionId } = req.params
       const notFound = () => {
-        // TODO: render 'not found page'
-        res.status(404).send('Submission not found')
+        res.render('pages/submission/not-found')
       }
 
       if (submissionId) {
         // lookup submission from the API
         try {
-          const submission = await esupervisionService.getCheckin(submissionId)
-          res.locals.submission = submission
+          res.locals.submission = await esupervisionService.getCheckin(submissionId)
           next()
         } catch (err) {
           if (err.responseStatus === 404) {

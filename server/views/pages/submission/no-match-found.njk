@@ -12,7 +12,7 @@
   {{
     govukBackLink({
       text: "Back",
-      href: "/submission/verify"
+      href: "/submission/" + submissionId + "/verify"
     })
   }}
 {% endblock %}
@@ -48,7 +48,7 @@
       {{
         govukButton({
           text: "Try again",
-          href: "/submission/verify"
+          href: "/submission/" + submissionId + "/verify"
         })
       }}
 

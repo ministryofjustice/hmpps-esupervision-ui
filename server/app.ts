@@ -45,7 +45,7 @@ export default function createApp(services: Services): express.Application {
   app.use(populateValidationErrors())
 
   app.use(routes(services))
-  app.use('/submission', submissionRoutes())
+  app.use('/submission/:submissionId', submissionRoutes())
   app.use('/practitioners', practitionersRoutes())
 
   app.use((req, res, next) => next(createError(404, 'Not found')))

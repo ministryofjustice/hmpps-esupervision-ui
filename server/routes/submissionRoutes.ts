@@ -5,7 +5,9 @@ import {
   handleStart,
   handleRedirect,
   handleVerify,
+  handleSubmission,
   renderAssistance,
+  renderQuestionsMentalHealth,
   renderCheckAnswers,
   renderConfirmation,
   renderIndex,
@@ -18,6 +20,7 @@ import {
 
 import {
   personalDetailsSchema,
+  mentalHealthSchema,
   assistanceSchema,
   callbackSchema,
   checkAnswersSchema,
@@ -33,26 +36,21 @@ export default function routes(): Router {
   get('/verify', renderVerify)
   router.post('/verify', validateFormData(personalDetailsSchema), handleVerify)
 
+  get('/questions/mental-health', renderQuestionsMentalHealth)
+  router.post('/questions/mental-health', validateFormData(mentalHealthSchema), handleRedirect('/questions/assistance'))
+
   get('/questions/assistance', renderAssistance)
-  router.post(
-    '/questions/assistance',
-    validateFormData(assistanceSchema),
-    handleRedirect('/submission/questions/callback'),
-  )
+  router.post('/questions/assistance', validateFormData(assistanceSchema), handleRedirect('/questions/callback'))
 
   get('/questions/callback', renderQuestionsCallback)
-  router.post('/questions/callback', validateFormData(callbackSchema), handleRedirect('/submission/video/inform'))
+  router.post('/questions/callback', validateFormData(callbackSchema), handleRedirect('/video/inform'))
 
   get('/video/inform', renderVideoInform)
   get('/video/record', renderVideoRecord)
   get('/video/review', renderVideoReview)
 
   get('/check-your-answers', renderCheckAnswers)
-  router.post('/check-your-answers', validateFormData(checkAnswersSchema), (req, res) => {
-    // API call to save submission data would go here
-    // For now, we just redirect to confirmation
-    res.redirect('/submission/confirmation')
-  })
+  router.post('/check-your-answers', validateFormData(checkAnswersSchema), handleSubmission)
 
   get('/confirmation', renderConfirmation)
 

@@ -42,6 +42,12 @@ const validCircumstances = [
   'none',
 ] as const
 
+export const mentalHealthSchema = z.object({
+  mentalHealth: z.enum(['veryWell', 'well', 'ok', 'notGreat', 'struggling'], {
+    required_error: 'Select how you are feeling',
+  }),
+})
+
 export const assistanceSchema = z.object({
   assistance: z.preprocess(
     val => {

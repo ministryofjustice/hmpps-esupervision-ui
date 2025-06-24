@@ -14,10 +14,6 @@ export default class EsupervisionApiClient extends RestClient {
     super('eSupervision API', config.apis.esupervisionApi, logger, authenticationClient)
   }
 
-  getCurrentTime() {
-    return this.get<string>({ path: '/example/time' }, asSystem())
-  }
-
   getCheckins(practitionerId: string): Promise<Page<Checkin>> {
     return this.get<Page<Checkin>>(
       {

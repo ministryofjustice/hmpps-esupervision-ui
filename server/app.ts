@@ -44,7 +44,7 @@ export default function createApp(services: Services): express.Application {
   app.use(storeFormDataInSession())
   app.use(populateValidationErrors())
 
-  app.use(routes(services))
+  app.use(routes())
   app.use('/submission/:submissionId', submissionRoutes(services))
   app.use('/practitioners', practitionersRoutes())
 

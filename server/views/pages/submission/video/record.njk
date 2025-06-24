@@ -8,7 +8,7 @@
   {{
     govukBackLink({
       text: "Back",
-      href: "/submission/video/inform"
+      href: "/submission/" + submissionId + "/video/inform"
     })
   }}
 {% endblock %}
@@ -41,7 +41,7 @@
             <button id="stop-recording" class="govuk-button govuk-button--secondary">Stop recording</button>
           </div>
           <div class="govuk-button-group es-video__navigation" id="es-video-check-in__navigation">
-            <a class="govuk-button" href="/submission/video/review">Continue</a>
+            <a class="govuk-button" href="/submission/{{ submissionId }}/video/review">Continue</a>
           </div>
         </div>
       </form>

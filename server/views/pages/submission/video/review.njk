@@ -11,7 +11,7 @@
   {{
     govukBackLink({
       text: "Back",
-      href: "/submission/video/record"
+      href: "/submission/" + submissionId + "/video/record"
     })
   }}
 {% endblock %}
@@ -28,7 +28,7 @@
       {{
         govukButton({
           text: "Continue",
-          href: "/submission/check-your-answers"
+          href: "/submission/" + submissionId + "/check-your-answers"
         })
       }}
     </div>

@@ -11,24 +11,36 @@ const pageParams = (req: Request): Record<string, string> => {
   }
 }
 
-export const handleStart: RequestHandler = async (req, res, next) => {
-  req.session.formData = {}
-  res.redirect('/submission/verify')
+const getSubmissionId = (req: Request): string => req.params.submissionId
+const pageParams = (req: Request): Record<string, string> => {
+  return {
+    submissionId: getSubmissionId(req),
+  }
 }
 
-export const handleRedirect = (url: string): RequestHandler => {
-  let redirectUrl = url
+export const handleStart: RequestHandler = async (req, res, next) => {
+  req.session.formData = {}
+  const { submissionId } = req.params
+  res.redirect(`/submission/${submissionId}/verify`)
+}
+
+export const handleRedirect = (submissionPath: string): RequestHandler => {
   return (req, res) => {
+    const { submissionId } = req.params
+    const basePath = `/submission/${submissionId}`
+    let redirectUrl = `${basePath}${submissionPath}`
+
     if (req.query.checkAnswers === 'true') {
-      redirectUrl = '/submission/check-your-answers'
+      redirectUrl = `${basePath}/check-your-answers`
     }
+
     res.redirect(redirectUrl)
   }
 }
 
 export const renderIndex: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/submission/index')
+    res.render('pages/submission/index', pageParams(req))
   } catch (error) {
     next(error)
   }
@@ -45,21 +57,22 @@ export const renderVerify: RequestHandler = async (req, res, next) => {
 export const handleVerify: RequestHandler = async (req, res, next) => {
   const { firstName, lastName, day, month, year } = req.body
   const dateOfBirth = `${day}/${month}/${year}`
+  const { submissionId } = req.params
 
   const { submissionId } = req.params
   const response = await esupervisionService.getCheckin(submissionId)
 
   // Check if details match
   if (firstName === 'John') {
-    return res.render('pages/submission/no-match-found', { firstName, lastName, dateOfBirth })
+    return res.render('pages/submission/no-match-found', { firstName, lastName, dateOfBirth, submissionId })
   }
 
-  return res.redirect('/submission/questions/assistance')
+  return res.redirect(`/submission/${submissionId}/questions/mental-health`)
 }
 
 export const renderVideoInform: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/submission/video/inform')
+    res.render('pages/submission/video/inform', pageParams(req))
   } catch (error) {
     next(error)
   }
@@ -70,8 +83,9 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
     const now = new Date()
     const todayDay = format(now, 'EEEE')
     const todayDate = format(now, 'do MMMM yyyy')
+    const submissionId = getSubmissionId(req)
 
-    res.render('pages/submission/video/record', { todayDate, todayDay })
+    res.render('pages/submission/video/record', { todayDate, todayDay, submissionId })
   } catch (error) {
     next(error)
   }
@@ -82,7 +96,17 @@ export const renderVideoReview: RequestHandler = async (req, res, next) => {
     const now = new Date()
     const todayDay = format(now, 'EEEE')
     const todayDate = format(now, 'do MMMM yyyy')
-    res.render('pages/submission/video/review', { todayDate, todayDay })
+    const submissionId = getSubmissionId(req)
+
+    res.render('pages/submission/video/review', { todayDate, todayDay, submissionId })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderQuestionsMentalHealth: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/submission/questions/mental-health', pageParams(req))
   } catch (error) {
     next(error)
   }
@@ -90,7 +114,7 @@ export const renderVideoReview: RequestHandler = async (req, res, next) => {
 
 export const renderAssistance: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/submission/questions/assistance')
+    res.render('pages/submission/questions/assistance', pageParams(req))
   } catch (error) {
     next(error)
   }
@@ -98,7 +122,7 @@ export const renderAssistance: RequestHandler = async (req, res, next) => {
 
 export const renderQuestionsCallback: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/submission/questions/callback')
+    res.render('pages/submission/questions/callback', pageParams(req))
   } catch (error) {
     next(error)
   }
@@ -118,10 +142,17 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   res.locals.callback = userFriendlyStrings(callback)
 
   try {
-    res.render('pages/submission/check-answers')
+    res.render('pages/submission/check-answers', pageParams(req))
   } catch (error) {
     next(error)
   }
+}
+
+export const handleSubmission: RequestHandler = (req, res) => {
+  // API call to save submission data would go here
+  // For now, we just redirect to confirmation
+  const submissionId = getSubmissionId(req)
+  res.redirect(`/submission/${submissionId}/confirmation`)
 }
 
 export const renderConfirmation: RequestHandler = async (req, res, next) => {

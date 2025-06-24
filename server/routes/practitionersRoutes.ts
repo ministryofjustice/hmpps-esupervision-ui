@@ -22,6 +22,7 @@ import {
   renderCheckAnswers,
   handleRegister,
   renderCheckInDetail,
+  renderDashboardFiltered,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -51,6 +52,7 @@ export default function routes(): Router {
 
   get('/', renderDashboard)
   get('/dashboard', renderDashboard)
+  get('/dashboard/:filter', renderDashboardFiltered)
   get('/checkin/:checkInId', renderCheckInDetail)
 
   get('/register', renderRegisterDetails)

@@ -142,7 +142,7 @@ export const handleSubmission: RequestHandler = (req, res) => {
 
 export const renderConfirmation: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/submission/confirmation')
+    res.render('pages/submission/confirmation', pageParams(req))
   } catch (error) {
     next(error)
   }

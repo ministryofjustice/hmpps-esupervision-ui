@@ -1,8 +1,9 @@
 import { RequestHandler } from 'express'
 import { format } from 'date-fns/format'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
-// import { services } from '../services'
-// const { esupervisionService } = services()
+import { services } from '../services'
+
+const { esupervisionService } = services()
 
 export const handleRedirect = (url: string): RequestHandler => {
   let redirectUrl = url
@@ -15,9 +16,19 @@ export const handleRedirect = (url: string): RequestHandler => {
 }
 
 export const renderDashboard: RequestHandler = async (req, res, next) => {
-  // const checkIns = await esupervisionService.getCheckins()
   try {
-    res.render('pages/practitioners/dashboard')
+    const checkIns = await esupervisionService.getCheckins()
+    res.render('pages/practitioners/dashboard', { checkIns })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderDashboardFiltered: RequestHandler = async (req, res, next) => {
+  try {
+    const { filter } = req.params
+    const checkIns = await esupervisionService.getCheckins()
+    res.render('pages/practitioners/dashboard', { checkIns, filter })
   } catch (error) {
     next(error)
   }
@@ -26,6 +37,7 @@ export const renderDashboard: RequestHandler = async (req, res, next) => {
 export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
+
     res.render('pages/practitioners/checkins/view', { checkInId })
   } catch (error) {
     next(error)

@@ -53,7 +53,7 @@ export const handleVerify: RequestHandler = async (req, res, next) => {
   const { firstName, lastName, day, month, year } = req.body
   const dateOfBirth = new Date(`${year}-${month}-${day} 00:00 UTC`)
 
-  const checkIn = await esupervisionService.getCheckin(submissionId)
+  const checkIn = res.locals.submission
 
   const { offender } = checkIn
   const offDob = new Date(`${offender.dateOfBirth} 00:00 UTC`)

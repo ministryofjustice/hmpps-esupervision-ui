@@ -26,9 +26,33 @@ import {
   checkAnswersSchema,
 } from '../schemas/submissionSchemas'
 
-export default function routes(): Router {
+import { Services } from '../services'
+
+export default function routes({ esupervisionService }: Services): Router {
   const router = Router({ mergeParams: true })
   const get = (routePath: string | string[], handler: RequestHandler) => router.get(routePath, asyncMiddleware(handler))
+
+  // all submission routes require a valid submission
+  // fetch from the API and return a 404 if the submission doesn't exist
+  router.use((req, res, next) => {
+    const { submissionId } = req.params
+    if (submissionId) {
+      // lookup submission from the API
+      const submissionPromise = esupervisionService.getCheckin(submissionId)
+      submissionPromise.then(
+        checkin => {
+          res.locals.submission = checkin
+          next()
+        },
+        err => {
+          // TODO: handle 404 explicitly
+          res.status(404).send('Submission not found')
+        },
+      )
+    } else {
+      res.status(404).send('Submission not found')
+    }
+  })
 
   router.post('/start', handleStart)
 

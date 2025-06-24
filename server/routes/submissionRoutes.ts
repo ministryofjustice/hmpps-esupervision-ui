@@ -45,12 +45,11 @@ export default function routes({ esupervisionService }: Services): Router {
           next()
         },
         err => {
-          // TODO: handle 404 explicitly
-          res.status(404).send('Submission not found')
+          res.render('pages/submission/not-found')
         },
       )
     } else {
-      res.status(404).send('Submission not found')
+      res.render('pages/submission/not-found')
     }
   })
 

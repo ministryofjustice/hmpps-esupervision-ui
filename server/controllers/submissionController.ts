@@ -1,5 +1,5 @@
 import { RequestHandler, Request } from 'express'
-import { format } from 'date-fns'
+import { format, isEqual } from 'date-fns'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
 
 const getSubmissionId = (req: Request): string => req.params.submissionId
@@ -46,15 +46,22 @@ export const renderVerify: RequestHandler = async (req, res, next) => {
 }
 
 export const handleVerify: RequestHandler = async (req, res, next) => {
-  const { firstName, lastName, day, month, year } = req.body
-  const dateOfBirth = `${day}/${month}/${year}`
   const { submissionId } = req.params
+  const { firstName, lastName, day, month, year } = req.body
+  const dateOfBirth = new Date(`${year}-${month}-${day} 00:00 UTC`)
 
-  // Check if details match
-  if (firstName === 'John') {
+  const checkIn = res.locals.submission
+
+  const { offender } = checkIn
+  const offDob = new Date(`${offender.dateOfBirth} 00:00 UTC`)
+  const isMatch =
+    offender.firstName.toLocaleLowerCase() === firstName.toLocaleLowerCase() &&
+    offender.lastName.toLocaleLowerCase() === lastName.toLocaleLowerCase() &&
+    isEqual(offDob, dateOfBirth)
+
+  if (!isMatch) {
     return res.render('pages/submission/no-match-found', { firstName, lastName, dateOfBirth, submissionId })
   }
-
   return res.redirect(`/submission/${submissionId}/questions/mental-health`)
 }
 

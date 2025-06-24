@@ -12,4 +12,8 @@ export default class EsupervisionService {
   getCheckins(practitionerId: string): Promise<Page<Checkin>> {
     return this.esupervisionApiClient.getCheckins(practitionerId)
   }
+
+  getCheckin(submissionId: string): Promise<Checkin> {
+    return this.esupervisionApiClient.getCheckin(submissionId)
+  }
 }

@@ -26,19 +26,29 @@
       </ul>
       <form method="POST" id="video-check-in">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-        <div class="es-video" id="es-video-check-in">
-          <div class="es-video__video-wrap">
-            <video class="es-video__video" id="es-video-check-in__video">Your browser does not support video</video>
-            <video class="es-video__video" id="es-video-check-in__preview">Your browser does not support video</video>
-            <div class="govuk-tag es-video__tag" id="es-video-check-in__status"></div>
+        <div class="videoRecorder" data-module="videoRecorder">
+          <input type="hidden" name="extractedFrame" id="extracted-frame-data" />
+          <input type="hidden" name="recordedVideo" id="recorded-video-data" />
+          <div class="videoRecorder__container">
+            <div class="videoRecorder__videoWrap">
+              <video class="videoRecorder__video">Your browser does not support video</video>
+              <video class="videoRecorder__video-preview">Your browser does not support video</video>
+              <span class="govuk-tag videoRecorder__tag"></span>
+            </div>
+            <div class="govuk-button-group videoRecorder__controls">
+              <button type="button" class="govuk-button videoRecorder__startButton" data-module="govuk-button">Start recording</button>
+              <button type="button" class="govuk-button govuk-button--secondary videoRecorder__stopButton" data-module="govuk-button" disabled>Stop recording</button>
+            </div>
+            <div class="govuk-button-group videoRecorder__form-controls">
+              <button type="submit" class="govuk-button videoRecorder__startButton" data-module="govuk-button">Continue</button>
+            </div>
           </div>
-          <div class="govuk-button-group es-video__controls" id="es-video-check-in__controls">
-            <button id="start-recording" class="govuk-button">Start recording</button>
-            <button id="stop-recording" class="govuk-button govuk-button--secondary">Stop recording</button>
-          </div>
-          <div class="govuk-button-group es-video__navigation" id="es-video-check-in__navigation">
-            <a class="govuk-button" href="/submission/{{ submissionId }}/video/review">Continue</a>
-          </div>
+            <div class="videoRecorder__error">
+              <div class="govuk-inset-text es-inset-text--error">
+                <h2 class="govuk-heading-m es-heading--error">You need to accept permissions on your device</h2>
+                <p>We are unable to access your camera to record a video. Check your browser settings and permissions. If you are having trouble using this service, contact your probation practitioner.  </p>
+              </div>
+            </div>
         </div>
       </form>
     </div>

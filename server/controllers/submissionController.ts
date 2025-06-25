@@ -81,6 +81,11 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const handleVideoPost: RequestHandler = async (req, res, next) => {
+  const { submissionId } = req.params
+  res.redirect(`/submission/${submissionId}/video/review`)
+}
+
 export const renderVideoReview: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/submission/video/review', pageParams(req))

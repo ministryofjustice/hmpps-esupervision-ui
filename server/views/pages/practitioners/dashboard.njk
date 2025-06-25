@@ -4,7 +4,6 @@
 
 {% block content %}
   <h1 class="govuk-heading-l">Check-ins</h1>
-  <h4>User {{ practitionerUuid }}</h4>
   {{
     mojSubNavigation({
     label: "Sub navigation",
@@ -55,6 +54,13 @@
     <h2 class="govuk-heading-m">Check-ins</h2>
     <p class="govuk-body">No check-ins found</p>
   {% endif %}
+{% endblock %}
 
-  <code>{{ practitionerUuid }}</code>
+{% block footer %}
+<footer class="govuk-footer">
+  <div class="govuk-width-container">
+    <h4 class="govuk-heading-xs govuk-!-margin-bottom-1">User ID</h4>
+    <p class="govuk-hint govuk-!-font-size-14"><code>{{ practitionerUuid }}</code></p>
+  </div>
+</footer>
 {% endblock %}

@@ -18,6 +18,7 @@ export default class EsupervisionApiClient extends RestClient {
     return this.get<Page<Checkin>>(
       {
         path: '/offender_checkins',
+        query: 'practitionerUuid=02a987aa-a1bb-4fa4-8f89-9ec2355227e6', // NOTE: temporary workaround
       },
       asSystem(),
     )

@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { format } from 'date-fns/format'
+import { v4 as uuidv4 } from 'uuid'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
 import { services } from '../services'
 
@@ -17,8 +18,9 @@ export const handleRedirect = (url: string): RequestHandler => {
 
 export const renderDashboard: RequestHandler = async (req, res, next) => {
   try {
-    const checkIns = await esupervisionService.getCheckins()
-    res.render('pages/practitioners/dashboard', { checkIns })
+    const practitionerUuid = res.locals.user.userId
+    const checkIns = await esupervisionService.getCheckins(practitionerUuid)
+    res.render('pages/practitioners/dashboard', { checkIns, practitionerUuid })
   } catch (error) {
     next(error)
   }
@@ -27,7 +29,8 @@ export const renderDashboard: RequestHandler = async (req, res, next) => {
 export const renderDashboardFiltered: RequestHandler = async (req, res, next) => {
   try {
     const { filter } = req.params
-    const checkIns = await esupervisionService.getCheckins()
+    const practitionerUuid = res.locals.user.userId
+    const checkIns = await esupervisionService.getCheckins(practitionerUuid)
     res.render('pages/practitioners/dashboard', { checkIns, filter })
   } catch (error) {
     next(error)
@@ -139,5 +142,30 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
 }
 
 export const handleRegister: RequestHandler = async (req, res, next) => {
-  return res.redirect('/practitioners/dashboard')
+  const { firstName, lastName, day, month, year, email, mobile } = res.locals.formData
+
+  const data = {
+    setupUuid: uuidv4(),
+    practitionerId: res.locals.user.userId,
+    firstName: firstName.toString() || '',
+    lastName: lastName.toString() || '',
+    dateOfBirth: `${year}-${month}-${day}`,
+    email: email.toString(),
+    phoneNumber: mobile.toString(),
+  }
+  try {
+    await esupervisionService.createOffender(data)
+    req.session.formData = {}
+  } catch (error) {
+    next(error)
+  }
+  return res.redirect('/practitioners/register/confirmation')
+}
+
+export const renderConfirmation: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/register/confirmation')
+  } catch (error) {
+    next(error)
+  }
 }

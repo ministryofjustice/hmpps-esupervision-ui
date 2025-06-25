@@ -8,16 +8,19 @@ import CreateCheckinRequest from './models/createCheckinRequest'
 import UploadLocationResponse from './models/uploadLocationResponse'
 import LocationInfo from './models/locationInfo'
 import CheckinSubmission from './models/checkinSubmission'
+import OffenderInfo from './models/offenderInfo'
+import OffenderSetup from './models/offenderSetup'
 
 export default class EsupervisionApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
     super('eSupervision API', config.apis.esupervisionApi, logger, authenticationClient)
   }
 
-  getCheckins(): Promise<Page<Checkin>> {
+  getCheckins(practitionerUuid: string): Promise<Page<Checkin>> {
     return this.get<Page<Checkin>>(
       {
         path: '/offender_checkins',
+        query: { practitionerUuid },
       },
       asSystem(),
     )
@@ -59,5 +62,16 @@ export default class EsupervisionApiClient extends RestClient {
       path: `/offender_checkins/${checkinId}/submit`,
       data: JSON.stringify(submission),
     })
+  }
+
+  async createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {
+    return this.post<OffenderSetup>(
+      {
+        path: '/offender_setup',
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify(offenderInfo),
+      },
+      asSystem(),
+    )
   }
 }

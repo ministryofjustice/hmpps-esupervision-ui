@@ -23,6 +23,7 @@ import {
   handleRegister,
   renderCheckInDetail,
   renderDashboardFiltered,
+  renderConfirmation,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -83,6 +84,8 @@ export default function routes(): Router {
 
   get('/register/check-answers', renderCheckAnswers)
   router.post('/register/check-answers', handleRegister)
+
+  get('/register/confirmation', renderConfirmation)
 
   return router
 }

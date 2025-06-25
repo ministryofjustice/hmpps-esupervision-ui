@@ -1,0 +1,17 @@
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% extends "../layout.njk" %}
+{% set section = "register" %}
+
+{% set title = "Persons details" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{
+        govukPanel({
+        titleText: "Details submitted"
+          })
+      }}
+    </div>
+  </div>
+{% endblock %}

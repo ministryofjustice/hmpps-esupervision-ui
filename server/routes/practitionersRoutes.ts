@@ -20,6 +20,7 @@ import {
   handleMobile,
   renderSetUp,
   renderCheckAnswers,
+  renderCases,
   handleRegister,
   renderCheckInDetail,
   renderDashboardFiltered,
@@ -55,6 +56,8 @@ export default function routes(): Router {
   get('/dashboard', renderDashboard)
   get('/dashboard/:filter', renderDashboardFiltered)
   get('/checkin/:checkInId', renderCheckInDetail)
+
+  get('/cases', renderCases)
 
   get('/register', renderRegisterDetails)
   router.post('/register', validateFormData(personsDetailsSchema), handleRedirect('/practitioners/register/photo'))

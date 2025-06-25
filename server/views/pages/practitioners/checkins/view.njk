@@ -1,10 +1,59 @@
 {% extends "../layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
 {% set section = "dashboard" %}
 
 {% set title = "Check-in details" %}
 
+{% block beforeContent %}
+
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/practitioners/dashboard"
+    })
+  }}
+{% endblock %}
+
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">{{ checkInId }}</div>
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-caption-l">Remote check-in</span>
+      <h1 class="govuk-heading-l">
+        {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }}
+        ({{ checkIn.offender.dateOfBirth | formatDate }})
+      </h1>
+      {{
+        govukSummaryList({
+          rows: [
+          {
+            key: {
+              text: "Check-in date"
+            },
+            value: {
+              text: checkIn.dueDate | gdsDate
+            }
+          },
+          {
+            key: {
+              text: "Check-in received"
+            },
+            value: {
+              text: checkIn.submittedOn | gdsDateTime
+            }
+          },
+          {
+            key: {
+              text: "Review date"
+            },
+            value: {
+              html: checkIn.createdAt | gdsDate
+            }
+          }
+        ]
+          })
+      }}
+    </div>
   </div>
 {% endblock %}

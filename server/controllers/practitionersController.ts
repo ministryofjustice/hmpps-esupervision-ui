@@ -47,6 +47,16 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const renderCases: RequestHandler = async (req, res, next) => {
+  try {
+    const practitionerUuid = res.locals.user.userId
+    const cases = await esupervisionService.getOffenders()
+    res.render('pages/practitioners/cases/index', { cases, practitionerUuid })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const renderRegisterDetails: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/practitioners/register/index')

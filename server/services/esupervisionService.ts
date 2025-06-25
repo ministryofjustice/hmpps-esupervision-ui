@@ -16,6 +16,10 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getCheckin(submissionId)
   }
 
+  getOffenders(): Promise<Page<OffenderInfo>> {
+    return this.esupervisionApiClient.getOffenders()
+  }
+
   submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {
     return this.esupervisionApiClient.submitCheckin(checkinId, submission)
   }

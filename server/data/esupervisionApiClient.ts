@@ -35,6 +35,15 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
+  getOffenders(): Promise<Page<OffenderInfo>> {
+    return this.get<Page<OffenderInfo>>(
+      {
+        path: '/offenders',
+      },
+      asSystem(),
+    )
+  }
+
   createCheckin(checkin: CreateCheckinRequest): Promise<Checkin> {
     return this.post<Checkin>({
       path: '/offender_checkins',

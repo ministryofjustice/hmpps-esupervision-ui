@@ -104,7 +104,7 @@ export const handleMobile: RequestHandler = async (req, res, next) => {
     return res.redirect('/practitioners/register/contact/email')
   }
 
-  return res.redirect('/practitioners/register/start-date')
+  return res.redirect('/practitioners/register/set-up')
 }
 
 export const renderEmail: RequestHandler = async (req, res, next) => {
@@ -150,12 +150,11 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     firstName: firstName.toString() || '',
     lastName: lastName.toString() || '',
     dateOfBirth: `${year}-${month}-${day}`,
-    email: email.toString(),
-    phoneNumber: mobile.toString(),
+    email: email ? email.toString() : null,
+    phoneNumber: mobile ? mobile.toString() : null,
   }
   try {
     await esupervisionService.createOffender(data)
-    req.session.formData = {}
   } catch (error) {
     next(error)
   }
@@ -164,7 +163,10 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
 
 export const renderConfirmation: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/confirmation')
+    const { startDateDay, startDateMonth, startDateYear } = res.locals.formData
+    const startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
+    res.render('pages/practitioners/register/confirmation', { startDate })
+    req.session.formData = {}
   } catch (error) {
     next(error)
   }

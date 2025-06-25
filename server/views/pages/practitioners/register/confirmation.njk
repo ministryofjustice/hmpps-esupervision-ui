@@ -3,6 +3,7 @@
 {% set section = "register" %}
 
 {% set title = "Persons details" %}
+{% set name = [formData['firstName'], ' ', formData['lastName']]  | join %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -12,6 +13,24 @@
         titleText: "Details submitted"
           })
       }}
+      <p>
+        {{ name }} has been set up to submit online wellbeing checks. They will receive their first link on
+        {{ startDate | gdsDate }}.
+      </p>
+      <p>
+        We have sent a confirmation to {mobile number}/{email address} with the date of their first online check and how
+        often they’ll be completing online wellbeing checks.
+      </p>
+      <h2 class="govuk-heading-m">What happens next</h2>
+      <p>
+        {{ name }} will receive a message via their preferred contact method when it is time to submit an online
+        wellbeing check. They will have 72 hours to complete their check and submit.
+      </p>
+      <p>
+        You will be notified when the checks are ready to be reviewed. You can sign in to manage online wellbeing checks
+        and review each submission.
+      </p>
+      <p><a href="#" class="govuk-link">What did you think of this service?</a> (takes 30 seconds)</p>
     </div>
   </div>
 {% endblock %}

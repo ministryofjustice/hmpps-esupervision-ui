@@ -57,11 +57,15 @@ export default class EsupervisionApiClient extends RestClient {
     }
   }
 
-  submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {
-    return this.post<Checkin>({
-      path: `/offender_checkins/${checkinId}/submit`,
-      data: JSON.stringify(submission),
-    })
+  async submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {
+    return this.post<Checkin>(
+      {
+        path: `/offender_checkins/${checkinId}/submit`,
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify(submission),
+      },
+      asSystem(),
+    )
   }
 
   async createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {

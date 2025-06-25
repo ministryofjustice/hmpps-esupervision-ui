@@ -3,6 +3,7 @@ import Page from '../data/models/page'
 import Checkin from '../data/models/checkin'
 import OffenderInfo from '../data/models/offenderInfo'
 import OffenderSetup from '../data/models/offenderSetup'
+import CheckinSubmission from '../data/models/checkinSubmission'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -13,6 +14,10 @@ export default class EsupervisionService {
 
   getCheckin(submissionId: string): Promise<Checkin> {
     return this.esupervisionApiClient.getCheckin(submissionId)
+  }
+
+  submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {
+    return this.esupervisionApiClient.submitCheckin(checkinId, submission)
   }
 
   createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {

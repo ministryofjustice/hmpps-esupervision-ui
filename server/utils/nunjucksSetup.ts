@@ -45,6 +45,14 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
 
+  njkEnv.addFilter('formatDate', (date: string) => {
+    if (!date) {
+      return ''
+    }
+    const d = new Date(date)
+    return format(d, 'dd/MM/yyyy')
+  })
+
   njkEnv.addFilter('gdsDate', (date: string) => {
     if (!date) {
       return ''

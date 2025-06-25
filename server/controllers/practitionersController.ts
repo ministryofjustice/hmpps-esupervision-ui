@@ -37,8 +37,8 @@ export const renderDashboardFiltered: RequestHandler = async (req, res, next) =>
 export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
-
-    res.render('pages/practitioners/checkins/view', { checkInId })
+    const checkIn = await esupervisionService.getCheckin(checkInId)
+    res.render('pages/practitioners/checkins/view', { checkIn })
   } catch (error) {
     next(error)
   }

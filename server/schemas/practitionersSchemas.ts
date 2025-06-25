@@ -3,8 +3,8 @@ import { isFuture } from 'date-fns'
 
 export const personsDetailsSchema = z
   .object({
-    firstName: z.string().min(1, 'Enter first name'),
-    lastName: z.string().min(1, 'Enter last name'),
+    firstName: z.string().min(1, 'Enter their first name'),
+    lastName: z.string().min(1, 'Enter their last name'),
     day: z.coerce.number({ message: 'Enter a valid day' }).positive({ message: 'Enter day' }),
     month: z.coerce.number({ message: 'Enter a valid month' }).positive({ message: 'Enter month' }),
     year: z.coerce.number({ message: 'Enter a valid year' }).positive({ message: 'Enter year' }),
@@ -45,7 +45,7 @@ export const setUpSchema = z
     startDateMonth: z.coerce.number({ message: 'Enter a valid month' }).positive({ message: 'Enter month' }),
     startDateYear: z.coerce.number({ message: 'Enter a valid year' }).positive({ message: 'Enter year' }),
     frequency: z.string({
-      required_error: 'Choose how often they should submit a check-in',
+      required_error: 'Select how often you would like the person to submit online checks',
     }),
   })
   .refine(
@@ -58,7 +58,7 @@ export const setUpSchema = z
       )
     },
     {
-      message: 'Enter a valid start date',
+      message: 'Enter a valid date',
       path: ['startDate'],
     },
   )
@@ -68,7 +68,7 @@ export const setUpSchema = z
       return isFuture(d)
     },
     {
-      message: 'Start date must be in the future',
+      message: 'Date must be in the future',
       path: ['startDate'],
     },
   )

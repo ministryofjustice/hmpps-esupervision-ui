@@ -163,7 +163,10 @@
         })
       }}
 
-      <a href="/practitioners/dashboard" class="govuk-button">Confirm and sign-up</a>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <button href="/practitioners/dashboard" class="govuk-button" type="submit">Confirm and sign-up</button>
+      </form>
     </div>
   </div>
 {% endblock %}

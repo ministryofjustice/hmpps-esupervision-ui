@@ -18,9 +18,9 @@ export const handleRedirect = (url: string): RequestHandler => {
 
 export const renderDashboard: RequestHandler = async (req, res, next) => {
   try {
-    const checkIns = await esupervisionService.getCheckins()
-    const { user } = res.locals
-    res.render('pages/practitioners/dashboard', { checkIns, user })
+    const practitionerUuid = res.locals.user.userId
+    const checkIns = await esupervisionService.getCheckins(practitionerUuid)
+    res.render('pages/practitioners/dashboard', { checkIns, practitionerUuid })
   } catch (error) {
     next(error)
   }

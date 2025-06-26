@@ -8,6 +8,8 @@ import OffenderInfo from '../data/models/offenderInfo'
 import OffenderSetup from '../data/models/offenderSetup'
 import CheckinSubmission from '../data/models/checkinSubmission'
 import CreateCheckinRequest from '../data/models/createCheckinRequest'
+import Practitioner from '../data/models/pracitioner'
+import PractitionerSetup from '../data/models/pracitionerSetup'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -42,5 +44,9 @@ export default class EsupervisionService {
 
   createCheckin(checkin: CreateCheckinRequest): Promise<Checkin> {
     return this.esupervisionApiClient.createCheckin(checkin)
+  }
+
+  createPractitioner(practitioner: Practitioner): Promise<PractitionerSetup> {
+    return this.esupervisionApiClient.createPractitioner(practitioner)
   }
 }

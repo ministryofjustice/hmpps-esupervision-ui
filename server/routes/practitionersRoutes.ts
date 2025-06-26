@@ -28,6 +28,9 @@ import {
   renderCreateInvite,
   renderCaseView,
   handleCreateInvite,
+  renderUsers,
+  renderUserCreate,
+  handleCreateUser,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -35,6 +38,7 @@ import {
   mobileSchema,
   emailSchema,
   setUpSchema,
+  practitionerSchema,
 } from '../schemas/practitionersSchemas'
 
 export default function routes(): Router {
@@ -64,6 +68,10 @@ export default function routes(): Router {
   get('/cases/:offenderId', renderCaseView)
   get('/cases/:offenderId/invite', renderCreateInvite)
   router.post('/cases/:offenderId/invite', handleCreateInvite)
+
+  get('/users', renderUsers)
+  get('/users/create', renderUserCreate)
+  router.post('/users/create', validateFormData(practitionerSchema), handleCreateUser)
 
   get('/register', renderRegisterDetails)
   router.post('/register', validateFormData(personsDetailsSchema), handleRedirect('/practitioners/register/photo'))

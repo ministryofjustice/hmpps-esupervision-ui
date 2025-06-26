@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { format } from 'date-fns/format'
+import { v4 as uuidv4 } from 'uuid'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
 import { services } from '../services'
 
@@ -17,8 +18,9 @@ export const handleRedirect = (url: string): RequestHandler => {
 
 export const renderDashboard: RequestHandler = async (req, res, next) => {
   try {
-    const checkIns = await esupervisionService.getCheckins()
-    res.render('pages/practitioners/dashboard', { checkIns })
+    const practitionerUuid = res.locals.user.userId
+    const checkIns = await esupervisionService.getCheckins(practitionerUuid)
+    res.render('pages/practitioners/dashboard', { checkIns, practitionerUuid })
   } catch (error) {
     next(error)
   }
@@ -27,7 +29,8 @@ export const renderDashboard: RequestHandler = async (req, res, next) => {
 export const renderDashboardFiltered: RequestHandler = async (req, res, next) => {
   try {
     const { filter } = req.params
-    const checkIns = await esupervisionService.getCheckins()
+    const practitionerUuid = res.locals.user.userId
+    const checkIns = await esupervisionService.getCheckins(practitionerUuid)
     res.render('pages/practitioners/dashboard', { checkIns, filter })
   } catch (error) {
     next(error)
@@ -39,6 +42,60 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
     const { checkInId } = req.params
     const checkIn = await esupervisionService.getCheckin(checkInId)
     res.render('pages/practitioners/checkins/view', { checkIn })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderCases: RequestHandler = async (req, res, next) => {
+  try {
+    const practitionerUuid = res.locals.user.userId
+    const cases = await esupervisionService.getOffenders()
+    // eslint-disable-next-line prefer-destructuring
+    res.locals.successMessage = req.flash('success')[0]
+    res.render('pages/practitioners/cases/index', { cases, practitionerUuid })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderCaseView: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/cases/view')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderCreateInvite: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/cases/invite')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleCreateInvite: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    const { dueDate, questions } = req.body
+
+    const data = {
+      practitioner: res.locals.user.userId,
+      offender: offenderId,
+      questions,
+      dueDate,
+    }
+
+    const response = await esupervisionService.createCheckin(data)
+
+    if (response) {
+      req.flash('success', {
+        message: `<strong>URL:</strong> <a href="/submission/${response.uuid}" class="govuk-notification-banner__link" target="_blank">/submission/${response.uuid}</a> <br /> <strong>Name:</strong> ${response.offender.firstName} ${response.offender.lastName} <br /><strong>Date of birth:</strong> ${format(response.offender.dateOfBirth, 'dd/MM/yyyy')}`,
+      })
+    }
+
+    res.redirect(`/practitioners/cases/`)
   } catch (error) {
     next(error)
   }
@@ -101,7 +158,7 @@ export const handleMobile: RequestHandler = async (req, res, next) => {
     return res.redirect('/practitioners/register/contact/email')
   }
 
-  return res.redirect('/practitioners/register/start-date')
+  return res.redirect('/practitioners/register/set-up')
 }
 
 export const renderEmail: RequestHandler = async (req, res, next) => {
@@ -139,5 +196,32 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
 }
 
 export const handleRegister: RequestHandler = async (req, res, next) => {
-  return res.redirect('/practitioners/dashboard')
+  const { firstName, lastName, day, month, year, email, mobile } = res.locals.formData
+
+  const data = {
+    setupUuid: uuidv4(),
+    practitionerId: res.locals.user.userId,
+    firstName: firstName.toString() || '',
+    lastName: lastName.toString() || '',
+    dateOfBirth: `${year}-${month}-${day}`,
+    email: email ? email.toString() : null,
+    phoneNumber: mobile ? mobile.toString() : null,
+  }
+  try {
+    await esupervisionService.createOffender(data)
+  } catch (error) {
+    next(error)
+  }
+  return res.redirect('/practitioners/register/confirmation')
+}
+
+export const renderConfirmation: RequestHandler = async (req, res, next) => {
+  try {
+    const { startDateDay, startDateMonth, startDateYear } = res.locals.formData
+    const startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
+    res.render('pages/practitioners/register/confirmation', { startDate })
+    req.session.formData = {}
+  } catch (error) {
+    next(error)
+  }
 }

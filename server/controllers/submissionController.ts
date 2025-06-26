@@ -180,10 +180,44 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   }
 }
 
-export const handleSubmission: RequestHandler = (req, res) => {
-  // API call to save submission data would go here
-  // For now, we just redirect to confirmation
+export const handleSubmission: RequestHandler = async (req, res, next) => {
+  const {
+    mentalHealth,
+    assistance,
+    mentalHealthSupport,
+    alcoholSupport,
+    drugsSupport,
+    moneySupport,
+    housingSupport,
+    supportSystemSupport,
+    otherSupport,
+    callback,
+    callbackDetails,
+  } = res.locals.formData
+
   const submissionId = getSubmissionId(req)
+  const data = {
+    offender: res.locals.submission.offender.uuid,
+    answers: JSON.stringify({
+      mentalHealth,
+      assistance,
+      mentalHealthSupport,
+      alcoholSupport,
+      drugsSupport,
+      moneySupport,
+      housingSupport,
+      supportSystemSupport,
+      otherSupport,
+      callback,
+      callbackDetails,
+    }),
+  }
+  try {
+    await esupervisionService.submitCheckin(submissionId, data)
+  } catch (error) {
+    next(error)
+  }
+
   res.redirect(`/submission/${submissionId}/confirmation`)
 }
 

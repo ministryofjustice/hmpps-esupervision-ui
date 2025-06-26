@@ -55,3 +55,12 @@
     <p class="govuk-body">No check-ins found</p>
   {% endif %}
 {% endblock %}
+
+{% block footer %}
+  <footer class="govuk-footer">
+    <div class="govuk-width-container">
+      <h4 class="govuk-heading-xs govuk-!-margin-bottom-1">User ID</h4>
+      <p class="govuk-hint govuk-!-font-size-14"><code>{{ practitionerUuid }}</code></p>
+    </div>
+  </footer>
+{% endblock %}

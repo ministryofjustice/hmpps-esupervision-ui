@@ -8,16 +8,19 @@ import CreateCheckinRequest from './models/createCheckinRequest'
 import UploadLocationResponse from './models/uploadLocationResponse'
 import LocationInfo from './models/locationInfo'
 import CheckinSubmission from './models/checkinSubmission'
+import OffenderInfo from './models/offenderInfo'
+import OffenderSetup from './models/offenderSetup'
 
 export default class EsupervisionApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
     super('eSupervision API', config.apis.esupervisionApi, logger, authenticationClient)
   }
 
-  getCheckins(): Promise<Page<Checkin>> {
+  getCheckins(practitionerUuid: string): Promise<Page<Checkin>> {
     return this.get<Page<Checkin>>(
       {
         path: '/offender_checkins',
+        query: { practitionerUuid },
       },
       asSystem(),
     )
@@ -32,12 +35,13 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  createCheckin(checkin: CreateCheckinRequest): Promise<Checkin> {
-    return this.post<Checkin>({
-      path: '/offender_checkins',
-      headers: { 'Content-Type': 'application/json' },
-      data: JSON.stringify(checkin),
-    })
+  getOffenders(): Promise<Page<OffenderInfo>> {
+    return this.get<Page<OffenderInfo>>(
+      {
+        path: '/offenders',
+      },
+      asSystem(),
+    )
   }
 
   async getCheckinVideoUploadLocation(checkinId: string, videoContentType: string): Promise<LocationInfo> {
@@ -74,10 +78,36 @@ export default class EsupervisionApiClient extends RestClient {
     }
   }
 
-  submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {
-    return this.post<Checkin>({
-      path: `/offender_checkins/${checkinId}/submit`,
-      data: JSON.stringify(submission),
-    })
+  async submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {
+    return this.post<Checkin>(
+      {
+        path: `/offender_checkins/${checkinId}/submit`,
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify(submission),
+      },
+      asSystem(),
+    )
+  }
+
+  async createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {
+    return this.post<OffenderSetup>(
+      {
+        path: '/offender_setup',
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify(offenderInfo),
+      },
+      asSystem(),
+    )
+  }
+
+  async createCheckin(checkinInfo: CreateCheckinRequest): Promise<Checkin> {
+    return this.post<Checkin>(
+      {
+        path: '/offender_checkins',
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify(checkinInfo),
+      },
+      asSystem(),
+    )
   }
 }

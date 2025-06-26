@@ -1,46 +1,66 @@
-.es-video {
-  &__video-wrap {
-    position: relative;
-    width: 100%;
-    background-color: #eee;
-    margin-bottom: 1rem;
-    &::before {
-      display: block;
-      padding-top: 56.25%;
-      content: '';
-    }
-  }
-  &__video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.videoRecorder__container {
+  display: block;
+}
+
+.videoRecorder__form-controls,
+.videoRecorder__error {
+  display: none;
+}
+
+.videoRecorder__videoWrap {
+  position: relative;
+  width: 100%;
+  background-color: #eee;
+  margin-bottom: 1rem;
+
+  &::before {
     display: block;
-    object-fit: cover;
-    z-index: 1;
+    padding-top: 56.25%;
+    content: '';
   }
-  &__tag {
-    position: absolute;
-    top: 2px;
-    left: 0;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    &.govuk-tag--pink::after {
-      content: '';
-      display: inline-block;
-      background: currentColor;
-      border-radius: 50%;
-      height: 8px;
-      width: 8px;
-      transform: scale(1);
-      animation: pulse 2s infinite;
-    }
-  }
-  &__navigation {
-    display: none;
+}
+
+.videoRecorder__video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.videoRecorder__video-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  z-index: 1;
+  display: none;
+}
+
+.videoRecorder__tag {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  gap: 5px;
+
+  &.govuk-tag--pink::after {
+    content: '';
+    display: inline-block;
+    background: currentColor;
+    border-radius: 50%;
+    height: 8px;
+    width: 8px;
+    transform: scale(1);
+    animation: pulse 2s infinite;
   }
 }
 

@@ -40,7 +40,7 @@ export default function nunjucksSetup(app: express.Express): void {
       express: app,
     },
   )
-
+  njkEnv.addGlobal('govukRebrand', true)
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)

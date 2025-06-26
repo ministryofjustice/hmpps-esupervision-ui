@@ -1,7 +1,9 @@
 import { RequestHandler, Request } from 'express'
 import { isEqual } from 'date-fns'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
+import logger from '../../logger'
 import { services } from '../services'
+import LocationInfo from '../data/models/locationInfo'
 
 const { esupervisionService } = services()
 
@@ -78,10 +80,52 @@ export const renderVideoInform: RequestHandler = async (req, res, next) => {
 
 export const renderVideoRecord: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/submission/video/record', pageParams(req))
+    const { submissionId } = req.params
+    const videoContentType = 'video/mp4'
+    const frameContentType = 'image/png'
+    const promises = [
+      esupervisionService.getCheckinVideoUploadLocation(submissionId, videoContentType),
+      esupervisionService.getCheckinFrameUploadLocation(submissionId, frameContentType),
+    ]
+    const [videoResult, framesResult] = await Promise.all(promises)
+    const videoUploadLocation = videoResult as LocationInfo
+    const frameUploadLocations = framesResult as LocationInfo[]
+
+    const checkIn = res.locals.submission
+    const offenderPhoto = checkIn.offender.photoUrl
+    // fetch the offender photo and create a blob
+    const offenderReferencePhoto = await fetch(offenderPhoto).then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch offender photo: ${response.statusText}`)
+      }
+      return response.blob()
+    })
+
+    const [referencePhotoUploadUrl, ...snapshotPhotoUploadUrls] = frameUploadLocations.map(location => location.url)
+    const referencePhotoUploadResult = await fetch(referencePhotoUploadUrl, {
+      method: 'PUT',
+      body: offenderReferencePhoto,
+    })
+
+    if (!referencePhotoUploadResult.ok) {
+      throw new Error(`Failed to upload reference photo: ${referencePhotoUploadResult.statusText}`)
+    } else {
+      logger.debug('Reference photo uploaded successfully', referencePhotoUploadUrl)
+    }
+
+    res.render('pages/submission/video/record', {
+      ...pageParams(req),
+      videoUploadUrl: videoUploadLocation.url,
+      frameUploadUrl: snapshotPhotoUploadUrls,
+    })
   } catch (error) {
     next(error)
   }
+}
+
+export const handleVideoPost: RequestHandler = async (req, res, next) => {
+  const { submissionId } = req.params
+  res.redirect(`/submission/${submissionId}/video/review`)
 }
 
 export const renderVideoReview: RequestHandler = async (req, res, next) => {

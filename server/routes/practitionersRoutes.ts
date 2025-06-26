@@ -25,6 +25,9 @@ import {
   renderCheckInDetail,
   renderDashboardFiltered,
   renderConfirmation,
+  renderCreateInvite,
+  renderCaseView,
+  handleCreateInvite,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -58,6 +61,9 @@ export default function routes(): Router {
   get('/checkin/:checkInId', renderCheckInDetail)
 
   get('/cases', renderCases)
+  get('/cases/:offenderId', renderCaseView)
+  get('/cases/:offenderId/invite', renderCreateInvite)
+  router.post('/cases/:offenderId/invite', handleCreateInvite)
 
   get('/register', renderRegisterDetails)
   router.post('/register', validateFormData(personsDetailsSchema), handleRedirect('/practitioners/register/photo'))

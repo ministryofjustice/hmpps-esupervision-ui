@@ -51,7 +51,51 @@ export const renderCases: RequestHandler = async (req, res, next) => {
   try {
     const practitionerUuid = res.locals.user.userId
     const cases = await esupervisionService.getOffenders()
+    // eslint-disable-next-line prefer-destructuring
+    res.locals.successMessage = req.flash('success')[0]
     res.render('pages/practitioners/cases/index', { cases, practitionerUuid })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderCaseView: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/cases/view')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderCreateInvite: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/cases/invite')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleCreateInvite: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    const { dueDate, questions } = req.body
+
+    const data = {
+      practitioner: res.locals.user.userId,
+      offender: offenderId,
+      questions,
+      dueDate,
+    }
+
+    const response = await esupervisionService.createCheckin(data)
+
+    if (response) {
+      req.flash('success', {
+        message: `<strong>URL:</strong> <a href="/submission/${response.uuid}" class="govuk-notification-banner__link" target="_blank">/submission/${response.uuid}</a> <br /> <strong>Name:</strong> ${response.offender.firstName} ${response.offender.lastName} <br /><strong>Date of birth:</strong> ${format(response.offender.dateOfBirth, 'dd/MM/yyyy')}`,
+      })
+    }
+
+    res.redirect(`/practitioners/cases/`)
   } catch (error) {
     next(error)
   }

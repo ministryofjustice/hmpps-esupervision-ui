@@ -26,9 +26,15 @@
       </ul>
       <form method="POST" id="video-check-in">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-        <div class="videoRecorder" data-module="videoRecorder">
-          <input type="hidden" name="extractedFrame" id="extracted-frame-data" />
-          <input type="hidden" name="recordedVideo" id="recorded-video-data" />
+        <div class="videoRecorder" 
+             data-module="videoRecorder" 
+             data-video-upload-url="{{ videoUploadUrl }}"
+             data-submission-id="{{ submissionId }}">
+             <ul class="es-hidden">
+             {% for frame in frameUploadUrl %}
+               <li data-frame-upload-url="{{ frame }}"></li>
+             {% endfor %}
+             </ul>
           <div class="videoRecorder__container">
             <div class="videoRecorder__videoWrap">
               <video class="videoRecorder__video">Your browser does not support video</video>
@@ -40,7 +46,8 @@
               <button type="button" class="govuk-button govuk-button--secondary videoRecorder__stopButton" data-module="govuk-button" disabled>Stop recording</button>
             </div>
             <div class="govuk-button-group videoRecorder__form-controls">
-              <button type="submit" class="govuk-button videoRecorder__startButton" data-module="govuk-button">Continue</button>
+              <button type="button" class="govuk-button videoRecorder__continueButton" data-module="govuk-button">Continue</button>
+              <button type="button" class="govuk-button videoRecorder__recordAgainButton" data-module="govuk-button">Try again</button>
             </div>
           </div>
             <div class="videoRecorder__error">
@@ -53,4 +60,7 @@
       </form>
     </div>
   </div>
+  <script>
+    const submissionId = "{{ submissionId }}"
+  </script>
 {% endblock %}

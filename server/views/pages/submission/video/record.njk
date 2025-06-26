@@ -26,15 +26,17 @@
       </ul>
       <form method="POST" id="video-check-in">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-        <div class="videoRecorder" 
-             data-module="videoRecorder" 
-             data-video-upload-url="{{ videoUploadUrl }}"
-             data-submission-id="{{ submissionId }}">
-             <ul class="es-hidden">
-             {% for frame in frameUploadUrl %}
-               <li data-frame-upload-url="{{ frame }}"></li>
-             {% endfor %}
-             </ul>
+        <div
+          class="videoRecorder"
+          data-module="videoRecorder"
+          data-video-upload-url="{{ videoUploadUrl }}"
+          data-submission-id="{{ submissionId }}"
+        >
+          <ul class="es-hidden">
+            {% for frame in frameUploadUrl %}
+              <li data-frame-upload-url="{{ frame }}"></li>
+            {% endfor %}
+          </ul>
           <div class="videoRecorder__container">
             <div class="videoRecorder__videoWrap">
               <video class="videoRecorder__video">Your browser does not support video</video>
@@ -42,25 +44,41 @@
               <span class="govuk-tag videoRecorder__tag"></span>
             </div>
             <div class="govuk-button-group videoRecorder__controls">
-              <button type="button" class="govuk-button videoRecorder__startButton" data-module="govuk-button">Start recording</button>
-              <button type="button" class="govuk-button govuk-button--secondary videoRecorder__stopButton" data-module="govuk-button" disabled>Stop recording</button>
+              <button type="button" class="govuk-button videoRecorder__startButton" data-module="govuk-button">
+                Start recording
+              </button>
+              <button
+                type="button"
+                class="govuk-button govuk-button--secondary videoRecorder__stopButton"
+                data-module="govuk-button"
+                disabled
+              >
+                Stop recording
+              </button>
             </div>
             <div class="govuk-button-group videoRecorder__form-controls">
-              <button type="button" class="govuk-button videoRecorder__continueButton" data-module="govuk-button">Continue</button>
-              <button type="button" class="govuk-button videoRecorder__recordAgainButton" data-module="govuk-button">Try again</button>
+              <button type="button" class="govuk-button videoRecorder__continueButton" data-module="govuk-button">
+                Continue
+              </button>
+              <button type="button" class="govuk-button videoRecorder__recordAgainButton" data-module="govuk-button">
+                Try again
+              </button>
             </div>
           </div>
-            <div class="videoRecorder__error">
-              <div class="govuk-inset-text es-inset-text--error">
-                <h2 class="govuk-heading-m es-heading--error">You need to accept permissions on your device</h2>
-                <p>We are unable to access your camera to record a video. Check your browser settings and permissions. If you are having trouble using this service, contact your probation practitioner.  </p>
-              </div>
+          <div class="videoRecorder__error">
+            <div class="govuk-inset-text es-inset-text--error">
+              <h2 class="govuk-heading-m es-heading--error">You need to accept permissions on your device</h2>
+              <p>
+                We are unable to access your camera to record a video. Check your browser settings and permissions. If
+                you are having trouble using this service, contact your probation practitioner.
+              </p>
             </div>
+          </div>
         </div>
       </form>
     </div>
   </div>
   <script>
-    const submissionId = "{{ submissionId }}"
+    const submissionId = '{{ submissionId }}'
   </script>
 {% endblock %}

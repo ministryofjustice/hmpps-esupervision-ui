@@ -41,16 +41,36 @@ export default class EsupervisionApiClient extends RestClient {
   }
 
   async getCheckinVideoUploadLocation(checkinId: string, videoContentType: string): Promise<LocationInfo> {
-    const location = await this.post<UploadLocationResponse>({
-      path: `/offender_checkins/${checkinId}`,
-      query: { 'content-type': videoContentType },
-    })
+    const location = await this.post<UploadLocationResponse>(
+      {
+        path: `/offender_checkins/${checkinId}/upload_location`,
+        query: { 'content-type': videoContentType },
+        headers: { 'Content-Type': 'application/json' },
+      },
+      asSystem(),
+    )
 
-    if (location.errorMessage) {
-      // TODO: throw a better exception type?
-      throw new Error(location.errorMessage)
+    if (location.errorMessage && location.locationInfo) {
+      throw new Error(`Failed to get video upload location: ${location.errorMessage}`)
     } else {
       return location.locationInfo
+    }
+  }
+
+  async getCheckinFrameUploadLocation(checkinId: string, frameContentType: string): Promise<LocationInfo[]> {
+    const location = await this.post<UploadLocationResponse>(
+      {
+        path: `/offender_checkins/${checkinId}/upload_location`,
+        query: { 'content-type': frameContentType, 'num-snapshots': 2 },
+        headers: { 'Content-Type': 'application/json' },
+      },
+      asSystem(),
+    )
+
+    if (location.errorMessage && location.locations) {
+      throw new Error(`Failed to get snapshot upload location: ${location.errorMessage}`)
+    } else {
+      return location.locations
     }
   }
 

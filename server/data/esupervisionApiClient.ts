@@ -44,14 +44,6 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  createCheckin(checkin: CreateCheckinRequest): Promise<Checkin> {
-    return this.post<Checkin>({
-      path: '/offender_checkins',
-      headers: { 'Content-Type': 'application/json' },
-      data: JSON.stringify(checkin),
-    })
-  }
-
   async getCheckinVideoUploadLocation(checkinId: string, videoContentType: string): Promise<LocationInfo> {
     const location = await this.post<UploadLocationResponse>({
       path: `/offender_checkins/${checkinId}`,
@@ -83,6 +75,17 @@ export default class EsupervisionApiClient extends RestClient {
         path: '/offender_setup',
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(offenderInfo),
+      },
+      asSystem(),
+    )
+  }
+
+  async createCheckin(checkinInfo: CreateCheckinRequest): Promise<Checkin> {
+    return this.post<Checkin>(
+      {
+        path: '/offender_checkins',
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify(checkinInfo),
       },
       asSystem(),
     )

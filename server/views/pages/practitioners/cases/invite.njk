@@ -1,0 +1,22 @@
+index.njk{% extends "../layout.njk" %}
+{% set section = "cases" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Create invite</h1>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="dueDate">Due date</label>
+          <input class="govuk-input" id="dueDate" name="dueDate" type="date" required />
+        </div>
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="message">Questions</label>
+          <textarea class="govuk-textarea" id="questions" name="questions" rows="5">questions</textarea>
+        </div>
+        <button type="submit" class="govuk-button">Create invite</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

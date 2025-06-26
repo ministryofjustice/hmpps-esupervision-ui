@@ -1,0 +1,88 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "../../../partials/errorSummary.njk" import errorSummary %}
+{% extends "../layout.njk" %}
+{% set section = "users" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
+      <h1 class="govuk-heading-l">Create practitioner</h1>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukInput({
+          label: {
+            text: "First name"
+          },
+          classes: "govuk-!-width-two-thirds",
+          id: "firstName",
+          name: "firstName",
+          autocomplete: "given-name",
+          errorMessage: validationErrors | findError("firstName"),
+          value: formData["firstName"]
+          })
+        }}
+
+        {{
+          govukInput({
+          label: {
+            text: "Last name"
+          },
+          classes: "govuk-!-width-two-thirds",
+          id: "lastName",
+          name: "lastName",
+          autocomplete: "family-name",
+          errorMessage: validationErrors | findError("lastName"),
+          value: formData["lastName"]
+          })
+        }}
+        {{
+          govukInput({
+          label: {
+            text: 'Email address'
+          },
+          id: "email",
+          name: "email",
+          classes: "govuk-!-width-two-thirds",
+          errorMessage: validationErrors | findError("email"),
+          value: formData["email"],
+          type: "email",
+          autocomplete: "email",
+          spellcheck: false
+          })
+        }}
+        {{
+          govukInput({
+          label: {
+            text: "Mobile number"
+          },
+          id: "mobile",
+          name: "mobile",
+          errorMessage: validationErrors | findError("mobile"),
+          value: formData["mobile"],
+          type: "tel",
+          autocomplete: "tel",
+          classes: "govuk-!-width-two-thirds"
+          })
+        }}
+        {{
+          govukInput({
+          label: {
+            text: "User ID"
+          },
+          classes: "govuk-!-width-two-thirds",
+          id: "uuid",
+          name: "uuid",
+          errorMessage: validationErrors | findError("uuid"),
+          value: formData["uuid"] | default("")
+          })
+        }}
+        <button type="submit" class="govuk-button">Create practitioner</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

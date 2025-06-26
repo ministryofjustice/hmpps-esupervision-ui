@@ -10,6 +10,8 @@ import LocationInfo from './models/locationInfo'
 import CheckinSubmission from './models/checkinSubmission'
 import OffenderInfo from './models/offenderInfo'
 import OffenderSetup from './models/offenderSetup'
+import Practitioner from './models/pracitioner'
+import PractitionerSetup from './models/pracitionerSetup'
 
 export default class EsupervisionApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
@@ -106,6 +108,17 @@ export default class EsupervisionApiClient extends RestClient {
         path: '/offender_checkins',
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(checkinInfo),
+      },
+      asSystem(),
+    )
+  }
+
+  async createPractitioner(practitioner: Practitioner): Promise<PractitionerSetup> {
+    return this.post<PractitionerSetup>(
+      {
+        path: '/practitioners',
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify(practitioner),
       },
       asSystem(),
     )

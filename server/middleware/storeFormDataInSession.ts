@@ -7,26 +7,28 @@ export default function storeFormDataInSession(): RequestHandler {
     }
     res.locals.formData = {}
 
-    Object.keys(req.body).forEach(i => {
-      if (i.indexOf('_') === 0) {
-        return
-      }
+    if (req.body) {
+      Object.keys(req.body).forEach(i => {
+        if (i.indexOf('_') === 0) {
+          return
+        }
 
-      let val = req.body[i]
+        let val = req.body[i]
 
-      // Delete values when users unselect checkboxes
-      if (val === '_unchecked') {
-        delete req.session.formData[i]
-        return
-      }
+        // Delete values when users unselect checkboxes
+        if (val === '_unchecked') {
+          delete req.session.formData[i]
+          return
+        }
 
-      // Remove _unchecked from arrays of checkboxes
-      if (Array.isArray(val)) {
-        val = val.filter((item: string) => item !== '_unchecked')
-      }
+        // Remove _unchecked from arrays of checkboxes
+        if (Array.isArray(val)) {
+          val = val.filter((item: string) => item !== '_unchecked')
+        }
 
-      req.session.formData[i] = val
-    })
+        req.session.formData[i] = val
+      })
+    }
 
     Object.assign(res.locals.formData || {}, req.session.formData)
 

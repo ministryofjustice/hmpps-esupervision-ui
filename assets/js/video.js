@@ -140,7 +140,7 @@ function stopRecording() {
 }
 
 function handleStop() {
-  const videoBlob = new Blob(this.recordedChunks, { type: 'video/webm' })
+  const videoBlob = new Blob(this.recordedChunks, { type: 'video/mp4' })
   this.videoPreview.src = URL.createObjectURL(videoBlob)
   this.videoPreview.controls = true
   this.videoPreview.style.display = 'block'
@@ -165,6 +165,9 @@ async function uploadCheckinMedia({ uploadUrl, data }) {
   const uploadResult = await fetch(uploadUrl, {
     method: 'PUT',
     body: data,
+    headers: {
+      'Content-Type': data.type,
+    },
   })
   return uploadResult
 }
@@ -174,7 +177,7 @@ async function verifyClicked(_) {
   if (this.videoFrame && this.recordedChunks.length > 0) {
     const videoUploadPromise = uploadCheckinMedia({
       uploadUrl: this.videoUploadUrl,
-      data: new Blob(this.recordedChunks, { type: 'video/webm' }),
+      data: new Blob(this.recordedChunks, { type: 'video/mp4' }),
     })
     const frameUploadPromises = []
     for (const frameUrl of this.frameUploadUrls) {

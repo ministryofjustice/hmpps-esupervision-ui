@@ -13,6 +13,7 @@ import OffenderSetup from './models/offenderSetup'
 import AutomatedIdVerificationResult from './models/automatedIdVerificationResult'
 import Practitioner from './models/pracitioner'
 import PractitionerSetup from './models/pracitionerSetup'
+import Offender from './models/offender'
 
 export default class EsupervisionApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
@@ -79,6 +80,32 @@ export default class EsupervisionApiClient extends RestClient {
     } else {
       return location.locations
     }
+  }
+
+  async getProfilePhotoUploadLocation(offenderSetup: OffenderSetup, photoContentType: string): Promise<LocationInfo> {
+    const location = await this.post<UploadLocationResponse>(
+      {
+        path: `/offender_setup/${offenderSetup.uuid}/upload_location`,
+        query: { 'content-type': photoContentType },
+        headers: { 'Content-Type': 'application/json' },
+      },
+      asSystem(),
+    )
+
+    if (location.errorMessage) {
+      throw new Error(`Failed to get profile photo upload location: ${location.errorMessage}`)
+    } else {
+      return location.locationInfo
+    }
+  }
+
+  completeOffenderSetup(offenderSetup: OffenderSetup): Promise<Offender> {
+    return this.post<Offender>(
+      {
+        path: `/offender_setup/${offenderSetup.uuid}/complete`,
+      },
+      asSystem(),
+    )
   }
 
   async submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {

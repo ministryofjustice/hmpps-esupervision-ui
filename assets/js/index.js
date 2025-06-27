@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const constraints = { video: { width: w, height: h } }
         const stream = await navigator.mediaDevices.getUserMedia(constraints)
         const takePhotoButton = document.getElementById('take-photo')
+        const form = document.getElementById('photoForm')
+        const photoDataField = document.getElementById('photoData')
 
         video.srcObject = stream
         video.play()
@@ -45,10 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const dataUrl = canvas.toDataURL('image/jpeg')
             const img = document.createElement('img')
             img.src = dataUrl
+            photoDataField.value = dataUrl
             videoContainer.innerHTML = ''
             videoContainer.appendChild(img)
-
-            window.location.href = '/practitioners/register/photo/review'
+            form.submit()
           })
         }
       } catch (err) {

@@ -72,25 +72,20 @@
       }}
 
       <h2 class="govuk-heading-m">Photo</h2>
-      {{
-        govukSummaryList({
-          rows: [
-            {
-              key: { text: "Photo" },
-              value: { text: "[photo]" },
-              actions: {
-                items: [
-                  {
-                    href: "/practitioners/register/photo",
-                    text: "Change",
-                    visuallyHiddenText: "your photo"
-                  }
-                ]
-              }
-            }
-          ]
-        })
-      }}
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Photo</dt>
+          <dd class="govuk-summary-list__value">
+            <img src="{{ formData["photoData"] }}" class="es-profile-image--small" />
+          </dd>
+
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/practitioners/register/photo?checkAnswers=true"
+              >Change<span class="govuk-visually-hidden"> your photo</span></a
+            >
+          </dd>
+        </div>
+      </dl>
 
       <h2 class="govuk-heading-m">Contact details</h2>
       <dl class="govuk-summary-list">

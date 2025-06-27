@@ -36,10 +36,18 @@
 
 .es-profile-image {
   margin-top: 2rem;
+  margin-bottom: 2rem;
   max-width: 100%;
   height: auto;
   display: block;
   box-shadow:
     rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
     rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+.es-profile-image--small {
+  max-width: 100%;
+  max-height: 250px;
+  height: auto;
+  display: block;
 }

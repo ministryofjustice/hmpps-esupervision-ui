@@ -11,6 +11,7 @@ import CreateCheckinRequest from '../data/models/createCheckinRequest'
 import AutomatedIdVerificationResult from '../data/models/automatedIdVerificationResult'
 import Practitioner from '../data/models/pracitioner'
 import PractitionerSetup from '../data/models/pracitionerSetup'
+import Offender from '../data/models/offender'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -41,6 +42,14 @@ export default class EsupervisionService {
 
   createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {
     return this.esupervisionApiClient.createOffender(offenderInfo)
+  }
+
+  getProfilePhotoUploadLocation(offenderSetup: OffenderSetup, photoContentType: string): Promise<LocationInfo> {
+    return this.esupervisionApiClient.getProfilePhotoUploadLocation(offenderSetup, photoContentType)
+  }
+
+  completeOffenderSetup(offenderSetup: OffenderSetup): Promise<Offender> {
+    return this.esupervisionApiClient.completeOffenderSetup(offenderSetup)
   }
 
   createCheckin(checkin: CreateCheckinRequest): Promise<Checkin> {

@@ -4,6 +4,7 @@ import userFriendlyStrings from '../utils/userFriendlyStrings'
 import logger from '../../logger'
 import { services } from '../services'
 import LocationInfo from '../data/models/locationInfo'
+import AutomatedIdVerificationResult from '../data/models/automatedIdVerificationResult'
 
 const { esupervisionService, faceCompareService } = services()
 
@@ -84,8 +85,8 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
     const videoContentType = 'video/mp4'
     const frameContentType = 'image/png'
     const promises = [
-      await esupervisionService.getCheckinVideoUploadLocation(submissionId, videoContentType),
-      await esupervisionService.getCheckinFrameUploadLocation(submissionId, frameContentType),
+      esupervisionService.getCheckinVideoUploadLocation(submissionId, videoContentType),
+      esupervisionService.getCheckinFrameUploadLocation(submissionId, frameContentType),
     ]
     const [videoResult, framesResult] = await Promise.all(promises)
     const videoUploadLocation = videoResult as LocationInfo
@@ -143,6 +144,7 @@ export const handleVideoVerify: RequestHandler = async (req, res, next) => {
     const result = await faceCompareService.processSubmission(submissionId)
 
     res.write(`data: ${JSON.stringify({ type: 'result', message: 'id verification complete', result })}\n\n`)
+    await esupervisionService.updateAutomatedIdCheckStatus(submissionId, result)
 
     res.end()
   } catch (error) {

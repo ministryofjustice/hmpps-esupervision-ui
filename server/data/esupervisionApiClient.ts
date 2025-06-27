@@ -10,6 +10,7 @@ import LocationInfo from './models/locationInfo'
 import CheckinSubmission from './models/checkinSubmission'
 import OffenderInfo from './models/offenderInfo'
 import OffenderSetup from './models/offenderSetup'
+import AutomatedIdVerificationResult from './models/automatedIdVerificationResult'
 import Practitioner from './models/pracitioner'
 import PractitionerSetup from './models/pracitionerSetup'
 
@@ -119,6 +120,17 @@ export default class EsupervisionApiClient extends RestClient {
         path: '/practitioners',
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(practitioner),
+      },
+      asSystem(),
+    )
+  }
+
+  async updateAutomatedIdCheckStatus(checkinId: string, result: AutomatedIdVerificationResult): Promise<Checkin> {
+    return this.post<Checkin>(
+      {
+        path: `/offender_checkins/${checkinId}/auto_id_check`,
+        headers: { 'Content-Type': 'application/json' },
+        query: { result },
       },
       asSystem(),
     )

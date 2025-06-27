@@ -1,10 +1,6 @@
 import { RekognitionClient, CompareFacesCommand } from '@aws-sdk/client-rekognition'
 import logger from '../../logger'
-
-export enum FaceCompareResult {
-  Match = 'MATCH',
-  NoMatch = 'NO_MATCH',
-}
+import AutomatedIdVerificationResult from '../data/models/automatedIdVerificationResult'
 
 export default class FaceCompareService {
   private readonly s3Bucket: string
@@ -16,7 +12,7 @@ export default class FaceCompareService {
     this.s3Bucket = this.config.s3DataBucket
   }
 
-  async processSubmission(submissionId: string): Promise<FaceCompareResult> {
+  async processSubmission(submissionId: string): Promise<AutomatedIdVerificationResult> {
     const Commmand = new CompareFacesCommand({
       SourceImage: {
         S3Object: {
@@ -43,10 +39,10 @@ export default class FaceCompareService {
         }
       }
 
-      return bestMatch.Similarity > 90 ? FaceCompareResult.Match : FaceCompareResult.NoMatch
+      return bestMatch.Similarity > 90 ? AutomatedIdVerificationResult.Match : AutomatedIdVerificationResult.NoMatch
     }
     logger.info('no face matches', submissionId)
 
-    return FaceCompareResult.NoMatch
+    return AutomatedIdVerificationResult.NoMatch
   }
 }

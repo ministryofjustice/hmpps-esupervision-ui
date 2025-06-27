@@ -77,6 +77,7 @@ export default function routes(): Router {
   router.post('/register', validateFormData(personsDetailsSchema), handleRedirect('/practitioners/register/photo'))
 
   get('/register/photo', renderPhotoCapture)
+  router.post('/register/photo', handleRedirect('/practitioners/register/photo/review'))
   get('/register/photo/review', renderPhotoReview)
 
   get('/register/contact', renderContactDetails)

@@ -42,6 +42,11 @@
         }}
       </div>
 
+      <form method="POST" id="photoForm">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="photoData" id="photoData" />
+      </form>
+
       <div id="es-photo-capture__error">
         <div class="govuk-inset-text es-inset-text--error">
           <h2 class="govuk-heading-m es-heading--error">Permissions</h2>

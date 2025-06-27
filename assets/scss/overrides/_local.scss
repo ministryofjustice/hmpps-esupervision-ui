@@ -4,6 +4,12 @@
   display: none;
 }
 
+.govuk-summary-list__key,
+.govuk-summary-list__value,
+.govuk-summary-list__actions {
+  vertical-align: top;
+}
+
 .es-inset-text--error {
   border-left-color: gds.$govuk-error-colour;
 }

@@ -1,5 +1,6 @@
 class Controls {
   constructor(module) {
+    this.verifyButton = module.querySelector('.videoRecorder__verifyButton')
     this.continueButton = module.querySelector('.videoRecorder__continueButton')
     this.recordAgainButton = module.querySelector('.videoRecorder__recordAgainButton')
     this.formControlsContainer = this.continueButton.closest('.videoRecorder__form-controls')
@@ -26,11 +27,15 @@ export default function VideoRecorder(module) {
   this.videoError = module.querySelector('.videoRecorder__error')
   this.video = module.querySelector('.videoRecorder__video')
   this.tag = module.querySelector('.videoRecorder__tag')
+  this.verificationError = module.querySelector('#verification-error')
+
   this.videoPreview = module.querySelector('.videoRecorder__video-preview')
   this.recordAgainClickHandler = _ => this.recordAgain()
   this.controls.recordAgainButton.addEventListener('click', _ => this.recordAgain())
   this.controls.continueButton.addEventListener('click', ev => this.continueClicked(ev))
+  this.controls.verifyButton.addEventListener('click', ev => this.verifyClicked(ev))
   this.videoUploadUrl = module.dataset.videoUploadUrl
+  // collect upload URLs from elem attributes
   this.frameUploadUrls = [...module.querySelectorAll('[data-frame-upload-url]')].map(
     elem => elem.dataset.frameUploadUrl,
   )
@@ -47,7 +52,7 @@ VideoRecorder.prototype.init = init
 VideoRecorder.prototype.startRecording = startRecording
 VideoRecorder.prototype.stopRecording = stopRecording
 VideoRecorder.prototype.handleStop = handleStop
-VideoRecorder.prototype.continueClicked = continueClicked
+VideoRecorder.prototype.verifyClicked = verifyClicked
 VideoRecorder.prototype.handleDataAvailable = handleDataAvailable
 VideoRecorder.prototype.getVideoFrameAtTwoSeconds = getVideoFrameAtTwoSeconds
 VideoRecorder.prototype.recordAgain = recordAgain
@@ -164,7 +169,7 @@ async function uploadCheckinMedia({ uploadUrl, data }) {
   return uploadResult
 }
 
-async function continueClicked(ev) {
+async function verifyClicked(_) {
   // we upload the video and extracted frame(s)
   if (this.videoFrame && this.recordedChunks.length > 0) {
     const videoUploadPromise = uploadCheckinMedia({
@@ -177,24 +182,25 @@ async function continueClicked(ev) {
       frameUploadPromises.push(frameUploadPromise)
     }
 
-    let preventSubmit = false
     const [videoUpload, ...frameUploads] = await Promise.allSettled([videoUploadPromise, ...frameUploadPromises])
     if (videoUpload.status === 'rejected') {
       console.warn('Video upload failed', { url: this.videoUploadUrl, error: videoUpload.error }) // eslint-disable-line no-console
-      preventSubmit = true
     }
     for (let index = 0; index < frameUploads.length; index += 1) {
       const frameUpload = frameUploads[index]
       if (frameUpload.status === 'rejected') {
         console.warn('Frame upload failed', { url: this.frameUploadUrls[index], error: frameUpload.error }) // eslint-disable-line no-console
-        preventSubmit = true
       }
     }
 
-    if (!preventSubmit) {
-      const form = ev.target.closest('form')
-      if (form) {
-        form.submit()
+    const events = new EventSource(`/submission/${this.submissionId}/video/verify`)
+    events.onmessage = ev => {
+      // console.log('EventSource message', ev)
+      const data = JSON.parse(ev.data)
+      if (data.type === 'result') {
+        events.close()
+        alert(`Face verification result: ${data.result}`) // eslint-disable-line no-alert
+        this.controls.continueButton.disabled = false
       }
     }
   }

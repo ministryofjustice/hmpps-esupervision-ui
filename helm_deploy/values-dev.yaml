@@ -14,6 +14,8 @@ generic-service:
     ESUPERVISION_API_URL: 'https://esupervision-api-dev.hmpps.service.justice.gov.uk'
     ENVIRONMENT_NAME: DEV
     AUDIT_ENABLED: 'false'
+    REKOG_AWS_REGION: 'eu-west-2'
+    REKOG_S3_DATA_BUCKET: 'user-ids-rekognition-d-2'
 
 generic-prometheus-alerts:
   alertSeverity: hmpps_esupervision_alerts_nonprod

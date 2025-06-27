@@ -8,6 +8,7 @@ import OffenderInfo from '../data/models/offenderInfo'
 import OffenderSetup from '../data/models/offenderSetup'
 import CheckinSubmission from '../data/models/checkinSubmission'
 import CreateCheckinRequest from '../data/models/createCheckinRequest'
+import AutomatedIdVerificationResult from '../data/models/automatedIdVerificationResult'
 import Practitioner from '../data/models/pracitioner'
 import PractitionerSetup from '../data/models/pracitionerSetup'
 
@@ -48,5 +49,9 @@ export default class EsupervisionService {
 
   createPractitioner(practitioner: Practitioner): Promise<PractitionerSetup> {
     return this.esupervisionApiClient.createPractitioner(practitioner)
+  }
+
+  updateAutomatedIdCheckStatus(checkinId: string, result: AutomatedIdVerificationResult): Promise<Checkin> {
+    return this.esupervisionApiClient.updateAutomatedIdCheckStatus(checkinId, result)
   }
 }

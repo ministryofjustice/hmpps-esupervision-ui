@@ -82,6 +82,14 @@ export default {
       },
       agent: new AgentConfig(Number(get('EXAMPLE_API_TIMEOUT_RESPONSE', 5000))),
     },
+    rekognitionApi: {
+      accessKeyId: get('REKOG_AWS_ACCESS_KEY_ID', 'accessKeyId', requiredInProduction),
+      secretAccessKey: get('REKOG_AWS_SECRET_ACCESS_KEY', 'secretAccessKey', requiredInProduction),
+      region: get('REKOG_AWS_REGION', 'region', requiredInProduction),
+      s3DataBucket: get('REKOG_S3_DATA_BUCKET', 's3DataBucket', requiredInProduction),
+      healthPath: '/health/ping',
+      url: get('ESUPERVISION_API_URL', 'http://localhost:8080', { requireInProduction: false }),
+    },
   },
   sqs: {
     audit: auditConfig(),

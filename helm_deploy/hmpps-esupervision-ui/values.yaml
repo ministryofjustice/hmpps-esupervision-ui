@@ -33,6 +33,8 @@ generic-service:
     TOKEN_VERIFICATION_ENABLED: 'true'
     AUDIT_SQS_REGION: 'eu-west-2'
     AUDIT_SERVICE_NAME: 'UNASSIGNED' # Your audit service name
+    REKOG_AWS_REGION: 'eu-west-2'
+    REKOG_S3_DATA_BUCKET: 'user-ids-rekognition-d-2'
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -54,6 +56,9 @@ generic-service:
       REDIS_AUTH_TOKEN: 'auth_token'
     hmpps-esupervision-ui-application-insights:
       APPLICATIONINSIGHTS_CONNECTION_STRING: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+    hmpps-esupervision-rekog-aws:
+      REKOG_AWS_ACCESS_KEY_ID: "aws_access_key_id"
+      REKOG_AWS_SECRET_ACCESS_KEY: "aws_secret_access_key"
     # This secret will need to be created in your namespace (note it isn't in hmpps-templates-dev)
     # IRSA configuration in your namespace will also be required, and then uncomment serviceAccountName above.
     # sqs-hmpps-audit-secret:

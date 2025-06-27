@@ -276,8 +276,18 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     email: email ? email.toString() : null,
     phoneNumber: mobile ? mobile.toString() : null,
   }
+
   try {
-    await esupervisionService.createOffender(data)
+    // create PoP record
+    const setup = await esupervisionService.createOffender(data)
+
+    // get upload location for PoP photo from the API
+    const uploadLocation = await esupervisionService.getProfilePhotoUploadLocation(setup, 'image/jpeg')
+
+    // upload PoP photo to location URL
+
+    // complete PoP registration
+    await esupervisionService.completeOffenderSetup(setup)
   } catch (error) {
     next(error)
   }

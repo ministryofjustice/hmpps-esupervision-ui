@@ -5,7 +5,7 @@ import logger from '../../logger'
 import { services } from '../services'
 import LocationInfo from '../data/models/locationInfo'
 
-const { esupervisionService } = services()
+const { esupervisionService, faceCompareService } = services()
 
 const getSubmissionId = (req: Request): string => req.params.submissionId
 const pageParams = (req: Request): Record<string, string> => {
@@ -118,6 +118,33 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
       videoUploadUrl: videoUploadLocation.url,
       frameUploadUrl: snapshotPhotoUploadUrls,
     })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleVideoVerify: RequestHandler = async (req, res, next) => {
+  try {
+    const submissionId = getSubmissionId(req)
+    logger.info('handleVideoVerify', submissionId)
+    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+
+    res.on('error', error => {
+      logger.error('Error writing to stream', error)
+    })
+    req.on('close', () => {
+      logger.info('Client disconnected', submissionId)
+    })
+
+    res.write(`data: ${JSON.stringify({ type: 'message', message: 'starting id verification' })}\n\n`)
+
+    const result = await faceCompareService.processSubmission(submissionId)
+
+    res.write(`data: ${JSON.stringify({ type: 'result', message: 'id verification complete', result })}\n\n`)
+
+    res.end()
   } catch (error) {
     next(error)
   }

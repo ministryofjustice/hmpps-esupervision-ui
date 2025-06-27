@@ -4,7 +4,6 @@ import userFriendlyStrings from '../utils/userFriendlyStrings'
 import logger from '../../logger'
 import { services } from '../services'
 import LocationInfo from '../data/models/locationInfo'
-import AutomatedIdVerificationResult from '../data/models/automatedIdVerificationResult'
 
 const { esupervisionService, faceCompareService } = services()
 

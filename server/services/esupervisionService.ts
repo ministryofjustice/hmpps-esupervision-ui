@@ -10,6 +10,7 @@ import CheckinSubmission from '../data/models/checkinSubmission'
 import CreateCheckinRequest from '../data/models/createCheckinRequest'
 import Practitioner from '../data/models/pracitioner'
 import PractitionerSetup from '../data/models/pracitionerSetup'
+import Offender from '../data/models/offender'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -46,7 +47,7 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getProfilePhotoUploadLocation(offenderSetup, photoContentType)
   }
 
-  completeOffenderSetup(offenderSetup: OffenderSetup): Promise<object> {
+  completeOffenderSetup(offenderSetup: OffenderSetup): Promise<Offender> {
     return this.esupervisionApiClient.completeOffenderSetup(offenderSetup)
   }
 

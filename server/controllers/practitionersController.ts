@@ -264,8 +264,21 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   }
 }
 
+const dataUrlToBlob = (dataUrl: string) => {
+  const [info, data] = dataUrl.split(',')
+  const mime = info.match(/:(.*?);/)[1]
+  const byteString = atob(data)
+  const bytes = new Uint8Array(byteString.length)
+
+  for (let i = 0; i < byteString.length; i += 1) {
+    bytes[i] = byteString.charCodeAt(i)
+  }
+
+  return new Blob([bytes], { type: mime })
+}
+
 export const handleRegister: RequestHandler = async (req, res, next) => {
-  const { firstName, lastName, day, month, year, email, mobile } = res.locals.formData
+  const { firstName, lastName, day, month, year, email, mobile, photoData } = res.locals.formData
 
   const data = {
     setupUuid: uuidv4(),
@@ -278,13 +291,27 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
   }
 
   try {
+    // convert photo data URL to blob
+    const photoBlob = dataUrlToBlob(photoData as string)
+
     // create PoP record
     const setup = await esupervisionService.createOffender(data)
 
     // get upload location for PoP photo from the API
-    const uploadLocation = await esupervisionService.getProfilePhotoUploadLocation(setup, 'image/jpeg')
+    const uploadLocation = await esupervisionService.getProfilePhotoUploadLocation(setup, photoBlob.type)
 
     // upload PoP photo to location URL
+    const response = await fetch(uploadLocation.url, {
+      method: 'PUT',
+      body: photoBlob,
+      headers: {
+        'Content-Type': photoBlob.type,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to upload profile image')
+    }
 
     // complete PoP registration
     await esupervisionService.completeOffenderSetup(setup)

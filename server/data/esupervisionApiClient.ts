@@ -99,9 +99,12 @@ export default class EsupervisionApiClient extends RestClient {
   }
 
   completeOffenderSetup(offenderSetup: OffenderSetup): Promise<Offender> {
-    return this.post<Offender>({
-      path: `/offender_setup/${offenderSetup.uuid}/complete`,
-    })
+    return this.post<Offender>(
+      {
+        path: `/offender_setup/${offenderSetup.uuid}/complete`,
+      },
+      asSystem(),
+    )
   }
 
   async submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {

@@ -1,0 +1,17 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% extends "../layout.njk" %}
+{% set section = "users" %}
+
+{% block content %}
+  {% if successMessage %}
+    {{
+      govukNotificationBanner({
+      html: '<p class="govuk-body">' + successMessage.message + '</p>',
+      type: 'success',
+      titleId: 'success-title'
+      })
+    }}
+  {% endif %}
+  <h1 class="govuk-heading-l">Practitioners</h1>
+  <a href="/practitioners/users/create" role="button" class="govuk-button">Create practitioner</a>
+{% endblock %}

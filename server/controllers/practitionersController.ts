@@ -3,6 +3,8 @@ import { format } from 'date-fns/format'
 import { v4 as uuidv4 } from 'uuid'
 import userFriendlyStrings from '../utils/userFriendlyStrings'
 import { services } from '../services'
+import Checkin from '../data/models/checkin'
+import Page from '../data/models/page'
 
 const { esupervisionService } = services()
 
@@ -19,7 +21,8 @@ export const handleRedirect = (url: string): RequestHandler => {
 export const renderDashboard: RequestHandler = async (req, res, next) => {
   try {
     const practitionerUuid = res.locals.user.userId
-    const checkIns = await esupervisionService.getCheckins(practitionerUuid)
+    const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid)
+    const checkIns = filterCheckIns(rawCheckIns)
     res.render('pages/practitioners/dashboard', { checkIns, practitionerUuid })
   } catch (error) {
     next(error)
@@ -30,10 +33,39 @@ export const renderDashboardFiltered: RequestHandler = async (req, res, next) =>
   try {
     const { filter } = req.params
     const practitionerUuid = res.locals.user.userId
-    const checkIns = await esupervisionService.getCheckins(practitionerUuid)
+    const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid)
+    const checkIns = filterCheckIns(rawCheckIns)
     res.render('pages/practitioners/dashboard', { checkIns, filter })
   } catch (error) {
     next(error)
+  }
+}
+
+const filterCheckIns = (checkIns: Page<Checkin>) => {
+  return checkIns.content.map((checkIn: Checkin) => {
+    const { offender, autoIdCheck, dueDate, status } = checkIn
+    return {
+      checkInId: checkIn.uuid,
+      offenderName: `${offender.firstName} ${offender.lastName}`,
+      offenderId: offender.uuid,
+      flagged: autoIdCheck === 'NO_MATCH',
+      receivedDate: checkIn.submittedOn ? format(new Date(checkIn.submittedOn), 'dd/MM/yyyy') : '',
+      dueDate: format(new Date(dueDate), 'dd/MM/yyyy'),
+      status: friendlyCheckInStatus(status),
+    }
+  })
+}
+
+const friendlyCheckInStatus = (status: string) => {
+  switch (status) {
+    case 'CREATED':
+      return 'Not submitted'
+    case 'SUBMITTED':
+      return 'Received'
+    case 'REVIEWED':
+      return 'Reviewed'
+    default:
+      return status
   }
 }
 
@@ -96,6 +128,43 @@ export const handleCreateInvite: RequestHandler = async (req, res, next) => {
     }
 
     res.redirect(`/practitioners/cases/`)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUsers: RequestHandler = async (req, res, next) => {
+  try {
+    // eslint-disable-next-line prefer-destructuring
+    res.locals.successMessage = req.flash('success')[0]
+    res.render('pages/practitioners/users/index')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUserCreate: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/users/create')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleCreateUser: RequestHandler = async (req, res, next) => {
+  try {
+    const { uuid, firstName, lastName, email, mobile } = res.locals.formData
+    const data = {
+      uuid: uuid.toString() || '',
+      firstName: firstName.toString() || '',
+      lastName: lastName.toString() || '',
+      email: email ? email.toString() : null,
+      phoneNumber: mobile ? mobile.toString() : null,
+      roles: ['ROLE_PRACTITIONER'],
+    }
+    await esupervisionService.createPractitioner(data)
+    req.flash('success', { message: 'Practitioner created successfully' })
+    res.redirect('/practitioners/users')
   } catch (error) {
     next(error)
   }

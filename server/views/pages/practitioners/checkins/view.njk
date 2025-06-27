@@ -61,7 +61,7 @@
           <dd class="govuk-summary-list__value">
             {% if checkIn.autoIdCheck == "MATCH" %}
               <span class="govuk-tag govuk-tag--green">Pass</span>
-            {% elseif checkIn.autoIdCheck == "NO_MATCH" %}
+              {% elseif checkIn.autoIdCheck == "NO_MATCH" %}
               <span class="govuk-tag govuk-tag--red">Fail</span>
             {% else %}
               <span class="govuk-tag govuk-tag--grey">Not submitted</span>
@@ -70,84 +70,82 @@
           <dd class="govuk-summary-list__actions"></dd>
         </div>
         {% if checkIn.autoIdCheck == "MATCH" or checkIn.autoIdCheck == "NO_MATCH" %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Video still</dt>
-          <dd class="govuk-summary-list__value">-</dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Video</dt>
-          <dd class="govuk-summary-list__value">
-            <a href="{{ checkIn.videoUrl }}" class="govuk-link" target="_blank">View video</a>
-          </dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Video still</dt>
+            <dd class="govuk-summary-list__value">-</dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Video</dt>
+            <dd class="govuk-summary-list__value">
+              <a href="{{ checkIn.videoUrl }}" class="govuk-link" target="_blank">View video</a>
+            </dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
         {% endif %}
       </dl>
       <h2 class="govuk-heading-m">Questions</h2>
       <dl class="govuk-summary-list">
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Mental health</dt>
-            <dd class="govuk-summary-list__value">{{ checkIn.answers.mentalHealth }}</dd>
-            <dd class="govuk-summary-list__actions"></dd>
-          </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Mental health</dt>
+          <dd class="govuk-summary-list__value">{{ checkIn.answers.mentalHealth }}</dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Anything they need help with</dt>
           <dd class="govuk-summary-list__value">{{ checkIn.answers.assistance }}</dd>
           <dd class="govuk-summary-list__actions"></dd>
         </div>
 
-
         {% if checkIn.answers.mentalHealthSupport %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Mental health</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.mentalHealthSupport }}</dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Mental health</dt>
+            <dd class="govuk-summary-list__value">{{ checkIn.answers.mentalHealthSupport }}</dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
         {% endif %}
         {% if checkIn.answers.alcoholSupport %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Alcohol</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.alcoholSupport }}</dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Alcohol</dt>
+            <dd class="govuk-summary-list__value">{{ checkIn.answers.alcoholSupport }}</dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
         {% endif %}
         {% if checkIn.answers.drugsSupport %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Drugs</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.drugsSupport }}</dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Drugs</dt>
+            <dd class="govuk-summary-list__value">{{ checkIn.answers.drugsSupport }}</dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
         {% endif %}
         {% if checkIn.answers.moneySupport %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Money</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.moneySupport }}</dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Money</dt>
+            <dd class="govuk-summary-list__value">{{ checkIn.answers.moneySupport }}</dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
         {% endif %}
         {% if checkIn.answers.housingSupport %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Housing</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.housingSupport }}</dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Housing</dt>
+            <dd class="govuk-summary-list__value">{{ checkIn.answers.housingSupport }}</dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
         {% endif %}
         {% if checkIn.answers.supportSystemSupport %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Support system</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.supportSystemSupport }}</dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Support system</dt>
+            <dd class="govuk-summary-list__value">{{ checkIn.answers.supportSystemSupport }}</dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
         {% endif %}
         {% if checkIn.answers.otherSupport %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Other</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.otherSupport }}</dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Other</dt>
+            <dd class="govuk-summary-list__value">{{ checkIn.answers.otherSupport }}</dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
         {% endif %}
-
 
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Contact with practitioner requested</dt>
@@ -155,17 +153,16 @@
           <dd class="govuk-summary-list__actions"></dd>
         </div>
         {% if checkIn.answers.callbackDetails %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">What needs to be discussed</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.callbackDetails }}</dd>
-          <dd class="govuk-summary-list__actions"></dd>
-        </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">What needs to be discussed</dt>
+            <dd class="govuk-summary-list__value">{{ checkIn.answers.callbackDetails }}</dd>
+            <dd class="govuk-summary-list__actions"></dd>
+          </div>
         {% endif %}
-
       </dl>
     </div>
     <div class="govuk-grid-column-one-third">
-        <img src="/assets/images/placeholder.jpg" class="es-profile-image" />
+      <img src="/assets/images/placeholder.jpg" class="es-profile-image" />
     </div>
   </div>
 {% endblock %}

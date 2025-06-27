@@ -73,7 +73,6 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
     const checkIn = await esupervisionService.getCheckin(checkInId)
-    console.log(checkIn)
     res.render('pages/practitioners/checkins/view', { checkIn })
   } catch (error) {
     next(error)

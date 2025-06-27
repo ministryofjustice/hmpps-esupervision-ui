@@ -29,7 +29,7 @@
           rows: [
           {
             key: {
-              text: "Check-in date"
+              text: "Check-in due"
             },
             value: {
               text: checkIn.dueDate | gdsDate
@@ -41,14 +41,6 @@
             },
             value: {
               text: checkIn.submittedOn | gdsDateTime
-            }
-          },
-          {
-            key: {
-              text: "Review date"
-            },
-            value: {
-              html: checkIn.createdAt | gdsDate
             }
           }
         ]
@@ -161,8 +153,9 @@
         {% endif %}
       </dl>
     </div>
+
     <div class="govuk-grid-column-one-third">
-      <img src="/assets/images/placeholder.jpg" class="es-profile-image" />
+      <img src="{{ "/assets/images/placeholder.png" if checkIn.offender.photoUrl == null else checkIn.offender.photoUrl }}" class="es-profile-image" />
     </div>
   </div>
 {% endblock %}

@@ -32,7 +32,6 @@ export default function VideoRecorder(module) {
   this.videoPreview = module.querySelector('.videoRecorder__video-preview')
   this.recordAgainClickHandler = _ => this.recordAgain()
   this.controls.recordAgainButton.addEventListener('click', _ => this.recordAgain())
-  this.controls.continueButton.addEventListener('click', ev => this.continueClicked(ev))
   this.controls.verifyButton.addEventListener('click', ev => this.verifyClicked(ev))
   this.videoUploadUrl = module.dataset.videoUploadUrl
   // collect upload URLs from elem attributes

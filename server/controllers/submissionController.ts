@@ -82,7 +82,7 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
   try {
     const { submissionId } = req.params
     const videoContentType = 'video/mp4'
-    const frameContentType = 'image/png'
+    const frameContentType = 'image/jpeg'
     const promises = [
       esupervisionService.getCheckinVideoUploadLocation(submissionId, videoContentType),
       esupervisionService.getCheckinFrameUploadLocation(submissionId, frameContentType),
@@ -104,10 +104,10 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
     const [referencePhotoUploadUrl, ...snapshotPhotoUploadUrls] = frameUploadLocations.map(location => location.url)
     const referencePhotoUploadResult = await fetch(referencePhotoUploadUrl, {
       method: 'PUT',
-      body: offenderReferencePhoto,
       headers: {
-        'Content-Type': 'image/png',
+        'Content-Type': offenderReferencePhoto.type,
       },
+      body: offenderReferencePhoto,
     })
 
     if (!referencePhotoUploadResult.ok) {

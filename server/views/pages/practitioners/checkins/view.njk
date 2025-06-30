@@ -46,6 +46,8 @@
         ]
           })
       }}
+
+
       <h2 class="govuk-heading-m">Video</h2>
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
@@ -70,7 +72,19 @@
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Video</dt>
             <dd class="govuk-summary-list__value">
-              <a href="{{ checkIn.videoUrl }}" class="govuk-link" target="_blank">View video</a>
+              <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                  <span class="govuk-details__summary-text">
+                    View video
+                  </span>
+                </summary>
+                <div class="govuk-details__text">
+                  <div class="videoRecorder__videoWrap">
+                    <video src="{{ checkIn.videoUrl }}" controls type="video/webm" class="videoRecorder__video">
+                    </video>
+                  </div>
+                </div>
+              </details>
             </dd>
             <dd class="govuk-summary-list__actions"></dd>
           </div>

@@ -24,7 +24,7 @@
       }]
     })
   }}
-  {% if checkIns %}
+  {% if checkIns and checkIns|length > 0 %}
     <table class="govuk-table" data-module="moj-sortable-table">
       <caption class="govuk-table__caption govuk-table__caption--m">
         Check-ins
@@ -68,8 +68,10 @@
 {% block footer %}
   <footer class="govuk-footer">
     <div class="govuk-width-container">
+      {% if practitionerUuid %}
       <h4 class="govuk-heading-xs govuk-!-margin-bottom-1">User ID</h4>
       <p class="govuk-hint govuk-!-font-size-14"><code>{{ practitionerUuid }}</code></p>
+      {% endif %}
     </div>
   </footer>
 {% endblock %}

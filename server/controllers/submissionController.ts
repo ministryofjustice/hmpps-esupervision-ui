@@ -105,6 +105,9 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
     const referencePhotoUploadResult = await fetch(referencePhotoUploadUrl, {
       method: 'PUT',
       body: offenderReferencePhoto,
+      headers: {
+        'Content-Type': 'image/png',
+      },
     })
 
     if (!referencePhotoUploadResult.ok) {

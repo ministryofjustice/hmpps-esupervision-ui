@@ -292,7 +292,7 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     practitionerId: res.locals.user.userId,
     firstName: firstName.toString() || '',
     lastName: lastName.toString() || '',
-    dateOfBirth: `${year}-${month}-${day}`,
+    dateOfBirth: format(`${year}-${month}-${day}`, 'yyyy-MM-dd'),
     email: email ? email.toString() : null,
     phoneNumber: mobile ? mobile.toString() : null,
   }

@@ -122,7 +122,7 @@ async function getVideoFrameAtTwoSeconds() {
       } else {
         reject(new Error('Failed to extract frame'))
       }
-    }, 'image/png')
+    }, 'image/jpeg')
   })
   this.videoFrame = frameBlob
 }

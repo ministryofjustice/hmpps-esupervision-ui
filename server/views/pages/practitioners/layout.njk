@@ -31,7 +31,7 @@
           </svg>
           HMPPS
         </a>
-
+        <a class="hmpps-header__link hmpps-header__title__service-name" href="/practitioners">Manage online wellbeing checks</a>
         {% if environmentName %}
           <div class="govuk-phase-banner">
             {{
@@ -72,18 +72,11 @@
 
   {{
     govukServiceNavigation({
-      serviceName: "Manage online wellbeing checks",
-      serviceUrl: "/practitioners",
       navigation: [
         {
           href: "/practitioners/dashboard",
           text: "Dashboard",
           active: true if section == "dashboard" else false
-        },
-        {
-          href: "/practitioners/register",
-          text: "Set up a person",
-          active: true if section == "register" else false
         },
         {
           href: "/practitioners/cases",

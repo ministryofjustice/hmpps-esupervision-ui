@@ -3,7 +3,7 @@
 .hmpps-header {
   @include gds.govuk-responsive-padding(3, 'top');
   @include gds.govuk-responsive-padding(3, 'bottom');
-  background-color: gds.govuk-colour('blue');
+  background-color: gds.govuk-colour('black');
 
   &__container {
     @include gds.govuk-width-container;

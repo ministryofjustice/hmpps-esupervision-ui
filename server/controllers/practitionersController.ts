@@ -292,7 +292,7 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     practitionerId: res.locals.user.userId,
     firstName: firstName.toString() || '',
     lastName: lastName.toString() || '',
-    dateOfBirth: `${year}-${month}-${day}`,
+    dateOfBirth: format(`${year}-${month}-${day}`, 'yyyy-MM-dd'),
     email: email ? email.toString() : null,
     phoneNumber: mobile ? mobile.toString() : null,
   }
@@ -332,7 +332,13 @@ export const renderConfirmation: RequestHandler = async (req, res, next) => {
   try {
     const { startDateDay, startDateMonth, startDateYear } = res.locals.formData
     const startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
-    res.render('pages/practitioners/register/confirmation', { startDate })
+    const contactPreference = res.locals.formData.contactPreference || 'email'
+    const contactString =
+      contactPreference === 'both'
+        ? `${res.locals.formData.email} and ${res.locals.formData.mobile}`
+        : res.locals.formData[contactPreference.toString()]
+
+    res.render('pages/practitioners/register/confirmation', { startDate, contactString })
     req.session.formData = {}
   } catch (error) {
     next(error)

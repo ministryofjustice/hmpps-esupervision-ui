@@ -57,8 +57,8 @@ generic-service:
     hmpps-esupervision-ui-application-insights:
       APPLICATIONINSIGHTS_CONNECTION_STRING: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
     hmpps-esupervision-rekog-aws:
-      REKOG_AWS_ACCESS_KEY_ID: "aws_access_key_id"
-      REKOG_AWS_SECRET_ACCESS_KEY: "aws_secret_access_key"
+      REKOG_AWS_ACCESS_KEY_ID: 'aws_access_key_id'
+      REKOG_AWS_SECRET_ACCESS_KEY: 'aws_secret_access_key'
     # This secret will need to be created in your namespace (note it isn't in hmpps-templates-dev)
     # IRSA configuration in your namespace will also be required, and then uncomment serviceAccountName above.
     # sqs-hmpps-audit-secret:

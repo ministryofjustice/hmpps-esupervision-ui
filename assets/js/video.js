@@ -76,7 +76,7 @@ function init() {
 
 async function startRecording() {
   try {
-    this.mediaRecorder = new MediaRecorder(this.stream, { mimeType: 'video/webm' })
+    this.mediaRecorder = new MediaRecorder(this.stream, { mimeType: 'video/mp4' })
   } catch (e) {
     console.error('MediaRecorder not supported:', e) // eslint-disable-line no-console
   }
@@ -122,7 +122,7 @@ async function getVideoFrameAtTwoSeconds() {
       } else {
         reject(new Error('Failed to extract frame'))
       }
-    }, 'image/png')
+    }, 'image/jpeg')
   })
   this.videoFrame = frameBlob
 }

@@ -6,7 +6,9 @@
 
 {% block content %}
   <h1 class="govuk-heading-l">Check-ins</h1>
-  <a href="/practitioners/register" class="govuk-button" data-module="govuk-button">Add person to online wellbeing check</a>
+  <a href="/practitioners/register" class="govuk-button" data-module="govuk-button"
+    >Add person to online wellbeing check</a
+  >
   {{
     mojSubNavigation({
     label: "Sub navigation",
@@ -51,7 +53,11 @@
               }}{% endif %}
             </td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
-              <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link">View<span class="govuk-visually-hidden"> the check-in of {{ checkin.offenderName }} received {{ checkin.receivedDate }}</span> </a>
+              <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link"
+                >View<span class="govuk-visually-hidden">
+                  the check-in of {{ checkin.offenderName }} received {{ checkin.receivedDate }}</span
+                >
+              </a>
             </td>
           </tr>
         {% endfor %}
@@ -67,8 +73,8 @@
   <footer class="govuk-footer">
     <div class="govuk-width-container">
       {% if practitionerUuid %}
-      <h4 class="govuk-heading-xs govuk-!-margin-bottom-1">User ID</h4>
-      <p class="govuk-hint govuk-!-font-size-14"><code>{{ practitionerUuid }}</code></p>
+        <h4 class="govuk-heading-xs govuk-!-margin-bottom-1">User ID</h4>
+        <p class="govuk-hint govuk-!-font-size-14"><code>{{ practitionerUuid }}</code></p>
       {% endif %}
     </div>
   </footer>

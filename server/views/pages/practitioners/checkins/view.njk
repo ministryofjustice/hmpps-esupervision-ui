@@ -47,7 +47,6 @@
           })
       }}
 
-
       <h2 class="govuk-heading-m">Video</h2>
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
@@ -61,32 +60,21 @@
               <span class="govuk-tag govuk-tag--grey">Not submitted</span>
             {% endif %}
           </dd>
-          <dd class="govuk-summary-list__actions"></dd>
         </div>
         {% if checkIn.autoIdCheck == "MATCH" or checkIn.autoIdCheck == "NO_MATCH" %}
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Video still</dt>
-            <dd class="govuk-summary-list__value">-</dd>
-            <dd class="govuk-summary-list__actions"></dd>
-          </div>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Video</dt>
             <dd class="govuk-summary-list__value">
               <details class="govuk-details">
                 <summary class="govuk-details__summary">
-                  <span class="govuk-details__summary-text">
-                    View video
-                  </span>
+                  <span class="govuk-details__summary-text"> View video </span>
                 </summary>
-                <div class="govuk-details__text">
-                  <div class="videoRecorder__videoWrap">
-                    <video src="{{ checkIn.videoUrl }}" controls type="video/webm" class="videoRecorder__video">
-                    </video>
-                  </div>
+
+                <div class="videoRecorder__videoWrap govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+                  <video src="{{ checkIn.videoUrl }}" controls type="video/webm" class="videoRecorder__video"></video>
                 </div>
               </details>
             </dd>
-            <dd class="govuk-summary-list__actions"></dd>
           </div>
         {% endif %}
       </dl>

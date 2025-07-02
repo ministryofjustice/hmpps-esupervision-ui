@@ -1,6 +1,7 @@
 {% extends "govuk/template.njk" %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+{% from "govuk/components/footer/macro.njk" import govukFooter %}
 
 {% block head %}
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet" />
@@ -91,6 +92,13 @@
 {% endblock %}
 
 {% block footer %}
+  {{
+    govukFooter({
+    meta: {
+      html: metaContent
+    }
+    })
+  }}
 {% endblock %}
 
 {% block bodyEnd %}

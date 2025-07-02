@@ -31,6 +31,7 @@ import {
   renderUsers,
   renderUserCreate,
   handleCreateUser,
+  handleStartRegister,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -73,6 +74,7 @@ export default function routes(): Router {
   get('/users/create', renderUserCreate)
   router.post('/users/create', validateFormData(practitionerSchema), handleCreateUser)
 
+  get('/register/start', handleStartRegister)
   get('/register', renderRegisterDetails)
   router.post('/register', validateFormData(personsDetailsSchema), handleRedirect('/practitioners/register/photo'))
 

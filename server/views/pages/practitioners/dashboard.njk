@@ -3,10 +3,11 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set section = "dashboard" %}
+{% set metaContent = '<h4 class="govuk-heading-xs govuk-!-margin-bottom-1">User ID</h4><p class="govuk-hint govuk-!-font-size-14"><code>' + practitionerUuid + '</code></p>' %}
 
 {% block content %}
   <h1 class="govuk-heading-l">Check-ins</h1>
-  <a href="/practitioners/register" class="govuk-button" data-module="govuk-button"
+  <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button"
     >Add person to online wellbeing check</a
   >
   {{
@@ -67,15 +68,4 @@
     <h2 class="govuk-heading-m">Check-ins</h2>
     <p class="govuk-body">No check-ins found</p>
   {% endif %}
-{% endblock %}
-
-{% block footer %}
-  <footer class="govuk-footer">
-    <div class="govuk-width-container">
-      {% if practitionerUuid %}
-        <h4 class="govuk-heading-xs govuk-!-margin-bottom-1">User ID</h4>
-        <p class="govuk-hint govuk-!-font-size-14"><code>{{ practitionerUuid }}</code></p>
-      {% endif %}
-    </div>
-  </footer>
 {% endblock %}

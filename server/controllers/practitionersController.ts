@@ -230,7 +230,7 @@ export const renderMobile: RequestHandler = async (req, res, next) => {
 export const handleMobile: RequestHandler = async (req, res, next) => {
   const { contactPreference } = res.locals.formData
 
-  if (contactPreference === 'both') {
+  if (contactPreference === 'BOTH') {
     return res.redirect('/practitioners/register/contact/email')
   }
 
@@ -336,7 +336,7 @@ export const renderConfirmation: RequestHandler = async (req, res, next) => {
     const startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
     const contactPreference = res.locals.formData.contactPreference || 'email'
     const contactString =
-      contactPreference === 'both'
+      contactPreference === 'BOTH'
         ? `${res.locals.formData.email} and ${res.locals.formData.mobile}`
         : res.locals.formData[contactPreference.toString()]
 

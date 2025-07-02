@@ -35,9 +35,10 @@
         </div>
         {{
           govukButton({
-            text: "Continue to take photo",
+            text: "Take photo",
             type: "button",
-            id: "take-photo"
+            id: "take-photo",
+            disabled: true
           })
         }}
       </div>
@@ -52,7 +53,7 @@
           <h2 class="govuk-heading-m es-heading--error">Permissions</h2>
           <p>We are unable to access your camera to take a photo. Check your browser settings and permissions.</p>
         </div>
-        <button class="govuk-button" disabled>Continue to take photo</button>
+        <button class="govuk-button" disabled>Take photo</button>
       </div>
     </div>
   </div>

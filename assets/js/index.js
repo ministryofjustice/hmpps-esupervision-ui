@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const photoDataField = document.getElementById('photoData')
 
         video.srcObject = stream
-        video.play()
+        await video.play()
 
         canvas.width = w
         canvas.height = h
@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoContainer.appendChild(canvas)
 
         if (takePhotoButton) {
+          takePhotoButton.removeAttribute('disabled')
           takePhotoButton.addEventListener('click', async () => {
             context.drawImage(video, 0, 0, w, h)
             const dataUrl = canvas.toDataURL('image/jpeg')

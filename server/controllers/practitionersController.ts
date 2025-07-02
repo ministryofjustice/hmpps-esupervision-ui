@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express'
 import { format } from 'date-fns/format'
 import { v4 as uuidv4 } from 'uuid'
-import userFriendlyStrings from '../utils/userFriendlyStrings'
 import { services } from '../services'
 import Checkin from '../data/models/checkin'
 import Page from '../data/models/page'
+import getUserFriendlyString from '../utils/userFriendlyStrings'
 
 const { esupervisionService } = services()
 
@@ -212,7 +212,7 @@ export const renderContactDetails: RequestHandler = async (req, res, next) => {
 export const handleContactPreferences: RequestHandler = async (req, res, next) => {
   const { contactPreference } = req.body
 
-  if (contactPreference === 'email') {
+  if (contactPreference === 'EMAIL') {
     return res.redirect('/practitioners/register/contact/email')
   }
 
@@ -255,15 +255,17 @@ export const renderSetUp: RequestHandler = async (req, res, next) => {
 
 export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   try {
-    const { day, month, year, contactPreference, startDateDay, startDateMonth, startDateYear } = res.locals.formData
+    const { day, month, year, contactPreference, startDateDay, startDateMonth, startDateYear, frequency } =
+      res.locals.formData
 
-    res.locals.dateOfBirth = `${day}/${month}/${year}`
-    res.locals.contactPreference = userFriendlyStrings(contactPreference?.toString())
+    res.locals.dateOfBirth = new Date(`${year}/${month}/${day}`)
+    res.locals.contactPreference = getUserFriendlyString(contactPreference?.toString())
 
     if (startDateYear) {
-      const startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
-      res.locals.startDate = format(startDate, 'do MMMM yyyy')
+      res.locals.startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
     }
+
+    res.locals.frequency = getUserFriendlyString(frequency.toString())
 
     res.render('pages/practitioners/register/check-answers')
   } catch (error) {

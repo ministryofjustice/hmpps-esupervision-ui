@@ -32,18 +32,18 @@ export const personalDetailsSchema = z
   )
 
 const validCircumstances = [
-  'mentalHealth',
-  'alcohol',
-  'drugs',
-  'money',
-  'housing',
-  'supportSystem',
-  'other',
-  'none',
+  'MENTAL_HEALTH',
+  'ALCOHOL',
+  'DRUGS',
+  'MONEY',
+  'HOUSING',
+  'SUPPORT_SYSTEM',
+  'OTHER',
+  'NO_HELP',
 ] as const
 
 export const mentalHealthSchema = z.object({
-  mentalHealth: z.enum(['veryWell', 'well', 'ok', 'notGreat', 'struggling'], {
+  mentalHealth: z.enum(['VERY_WELL', 'WELL', 'OK', 'NOT_GREAT', 'STRUGGLING'], {
     required_error: 'Select how you are feeling',
   }),
 })
@@ -60,13 +60,13 @@ export const assistanceSchema = z.object({
 })
 
 export const callbackSchema = z.object({
-  callback: z.enum(['yes', 'no'], {
+  callback: z.enum(['YES', 'NO'], {
     required_error: 'Select yes if you need to speak to your probation practitioner',
   }),
 })
 
 export const checkAnswersSchema = z.object({
-  checkAnswers: z.enum(['confirm'], {
+  checkAnswers: z.enum(['CONFIRM'], {
     required_error: 'Confirm your details are correct',
   }),
 })

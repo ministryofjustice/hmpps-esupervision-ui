@@ -56,7 +56,7 @@
             },
             {
               key: { text: "Date of birth" },
-              value: { text: dateOfBirth },
+              value: { text: dateOfBirth | gdsDate },
               actions: {
                 items: [
                   {
@@ -98,7 +98,7 @@
             >
           </dd>
         </div>
-        {% if formData['contactPreference'] == 'both' or formData['contactPreference'] == 'text' %}
+        {% if formData['contactPreference'] == 'BOTH' or formData['contactPreference'] == 'TEXT' %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Mobile number</dt>
             <dd class="govuk-summary-list__value">{{ formData['mobile'] }}</dd>
@@ -110,7 +110,7 @@
           </div>
         {% endif %}
 
-        {% if formData['contactPreference'] == 'both' or formData['contactPreference'] == 'email' %}
+        {% if formData['contactPreference'] == 'BOTH' or formData['contactPreference'] == 'EMAIL' %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Email address</dt>
             <dd class="govuk-summary-list__value">{{ formData['email'] }}</dd>
@@ -130,7 +130,7 @@
           rows: [
             {
               key: { text: "Start date" },
-              value: { text: startDate },
+              value: { text: startDate | gdsDate},
               actions: {
                 items: [
                   {
@@ -143,7 +143,7 @@
             },
             {
               key: { text: "Frequency" },
-              value: { text: formData['frequency'] },
+              value: { text: frequency },
               actions: {
                 items: [
                   {

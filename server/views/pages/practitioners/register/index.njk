@@ -9,6 +9,15 @@
 
 {% set title = "Persons details" %}
 
+{% block beforeContent %}
+  {{
+    govukBackLink({
+    text: "Back",
+    href: "/practitioners/dashboard"
+    })
+  }}
+{% endblock %}
+
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">

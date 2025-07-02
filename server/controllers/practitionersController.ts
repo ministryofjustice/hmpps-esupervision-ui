@@ -177,6 +177,11 @@ export const handleCreateUser: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const handleStartRegister: RequestHandler = async (req, res, next) => {
+  req.session.formData = {}
+  res.redirect(`/practitioners/register`)
+}
+
 export const renderRegisterDetails: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/practitioners/register/index')

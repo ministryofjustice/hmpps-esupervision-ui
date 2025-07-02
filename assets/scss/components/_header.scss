@@ -31,10 +31,10 @@
     & {
       display: flex;
       align-items: center;
+      gap: 0.62rem;
     }
 
     &__organisation-name {
-      @include gds.govuk-responsive-margin(2, 'right');
       @include gds.govuk-font($size: 24, $weight: 'bold');
 
       & {

@@ -15,7 +15,6 @@ import {
   renderVerify,
   renderVideoInform,
   renderVideoRecord,
-  renderVideoReview,
   handleVideoVerify,
   handleVideoPost,
 } from '../controllers/submissionController'
@@ -80,8 +79,6 @@ export default function routes({ esupervisionService }: Services): Router {
   get('/video/record', renderVideoRecord)
   get('/video/verify', handleVideoVerify)
   router.post('/video/record', handleVideoPost)
-
-  get('/video/review', renderVideoReview)
 
   get('/check-your-answers', renderCheckAnswers)
   router.post('/check-your-answers', validateFormData(checkAnswersSchema), handleSubmission)

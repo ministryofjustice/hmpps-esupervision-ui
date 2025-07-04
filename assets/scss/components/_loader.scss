@@ -1,0 +1,28 @@
+@use 'govuk-frontend/dist/govuk/index' as gds;
+
+.es-loader {
+  padding: 5rem 0;
+  text-align: center;
+
+  &__spinner {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+    border: 0.75rem solid rgb(243.7, 247.85, 251.45);
+    border-radius: 50%;
+    border-top-color: gds.govuk-colour('blue');
+    width: 5rem;
+    height: 5rem;
+    animation: loading-spinner-animation 1.25s linear infinite;
+  }
+
+  &__content {
+    color: red;
+  }
+}
+
+@keyframes loading-spinner-animation {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -14,18 +14,18 @@
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
-      <p>In your video:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>you do not need to speak</li>
-        <li>don’t worry about how you look</li>
-        <li>make sure your whole face is visible and well lit</li>
-        <li>make sure you are not wearing a hat or sunglasses</li>
-      </ul>
-      <form method="POST" id="video-check-in">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+  <div class="es-pane" id="video-pane-record" tabindex="0">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+        <p>In your video:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>you do not need to speak</li>
+          <li>don’t worry about how you look</li>
+          <li>make sure your whole face is visible and well lit</li>
+          <li>make sure you are not wearing a hat or sunglasses</li>
+        </ul>
+
         <div
           class="videoRecorder"
           data-module="videoRecorder"
@@ -40,11 +40,10 @@
           <div class="videoRecorder__container">
             <div class="videoRecorder__videoWrap">
               <video class="videoRecorder__video">Your browser does not support video</video>
-              <video class="videoRecorder__video-preview">Your browser does not support video</video>
-              <span class="govuk-tag videoRecorder__tag"></span>
+              <span class="govuk-tag govuk-tag--pink videoRecorder__tag">Recording</span>
             </div>
             <div class="govuk-button-group videoRecorder__controls">
-              <button type="button" class="govuk-button videoRecorder__startButton" data-module="govuk-button">
+              <button type="button" class="govuk-button videoRecorder__startButton" data-module="govuk-button" disabled>
                 Start recording
               </button>
               <button
@@ -54,22 +53,6 @@
                 disabled
               >
                 Stop recording
-              </button>
-            </div>
-            <div class="govuk-button-group videoRecorder__form-controls">
-              <button type="button" class="govuk-button videoRecorder__verifyButton" data-module="govuk-button">
-                Verify
-              </button>
-              <button
-                type="submit"
-                class="govuk-button videoRecorder__continueButton"
-                data-module="govuk-button"
-                disabled
-              >
-                Continue
-              </button>
-              <button type="button" class="govuk-button videoRecorder__recordAgainButton" data-module="govuk-button">
-                Try again
               </button>
             </div>
           </div>
@@ -83,9 +66,14 @@
             </div>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   </div>
+
+  {% include "./partials/loading.njk" %}
+  {% include "./partials/match.njk" %}
+  {% include "./partials/nomatch.njk" %}
+
   <script>
     const submissionId = '{{ submissionId }}'
   </script>

@@ -28,20 +28,25 @@ export default class FaceCompareService {
       },
     })
 
-    const result = await this.rekognitionClient.send(Commmand)
-    logger.info('Compared the face', result)
+    try {
+      const result = await this.rekognitionClient.send(Commmand)
+      logger.info('Compared the video still with the stored image', result)
 
-    let bestMatch: { Similarity: number } = { Similarity: 0.0 }
-    if (result.FaceMatches.length > 0) {
-      for (let i = 0; i < result.FaceMatches.length; i += 1) {
-        if (result.FaceMatches[i].Similarity > bestMatch.Similarity) {
-          bestMatch = result.FaceMatches[i] as { Similarity: number }
+      let bestMatch: { Similarity: number } = { Similarity: 0.0 }
+      if (result.FaceMatches.length > 0) {
+        for (let i = 0; i < result.FaceMatches.length; i += 1) {
+          if (result.FaceMatches[i].Similarity > bestMatch.Similarity) {
+            bestMatch = result.FaceMatches[i] as { Similarity: number }
+          }
         }
-      }
 
-      return bestMatch.Similarity > 90 ? AutomatedIdVerificationResult.Match : AutomatedIdVerificationResult.NoMatch
+        return bestMatch.Similarity > 90 ? AutomatedIdVerificationResult.Match : AutomatedIdVerificationResult.NoMatch
+      }
+    } catch (error) {
+      logger.error('No face detected in the video', error)
     }
-    logger.info('no face matches', submissionId)
+
+    logger.info('Faces do not match', submissionId)
 
     return AutomatedIdVerificationResult.NoMatch
   }

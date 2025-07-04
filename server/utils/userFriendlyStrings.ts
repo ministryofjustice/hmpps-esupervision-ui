@@ -14,6 +14,7 @@ const definitions: Record<string, string> = {
   MENTAL_HEALTH: 'Mental health',
   ALCOHOL: 'Alcohol',
   DRUGS: 'Drugs',
+  HOUSING: 'Housing',
   MONEY: 'Money',
   SUPPORT_SYSTEM: 'Support system',
   OTHER: 'Other',
@@ -23,6 +24,9 @@ const definitions: Record<string, string> = {
 export default function getUserFriendlyString(key: string): string {
   if (!key) {
     return ''
+  }
+  if (typeof key !== 'string') {
+    return key
   }
   return definitions[key.trim().toUpperCase()] ?? key
 }

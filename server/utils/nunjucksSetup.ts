@@ -10,6 +10,7 @@ import config from '../config'
 import logger from '../../logger'
 
 import { findError } from '../middleware/validateFormData'
+import getUserFriendlyString from './userFriendlyStrings'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -47,6 +48,10 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
+
+  njkEnv.addFilter('userFriendlyString', (term: string) => {
+    return getUserFriendlyString(term)
+  })
 
   njkEnv.addFilter('formatDate', (date: string) => {
     if (!date) {

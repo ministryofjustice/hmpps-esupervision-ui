@@ -1,0 +1,9 @@
+.es-pane {
+  &--hidden {
+    display: none;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

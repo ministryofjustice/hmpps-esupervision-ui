@@ -40,7 +40,6 @@
   display: block;
   object-fit: cover;
   z-index: 1;
-  display: none;
 }
 
 .videoRecorder__tag {
@@ -62,6 +61,10 @@
     transform: scale(1);
     animation: pulse 2s infinite;
   }
+}
+
+.videoRecorder__video-preview + .videoRecorder__tag {
+  display: block;
 }
 
 @keyframes pulse {

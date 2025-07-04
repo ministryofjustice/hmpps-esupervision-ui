@@ -1,23 +1,51 @@
 class Controls {
   constructor(module) {
-    this.verifyButton = module.querySelector('.videoRecorder__verifyButton')
-    this.continueButton = module.querySelector('.videoRecorder__continueButton')
-    this.recordAgainButton = module.querySelector('.videoRecorder__recordAgainButton')
-    this.formControlsContainer = this.continueButton.closest('.videoRecorder__form-controls')
-
     this.startButton = module.querySelector('.videoRecorder__startButton')
     this.stopButton = module.querySelector('.videoRecorder__stopButton')
-    this.videoControlsContainer = this.startButton.closest('.videoRecorder__controls')
+    this.panes = {
+      record: document.getElementById('video-pane-record'),
+      match: document.getElementById('video-pane-match'),
+      nomatch: document.getElementById('video-pane-nomatch'),
+      loading: document.getElementById('video-pane-loading'),
+    }
   }
 
-  showFormControls() {
-    this.formControlsContainer.style.display = 'block'
-    this.videoControlsContainer.style.display = 'none'
+  show(name) {
+    this.showPane(name)
+    Object.keys(this.panes).forEach(key => {
+      if (key !== name) {
+        this.hidePane(key)
+      }
+    })
   }
 
-  showVideoControls() {
-    this.formControlsContainer.style.display = 'none'
-    this.videoControlsContainer.style.display = 'block'
+  showPane(key) {
+    const pane = this.panes[key]
+    pane.classList.remove('es-pane--hidden')
+    pane.setAttribute('aria-hidden', 'false')
+    pane.focus()
+  }
+
+  hidePane(key) {
+    const pane = this.panes[key]
+    pane.classList.add('es-pane--hidden')
+    pane.setAttribute('aria-hidden', 'true')
+  }
+
+  showRecord() {
+    this.show('record')
+  }
+
+  showMatch() {
+    this.show('match')
+  }
+
+  showNoMatch() {
+    this.show('nomatch')
+  }
+
+  showLoading() {
+    this.show('loading')
   }
 }
 
@@ -27,14 +55,8 @@ export default function VideoRecorder(module) {
   this.videoError = module.querySelector('.videoRecorder__error')
   this.video = module.querySelector('.videoRecorder__video')
   this.tag = module.querySelector('.videoRecorder__tag')
-  this.verificationError = module.querySelector('#verification-error')
-
-  this.videoPreview = module.querySelector('.videoRecorder__video-preview')
-  this.recordAgainClickHandler = _ => this.recordAgain()
-  this.controls.recordAgainButton.addEventListener('click', _ => this.recordAgain())
-  this.controls.verifyButton.addEventListener('click', ev => this.verifyClicked(ev))
+  this.videoPreviews = document.querySelectorAll('.videoRecorder__video-preview')
   this.videoUploadUrl = module.dataset.videoUploadUrl
-  // collect upload URLs from elem attributes
   this.frameUploadUrls = [...module.querySelectorAll('[data-frame-upload-url]')].map(
     elem => elem.dataset.frameUploadUrl,
   )
@@ -51,19 +73,19 @@ VideoRecorder.prototype.init = init
 VideoRecorder.prototype.startRecording = startRecording
 VideoRecorder.prototype.stopRecording = stopRecording
 VideoRecorder.prototype.handleStop = handleStop
-VideoRecorder.prototype.verifyClicked = verifyClicked
+VideoRecorder.prototype.verifyVideo = verifyVideo
 VideoRecorder.prototype.handleDataAvailable = handleDataAvailable
 VideoRecorder.prototype.getVideoFrameAtTwoSeconds = getVideoFrameAtTwoSeconds
-VideoRecorder.prototype.recordAgain = recordAgain
 
 function init() {
   navigator.mediaDevices
     .getUserMedia({ video: { facingMode: 'user' }, audio: false })
-    .then(stream => {
+    .then(async stream => {
       this.stream = stream
       this.video.srcObject = stream
-      this.video.play()
+      await this.video.play()
       this.videoError.style.display = 'none'
+      this.controls.startButton.disabled = false
       this.controls.startButton.addEventListener('click', _ => this.startRecording())
       this.controls.stopButton.addEventListener('click', _ => this.stopRecording())
     })
@@ -76,21 +98,16 @@ function init() {
 
 async function startRecording() {
   try {
-    this.mediaRecorder = new MediaRecorder(this.stream, { mimeType: 'video/mp4' })
+    this.mediaRecorder = await new MediaRecorder(this.stream, { mimeType: 'video/mp4' })
   } catch (e) {
     console.error('MediaRecorder not supported:', e) // eslint-disable-line no-console
   }
   this.controls.startButton.disabled = true
-  this.tag.classList.add('govuk-tag--pink')
   this.tag.innerHTML = 'Recording'
   this.tag.style.display = 'flex'
   this.mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this)
   this.mediaRecorder.onstop = this.handleStop.bind(this)
   this.mediaRecorder.start(100)
-
-  if (this.videoPreview) {
-    URL.revokeObjectURL(this.videoPreview.src)
-  }
   this.recordingDuration = 0
 
   this.recordingTimer = setInterval(() => {
@@ -98,6 +115,7 @@ async function startRecording() {
 
     if (this.recordingDuration >= 2) {
       this.controls.stopButton.disabled = false
+      this.controls.stopButton.focus()
       this.getVideoFrameAtTwoSeconds()
     }
 
@@ -111,11 +129,10 @@ async function getVideoFrameAtTwoSeconds() {
   const canvas = document.createElement('canvas')
   canvas.width = this.video.videoWidth
   canvas.height = this.video.videoHeight
-  // console.debug('extracting frame', { width: canvas.width, height: canvas.height })
   canvas.getContext('2d').drawImage(this.video, 0, 0, canvas.width, canvas.height)
 
   // convert canvas image to blob
-  const frameBlob = await new Promise((resolve, reject) => {
+  this.videoFrame = await new Promise((resolve, reject) => {
     canvas.toBlob(blob => {
       if (blob) {
         resolve(blob)
@@ -124,26 +141,25 @@ async function getVideoFrameAtTwoSeconds() {
       }
     }, 'image/jpeg')
   })
-  this.videoFrame = frameBlob
 }
 
-function stopRecording() {
+async function stopRecording() {
   if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
     this.mediaRecorder.stop()
     clearInterval(this.recordingTimer)
     this.controls.startButton.disabled = false
-    this.controls.showFormControls()
-    this.tag.classList.remove('govuk-tag--pink')
-    this.tag.innerHTML = 'Preview'
+    this.controls.showLoading()
   }
 }
 
-function handleStop() {
+async function handleStop() {
   const videoBlob = new Blob(this.recordedChunks, { type: 'video/mp4' })
-  this.videoPreview.src = URL.createObjectURL(videoBlob)
-  this.videoPreview.controls = true
-  this.videoPreview.style.display = 'block'
-  this.video.style.display = 'none'
+  this.videoPreviews.forEach(video => {
+    const v = video
+    v.src = URL.createObjectURL(videoBlob)
+    v.controls = true
+  })
+  await this.verifyVideo()
 }
 
 function handleDataAvailable(event) {
@@ -152,32 +168,23 @@ function handleDataAvailable(event) {
   }
 }
 
-function recordAgain() {
-  this.controls.showVideoControls()
-
-  // restore video
-  this.videoPreview.style.display = 'none'
-  this.video.style.display = 'block'
-}
-
 async function uploadCheckinMedia({ uploadUrl, data }) {
-  const uploadResult = await fetch(uploadUrl, {
+  return fetch(uploadUrl, {
     method: 'PUT',
     body: data,
     headers: {
       'Content-Type': data.type,
     },
   })
-  return uploadResult
 }
 
-async function verifyClicked(_) {
-  // we upload the video and extracted frame(s)
+async function verifyVideo() {
   if (this.videoFrame && this.recordedChunks.length > 0) {
     const videoUploadPromise = uploadCheckinMedia({
       uploadUrl: this.videoUploadUrl,
       data: new Blob(this.recordedChunks, { type: 'video/mp4' }),
     })
+
     const frameUploadPromises = []
     for (const frameUrl of this.frameUploadUrls) {
       const frameUploadPromise = uploadCheckinMedia({ uploadUrl: frameUrl, data: this.videoFrame })
@@ -185,9 +192,11 @@ async function verifyClicked(_) {
     }
 
     const [videoUpload, ...frameUploads] = await Promise.allSettled([videoUploadPromise, ...frameUploadPromises])
+
     if (videoUpload.status === 'rejected') {
       console.warn('Video upload failed', { url: this.videoUploadUrl, error: videoUpload.error }) // eslint-disable-line no-console
     }
+
     for (let index = 0; index < frameUploads.length; index += 1) {
       const frameUpload = frameUploads[index]
       if (frameUpload.status === 'rejected') {
@@ -197,13 +206,18 @@ async function verifyClicked(_) {
 
     const events = new EventSource(`/submission/${this.submissionId}/video/verify`)
     events.onmessage = ev => {
-      // console.log('EventSource message', ev)
       const data = JSON.parse(ev.data)
       if (data.type === 'result') {
         events.close()
-        alert(`Face verification result: ${data.result}`) // eslint-disable-line no-alert
-        this.controls.continueButton.disabled = false
+        if (data.result === 'MATCH') {
+          this.controls.showMatch()
+        } else {
+          this.controls.showNoMatch()
+        }
       }
     }
+  } else {
+    console.warn('No video or frame data to upload') // eslint-disable-line no-console
+    this.controls.showNoMatch()
   }
 }

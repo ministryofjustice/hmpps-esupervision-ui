@@ -1,9 +1,9 @@
 import { RequestHandler, Request } from 'express'
 import { isEqual } from 'date-fns'
-import userFriendlyStrings from '../utils/userFriendlyStrings'
 import logger from '../../logger'
 import { services } from '../services'
 import LocationInfo from '../data/models/locationInfo'
+import getUserFriendlyString from '../utils/userFriendlyStrings'
 
 const { esupervisionService, faceCompareService } = services()
 
@@ -60,8 +60,8 @@ export const handleVerify: RequestHandler = async (req, res, next) => {
   const { offender } = checkIn
   const offDob = new Date(`${offender.dateOfBirth} 00:00 UTC`)
   const isMatch =
-    offender.firstName.toLocaleLowerCase() === firstName.toLocaleLowerCase() &&
-    offender.lastName.toLocaleLowerCase() === lastName.toLocaleLowerCase() &&
+    offender.firstName.toLocaleLowerCase().trim() === firstName.toLocaleLowerCase().trim() &&
+    offender.lastName.toLocaleLowerCase().trim() === lastName.toLocaleLowerCase().trim() &&
     isEqual(offDob, dateOfBirth)
 
   if (!isMatch) {
@@ -156,15 +156,7 @@ export const handleVideoVerify: RequestHandler = async (req, res, next) => {
 
 export const handleVideoPost: RequestHandler = async (req, res, next) => {
   const { submissionId } = req.params
-  res.redirect(`/submission/${submissionId}/video/review`)
-}
-
-export const renderVideoReview: RequestHandler = async (req, res, next) => {
-  try {
-    res.render('pages/submission/video/review', pageParams(req))
-  } catch (error) {
-    next(error)
-  }
+  res.redirect(`/submission/${submissionId}/check-your-answers`)
 }
 
 export const renderQuestionsMentalHealth: RequestHandler = async (req, res, next) => {
@@ -192,19 +184,11 @@ export const renderQuestionsCallback: RequestHandler = async (req, res, next) =>
 }
 
 export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
-  const { circumstances, policeContact, alcoholUse, alcoholUnits, drugsUse, physicalHealth, mentalHealth, callback } =
-    res.locals.formData
-
-  res.locals.circumstancesList = extractListItems(circumstances)
-  res.locals.policeContact = userFriendlyStrings(policeContact)
-  res.locals.alcoholUse = userFriendlyStrings(alcoholUse)
-  res.locals.alcoholUnits = extractListItems(alcoholUnits)
-  res.locals.drugsUse = userFriendlyStrings(drugsUse)
-  res.locals.physicalHealth = userFriendlyStrings(physicalHealth)
-  res.locals.mentalHealth = userFriendlyStrings(mentalHealth)
-  res.locals.callback = userFriendlyStrings(callback)
-
   try {
+    const { assistance } = res.locals.formData
+    if (typeof assistance === 'string' || Array.isArray(assistance)) {
+      res.locals.assistance = extractListItems(assistance)
+    }
     res.render('pages/submission/check-answers', pageParams(req))
   } catch (error) {
     next(error)
@@ -262,12 +246,11 @@ export const renderConfirmation: RequestHandler = async (req, res, next) => {
 
 function extractListItems(formItem: string | string[]): string {
   if (typeof formItem === 'string') {
-    return userFriendlyStrings(formItem)
+    return getUserFriendlyString(formItem)
   }
 
   if (Array.isArray(formItem)) {
-    formItem.map(item => userFriendlyStrings(item))
-    return formItem.join(',<br />')
+    return formItem.map(item => getUserFriendlyString(item.toString())).join(',<br />')
   }
 
   return ''

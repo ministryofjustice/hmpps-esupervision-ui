@@ -2,13 +2,14 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "govuk/components/footer/macro.njk" import govukFooter %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {% block head %}
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet" />
 {% endblock %}
 
 {% block pageTitle %}{{ pageTitle | default("Manage online wellbeing checks") }}{% endblock %}
-
+{% set environmentName = "Private Beta" %}
 {% block header %}
   <header class="hmpps-header" role="banner">
     <div class="hmpps-header__container">
@@ -92,6 +93,21 @@
 {% endblock %}
 
 {% block footer %}
+  <div class="govuk-phase-banner es-footer__phase-banner">
+    <p class="govuk-phase-banner__content">
+      <span class="govuk-phase-banner__text">
+        This is a new service – your
+        <a
+          class="govuk-link"
+          target="_blank"
+          rel="nofollow"
+          href="https://forms.office.com/pages/responsepage.aspx?id=KEeHxuZx_kGp4S6MNndq2GF5fsslU5tImfiqSSPf6JhUQ0I3WUFTR1lVOUVSRjBRNElMSlYwMkRZWiQlQCN0PWcu&route=shorturl"
+          >feedback</a
+        >
+        will help us to improve it.
+      </span>
+    </p>
+  </div>
   {{
     govukFooter({
     meta: {

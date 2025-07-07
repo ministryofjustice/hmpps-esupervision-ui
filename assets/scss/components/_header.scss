@@ -165,8 +165,13 @@
 
 .govuk-phase-banner {
   @include gds.govuk-width-container;
+}
 
-  & {
-    border: none;
-  }
+.hmpps-header .govuk-phase-banner {
+  border: none;
+}
+
+.es-footer__phase-banner {
+  border-bottom: none;
+  border-top: 1px solid gds.$govuk-border-colour;
 }

@@ -1,6 +1,7 @@
 {% extends "govuk/template.njk" %}
 {% from "govuk/components/header/macro.njk" import govukHeader %}
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {% block head %}
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet" />
@@ -11,13 +12,21 @@
 {% block header %}
   {{
     govukHeader({
-    classes: "govuk-header--full-width-border"
+      classes: "govuk-header--full-width-border"
     })
   }}
   {{
     govukServiceNavigation({
-    serviceName: journeyName | default(applicationName),
-    serviceUrl: "/register" if journeyName == "Sign up for remote check-in" else "/submission/" + submissionId
+      serviceName: journeyName | default(applicationName),
+      serviceUrl: "/submission/" + submissionId + "/" if submissionId else "/"
+    })
+  }}
+  {{
+    govukPhaseBanner({
+    tag: {
+      text: "Private Beta"
+    },
+    html: 'This is a new service – your <a class="govuk-link" target="_blank" rel="nofollow" href="https://forms.office.com/pages/responsepage.aspx?id=KEeHxuZx_kGp4S6MNndq2GF5fsslU5tImfiqSSPf6JhUQko3QVg0MkVGRTVYV0dFMEJJUzBZUTIyVCQlQCN0PWcu&route=shorturl">feedback</a> will help us to improve it.'
     })
   }}
 {% endblock %}

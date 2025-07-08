@@ -2,6 +2,7 @@ import CheckinStatus from './checkinStatus'
 import PersonOnProbation from './personOnProbation'
 import AutomatedIdVerificationResult from './automatedIdVerificationResult'
 import ManualIdVerificationResult from './manualIdVerificationResult'
+import SurveyResponse from './survey/surveyResponse'
 
 export default class Checkin {
   uuid: string
@@ -16,7 +17,7 @@ export default class Checkin {
 
   questions: string // TODO: find out structure
 
-  answers: string // TODO: find out structure
+  surveyResponse: SurveyResponse
 
   createdBy: string // TODO: parse uuid
 

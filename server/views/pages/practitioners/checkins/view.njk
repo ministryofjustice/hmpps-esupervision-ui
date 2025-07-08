@@ -82,74 +82,74 @@
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Mental health</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.mentalHealth }}</dd>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.mentalHealth }}</dd>
           <dd class="govuk-summary-list__actions"></dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Anything they need help with</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.assistance }}</dd>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.assistance }}</dd>
           <dd class="govuk-summary-list__actions"></dd>
         </div>
 
-        {% if checkIn.answers.mentalHealthSupport %}
+        {% if checkIn.surveyResponse.mentalHealthSupport %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Mental health</dt>
-            <dd class="govuk-summary-list__value">{{ checkIn.answers.mentalHealthSupport }}</dd>
+            <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.mentalHealthSupport }}</dd>
             <dd class="govuk-summary-list__actions"></dd>
           </div>
         {% endif %}
-        {% if checkIn.answers.alcoholSupport %}
+        {% if checkIn.surveyResponse.alcoholSupport %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Alcohol</dt>
-            <dd class="govuk-summary-list__value">{{ checkIn.answers.alcoholSupport }}</dd>
+            <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.alcoholSupport }}</dd>
             <dd class="govuk-summary-list__actions"></dd>
           </div>
         {% endif %}
-        {% if checkIn.answers.drugsSupport %}
+        {% if checkIn.surveyResponse.drugsSupport %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Drugs</dt>
-            <dd class="govuk-summary-list__value">{{ checkIn.answers.drugsSupport }}</dd>
+            <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.drugsSupport }}</dd>
             <dd class="govuk-summary-list__actions"></dd>
           </div>
         {% endif %}
-        {% if checkIn.answers.moneySupport %}
+        {% if checkIn.surveyResponse.moneySupport %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Money</dt>
-            <dd class="govuk-summary-list__value">{{ checkIn.answers.moneySupport }}</dd>
+            <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.moneySupport }}</dd>
             <dd class="govuk-summary-list__actions"></dd>
           </div>
         {% endif %}
-        {% if checkIn.answers.housingSupport %}
+        {% if checkIn.surveyResponse.housingSupport %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Housing</dt>
-            <dd class="govuk-summary-list__value">{{ checkIn.answers.housingSupport }}</dd>
+            <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.housingSupport }}</dd>
             <dd class="govuk-summary-list__actions"></dd>
           </div>
         {% endif %}
-        {% if checkIn.answers.supportSystemSupport %}
+        {% if checkIn.surveyResponse.supportSystemSupport %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Support system</dt>
-            <dd class="govuk-summary-list__value">{{ checkIn.answers.supportSystemSupport }}</dd>
+            <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.supportSystemSupport }}</dd>
             <dd class="govuk-summary-list__actions"></dd>
           </div>
         {% endif %}
-        {% if checkIn.answers.otherSupport %}
+        {% if checkIn.surveyResponse.otherSupport %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Other</dt>
-            <dd class="govuk-summary-list__value">{{ checkIn.answers.otherSupport }}</dd>
+            <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.otherSupport }}</dd>
             <dd class="govuk-summary-list__actions"></dd>
           </div>
         {% endif %}
 
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Contact with practitioner requested</dt>
-          <dd class="govuk-summary-list__value">{{ checkIn.answers.callback }}</dd>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.callback }}</dd>
           <dd class="govuk-summary-list__actions"></dd>
         </div>
-        {% if checkIn.answers.callbackDetails %}
+        {% if checkIn.surveyResponse.callbackDetails %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">What needs to be discussed</dt>
-            <dd class="govuk-summary-list__value">{{ checkIn.answers.callbackDetails }}</dd>
+            <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.callbackDetails }}</dd>
             <dd class="govuk-summary-list__actions"></dd>
           </div>
         {% endif %}

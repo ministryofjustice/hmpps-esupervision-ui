@@ -1,6 +1,6 @@
 enum CallbackRequested {
   Yes = 'YES',
-  NO = 'NO',
+  No = 'NO',
 }
 
 export default CallbackRequested

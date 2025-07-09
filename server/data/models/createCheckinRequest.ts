@@ -3,7 +3,5 @@ export default class CreateCheckinRequest {
 
   offender: string // TODO: require uuid?
 
-  questions: string // TODO: fix structure
-
   dueDate: string // TODO: require date?
 }

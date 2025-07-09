@@ -4,6 +4,9 @@ import logger from '../../logger'
 import { services } from '../services'
 import LocationInfo from '../data/models/locationInfo'
 import getUserFriendlyString from '../utils/userFriendlyStrings'
+import MentalHealth from '../data/models/survey/mentalHealth'
+import SupportAspect from '../data/models/survey/supportAspect'
+import CallbackRequested from '../data/models/survey/callbackRequested'
 
 const { esupervisionService, faceCompareService } = services()
 
@@ -203,24 +206,24 @@ export const handleSubmission: RequestHandler = async (req, res, next) => {
   } = res.locals.formData
 
   const submissionId = getSubmissionId(req)
-  const data = {
+  const submission = {
     offender: res.locals.submission.offender.uuid,
-    answers: JSON.stringify({
-      mentalHealth,
-      assistance,
-      mentalHealthSupport,
-      alcoholSupport,
-      drugsSupport,
-      moneySupport,
-      housingSupport,
-      supportSystemSupport,
-      otherSupport,
-      callback,
-      callbackDetails,
-    }),
+    survey: {
+      mentalHealth: mentalHealth as MentalHealth,
+      assistance: assistance as SupportAspect[],
+      mentalHealthSupport: mentalHealthSupport as string,
+      alcoholSupport: alcoholSupport as string,
+      drugsSupport: drugsSupport as string,
+      moneySupport: moneySupport as string,
+      housingSupport: housingSupport as string,
+      supportSystemSupport: supportSystemSupport as string,
+      otherSupport: otherSupport as string,
+      callback: callback as CallbackRequested,
+      callbackDetails: callbackDetails as string,
+    },
   }
   try {
-    await esupervisionService.submitCheckin(submissionId, data)
+    await esupervisionService.submitCheckin(submissionId, submission)
   } catch (error) {
     next(error)
   }

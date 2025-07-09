@@ -73,13 +73,6 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
     const checkIn = await esupervisionService.getCheckin(checkInId)
-
-    try {
-      checkIn.answers = JSON.parse(checkIn.answers)
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to parse check-in answers:', e)
-    }
     res.render('pages/practitioners/checkins/view', { checkIn })
   } catch (error) {
     next(error)
@@ -117,12 +110,11 @@ export const renderCreateInvite: RequestHandler = async (req, res, next) => {
 export const handleCreateInvite: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    const { dueDate, questions } = req.body
+    const { dueDate } = req.body
 
     const data = {
       practitioner: res.locals.user.userId,
       offender: offenderId,
-      questions,
       dueDate,
     }
 

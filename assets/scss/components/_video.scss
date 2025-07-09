@@ -1,12 +1,3 @@
-.videoRecorder__container {
-  display: block;
-}
-
-.videoRecorder__form-controls,
-.videoRecorder__error {
-  display: none;
-}
-
 .videoRecorder__videoWrap {
   position: relative;
   width: 100%;
@@ -50,17 +41,18 @@
   display: none;
   align-items: center;
   gap: 5px;
+  max-width: none;
+}
 
-  &.govuk-tag--pink::after {
-    content: '';
-    display: inline-block;
-    background: currentColor;
-    border-radius: 50%;
-    height: 8px;
-    width: 8px;
-    transform: scale(1);
-    animation: pulse 2s infinite;
-  }
+.videoRecorder__tag::before {
+  content: '';
+  display: inline-block;
+  background: currentColor;
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+  transform: scale(1);
+  animation: pulse 2s infinite;
 }
 
 .videoRecorder__video-preview + .videoRecorder__tag {

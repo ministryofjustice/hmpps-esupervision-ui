@@ -1,175 +1,120 @@
-class Controls {
-  constructor(module) {
-    this.startButton = module.querySelector('.videoRecorder__startButton')
-    this.stopButton = module.querySelector('.videoRecorder__stopButton')
-    this.panes = {
-      record: document.getElementById('video-pane-record'),
-      match: document.getElementById('video-pane-match'),
-      nomatch: document.getElementById('video-pane-nomatch'),
-      loading: document.getElementById('video-pane-loading'),
-    }
-  }
+const videoContainer = document.getElementById('videoContainer')
+const { videoUploadUrl, imageUploadUrl, submissionId } = videoContainer.dataset
+const video = document.getElementById('video')
+const canvas = document.getElementById('canvas')
+const startBtn = document.getElementById('startBtn')
+const statusTag = document.getElementById('statusTag')
+const recordingScreen = document.getElementById('recordingScreen')
+const errorMessage = document.getElementById('errorMessage')
+const loadingScreen = document.getElementById('loadingScreen')
+const matchScreen = document.getElementById('matchScreen')
+const matchPreview = document.getElementById('matchPreview')
+const noMatchScreen = document.getElementById('noMatchScreen')
+const noMatchPreview = document.getElementById('noMatchPreview')
+const errorScreen = document.getElementById('errorScreen')
 
-  show(name) {
-    this.showPane(name)
-    Object.keys(this.panes).forEach(key => {
-      if (key !== name) {
-        this.hidePane(key)
-      }
-    })
-  }
+let mediaRecorder
+let recordedChunks = []
+let screenshotBlob = null
 
-  showPane(key) {
-    const pane = this.panes[key]
-    pane.classList.remove('es-pane--hidden')
-    pane.setAttribute('aria-hidden', 'false')
-    pane.focus()
-  }
+const videoFormat = 'video/mp4'
+const imageFormat = 'image/jpeg'
+const screenShotTime = 2000 // 2 seconds
+const maximumRecordingTime = 5000 // 5 seconds
+const loadingScreenDelay = 3000 // 3 seconds
 
-  hidePane(key) {
-    const pane = this.panes[key]
-    pane.classList.add('es-pane--hidden')
-    pane.setAttribute('aria-hidden', 'true')
-  }
-
-  showRecord() {
-    this.show('record')
-  }
-
-  showMatch() {
-    this.show('match')
-  }
-
-  showNoMatch() {
-    this.show('nomatch')
-  }
-
-  showLoading() {
-    this.show('loading')
-  }
+const screens = {
+  record: recordingScreen,
+  match: matchScreen,
+  noMatch: noMatchScreen,
+  loading: loadingScreen,
+  error: errorScreen,
 }
 
-export default function VideoRecorder(module) {
-  this.controls = new Controls(module)
-  this.videoContainer = module.querySelector('.videoRecorder__container')
-  this.videoError = module.querySelector('.videoRecorder__error')
-  this.video = module.querySelector('.videoRecorder__video')
-  this.tag = module.querySelector('.videoRecorder__tag')
-  this.videoPreviews = document.querySelectorAll('.videoRecorder__video-preview')
-  this.videoUploadUrl = module.dataset.videoUploadUrl
-  this.frameUploadUrls = [...module.querySelectorAll('[data-frame-upload-url]')].map(
-    elem => elem.dataset.frameUploadUrl,
-  )
-  this.submissionId = module.dataset.submissionId
-  this.recordingTimer = null
-  this.recordingDuration = 0
-  this.mediaRecorder = null
-  this.recordedChunks = []
-  this.stream = null
-  this.videoFrame = null
-}
-
-VideoRecorder.prototype.init = init
-VideoRecorder.prototype.startRecording = startRecording
-VideoRecorder.prototype.stopRecording = stopRecording
-VideoRecorder.prototype.handleStop = handleStop
-VideoRecorder.prototype.verifyVideo = verifyVideo
-VideoRecorder.prototype.handleDataAvailable = handleDataAvailable
-VideoRecorder.prototype.getVideoFrameAtTwoSeconds = getVideoFrameAtTwoSeconds
-
-function init() {
-  navigator.mediaDevices
-    .getUserMedia({ video: { facingMode: 'user' }, audio: false })
-    .then(async stream => {
-      this.stream = stream
-      this.video.srcObject = stream
-      await this.video.play()
-      this.videoError.style.display = 'none'
-      this.controls.startButton.disabled = false
-      this.controls.startButton.addEventListener('click', _ => this.startRecording())
-      this.controls.stopButton.addEventListener('click', _ => this.stopRecording())
-    })
-    .catch(error => {
-      console.error('Error accessing media devices:', error) // eslint-disable-line no-console
-      this.videoContainer.style.display = 'none'
-      this.videoError.style.display = 'block'
-    })
-}
-
-async function startRecording() {
+async function initVideo() {
   try {
-    this.mediaRecorder = await new MediaRecorder(this.stream, { mimeType: 'video/mp4' })
-  } catch (e) {
-    console.error('MediaRecorder not supported:', e) // eslint-disable-line no-console
+    showScreen('record')
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+    video.srcObject = stream
+    mediaRecorder = new MediaRecorder(stream)
+    mediaRecorder.ondataavailable = e => recordedChunks.push(e.data)
+    mediaRecorder.onstop = handleRecordingComplete
+    startBtn.disabled = false
+  } catch (error) {
+    console.error('Error accessing media devices:', error) // eslint-disable-line no-console
+    videoContainer.hidden = true
+    errorMessage.hidden = false
   }
-  this.controls.startButton.disabled = true
-  this.tag.innerHTML = 'Recording'
-  this.tag.style.display = 'flex'
-  this.mediaRecorder.ondataavailable = this.handleDataAvailable.bind(this)
-  this.mediaRecorder.onstop = this.handleStop.bind(this)
-  this.mediaRecorder.start(100)
-  this.recordingDuration = 0
-
-  this.recordingTimer = setInterval(() => {
-    this.recordingDuration += 0.1
-
-    if (this.recordingDuration >= 2) {
-      this.controls.stopButton.disabled = false
-      this.controls.stopButton.focus()
-      this.getVideoFrameAtTwoSeconds()
-    }
-
-    if (this.recordingDuration >= 5) {
-      this.stopRecording()
-    }
-  }, 100)
 }
 
-async function getVideoFrameAtTwoSeconds() {
-  const canvas = document.createElement('canvas')
-  canvas.width = this.video.videoWidth
-  canvas.height = this.video.videoHeight
-  canvas.getContext('2d').drawImage(this.video, 0, 0, canvas.width, canvas.height)
+startBtn.addEventListener('click', () => {
+  startBtn.disabled = true
+  statusTag.textContent = `Recording... ${maximumRecordingTime / 1000}s remaining`
+  statusTag.style.display = 'flex'
 
-  // convert canvas image to blob
-  this.videoFrame = await new Promise((resolve, reject) => {
-    canvas.toBlob(blob => {
-      if (blob) {
-        resolve(blob)
+  recordedChunks = []
+  mediaRecorder.start()
+
+  // Screenshot at 2s
+  setTimeout(captureScreenshot, screenShotTime)
+
+  // Countdown tag
+  let seconds = maximumRecordingTime / 1000
+  const interval = setInterval(() => {
+    seconds -= 1
+    if (seconds > 0) {
+      statusTag.textContent = `Recording... ${seconds}s remaining`
+    } else {
+      clearInterval(interval)
+    }
+  }, 1000)
+
+  // Stop at 5s
+  setTimeout(() => {
+    if (mediaRecorder.state === 'recording') {
+      mediaRecorder.stop()
+    }
+  }, maximumRecordingTime)
+})
+
+function captureScreenshot() {
+  const ctx = canvas.getContext('2d')
+  canvas.width = video.videoWidth
+  canvas.height = video.videoHeight
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+  canvas.toBlob(blob => {
+    screenshotBlob = blob
+  }, imageFormat)
+}
+
+function handleRecordingComplete() {
+  const videoBlob = new Blob(recordedChunks, { type: videoFormat })
+  const videoURL = URL.createObjectURL(videoBlob)
+
+  showScreen('loading')
+
+  const startTime = Date.now()
+
+  uploadAndRecognition(videoBlob, screenshotBlob).then(result => {
+    const elapsed = Date.now() - startTime
+    const delay = Math.max(0, loadingScreenDelay - elapsed)
+
+    setTimeout(() => {
+      if (result === 'MATCH') {
+        matchPreview.src = videoURL
+        showScreen('match')
+      } else if (result === 'NO_MATCH') {
+        noMatchPreview.src = videoURL
+        showScreen('noMatch')
       } else {
-        reject(new Error('Failed to extract frame'))
+        showScreen('error')
       }
-    }, 'image/jpeg')
+    }, delay)
   })
 }
 
-async function stopRecording() {
-  if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
-    this.mediaRecorder.stop()
-    clearInterval(this.recordingTimer)
-    this.controls.startButton.disabled = false
-    this.controls.showLoading()
-  }
-}
-
-async function handleStop() {
-  const videoBlob = new Blob(this.recordedChunks, { type: 'video/mp4' })
-  this.videoPreviews.forEach(video => {
-    const v = video
-    v.src = URL.createObjectURL(videoBlob)
-    v.controls = true
-  })
-  await this.verifyVideo()
-}
-
-function handleDataAvailable(event) {
-  if (event.data.size > 0) {
-    this.recordedChunks.push(event.data)
-  }
-}
-
-async function uploadCheckinMedia({ uploadUrl, data }) {
-  return fetch(uploadUrl, {
+async function uploadFile({ url, data }) {
+  return fetch(url, {
     method: 'PUT',
     body: data,
     headers: {
@@ -178,46 +123,58 @@ async function uploadCheckinMedia({ uploadUrl, data }) {
   })
 }
 
-async function verifyVideo() {
-  if (this.videoFrame && this.recordedChunks.length > 0) {
-    const videoUploadPromise = uploadCheckinMedia({
-      uploadUrl: this.videoUploadUrl,
-      data: new Blob(this.recordedChunks, { type: 'video/mp4' }),
+async function uploadAndRecognition(videoClip, screenShot) {
+  const screenShotPromise = uploadFile({
+    url: imageUploadUrl,
+    data: screenShot,
+  })
+
+  const videoClipPromise = uploadFile({
+    url: videoUploadUrl,
+    data: videoClip,
+  })
+
+  const faceRecognitionResult = await fetch(`/submission/${submissionId}/video/verify`)
+    .then(res => res.json())
+    .catch(e => () => {
+      return new Promise(resolve => {
+        resolve('ERROR', e)
+      })
     })
 
-    const frameUploadPromises = []
-    for (const frameUrl of this.frameUploadUrls) {
-      const frameUploadPromise = uploadCheckinMedia({ uploadUrl: frameUrl, data: this.videoFrame })
-      frameUploadPromises.push(frameUploadPromise)
-    }
+  const [videoUpload, imageUpload] = await Promise.allSettled([
+    videoClipPromise,
+    screenShotPromise,
+    faceRecognitionResult,
+  ])
 
-    const [videoUpload, ...frameUploads] = await Promise.allSettled([videoUploadPromise, ...frameUploadPromises])
-
-    if (videoUpload.status === 'rejected') {
-      console.warn('Video upload failed', { url: this.videoUploadUrl, error: videoUpload.error }) // eslint-disable-line no-console
-    }
-
-    for (let index = 0; index < frameUploads.length; index += 1) {
-      const frameUpload = frameUploads[index]
-      if (frameUpload.status === 'rejected') {
-        console.warn('Frame upload failed', { url: this.frameUploadUrls[index], error: frameUpload.error }) // eslint-disable-line no-console
-      }
-    }
-
-    const events = new EventSource(`/submission/${this.submissionId}/video/verify`)
-    events.onmessage = ev => {
-      const data = JSON.parse(ev.data)
-      if (data.type === 'result') {
-        events.close()
-        if (data.result === 'MATCH') {
-          this.controls.showMatch()
-        } else {
-          this.controls.showNoMatch()
-        }
-      }
-    }
-  } else {
-    console.warn('No video or frame data to upload') // eslint-disable-line no-console
-    this.controls.showNoMatch()
+  if (videoUpload.status === 'rejected') {
+    console.warn('Video upload failed', { url: videoUploadUrl, error: videoUpload.error }) // eslint-disable-line no-console
   }
+
+  if (imageUpload.status === 'rejected') {
+    console.warn('Frame upload failed', { url: imageUploadUrl, error: imageUpload.error }) // eslint-disable-line no-console
+  }
+
+  return new Promise(resolve => {
+    if (faceRecognitionResult.status === 'SUCCESS') {
+      resolve(faceRecognitionResult.result)
+    } else {
+      resolve('ERROR')
+    }
+  })
 }
+
+const hideAllScreens = () => {
+  Object.values(screens).forEach(screen => {
+    const s = screen
+    s.hidden = true
+  })
+}
+
+const showScreen = screen => {
+  hideAllScreens()
+  screens[screen].hidden = false
+}
+
+initVideo()

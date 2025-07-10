@@ -1,113 +1,124 @@
-const videoContainer = document.getElementById('videoContainer')
-const { videoUploadUrl, imageUploadUrl, submissionId } = videoContainer.dataset
-const video = document.getElementById('video')
-const canvas = document.getElementById('canvas')
-const startBtn = document.getElementById('startBtn')
-const statusTag = document.getElementById('statusTag')
-const recordingScreen = document.getElementById('recordingScreen')
-const errorMessage = document.getElementById('errorMessage')
-const loadingScreen = document.getElementById('loadingScreen')
-const matchScreen = document.getElementById('matchScreen')
-const matchPreview = document.getElementById('matchPreview')
-const noMatchScreen = document.getElementById('noMatchScreen')
-const noMatchPreview = document.getElementById('noMatchPreview')
-const errorScreen = document.getElementById('errorScreen')
+export default function VideoRecorder() {
+  this.videoContainer = document.getElementById('videoContainer')
+  const { videoUploadUrl, imageUploadUrl, submissionId } = this.videoContainer.dataset
+  this.urls = { videoUploadUrl, imageUploadUrl, submissionId }
+  this.video = document.getElementById('video')
+  this.canvas = document.getElementById('canvas')
+  this.startBtn = document.getElementById('startBtn')
+  this.statusTag = document.getElementById('statusTag')
+  this.recordingScreen = document.getElementById('recordingScreen')
+  this.errorMessage = document.getElementById('errorMessage')
+  this.loadingScreen = document.getElementById('loadingScreen')
+  this.matchScreen = document.getElementById('matchScreen')
+  this.matchPreview = document.getElementById('matchPreview')
+  this.noMatchScreen = document.getElementById('noMatchScreen')
+  this.noMatchPreview = document.getElementById('noMatchPreview')
+  this.errorScreen = document.getElementById('errorScreen')
 
-let mediaRecorder
-let recordedChunks = []
-let screenshotBlob = null
+  this.mediaRecorder = null
+  this.recordedChunks = []
+  this.screenshotBlob = null
 
-const videoFormat = 'video/mp4'
-const imageFormat = 'image/jpeg'
-const screenShotTime = 2000 // 2 seconds
-const maximumRecordingTime = 5000 // 5 seconds
-const loadingScreenDelay = 3000 // 3 seconds
+  this.videoFormat = 'video/mp4'
+  this.imageFormat = 'image/jpeg'
+  this.screenShotTime = 2000 // 2 seconds
+  this.maximumRecordingTime = 5000 // 5 seconds
+  this.loadingScreenDelay = 3000 // 3 seconds
 
-const screens = {
-  record: recordingScreen,
-  match: matchScreen,
-  noMatch: noMatchScreen,
-  loading: loadingScreen,
-  error: errorScreen,
-}
-
-async function initVideo() {
-  try {
-    showScreen('record')
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
-    video.srcObject = stream
-    mediaRecorder = new MediaRecorder(stream)
-    mediaRecorder.ondataavailable = e => recordedChunks.push(e.data)
-    mediaRecorder.onstop = handleRecordingComplete
-    startBtn.disabled = false
-  } catch (error) {
-    console.error('Error accessing media devices:', error) // eslint-disable-line no-console
-    videoContainer.hidden = true
-    errorMessage.hidden = false
+  this.screens = {
+    record: this.recordingScreen,
+    match: this.matchScreen,
+    noMatch: this.noMatchScreen,
+    loading: this.loadingScreen,
+    error: this.errorScreen,
   }
 }
 
-startBtn.addEventListener('click', () => {
-  startBtn.disabled = true
-  statusTag.textContent = `Recording... ${maximumRecordingTime / 1000}s remaining`
-  statusTag.style.display = 'flex'
+VideoRecorder.prototype.initVideo = initVideo
+VideoRecorder.prototype.captureScreenshot = captureScreenshot
+VideoRecorder.prototype.handleRecordingComplete = handleRecordingComplete
+VideoRecorder.prototype.uploadFile = uploadFile
+VideoRecorder.prototype.uploadAndRecognition = uploadAndRecognition
+VideoRecorder.prototype.showScreen = showScreen
+VideoRecorder.prototype.hideAllScreens = hideAllScreens
 
-  recordedChunks = []
-  mediaRecorder.start()
+async function initVideo() {
+  try {
+    this.showScreen('record')
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+    this.video.srcObject = stream
+    this.mediaRecorder = new MediaRecorder(stream)
+    this.mediaRecorder.ondataavailable = e => this.recordedChunks.push(e.data)
+    this.mediaRecorder.onstop = this.handleRecordingComplete.bind(this)
+    this.startBtn.disabled = false
+  } catch (error) {
+    console.error('Error accessing media devices:', error) // eslint-disable-line no-console
+    this.videoContainer.hidden = true
+    this.errorMessage.hidden = false
+  }
 
-  // Screenshot at 2s
-  setTimeout(captureScreenshot, screenShotTime)
+  this.startBtn.addEventListener('click', () => {
+    this.startBtn.disabled = true
+    this.statusTag.textContent = `Recording... ${this.maximumRecordingTime / 1000}s remaining`
+    this.statusTag.style.display = 'flex'
 
-  // Countdown tag
-  let seconds = maximumRecordingTime / 1000
-  const interval = setInterval(() => {
-    seconds -= 1
-    if (seconds > 0) {
-      statusTag.textContent = `Recording... ${seconds}s remaining`
-    } else {
-      clearInterval(interval)
-    }
-  }, 1000)
+    this.recordedChunks = []
+    this.mediaRecorder.start()
 
-  // Stop at 5s
-  setTimeout(() => {
-    if (mediaRecorder.state === 'recording') {
-      mediaRecorder.stop()
-    }
-  }, maximumRecordingTime)
-})
+    // Screenshot at 2s
+    setTimeout(this.captureScreenshot, this.screenShotTime)
+
+    // Countdown tag
+    let seconds = this.maximumRecordingTime / 1000
+    const interval = setInterval(() => {
+      seconds -= 1
+      if (seconds > 0) {
+        this.statusTag.textContent = `Recording... ${seconds}s remaining`
+      } else {
+        clearInterval(interval)
+      }
+    }, 1000)
+
+    // Stop at 5s
+    setTimeout(() => {
+      if (this.mediaRecorder.state === 'recording') {
+        this.mediaRecorder.stop()
+      }
+    }, this.maximumRecordingTime)
+  })
+}
 
 function captureScreenshot() {
-  const ctx = canvas.getContext('2d')
-  canvas.width = video.videoWidth
-  canvas.height = video.videoHeight
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-  canvas.toBlob(blob => {
-    screenshotBlob = blob
-  }, imageFormat)
+  const ctx = this.canvas.getContext('2d')
+  this.canvas.width = this.video.videoWidth
+  this.canvas.height = this.video.videoHeight
+  ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height)
+  this.canvas.toBlob(blob => {
+    this.screenshotBlob = blob
+  }, this.imageFormat)
 }
 
 function handleRecordingComplete() {
-  const videoBlob = new Blob(recordedChunks, { type: videoFormat })
+  const videoBlob = new Blob(this.recordedChunks, { type: this.videoFormat })
   const videoURL = URL.createObjectURL(videoBlob)
 
-  showScreen('loading')
+  this.showScreen('loading')
 
   const startTime = Date.now()
 
-  uploadAndRecognition(videoBlob, screenshotBlob).then(result => {
+  this.uploadAndRecognition(videoBlob, this.screenshotBlob).then(result => {
     const elapsed = Date.now() - startTime
-    const delay = Math.max(0, loadingScreenDelay - elapsed)
+    const delay = Math.max(0, this.loadingScreenDelay - elapsed)
 
     setTimeout(() => {
       if (result === 'MATCH') {
-        matchPreview.src = videoURL
-        showScreen('match')
+        this.matchPreview.src = videoURL
+        this.showScreen('match')
       } else if (result === 'NO_MATCH') {
-        noMatchPreview.src = videoURL
-        showScreen('noMatch')
+        this.noMatchPreview.src = videoURL
+        this.showScreen('noMatch')
       } else {
-        showScreen('error')
+        this.showScreen('error')
       }
     }, delay)
   })
@@ -124,17 +135,17 @@ async function uploadFile({ url, data }) {
 }
 
 async function uploadAndRecognition(videoClip, screenShot) {
-  const screenShotPromise = uploadFile({
-    url: imageUploadUrl,
+  const screenShotPromise = this.uploadFile({
+    url: this.urls.imageUploadUrl,
     data: screenShot,
   })
 
-  const videoClipPromise = uploadFile({
-    url: videoUploadUrl,
+  const videoClipPromise = this.uploadFile({
+    url: this.urls.videoUploadUrl,
     data: videoClip,
   })
 
-  const faceRecognitionResult = await fetch(`/submission/${submissionId}/video/verify`)
+  const faceRecognitionResult = await fetch(`/submission/${this.urls.submissionId}/video/verify`)
     .then(res => res.json())
     .catch(e => () => {
       return new Promise(resolve => {
@@ -149,11 +160,11 @@ async function uploadAndRecognition(videoClip, screenShot) {
   ])
 
   if (videoUpload.status === 'rejected') {
-    console.warn('Video upload failed', { url: videoUploadUrl, error: videoUpload.error }) // eslint-disable-line no-console
+    console.warn('Video upload failed', { url: this.urls.videoUploadUrl, error: videoUpload.error }) // eslint-disable-line no-console
   }
 
   if (imageUpload.status === 'rejected') {
-    console.warn('Frame upload failed', { url: imageUploadUrl, error: imageUpload.error }) // eslint-disable-line no-console
+    console.warn('Frame upload failed', { url: this.urls.imageUploadUrl, error: imageUpload.error }) // eslint-disable-line no-console
   }
 
   return new Promise(resolve => {
@@ -165,16 +176,14 @@ async function uploadAndRecognition(videoClip, screenShot) {
   })
 }
 
-const hideAllScreens = () => {
-  Object.values(screens).forEach(screen => {
+function hideAllScreens() {
+  Object.values(this.screens).forEach(screen => {
     const s = screen
     s.hidden = true
   })
 }
 
-const showScreen = screen => {
-  hideAllScreens()
-  screens[screen].hidden = false
+function showScreen(screen) {
+  this.hideAllScreens()
+  this.screens[screen].hidden = false
 }
-
-initVideo()

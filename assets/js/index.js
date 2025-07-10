@@ -5,6 +5,12 @@ import VideoRecorder from './video'
 govukFrontend.initAll()
 mojFrontend.initAll()
 
+const videoRecorder = document.querySelector('[data-module="videoRecorder"]')
+
+if (videoRecorder) {
+  new VideoRecorder(videoRecorder).initVideo()
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   async function capturePhoto(v) {
     const videoContainer = document.getElementById('es-photo-capture')

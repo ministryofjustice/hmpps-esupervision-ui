@@ -5,6 +5,7 @@ import { services } from '../services'
 import Checkin from '../data/models/checkin'
 import Page from '../data/models/page'
 import getUserFriendlyString from '../utils/userFriendlyStrings'
+import CheckinInterval from '../data/models/checkinInterval'
 
 const { esupervisionService } = services()
 
@@ -344,7 +345,9 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
 }
 
 export const handleRegister: RequestHandler = async (req, res, next) => {
-  const { firstName, lastName, day, month, year, contactPreference, email, mobile } = res.locals.formData
+  const { firstName, lastName, day, month, year, contactPreference, email, mobile, frequency } = res.locals.formData
+  const { startDateYear, startDateMonth, startDateDay } = res.locals.formData
+  const nextCheckinDate = new Date(startDateYear as number, (startDateMonth as number) - 1, startDateDay as number)
 
   const data = {
     setupUuid: uuidv4(),
@@ -354,6 +357,8 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : null,
     email: contactPreference === 'EMAIL' && email ? email.toString() : null, // Only include email if contact preference is EMAIL
     phoneNumber: contactPreference === 'TEXT' && mobile ? mobile.toString() : null, // Only include mobile if contact preference is TEXT
+    nextCheckinDate: format(nextCheckinDate, 'yyyy-MM-dd'),
+    checkinInterval: frequency as CheckinInterval,    
   }
   try {
     const setup = await esupervisionService.createOffender(data)

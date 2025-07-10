@@ -107,8 +107,13 @@ function handleRecordingComplete() {
   const startTime = Date.now()
   this.uploadAndRecognition(videoBlob, this.screenshotBlob).then(result => {
     const elapsed = Date.now() - startTime
+
+    // Calculate delay based on elapsed time
+    // If the recognition took longer than the loading screen delay (3 seconds), show immediately
     const delay = Math.max(0, this.loadingScreenDelay - elapsed)
 
+    // Delay the loading screen to simulate processing time
+    // Hide loading screen after the delay
     setTimeout(() => {
       if (result === 'MATCH') {
         this.matchPreview.src = videoURL

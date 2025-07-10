@@ -82,7 +82,9 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
 export const renderCases: RequestHandler = async (req, res, next) => {
   try {
     const practitionerUuid = res.locals.user.userId
-    const cases = await esupervisionService.getOffenders()
+    const page = 0
+    const size = 20
+    const cases = await esupervisionService.getOffenders(page, size)
     // eslint-disable-next-line prefer-destructuring
     res.locals.successMessage = req.flash('success')[0]
     res.render('pages/practitioners/cases/index', { cases, practitionerUuid })

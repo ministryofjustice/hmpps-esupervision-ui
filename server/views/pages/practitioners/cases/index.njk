@@ -1,9 +1,9 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "../../../partials/pagination.njk" import pagination %}
 {% extends "../layout.njk" %}
 {% set section = "cases" %}
 
 {% block content %}
-
   {% if successMessage %}
     {{
       govukNotificationBanner({
@@ -39,6 +39,7 @@
         {% endfor %}
       </tbody>
     </table>
+    {{ pagination(page, size, cases.content | length) }}
   {% else %}
     <h2 class="govuk-heading-m">Cases</h2>
     <p class="govuk-body">No cases found</p>

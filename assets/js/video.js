@@ -38,7 +38,7 @@ VideoRecorder.prototype.initVideo = initVideo
 VideoRecorder.prototype.captureScreenshot = captureScreenshot
 VideoRecorder.prototype.handleRecordingComplete = handleRecordingComplete
 VideoRecorder.prototype.uploadFile = uploadFile
-VideoRecorder.prototype.uploadAndRecognition = uploadAndRecognition
+VideoRecorder.prototype.uploadAndRekognition = uploadAndRekognition
 VideoRecorder.prototype.showScreen = showScreen
 VideoRecorder.prototype.hideAllScreens = hideAllScreens
 
@@ -105,15 +105,15 @@ function handleRecordingComplete() {
   this.showScreen('loading')
 
   const startTime = Date.now()
-  this.uploadAndRecognition(videoBlob, this.screenshotBlob).then(result => {
+  this.uploadAndRekognition(videoBlob, this.screenshotBlob).then(result => {
     const elapsed = Date.now() - startTime
 
-    // Calculate delay based on elapsed time
-    // If the recognition took longer than the loading screen delay (3 seconds), show immediately
+    // Calculate delay based on elapsed time of upload and processing
+    // If the files uploads and Rekognition takes longer than the loading screen delay (3 seconds), show immediately
     const delay = Math.max(0, this.loadingScreenDelay - elapsed)
 
     // Delay the loading screen to simulate processing time
-    // Hide loading screen after the delay
+    // Hide loading screen after the delay - show match or no match screen
     setTimeout(() => {
       if (result === 'MATCH') {
         this.matchPreview.src = videoURL
@@ -139,7 +139,7 @@ async function uploadFile({ url, data }) {
   })
 }
 
-async function uploadAndRecognition(videoClip, screenShot) {
+async function uploadAndRekognition(videoClip, screenShot) {
   const screenShotPromise = this.uploadFile({
     url: this.urls.imageUploadUrl,
     data: screenShot,

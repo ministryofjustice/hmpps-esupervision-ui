@@ -1,3 +1,5 @@
+import CheckinInterval from './checkinInterval'
+
 export default class OffenderInfo {
   setupUuid: string
 
@@ -12,4 +14,8 @@ export default class OffenderInfo {
   email: string
 
   phoneNumber: string
+
+  nextCheckinDate: string
+
+  checkinInterval: CheckinInterval
 }

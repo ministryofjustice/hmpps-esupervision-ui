@@ -66,7 +66,7 @@ async function initVideo() {
     this.mediaRecorder.start()
 
     // Screenshot at 2s
-    setTimeout(this.captureScreenshot, this.screenShotTime)
+    setTimeout(this.captureScreenshot.bind(this), this.screenShotTime)
 
     // Countdown tag
     let seconds = this.maximumRecordingTime / 1000
@@ -105,7 +105,6 @@ function handleRecordingComplete() {
   this.showScreen('loading')
 
   const startTime = Date.now()
-
   this.uploadAndRecognition(videoBlob, this.screenshotBlob).then(result => {
     const elapsed = Date.now() - startTime
     const delay = Math.max(0, this.loadingScreenDelay - elapsed)

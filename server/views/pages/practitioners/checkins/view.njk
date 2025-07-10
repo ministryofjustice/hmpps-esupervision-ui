@@ -89,8 +89,9 @@
           <dt class="govuk-summary-list__key">Anything they need help with</dt>
           <dd class="govuk-summary-list__value">
             {% for a in checkIn.surveyResponse.assistance | split(",") %}
-            {{ a | userFriendlyString }}{% if not loop.last %}, {% endif %}
-            {% endfor %}</dd>
+              {{ a | userFriendlyString }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+          </dd>
           <dd class="govuk-summary-list__actions"></dd>
         </div>
 

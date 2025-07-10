@@ -2,7 +2,15 @@ import MentalHealth from './mentalHealth'
 import SupportAspect from './supportAspect'
 import CallbackRequested from './callbackRequested'
 
-export default class SurveyResponse {
+export type SurveyVersion = string
+
+export interface Versioned {
+  version: SurveyVersion
+}
+
+export default class SurveyResponse implements Versioned {
+  version: SurveyVersion
+
   mentalHealth: MentalHealth
 
   assistance: SupportAspect[]

@@ -142,7 +142,7 @@ export const handleVideoVerify: RequestHandler = async (req, res, next) => {
 
     res.json({ status: 'SUCCESS', result })
   } catch (error) {
-    res.json({ status: 'ERROR', error })
+    res.json({ status: 'ERROR', message: error.message })
   }
 }
 

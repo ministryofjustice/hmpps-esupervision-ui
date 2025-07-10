@@ -117,6 +117,7 @@ function handleRecordingComplete() {
         this.noMatchPreview.src = videoURL
         this.showScreen('noMatch')
       } else {
+        console.warn('Unexpected error: ', result.message) // eslint-disable-line no-console
         this.showScreen('error')
       }
     }, delay)
@@ -144,35 +145,27 @@ async function uploadAndRecognition(videoClip, screenShot) {
     data: videoClip,
   })
 
-  const faceRecognitionResult = await fetch(`/submission/${this.urls.submissionId}/video/verify`)
-    .then(res => res.json())
-    .catch(e => () => {
-      return new Promise(resolve => {
-        resolve('ERROR', e)
-      })
-    })
-
-  const [videoUpload, imageUpload] = await Promise.allSettled([
-    videoClipPromise,
-    screenShotPromise,
-    faceRecognitionResult,
-  ])
-
-  if (videoUpload.status === 'rejected') {
-    console.warn('Video upload failed', { url: this.urls.videoUploadUrl, error: videoUpload.error }) // eslint-disable-line no-console
-  }
+  const [videoUpload, imageUpload] = await Promise.allSettled([videoClipPromise, screenShotPromise])
 
   if (imageUpload.status === 'rejected') {
-    console.warn('Frame upload failed', { url: this.urls.imageUploadUrl, error: imageUpload.error }) // eslint-disable-line no-console
+    return { status: 'ERROR', message: 'Screenshot upload failed' }
   }
 
-  return new Promise(resolve => {
-    if (faceRecognitionResult.status === 'SUCCESS') {
-      resolve(faceRecognitionResult.result)
-    } else {
-      resolve('ERROR')
-    }
-  })
+  if (videoUpload.status === 'rejected') {
+    return { status: 'ERROR', message: 'Video upload failed' }
+  }
+
+  const faceRecognitionResult = await fetch(`/submission/${this.urls.submissionId}/video/verify`)
+    .then(res => res.json())
+    .catch(error => {
+      return { status: 'ERROR', message: `Face recognition request failed - ${error.message}` }
+    })
+
+  if (faceRecognitionResult.status === 'SUCCESS') {
+    return faceRecognitionResult.result
+  }
+
+  return { status: 'ERROR', message: 'Unable to verify photo or video' }
 }
 
 function hideAllScreens() {

@@ -5,6 +5,7 @@ import { services } from '../services'
 import Checkin from '../data/models/checkin'
 import Page from '../data/models/page'
 import getUserFriendlyString from '../utils/userFriendlyStrings'
+import CheckinInterval from '../data/models/checkinInterval'
 
 const { esupervisionService } = services()
 
@@ -287,7 +288,9 @@ const dataUrlToBlob = (dataUrl: string) => {
 }
 
 export const handleRegister: RequestHandler = async (req, res, next) => {
-  const { firstName, lastName, day, month, year, email, mobile, photoData } = res.locals.formData
+  const { firstName, lastName, day, month, year, email, mobile, photoData, frequency } = res.locals.formData
+  const { startDateYear, startDateMonth, startDateDay } = res.locals.formData
+  const nextCheckinDate = new Date(startDateYear as number, (startDateMonth as number) - 1, startDateDay as number)
 
   const data = {
     setupUuid: uuidv4(),
@@ -297,6 +300,8 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     dateOfBirth: format(`${year}-${month}-${day}`, 'yyyy-MM-dd'),
     email: email ? email.toString() : null,
     phoneNumber: mobile ? mobile.toString() : null,
+    nextCheckinDate: format(nextCheckinDate, 'yyyy-MM-dd'),
+    checkinInterval: frequency as CheckinInterval,
   }
 
   try {

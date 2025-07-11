@@ -133,33 +133,25 @@ export const handleVideoVerify: RequestHandler = async (req, res, next) => {
   try {
     const submissionId = getSubmissionId(req)
     logger.info('handleVideoVerify', submissionId)
-    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Content-Type', 'application/json')
     res.setHeader('Cache-Control', 'no-cache')
     res.setHeader('Connection', 'keep-alive')
 
-    res.on('error', error => {
-      logger.error('Error writing to stream', error)
-    })
-    req.on('close', () => {
-      logger.info('Client disconnected', submissionId)
-    })
-
-    res.write(`data: ${JSON.stringify({ type: 'message', message: 'starting id verification' })}\n\n`)
-
     const result = await faceCompareService.processSubmission(submissionId)
-
-    res.write(`data: ${JSON.stringify({ type: 'result', message: 'id verification complete', result })}\n\n`)
     await esupervisionService.updateAutomatedIdCheckStatus(submissionId, result)
 
-    res.end()
+    res.json({ status: 'SUCCESS', result })
   } catch (error) {
-    next(error)
+    res.json({ status: 'ERROR', message: error.message })
   }
 }
 
-export const handleVideoPost: RequestHandler = async (req, res, next) => {
-  const { submissionId } = req.params
-  res.redirect(`/submission/${submissionId}/check-your-answers`)
+export const renderViewVideo: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/submission/video/view', pageParams(req))
+  } catch (error) {
+    next(error)
+  }
 }
 
 export const renderQuestionsMentalHealth: RequestHandler = async (req, res, next) => {

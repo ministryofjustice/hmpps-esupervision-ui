@@ -6,6 +6,7 @@ import {
   handleRedirect,
   handleVerify,
   handleSubmission,
+  handleVideoVerify,
   renderAssistance,
   renderQuestionsMentalHealth,
   renderCheckAnswers,
@@ -15,8 +16,7 @@ import {
   renderVerify,
   renderVideoInform,
   renderVideoRecord,
-  handleVideoVerify,
-  handleVideoPost,
+  renderViewVideo,
 } from '../controllers/submissionController'
 
 import {
@@ -78,7 +78,7 @@ export default function routes({ esupervisionService }: Services): Router {
   get('/video/inform', renderVideoInform)
   get('/video/record', renderVideoRecord)
   get('/video/verify', handleVideoVerify)
-  router.post('/video/record', handleVideoPost)
+  get('/video/view', renderViewVideo)
 
   get('/check-your-answers', renderCheckAnswers)
   router.post('/check-your-answers', validateFormData(checkAnswersSchema), handleSubmission)

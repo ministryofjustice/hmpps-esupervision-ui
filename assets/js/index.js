@@ -8,7 +8,7 @@ mojFrontend.initAll()
 const videoRecorder = document.querySelector('[data-module="videoRecorder"]')
 
 if (videoRecorder) {
-  new VideoRecorder(videoRecorder).init()
+  new VideoRecorder(videoRecorder).initVideo()
 }
 
 document.addEventListener('DOMContentLoaded', () => {

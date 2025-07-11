@@ -14,49 +14,35 @@
 {% endblock %}
 
 {% block content %}
-  <div class="es-pane" id="video-pane-record" tabindex="0">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
-        <p>In your video:</p>
-        <ul class="govuk-list govuk-list--bullet">
-          <li>you do not need to speak</li>
-          <li>don’t worry about how you look</li>
-          <li>make sure your whole face is visible and well lit</li>
-          <li>make sure you are not wearing a hat or sunglasses</li>
-        </ul>
-
-        <div
-          class="videoRecorder"
-          data-module="videoRecorder"
-          data-video-upload-url="{{ videoUploadUrl }}"
-          data-submission-id="{{ submissionId }}"
-        >
-          <ul class="es-hidden">
-            {% for frame in frameUploadUrl %}
-              <li data-frame-upload-url="{{ frame }}"></li>
-            {% endfor %}
+  <div data-module="videoRecorder">
+    <div class="es-pane" id="recordingScreen" tabindex="0">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+          <p>In your video:</p>
+          <ul class="govuk-list govuk-list--bullet">
+            <li>you do not need to speak</li>
+            <li>don’t worry about how you look</li>
+            <li>make sure your whole face is visible and well lit</li>
+            <li>make sure you are not wearing a hat or sunglasses</li>
           </ul>
-          <div class="videoRecorder__container">
+          <div
+            class="videoRecorder__container"
+            id="videoContainer"
+            data-video-upload-url="{{ videoUploadUrl }}"
+            data-submission-id="{{ submissionId }}"
+            {% for frame in frameUploadUrl %}
+              data-image-upload-url="{{ frame }}"
+            {% endfor %}
+          >
             <div class="videoRecorder__videoWrap">
-              <video class="videoRecorder__video">Your browser does not support video</video>
-              <span class="govuk-tag govuk-tag--pink videoRecorder__tag">Recording</span>
+              <video id="video" class="videoRecorder__video" autoplay muted playsinline></video>
+              <canvas id="canvas" hidden></canvas>
+              <div id="statusTag" class="govuk-tag govuk-tag--red videoRecorder__tag"></div>
             </div>
-            <div class="govuk-button-group videoRecorder__controls">
-              <button type="button" class="govuk-button videoRecorder__startButton" data-module="govuk-button" disabled>
-                Start recording
-              </button>
-              <button
-                type="button"
-                class="govuk-button govuk-button--secondary videoRecorder__stopButton"
-                data-module="govuk-button"
-                disabled
-              >
-                Continue
-              </button>
-            </div>
+            <button id="startBtn" class="govuk-button" disabled>Start recording</button>
           </div>
-          <div class="videoRecorder__error">
+          <div class="videoRecorder__error" id="errorMessage" hidden>
             <div class="govuk-inset-text es-inset-text--error">
               <h2 class="govuk-heading-m es-heading--error">You need to accept permissions on your device</h2>
               <p>
@@ -69,12 +55,8 @@
       </div>
     </div>
   </div>
-
   {% include "./partials/loading.njk" %}
   {% include "./partials/match.njk" %}
   {% include "./partials/nomatch.njk" %}
-
-  <script>
-    const submissionId = '{{ submissionId }}'
-  </script>
+  {% include "./partials/error.njk" %}
 {% endblock %}

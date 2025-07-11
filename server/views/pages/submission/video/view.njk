@@ -1,0 +1,23 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% extends "../../../partials/layout.njk" %}
+
+{% set pageTitle = "View your video" %}
+{% set showPane = true %}
+
+{% block beforeContent %}
+  {{
+    govukBackLink({
+    text: "Back",
+    href: "/submission/" + submissionId + "/check-your-answers"
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  {% if submission.autoIdCheck == 'MATCH' %}
+    {% include "./partials/match.njk" %}
+  {% else %}
+    {% include "./partials/nomatch.njk" %}
+  {% endif %}
+{% endblock %}

@@ -32,8 +32,8 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getCheckinFrameUploadLocation(submissionId, contentType)
   }
 
-  getOffenders(): Promise<Page<OffenderInfo>> {
-    return this.esupervisionApiClient.getOffenders()
+  getOffenders(page: number, size: number): Promise<Page<OffenderInfo>> {
+    return this.esupervisionApiClient.getOffenders(page, size)
   }
 
   submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {

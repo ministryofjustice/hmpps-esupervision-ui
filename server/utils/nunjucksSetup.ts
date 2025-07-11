@@ -61,8 +61,12 @@ export default function nunjucksSetup(app: express.Express): void {
     return format(d, 'dd/MM/yyyy')
   })
 
-  njkEnv.addFilter('split', (str: string, separator: string) => {
-    return str.toString().split(separator)
+  njkEnv.addFilter('split', (str: unknown, separator: string = ',') => {
+    if (typeof str !== 'string') {
+      return str
+    }
+    const sep = typeof separator === 'string' ? separator : String(separator)
+    return str.split(sep).map(item => item.trim())
   })
 
   njkEnv.addFilter('gdsDate', (date: string) => {

@@ -120,7 +120,7 @@
             errorMessage: validationErrors | findError("otherSupport"),
             value: formData["otherSupport"],
             label: {
-              text: "Tell us why you need help"
+              text: "Tell us why you need help (optional)"
             }
           })
         }}
@@ -203,7 +203,7 @@
               {
                 value: "NO_HELP",
                 checked: checked("assistance", "NO_HELP"),
-                text: "No, I don’t need help",
+                text: "No, I do not need help",
                 behaviour: "exclusive"
               }
             ]

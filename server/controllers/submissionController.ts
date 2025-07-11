@@ -3,7 +3,6 @@ import { isEqual } from 'date-fns'
 import logger from '../../logger'
 import { services } from '../services'
 import LocationInfo from '../data/models/locationInfo'
-import getUserFriendlyString from '../utils/userFriendlyStrings'
 import MentalHealth from '../data/models/survey/mentalHealth'
 import SupportAspect from '../data/models/survey/supportAspect'
 import CallbackRequested from '../data/models/survey/callbackRequested'
@@ -170,6 +169,37 @@ export const renderAssistance: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const handleAssistance: RequestHandler = async (req, res, next) => {
+  const { assistance } = req.body
+  const { submissionId } = req.params
+
+  const supportFieldsMap: Record<string, keyof typeof req.session.formData> = {
+    MENTAL_HEALTH: 'mentalHealthSupport',
+    ALCOHOL: 'alcoholSupport',
+    DRUGS: 'drugsSupport',
+    MONEY: 'moneySupport',
+    HOUSING: 'housingSupport',
+    SUPPORT_SYSTEM: 'supportSystemSupport',
+    OTHER: 'otherSupport',
+  }
+
+  // If the parent checkbox is not selected, clear all support fields from the session
+  for (const [key, field] of Object.entries(supportFieldsMap)) {
+    if (!assistance.includes(key)) {
+      req.session.formData[field] = ''
+    }
+  }
+
+  const basePath = `/submission/${submissionId}`
+  let redirectUrl = `${basePath}/questions/callback`
+
+  if (req.query.checkAnswers === 'true') {
+    redirectUrl = `${basePath}/check-your-answers`
+  }
+
+  res.redirect(redirectUrl)
+}
+
 export const renderQuestionsCallback: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/submission/questions/callback', pageParams(req))
@@ -180,10 +210,6 @@ export const renderQuestionsCallback: RequestHandler = async (req, res, next) =>
 
 export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   try {
-    const { assistance } = res.locals.formData
-    if (typeof assistance === 'string' || Array.isArray(assistance)) {
-      res.locals.assistance = extractListItems(assistance)
-    }
     res.render('pages/submission/check-answers', pageParams(req))
   } catch (error) {
     next(error)
@@ -237,16 +263,4 @@ export const renderConfirmation: RequestHandler = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
-}
-
-function extractListItems(formItem: string | string[]): string {
-  if (typeof formItem === 'string') {
-    return getUserFriendlyString(formItem)
-  }
-
-  if (Array.isArray(formItem)) {
-    return formItem.map(item => getUserFriendlyString(item.toString())).join(',<br />')
-  }
-
-  return ''
 }

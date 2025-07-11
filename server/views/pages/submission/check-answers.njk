@@ -38,14 +38,18 @@
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Is there anything you need help with?</dt>
-          <dd class="govuk-summary-list__value">{{ assistance | safe }}</dd>
+          <dd class="govuk-summary-list__value">
+            {% for a in formData['assistance'] | split(",") %}
+            {{ a | userFriendlyString }}{% if not loop.last %},{% endif %}
+            {% endfor %}</dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
               >Change<span class="govuk-visually-hidden"> if there anything you need help with</span></a
             >
           </dd>
         </div>
-        {% if formData['mentalHealthSupport'] %}
+
+        {% if formData['mentalHealthSupport']  %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Mental health</dt>
             <dd class="govuk-summary-list__value">{{ formData['mentalHealthSupport'] }}</dd>

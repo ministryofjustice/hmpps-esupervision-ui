@@ -17,6 +17,7 @@ import {
   renderVideoInform,
   renderVideoRecord,
   renderViewVideo,
+  handleAssistance,
 } from '../controllers/submissionController'
 
 import {
@@ -70,7 +71,7 @@ export default function routes({ esupervisionService }: Services): Router {
   router.post('/questions/mental-health', validateFormData(mentalHealthSchema), handleRedirect('/questions/assistance'))
 
   get('/questions/assistance', renderAssistance)
-  router.post('/questions/assistance', validateFormData(assistanceSchema), handleRedirect('/questions/callback'))
+  router.post('/questions/assistance', validateFormData(assistanceSchema), handleAssistance)
 
   get('/questions/callback', renderQuestionsCallback)
   router.post('/questions/callback', validateFormData(callbackSchema), handleRedirect('/video/inform'))

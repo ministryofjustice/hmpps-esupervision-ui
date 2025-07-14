@@ -48,7 +48,7 @@ const filterCheckIns = (checkIns: Page<Checkin>) => {
       checkInId: checkIn.uuid,
       offenderName: `${offender.firstName} ${offender.lastName}`,
       offenderId: offender.uuid,
-      flagged: autoIdCheck === 'NO_MATCH',
+      flagged: autoIdCheck === 'NO_MATCH' || checkIn.flaggedResponses.length > 0,
       receivedDate: checkIn.submittedOn ? format(new Date(checkIn.submittedOn), 'dd/MM/yyyy') : '',
       dueDate: format(new Date(dueDate), 'dd/MM/yyyy'),
       status: friendlyCheckInStatus(status),

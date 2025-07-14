@@ -17,12 +17,16 @@
 {% endblock %}
 
 {% block content %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <span class="govuk-caption-l">Remote check-in</span>
       <h1 class="govuk-heading-l">
         {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }}
         ({{ checkIn.offender.dateOfBirth | formatDate }})
+        {% if checkIn.autoIdCheck == "NO_MATCH" or checkIn.flaggedResponses | length > 0 %}
+          <span class="govuk-tag govuk-tag--yellow">Flagged</span>
+        {% endif %}
       </h1>
       {{
         govukSummaryList({
@@ -53,11 +57,16 @@
           <dt class="govuk-summary-list__key">ID match</dt>
           <dd class="govuk-summary-list__value">
             {% if checkIn.autoIdCheck == "MATCH" %}
-              <span class="govuk-tag govuk-tag--green">Pass</span>
+              <span>Pass</span>
               {% elseif checkIn.autoIdCheck == "NO_MATCH" %}
-              <span class="govuk-tag govuk-tag--red">Fail</span>
+              <span>Fail</span>
             {% else %}
-              <span class="govuk-tag govuk-tag--grey">Not submitted</span>
+              <span>Not submitted</span>
+            {% endif %}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            {% if checkIn.autoIdCheck == "NO_MATCH" %}
+            <span class="govuk-tag govuk-tag--yellow">Flagged</span>
             {% endif %}
           </dd>
         </div>
@@ -83,7 +92,11 @@
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Mental health</dt>
           <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.mentalHealth | userFriendlyString }}</dd>
-          <dd class="govuk-summary-list__actions"></dd>
+          <dd class="govuk-summary-list__actions">
+            {% if 'mentalHealth' in checkIn.flaggedResponses %}
+            <span class="govuk-tag govuk-tag--yellow">Flagged</span>
+            {% endif %}
+          </dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Anything they need help with</dt>
@@ -92,7 +105,11 @@
               {{ a | userFriendlyString }}{% if not loop.last %},{% endif %}
             {% endfor %}
           </dd>
-          <dd class="govuk-summary-list__actions"></dd>
+          <dd class="govuk-summary-list__actions">
+            {% if 'assistance' in checkIn.flaggedResponses %}
+            <span class="govuk-tag govuk-tag--yellow">Flagged</span>
+            {% endif %}
+          </dd>
         </div>
 
         {% if checkIn.surveyResponse.mentalHealthSupport %}
@@ -148,7 +165,9 @@
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Contact with practitioner requested</dt>
           <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.callback | userFriendlyString }}</dd>
-          <dd class="govuk-summary-list__actions"></dd>
+          <dd class="govuk-summary-list__actions">{% if 'callback' in checkIn.flaggedResponses %}
+            <span class="govuk-tag govuk-tag--yellow">Flagged</span>
+            {% endif %}</dd>
         </div>
         {% if checkIn.surveyResponse.callbackDetails %}
           <div class="govuk-summary-list__row">

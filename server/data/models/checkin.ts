@@ -30,4 +30,6 @@ export default class Checkin {
   autoIdCheck: AutomatedIdVerificationResult
 
   manualIdCheck: ManualIdVerificationResult
+
+  flaggedResponses: string[]
 }

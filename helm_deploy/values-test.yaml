@@ -1,0 +1,21 @@
+---
+# Per environment values which override defaults in hmpps-template-typescript/values.yaml
+
+generic-service:
+  replicaCount: 2
+
+  ingress:
+    host: esupervision-test.hmpps.service.justice.gov.uk
+
+  env:
+    INGRESS_URL: 'https://esupervision-test.hmpps.service.justice.gov.uk'
+    HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
+    TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
+    ESUPERVISION_API_URL: 'https://esupervision-api-test.hmpps.service.justice.gov.uk'
+    ENVIRONMENT_NAME: TEST
+    AUDIT_ENABLED: 'false'
+    REKOG_AWS_REGION: 'eu-west-2'
+    REKOG_S3_DATA_BUCKET: 'user-ids-rekognition-d-2'
+
+generic-prometheus-alerts:
+  alertSeverity: hmpps_esupervision_alerts_nonprod

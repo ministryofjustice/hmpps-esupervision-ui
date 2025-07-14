@@ -83,3 +83,24 @@ const hide = el => {
   element.classList.add('es-hidden')
   element.ariaHidden = true
 }
+
+const photoUploadField = document.getElementById('photoUpload')
+const photoDataField = document.getElementById('photoData')
+
+if (photoUploadField) {
+  photoUploadField.addEventListener('change', event => {
+    const file = event.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = e => {
+        const img = document.createElement('img')
+        img.src = e.target.result
+        photoDataField.value = e.target.result
+        const photoContainer = document.getElementById('photoPreview')
+        photoContainer.innerHTML = ''
+        photoContainer.appendChild(img)
+      }
+      reader.readAsDataURL(file)
+    }
+  })
+}

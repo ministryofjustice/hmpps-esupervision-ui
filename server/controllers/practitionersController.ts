@@ -193,6 +193,14 @@ export const renderPhotoCapture: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const renderPhotoUpload: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/register/photo/upload')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const renderPhotoReview: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/practitioners/register/photo/review')

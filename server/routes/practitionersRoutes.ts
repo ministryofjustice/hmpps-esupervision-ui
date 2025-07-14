@@ -12,6 +12,7 @@ import {
   renderDashboard,
   renderRegisterDetails,
   renderPhotoCapture,
+  renderPhotoUpload,
   renderPhotoReview,
   renderContactDetails,
   handleContactPreferences,
@@ -80,6 +81,8 @@ export default function routes(): Router {
 
   get('/register/photo', renderPhotoCapture)
   router.post('/register/photo', handleRedirect('/practitioners/register/photo/review'))
+  get('/register/photo/upload', renderPhotoUpload)
+  router.post('/register/photo/upload', handleRedirect('/practitioners/register/photo/review'))
   get('/register/photo/review', renderPhotoReview)
 
   get('/register/contact', renderContactDetails)

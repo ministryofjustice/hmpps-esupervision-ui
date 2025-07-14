@@ -235,6 +235,7 @@ export const handleSubmission: RequestHandler = async (req, res, next) => {
   const submission = {
     offender: res.locals.submission.offender.uuid,
     survey: {
+      version: '2025-07-10@pilot',
       mentalHealth: mentalHealth as MentalHealth,
       assistance: assistance as SupportAspect[],
       mentalHealthSupport: mentalHealthSupport as string,
@@ -248,13 +249,13 @@ export const handleSubmission: RequestHandler = async (req, res, next) => {
       callbackDetails: callbackDetails as string,
     },
   }
+
   try {
     await esupervisionService.submitCheckin(submissionId, submission)
+    res.redirect(`/submission/${submissionId}/confirmation`)
   } catch (error) {
     next(error)
   }
-
-  res.redirect(`/submission/${submissionId}/confirmation`)
 }
 
 export const renderConfirmation: RequestHandler = async (req, res, next) => {

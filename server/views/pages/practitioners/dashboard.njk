@@ -1,5 +1,6 @@
 {% extends "./layout.njk" %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set section = "dashboard" %}
@@ -7,6 +8,15 @@
 {% set metaContent = '<h4 class="govuk-heading-xs govuk-!-margin-bottom-1">User ID</h4><p class="govuk-hint govuk-!-font-size-14"><code>' + practitionerUuid + '</code></p>' %}
 
 {% block content %}
+{% if successMessage %}
+{{ mojAlert({
+  variant: "success",
+  title: successMessage.title,
+  showTitleAsHeading: true,
+  dismissible: false,
+  html: successMessage.message
+}) }}
+{% endif %}
   <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
   <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button"
     >Add person</a

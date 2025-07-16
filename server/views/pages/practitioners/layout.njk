@@ -8,7 +8,7 @@
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet" />
 {% endblock %}
 
-{% block pageTitle %}{{ pageTitle | default("Manage online wellbeing checks") }}{% endblock %}
+{% block pageTitle %}{{ pageTitle | default("Manage probation check ins") }}{% endblock %}
 {% set environmentName = "Private Beta" %}
 {% block header %}
   <header class="hmpps-header" role="banner">
@@ -34,7 +34,7 @@
           HMPPS
         </a>
         <a class="hmpps-header__link hmpps-header__title__service-name" href="/practitioners"
-          >Manage online wellbeing checks</a
+          >Manage probation check ins</a
         >
         {% if environmentName %}
           <div class="govuk-phase-banner">

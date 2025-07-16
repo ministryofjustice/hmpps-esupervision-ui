@@ -6,7 +6,7 @@
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../../partials/layout.njk" %}
 
-{% set title = "Is there anything else you need to speak with your probation practitioner about?" %}
+{% set title = "Is there anything else you need to speak with your probation officer about?" %}
 {% set pageTitle = title %}
 
 {% block beforeContent %}
@@ -47,7 +47,7 @@
               errorMessage: validationErrors | findError("callback"),
               value: formData["callback"],
               hint: {
-                text: "There may be a delay in your probation practitioner contacting you. They may refer you to support services if you have asked for help. "
+                text: "There may be a delay in your probation officer contacting you. They may refer you to support services if you have asked for help. "
               },
               fieldset: {
                 legend: {
@@ -73,7 +73,7 @@
         }}
         {{
           govukInsetText({
-            text: 'If this is urgent, you should contact your probation practitioner yourself. If there is an emergency, call 999.'
+            text: 'If this is urgent, you should contact your probation officer yourself. If there is an emergency, call 999.'
           })
         }}
         {{

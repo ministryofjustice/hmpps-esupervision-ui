@@ -7,10 +7,9 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">Submit an online wellbeing check</h1>
+      <h1 class="govuk-heading-l">Check in with your probation officer</h1>
       <p>
-        You can use this service to submit online wellbeing checks as part of your probation. Your probation
-        practitioner will have signed you up for this service during a face to face appointment.
+        You can use this service to check in with your probation officer as part of your probation. Your probation officer will have signed you up for this service during a face to face appointment.
       </p>
       <h2 class="govuk-heading-m">Before you start</h2>
       <p>You will need:</p>
@@ -28,9 +27,9 @@
       </ul>
       <p>
         We will use your video to confirm who you are. We will do this by comparing it with the photo your probation
-        practitioner took when they signed you up.
+        officer took when they signed you up.
       </p>
-      <p>The answers to your questions will be sent to your probation practitioner to review.</p>
+      <p>The answers to your questions will be sent to your probation officer to review.</p>
       <form action="/submission/{{ submissionId }}/start" method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{
@@ -43,7 +42,7 @@
       <h2 class="govuk-heading-m">If you need help</h2>
       <p>
         If you have difficulty using this service, or you do not have access to everything you need, you should contact
-        your probation practitioner and let them know.
+        your probation officer and let them know.
       </p>
     </div>
   </div>

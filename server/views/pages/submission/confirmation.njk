@@ -1,7 +1,7 @@
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = "Online wellbeing check submitted" %}
+{% set pageTitle = "Check in submitted" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -9,30 +9,27 @@
     <div class="govuk-grid-column-two-thirds">
       {{
         govukPanel({
-          titleText: "Online wellbeing check submitted"
+          titleText: "Check in submitted"
         })
       }}
       <p>
-        We have sent you a confirmation using the contact details your probation practitioner entered when they signed
+        We have sent you a confirmation using the contact details your probation officer entered when they signed
         you up.
       </p>
       <h2 class="govuk-heading-m">What happens next?</h2>
       <p>
-        Your video and answers have been shared with your probation practitioner. They will contact you if there are any
-        concerns with the information you’ve entered, or if you requested contact.
+        Your video and answers have been shared with your probation officer. They will contact you if there are any concerns with the information you’ve entered, or if you requested contact.
       </p>
       <p>
-        We will remind you about your next online wellbeing check using the same contact details your practitioner
-        entered when they signed you up.
+        We will remind you about your next check in using the same contact details your officer entered when they signed you up.
       </p>
       <p>
         <a
           href="https://forms.office.com/pages/responsepage.aspx?id=KEeHxuZx_kGp4S6MNndq2GF5fsslU5tImfiqSSPf6JhUQko3QVg0MkVGRTVYV0dFMEJJUzBZUTIyVCQlQCN0PWcu&route=shorturl"
           target="_blank"
           class="govuk-link"
-          >What did you think of this service?</a
+          >What did you think of this service? (opens in new tab)</a
         >
-        (takes 30 seconds)
       </p>
     </div>
   </div>

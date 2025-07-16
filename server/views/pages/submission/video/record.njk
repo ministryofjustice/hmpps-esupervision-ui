@@ -31,9 +31,9 @@
             id="videoContainer"
             data-video-upload-url="{{ videoUploadUrl }}"
             data-submission-id="{{ submissionId }}"
-            {% for frame in frameUploadUrl %}
-              data-image-upload-url="{{ frame }}"
-            {% endfor %}
+            {% if frameUploadUrl.length > 0 %}
+              data-image-upload-url="{{ frameUploadUrl[0] }}"
+            {% endif %}
           >
             <div class="videoRecorder__videoWrap">
               <video id="video" class="videoRecorder__video" autoplay muted playsinline></video>

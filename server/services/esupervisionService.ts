@@ -1,4 +1,4 @@
-import EsupervisionApiClient from '../data/esupervisionApiClient'
+import EsupervisionApiClient, { CheckinUploadContentTypes } from '../data/esupervisionApiClient'
 import Page from '../data/models/page'
 import Checkin from '../data/models/checkin'
 
@@ -12,6 +12,7 @@ import AutomatedIdVerificationResult from '../data/models/automatedIdVerificatio
 import Practitioner from '../data/models/pracitioner'
 import PractitionerSetup from '../data/models/pracitionerSetup'
 import Offender from '../data/models/offender'
+import CheckinUploadLocationResponse from '../data/models/checkinUploadLocationResponse'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -24,12 +25,11 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getCheckin(submissionId)
   }
 
-  getCheckinVideoUploadLocation(submissionId: string, videoContentType: string): Promise<LocationInfo> {
-    return this.esupervisionApiClient.getCheckinVideoUploadLocation(submissionId, videoContentType)
-  }
-
-  getCheckinFrameUploadLocation(submissionId: string, contentType: string): Promise<LocationInfo[]> {
-    return this.esupervisionApiClient.getCheckinFrameUploadLocation(submissionId, contentType)
+  getCheckinUploadLocation(
+    submissionId: string,
+    contentTypes: CheckinUploadContentTypes,
+  ): Promise<CheckinUploadLocationResponse> {
+    return this.esupervisionApiClient.getCheckinUploadLocation(submissionId, contentTypes)
   }
 
   getOffenders(practitionerUuid: string, page: number, size: number): Promise<Page<OffenderInfo>> {

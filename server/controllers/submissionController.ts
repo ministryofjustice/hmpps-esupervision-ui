@@ -225,7 +225,6 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
 export const handleSubmission: RequestHandler = async (req, res, next) => {
   const {
     mentalHealth,
-    assistance,
     mentalHealthSupport,
     alcoholSupport,
     drugsSupport,
@@ -236,6 +235,13 @@ export const handleSubmission: RequestHandler = async (req, res, next) => {
     callback,
     callbackDetails,
   } = res.locals.formData
+
+  let { assistance } = res.locals.formData
+
+  // If user selects a single assistance option, convert it to an array
+  if (typeof assistance === 'string') {
+    assistance = [assistance]
+  }
 
   const submissionId = getSubmissionId(req)
   const submission = {

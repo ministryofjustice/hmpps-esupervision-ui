@@ -6,7 +6,7 @@
 {% set section = "register" %}
 
 {% set name = [formData['firstName'], ' ', formData['lastName']]  | join %}
-{% set title = "How should we send the link to the service?" %}
+{% set title = "How does " + name + " want us to send a link to the service?" %}
 
 {% block beforeContent %}
   {{
@@ -37,7 +37,7 @@
               }
             },
             hint: {
-              text: "We will use these details to send a link to " + name + " each time they need to submit an online wellness check."
+              text: "We will use these details to send a link to " + name + " each time they need to use the check in service."
             },
             items: [
               {

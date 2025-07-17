@@ -11,7 +11,7 @@
     formData['firstName'], ' ', formData['lastName']
   ] | join
 %}
-{% set title = "Set up online wellbeing checks" %}
+{% set title = "Set up check ins" %}
 
 {% block beforeContent %}
   {{
@@ -34,7 +34,7 @@
             id: "startDate",
             prefix: "startDate",
             title: {
-              text: "When would you like " + name + " to start online checks?",
+              text: "When would you like " + name + " to complete their first check in?",
               isPageHeading: false,
               classes: "govuk-fieldset__legend--m"
             },
@@ -52,7 +52,7 @@
             value: formData["frequency"],
             fieldset: {
               legend: {
-                text: "How often would you like " + name + " to submit an online wellbeing check?",
+                text: "How often would you like " + name + " to check in?",
                 isPageHeading: false,
                 classes: "govuk-fieldset__legend--m"
               }

@@ -20,6 +20,8 @@ export const handleRedirect = (url: string): RequestHandler => {
 
 export const renderDashboard: RequestHandler = async (req, res, next) => {
   try {
+    // eslint-disable-next-line prefer-destructuring
+    res.locals.successMessage = req.flash('success')[0]
     const practitionerUuid = res.locals.user.userId
     const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid)
     const checkIns = filterCheckIns(rawCheckIns)
@@ -48,7 +50,7 @@ const filterCheckIns = (checkIns: Page<Checkin>) => {
       checkInId: checkIn.uuid,
       offenderName: `${offender.firstName} ${offender.lastName}`,
       offenderId: offender.uuid,
-      flagged: autoIdCheck === 'NO_MATCH',
+      flagged: autoIdCheck === 'NO_MATCH' || checkIn.flaggedResponses.length > 0,
       receivedDate: checkIn.submittedOn ? format(new Date(checkIn.submittedOn), 'dd/MM/yyyy') : '',
       dueDate: format(new Date(dueDate), 'dd/MM/yyyy'),
       status: friendlyCheckInStatus(status),
@@ -85,7 +87,7 @@ export const renderCases: RequestHandler = async (req, res, next) => {
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
     const size = req.query.size ? parseInt(req.query.size as string, 10) : 20
 
-    const cases = await esupervisionService.getOffenders(page, size)
+    const cases = await esupervisionService.getOffenders(practitionerUuid, page, size)
     // eslint-disable-next-line prefer-destructuring
     res.locals.successMessage = req.flash('success')[0]
     res.render('pages/practitioners/cases/index', { cases, practitionerUuid, page, size })
@@ -331,25 +333,19 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     }
 
     // complete PoP registration
-    await esupervisionService.completeOffenderSetup(setup)
-  } catch (error) {
-    next(error)
-  }
-  return res.redirect('/practitioners/register/confirmation')
-}
+    const registerResponse = await esupervisionService.completeOffenderSetup(setup)
 
-export const renderConfirmation: RequestHandler = async (req, res, next) => {
-  try {
-    const { startDateDay, startDateMonth, startDateYear } = res.locals.formData
-    const startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
-    const contactPreference = res.locals.formData.contactPreference || 'email'
-    const contactString =
-      contactPreference === 'BOTH'
-        ? `${res.locals.formData.email} and ${res.locals.formData.mobile}`
-        : res.locals.formData[contactPreference.toString()]
-
-    res.render('pages/practitioners/register/confirmation', { startDate, contactString })
-    req.session.formData = {}
+    if (registerResponse) {
+      const name = `${firstName} ${lastName}`
+      const contactInfo = [mobile, email].filter(Boolean).join(' and ')
+      // set flash message
+      req.flash('success', {
+        title: `${name} has been set up to check in online`,
+        message: `We have sent a confirmation to ${contactInfo}`,
+      })
+      // redirect to dashboard
+      res.redirect('/practitioners/dashboard')
+    }
   } catch (error) {
     next(error)
   }

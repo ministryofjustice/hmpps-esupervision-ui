@@ -6,6 +6,7 @@ import Page from './models/page'
 import Checkin from './models/checkin'
 import CreateCheckinRequest from './models/createCheckinRequest'
 import UploadLocationResponse from './models/uploadLocationResponse'
+import CheckinUploadLocationResponse from './models/checkinUploadLocationResponse'
 import LocationInfo from './models/locationInfo'
 import CheckinSubmission from './models/checkinSubmission'
 import OffenderInfo from './models/offenderInfo'
@@ -14,6 +15,15 @@ import AutomatedIdVerificationResult from './models/automatedIdVerificationResul
 import Practitioner from './models/pracitioner'
 import PractitionerSetup from './models/pracitionerSetup'
 import Offender from './models/offender'
+
+/**
+ * Specifies content types for possible upload locations for a checkin.
+ */
+export type CheckinUploadContentTypes = {
+  video: string
+  reference: string
+  snapshots: string[]
+}
 
 export default class EsupervisionApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
@@ -39,48 +49,31 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  getOffenders(page: number, size: number): Promise<Page<OffenderInfo>> {
+  getOffenders(practitionerUuid: string, page: number, size: number): Promise<Page<OffenderInfo>> {
     return this.get<Page<OffenderInfo>>(
       {
         path: '/offenders',
-        query: { page, size },
+        query: { practitionerUuid, page, size },
       },
       asSystem(),
     )
   }
 
-  async getCheckinVideoUploadLocation(checkinId: string, videoContentType: string): Promise<LocationInfo> {
-    const location = await this.post<UploadLocationResponse>(
+  async getCheckinUploadLocation(
+    checkinId: string,
+    contentTypes: CheckinUploadContentTypes,
+  ): Promise<CheckinUploadLocationResponse> {
+    const { video, reference, snapshots } = contentTypes
+    const locations = await this.post<CheckinUploadLocationResponse>(
       {
         path: `/offender_checkins/${checkinId}/upload_location`,
-        query: { 'content-type': videoContentType },
+        query: { video, reference, snapshots: snapshots.join(',') },
         headers: { 'Content-Type': 'application/json' },
       },
       asSystem(),
     )
 
-    if (location.errorMessage && location.locationInfo) {
-      throw new Error(`Failed to get video upload location: ${location.errorMessage}`)
-    } else {
-      return location.locationInfo
-    }
-  }
-
-  async getCheckinFrameUploadLocation(checkinId: string, frameContentType: string): Promise<LocationInfo[]> {
-    const location = await this.post<UploadLocationResponse>(
-      {
-        path: `/offender_checkins/${checkinId}/upload_location`,
-        query: { 'content-type': frameContentType, 'num-snapshots': 2 },
-        headers: { 'Content-Type': 'application/json' },
-      },
-      asSystem(),
-    )
-
-    if (location.errorMessage && location.locations) {
-      throw new Error(`Failed to get snapshot upload location: ${location.errorMessage}`)
-    } else {
-      return location.locations
-    }
+    return locations
   }
 
   async getProfilePhotoUploadLocation(offenderSetup: OffenderSetup, photoContentType: string): Promise<LocationInfo> {

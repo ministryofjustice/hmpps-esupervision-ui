@@ -31,9 +31,9 @@
             id="videoContainer"
             data-video-upload-url="{{ videoUploadUrl }}"
             data-submission-id="{{ submissionId }}"
-            {% for frame in frameUploadUrl %}
-              data-image-upload-url="{{ frame }}"
-            {% endfor %}
+            {% if frameUploadUrl.length > 0 %}
+              data-image-upload-url="{{ frameUploadUrl[0] }}"
+            {% endif %}
           >
             <div class="videoRecorder__videoWrap">
               <video id="video" class="videoRecorder__video" autoplay muted playsinline></video>
@@ -47,7 +47,7 @@
               <h2 class="govuk-heading-m es-heading--error">You need to accept permissions on your device</h2>
               <p>
                 We are unable to access your camera to record a video. Check your browser settings and permissions. If
-                you are having trouble using this service, contact your probation practitioner.
+                you are having trouble using this service, contact your probation officer.
               </p>
             </div>
           </div>

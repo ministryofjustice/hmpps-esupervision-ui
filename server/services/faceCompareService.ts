@@ -30,7 +30,8 @@ export default class FaceCompareService {
 
     try {
       const result = await this.rekognitionClient.send(Commmand)
-      logger.info('Compared the video still with the stored image', result)
+      // logger.debug('Compared the video still with the stored image', result)
+      logger.info('Face compare: face matches', result.FaceMatches)
 
       let bestMatch: { Similarity: number } = { Similarity: 0.0 }
       if (result.FaceMatches.length > 0) {

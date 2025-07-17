@@ -2,7 +2,6 @@ import { RequestHandler, Request } from 'express'
 import { isEqual } from 'date-fns'
 import logger from '../../logger'
 import { services } from '../services'
-import LocationInfo from '../data/models/locationInfo'
 import MentalHealth from '../data/models/survey/mentalHealth'
 import SupportAspect from '../data/models/survey/supportAspect'
 import CallbackRequested from '../data/models/survey/callbackRequested'
@@ -27,6 +26,7 @@ export const handleRedirect = (submissionPath: string): RequestHandler => {
     const { submissionId } = req.params
     const basePath = `/submission/${submissionId}`
     let redirectUrl = `${basePath}${submissionPath}`
+    logger.info('handleRedirect: ', { checkAnswers: req.query.checkAnswers, redirectUrl })
 
     if (req.query.checkAnswers === 'true') {
       redirectUrl = `${basePath}/check-your-answers`
@@ -85,13 +85,6 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
     const { submissionId } = req.params
     const videoContentType = 'video/mp4'
     const frameContentType = 'image/jpeg'
-    const promises = [
-      esupervisionService.getCheckinVideoUploadLocation(submissionId, videoContentType),
-      esupervisionService.getCheckinFrameUploadLocation(submissionId, frameContentType),
-    ]
-    const [videoResult, framesResult] = await Promise.all(promises)
-    const videoUploadLocation = videoResult as LocationInfo
-    const frameUploadLocations = framesResult as LocationInfo[]
 
     const checkIn = res.locals.submission
     const offenderPhoto = checkIn.offender.photoUrl
@@ -103,11 +96,24 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
       return response.blob()
     })
 
-    const [referencePhotoUploadUrl, ...snapshotPhotoUploadUrls] = frameUploadLocations.map(location => location.url)
-    const referencePhotoUploadResult = await fetch(referencePhotoUploadUrl, {
+    const uploadLocations = await esupervisionService.getCheckinUploadLocation(submissionId, {
+      video: videoContentType,
+      reference: offenderReferencePhoto.type,
+      snapshots: [frameContentType, frameContentType],
+    })
+
+    if (
+      uploadLocations.references.length === 0 ||
+      uploadLocations.snapshots.length === 0 ||
+      uploadLocations.video === undefined
+    ) {
+      throw new Error(`Failed to get upload locations: ${JSON.stringify(uploadLocations)}`)
+    }
+
+    const referencePhotoUploadResult = await fetch(uploadLocations.references[0].url, {
       method: 'PUT',
       headers: {
-        'Content-Type': offenderReferencePhoto.type,
+        'Content-Type': uploadLocations.references[0].contentType,
       },
       body: offenderReferencePhoto,
     })
@@ -115,13 +121,13 @@ export const renderVideoRecord: RequestHandler = async (req, res, next) => {
     if (!referencePhotoUploadResult.ok) {
       throw new Error(`Failed to upload reference photo: ${referencePhotoUploadResult.statusText}`)
     } else {
-      logger.debug('Reference photo uploaded successfully', referencePhotoUploadUrl)
+      logger.debug('Reference photo uploaded successfully', uploadLocations.references[0].url)
     }
 
     res.render('pages/submission/video/record', {
       ...pageParams(req),
-      videoUploadUrl: videoUploadLocation.url,
-      frameUploadUrl: snapshotPhotoUploadUrls,
+      videoUploadUrl: uploadLocations.video.url,
+      frameUploadUrl: uploadLocations.snapshots.map(snapshot => snapshot.url),
     })
   } catch (error) {
     next(error)
@@ -219,7 +225,6 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
 export const handleSubmission: RequestHandler = async (req, res, next) => {
   const {
     mentalHealth,
-    assistance,
     mentalHealthSupport,
     alcoholSupport,
     drugsSupport,
@@ -231,10 +236,18 @@ export const handleSubmission: RequestHandler = async (req, res, next) => {
     callbackDetails,
   } = res.locals.formData
 
+  let { assistance } = res.locals.formData
+
+  // If user selects a single assistance option, convert it to an array
+  if (typeof assistance === 'string') {
+    assistance = [assistance]
+  }
+
   const submissionId = getSubmissionId(req)
   const submission = {
     offender: res.locals.submission.offender.uuid,
     survey: {
+      version: '2025-07-10@pilot',
       mentalHealth: mentalHealth as MentalHealth,
       assistance: assistance as SupportAspect[],
       mentalHealthSupport: mentalHealthSupport as string,
@@ -248,13 +261,13 @@ export const handleSubmission: RequestHandler = async (req, res, next) => {
       callbackDetails: callbackDetails as string,
     },
   }
+
   try {
     await esupervisionService.submitCheckin(submissionId, submission)
+    res.redirect(`/submission/${submissionId}/confirmation`)
   } catch (error) {
     next(error)
   }
-
-  res.redirect(`/submission/${submissionId}/confirmation`)
 }
 
 export const renderConfirmation: RequestHandler = async (req, res, next) => {

@@ -6,7 +6,7 @@
 {% set section = "register" %}
 
 {% set name = [formData['firstName'], ' ', formData['lastName']]  | join %}
-{% set title = "What is " + name + "'s email address?" %}
+{% set title = "What is " + name + "s email address?" %}
 
 {% block beforeContent %}
   {{

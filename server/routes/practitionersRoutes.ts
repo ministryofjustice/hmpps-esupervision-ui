@@ -24,7 +24,6 @@ import {
   handleRegister,
   renderCheckInDetail,
   renderDashboardFiltered,
-  renderConfirmation,
   renderCreateInvite,
   renderCaseView,
   handleCreateInvite,
@@ -104,8 +103,6 @@ export default function routes(): Router {
 
   get('/register/check-answers', renderCheckAnswers)
   router.post('/register/check-answers', handleRegister)
-
-  get('/register/confirmation', renderConfirmation)
 
   return router
 }

@@ -20,6 +20,8 @@ export const handleRedirect = (url: string): RequestHandler => {
 
 export const renderDashboard: RequestHandler = async (req, res, next) => {
   try {
+    // eslint-disable-next-line prefer-destructuring
+    res.locals.successMessage = req.flash('success')[0]
     const practitionerUuid = res.locals.user.userId
     const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid)
     const checkIns = filterCheckIns(rawCheckIns)
@@ -323,25 +325,19 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     }
 
     // complete PoP registration
-    await esupervisionService.completeOffenderSetup(setup)
-  } catch (error) {
-    next(error)
-  }
-  return res.redirect('/practitioners/register/confirmation')
-}
+    const registerResponse = await esupervisionService.completeOffenderSetup(setup)
 
-export const renderConfirmation: RequestHandler = async (req, res, next) => {
-  try {
-    const { startDateDay, startDateMonth, startDateYear } = res.locals.formData
-    const startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
-    const contactPreference = res.locals.formData.contactPreference || 'email'
-    const contactString =
-      contactPreference === 'BOTH'
-        ? `${res.locals.formData.email} and ${res.locals.formData.mobile}`
-        : res.locals.formData[contactPreference.toString()]
-
-    res.render('pages/practitioners/register/confirmation', { startDate, contactString })
-    req.session.formData = {}
+    if (registerResponse) {
+      const name = `${firstName} ${lastName}`
+      const contactInfo = [mobile, email].filter(Boolean).join(' and ')
+      // set flash message
+      req.flash('success', {
+        title: `${name} has been set up to check in online`,
+        message: `We have sent a confirmation to ${contactInfo}`,
+      })
+      // redirect to dashboard
+      res.redirect('/practitioners/dashboard')
+    }
   } catch (error) {
     next(error)
   }

@@ -267,15 +267,16 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   try {
     const { day, month, year, contactPreference, startDateDay, startDateMonth, startDateYear, frequency } =
       res.locals.formData
-
-    res.locals.dateOfBirth = new Date(`${year}/${month}/${day}`)
+    if (year) {
+      res.locals.dateOfBirth = new Date(`${year}/${month}/${day}`)
+    }
     res.locals.contactPreference = getUserFriendlyString(contactPreference?.toString())
 
     if (startDateYear) {
       res.locals.startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
     }
 
-    res.locals.frequency = getUserFriendlyString(frequency.toString())
+    res.locals.frequency = getUserFriendlyString(frequency?.toString() || 'WEEKLY')
 
     res.render('pages/practitioners/register/check-answers')
   } catch (error) {
@@ -297,6 +298,50 @@ const dataUrlToBlob = (dataUrl: string) => {
 }
 
 export const handleRegister: RequestHandler = async (req, res, next) => {
+  const { firstName, lastName, day, month, year, email, mobile } = res.locals.formData
+
+  const data = {
+    setupUuid: uuidv4(),
+    practitionerId: res.locals.user.userId,
+    firstName: firstName?.toString() || '',
+    lastName: lastName?.toString() || '',
+    dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : null,
+    email: email ? email.toString() : null,
+    phoneNumber: mobile ? mobile.toString() : null,
+  }
+  try {
+    // console.log(data)
+    const setup = await esupervisionService.createOffender(data)
+    const uploadLocation = await esupervisionService.getProfilePhotoUploadLocation(setup, 'image/jpeg')
+    res.json({ status: 'SUCCESS', message: 'Registration complete', setup, uploadLocation })
+  } catch (error) {
+    res.json({ status: 'ERROR', message: error.message })
+  }
+}
+
+export const handleRegisterComplete: RequestHandler = async (req, res, next) => {
+  const { firstName, lastName, email, mobile } = res.locals.formData
+  try {
+    // complete PoP registration
+    const registerResponse = await esupervisionService.completeOffenderSetup(req.params.setupId)
+
+    if (registerResponse) {
+      const name = `${firstName} ${lastName}`
+      const contactInfo = [mobile, email].filter(Boolean).join(' and ')
+      // set flash message
+      req.flash('success', {
+        title: `${name} has been set up to check in online`,
+        message: `We have sent a confirmation to ${contactInfo}`,
+      })
+      // redirect to dashboard
+      res.redirect('/practitioners/dashboard')
+    }
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleRegisterOld: RequestHandler = async (req, res, next) => {
   const { firstName, lastName, day, month, year, email, mobile, photoData } = res.locals.formData
 
   const data = {
@@ -333,7 +378,7 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     }
 
     // complete PoP registration
-    const registerResponse = await esupervisionService.completeOffenderSetup(setup)
+    const registerResponse = await esupervisionService.completeOffenderSetup(setup.uuid)
 
     if (registerResponse) {
       const name = `${firstName} ${lastName}`

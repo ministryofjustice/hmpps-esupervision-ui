@@ -14,10 +14,8 @@
     }}
   {% endif %}
   <h1 class="govuk-heading-l">Cases</h1>
-  <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button"
-  >Add person</a
-  >
-  {% if cases %}
+  <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button">Add person</a>
+  {% if cases.content | length > 0 %}
     <table class="govuk-table" data-module="moj-sortable-table">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
@@ -43,8 +41,5 @@
       </tbody>
     </table>
     {{ pagination(page, size, cases.content | length) }}
-  {% else %}
-    <h2 class="govuk-heading-m">Cases</h2>
-    <p class="govuk-body">No cases found</p>
   {% endif %}
 {% endblock %}

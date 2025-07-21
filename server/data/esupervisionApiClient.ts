@@ -93,10 +93,10 @@ export default class EsupervisionApiClient extends RestClient {
     }
   }
 
-  completeOffenderSetup(offenderSetup: OffenderSetup): Promise<Offender> {
+  completeOffenderSetup(setupId: string): Promise<Offender> {
     return this.post<Offender>(
       {
-        path: `/offender_setup/${offenderSetup.uuid}/complete`,
+        path: `/offender_setup/${setupId}/complete`,
       },
       asSystem(),
     )

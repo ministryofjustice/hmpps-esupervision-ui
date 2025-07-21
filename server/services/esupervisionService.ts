@@ -48,8 +48,8 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getProfilePhotoUploadLocation(offenderSetup, photoContentType)
   }
 
-  completeOffenderSetup(offenderSetup: OffenderSetup): Promise<Offender> {
-    return this.esupervisionApiClient.completeOffenderSetup(offenderSetup)
+  completeOffenderSetup(setupId: string): Promise<Offender> {
+    return this.esupervisionApiClient.completeOffenderSetup(setupId)
   }
 
   createCheckin(checkin: CreateCheckinRequest): Promise<Checkin> {

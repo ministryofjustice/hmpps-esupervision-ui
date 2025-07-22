@@ -15,7 +15,7 @@ export default class OffenderInfo {
 
   phoneNumber: string
 
-  nextCheckinDate: string
+  firstCheckinDate: string
 
   checkinInterval: CheckinInterval
 }

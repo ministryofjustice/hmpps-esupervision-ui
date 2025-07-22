@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { isFuture } from 'date-fns'
+import { isFuture, isToday } from 'date-fns'
 
 export const personsDetailsSchema = z
   .object({
@@ -71,10 +71,10 @@ export const setUpSchema = z
   .refine(
     ({ startDateDay, startDateMonth, startDateYear }) => {
       const d = new Date(startDateYear, startDateMonth - 1, startDateDay)
-      return isFuture(d)
+      return isFuture(d) || isToday(d)
     },
     {
-      message: 'Date must be in the future',
+      message: 'Date must be in the future or today',
       path: ['startDate'],
     },
   )

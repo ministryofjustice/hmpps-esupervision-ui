@@ -322,8 +322,8 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
 export const handleRegisterComplete: RequestHandler = async (req, res, next) => {
   const { firstName, lastName, email, mobile } = res.locals.formData
   try {
-    // complete PoP registration
-    const registerResponse = await esupervisionService.completeOffenderSetup(req.params.setupId)
+    // Complete PoP registration
+    const registerResponse = await esupervisionService.completeOffenderSetup(req.body.setupId)
 
     if (registerResponse) {
       const name = `${firstName} ${lastName}`

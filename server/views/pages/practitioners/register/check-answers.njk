@@ -162,6 +162,11 @@
       }}
 
       <button id="registerButton" class="govuk-button">Confirm and sign-up</button>
+
+      <form id="completeRegistrationForm" method="post" action="/practitioners/register/complete" >
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="text" id="setupId" name="setupId" value="{{ setupId }}" />
+      </form>
     </div>
   </div>
 {% endblock %}

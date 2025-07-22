@@ -8,11 +8,21 @@ mojFrontend.initAll()
 
 const videoRecorder = document.querySelector('[data-module="videoRecorder"]')
 
+const IMAGE_SESSION_KEY = 'esImageUpload'
+
+const displayUploadedImage = document.getElementsByClassName('es-uploaded-image')
+const uploadedImageData = localStorage.getItem(IMAGE_SESSION_KEY)
+
+const photoUploadInput = document.getElementById('photoUpload-input')
+const photoContentDisplay = document.getElementById('photoPreview')
+const validationMessage = document.getElementById('photoUploadMessage')
+
+const screenshot = document.getElementById('screenshot')
+const registerButton = document.getElementById('registerButton')
+
 if (videoRecorder) {
   new VideoRecorder(videoRecorder).initVideo()
 }
-
-const IMAGE_SESSION_KEY = 'esImageUpload'
 
 document.addEventListener('DOMContentLoaded', () => {
   async function capturePhoto(v) {
@@ -34,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const stream = await navigator.mediaDevices.getUserMedia(constraints)
         const takePhotoButton = document.getElementById('take-photo')
         const form = document.getElementById('photoForm')
-        const photoDataField = document.getElementById('photoData')
 
         video.srcObject = stream
         await video.play()
@@ -87,8 +96,7 @@ const hide = el => {
   element.ariaHidden = true
 }
 
-const displayUploadedImage = document.getElementsByClassName('es-uploaded-image')
-const uploadedImageData = localStorage.getItem(IMAGE_SESSION_KEY)
+// Display the uploaded image if it exists in localStorage and the container is present
 
 if (displayUploadedImage && uploadedImageData) {
   const img = new Image()
@@ -98,20 +106,18 @@ if (displayUploadedImage && uploadedImageData) {
 
   img.onload = () => {
     forEach(displayUploadedImage, uploadedImageContainer => {
-      const uploadedImage = uploadedImageContainer
-      uploadedImage.innerHTML = ''
-      uploadedImage.appendChild(img)
+      const image = uploadedImageContainer
+      image.innerHTML = ''
+      image.appendChild(img)
     })
   }
 }
 
-const photoUploadInput = document.getElementById('photoUpload-input')
-const photoContentDisplay = document.getElementById('photoPreview')
-const validationMessage = document.getElementById('photoUploadMessage')
-
-const screenshot = document.getElementById('screenshot')
+// Handle the photo upload input change event
 
 if (photoUploadInput) {
+  // Photo upload input is present, clear any previous session data
+  localStorage.removeItem(IMAGE_SESSION_KEY)
   photoUploadInput.addEventListener('change', handlePhotoSelection)
 }
 
@@ -120,18 +126,18 @@ function handlePhotoSelection(event) {
   photoContentDisplay.textContent = ''
   validationMessage.textContent = ''
 
-  // Validate file existence and type
+  // Validate file attached
   if (!file) {
     showValidationMessage('Select an image file to upload')
     return
   }
-
+  // Validate file type
   if (!file.type.startsWith('image/')) {
     showValidationMessage('Select an image file, for example: .jpg, .jpeg, .png, .gif')
     return
   }
 
-  // Read the file
+  // Read the image
   const reader = new FileReader()
   reader.onload = () => {
     const img = new Image()
@@ -147,7 +153,8 @@ function handlePhotoSelection(event) {
       ctx.drawImage(img, 0, 0, img.width, img.height)
 
       const screenshotDataUrl = canvas.toDataURL('image/jpeg', 0.8)
-      // Store the photo in localStorage
+
+      // Store the screenshot in localStorage
       localStorage.setItem(IMAGE_SESSION_KEY, screenshotDataUrl)
 
       const screenshotImg = new Image()
@@ -167,36 +174,37 @@ function showValidationMessage(message) {
   validationMessage.textContent = message
 }
 
-const uploadedImage = document.getElementById('es-uploaded-image')
-
-if (uploadedImage && uploadedImageData) {
-  const img = new Image()
-  img.src = uploadedImageData
-  img.alt = 'Uploaded image preview'
-  img.classList.add('es-profile-image')
-
-  img.onload = () => {
-    uploadedImage.innerHTML = ''
-    uploadedImage.appendChild(img)
+function dataUrlToBlob(dataUrl) {
+  const [info, data] = dataUrl.split(',')
+  const mime = info.match(/:(.*?);/)[1]
+  const byteString = atob(data)
+  const bytes = new Uint8Array(byteString.length)
+  for (let i = 0; i < byteString.length; i += 1) {
+    bytes[i] = byteString.charCodeAt(i)
   }
+  return new Blob([bytes], { type: mime })
 }
 
-const registerButton = document.getElementById('registerButton')
+// Handle the registration button click event on Check Your Answers page
 
 if (registerButton) {
   registerButton.addEventListener('click', async () => {
+    // Disable the button to prevent multiple submissions
     registerButton.setAttribute('disabled', 'disabled')
+
     const registerResult = await fetch(`/practitioners/register/details`, {
       method: 'GET',
     })
       .then(res => res.json())
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.error(error)
         return { status: 'ERROR', message: `Registration failed` }
       })
 
     if (registerResult.status === 'SUCCESS') {
       const { url } = registerResult.uploadLocation
+      // Upload the image to the provided URL
       const uploadImageResult = await fetch(url, {
         method: 'PUT',
         body: dataUrlToBlob(localStorage.getItem(IMAGE_SESSION_KEY).toString()),
@@ -205,29 +213,11 @@ if (registerButton) {
         },
       })
       if (uploadImageResult) {
-        const completeRegistration = await fetch(`/practitioners/register/complete/${registerResult.setup.uuid}`, {
-          method: 'GET',
-        })
-        if (completeRegistration.ok) {
-          window.location.href = '/practitioners/dashboard'
-        } else {
-          // eslint-disable-next-line no-console
-          console.error('Failed to complete registration')
-        }
+        // If the upload is successful, submit the form with the setup ID and clear the localStorage
+        localStorage.removeItem(IMAGE_SESSION_KEY)
+        document.getElementById('setupId').value = registerResult.setup.uuid
+        document.getElementById('completeRegistrationForm').submit()
       }
     }
   })
-}
-
-const dataUrlToBlob = dataUrl => {
-  const [info, data] = dataUrl.split(',')
-  const mime = info.match(/:(.*?);/)[1]
-  const byteString = atob(data)
-  const bytes = new Uint8Array(byteString.length)
-
-  for (let i = 0; i < byteString.length; i += 1) {
-    bytes[i] = byteString.charCodeAt(i)
-  }
-
-  return new Blob([bytes], { type: mime })
 }

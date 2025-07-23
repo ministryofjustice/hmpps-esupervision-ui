@@ -113,6 +113,17 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
+  async reviewCheckin(practitionerUuid: string, checkinId: string, match: boolean): Promise<Checkin> {
+    return this.post<Checkin>(
+      {
+        path: `/offender_checkins/${checkinId}/review`,
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify({ practitioner: practitionerUuid, manualIdCheck: match ? 'MATCH' : 'NO_MATCH' }),
+      },
+      asSystem(),
+    )
+  }
+
   async createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {
     return this.post<OffenderSetup>(
       {

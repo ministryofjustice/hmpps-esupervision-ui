@@ -1,0 +1,21 @@
+{% extends "../layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% set title = "Check-in details" %}
+
+{% block beforeContent %}
+  <div class="es-page-actions">
+    <div class="es-page-actions__back">
+      {{
+        govukBackLink({
+          text: "Back",
+          href: "/practitioners/checkin/" + checkIn.uuid
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+{% endblock %}

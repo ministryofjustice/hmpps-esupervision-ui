@@ -82,7 +82,7 @@ export default function nunjucksSetup(app: express.Express): void {
       return ''
     }
     const d = new Date(date)
-    return format(d, "d MMMM yyyy 'at' h:mmaaa")
+    return format(d, "d MMMM yyyy', ' h:mmaaa")
   })
 
   njkEnv.addGlobal('checked', function isChecked(name: string, value: string) {

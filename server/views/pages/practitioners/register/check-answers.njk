@@ -78,12 +78,8 @@
           <dd class="govuk-summary-list__value">
             <div class="es-uploaded-image es-uploaded-image--small"></div>
           </dd>
-          {% set changePhotoUrl = "/practitioners/register/photo?checkAnswers=true" %}
-          {% if formData['userPhotoUpload'] == "true" %}
-            {% set changePhotoUrl = "/practitioners/register/photo/upload?checkAnswers=true" %}
-          {% endif %}
           <dd class="govuk-summary-list__actions">
-            <a class="govuk-link govuk-link--no-visited-state" href="{{ changePhotoUrl }}"
+            <a class="govuk-link govuk-link--no-visited-state" href="/practitioners/register/photo/review?checkAnswers=true"
               >Change<span class="govuk-visually-hidden"> the photo</span></a
             >
           </dd>

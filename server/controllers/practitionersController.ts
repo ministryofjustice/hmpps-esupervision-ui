@@ -181,7 +181,8 @@ export const handleStartRegister: RequestHandler = async (req, res, next) => {
 
 export const renderRegisterDetails: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/index')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/index', { cya })
   } catch (error) {
     next(error)
   }
@@ -189,7 +190,8 @@ export const renderRegisterDetails: RequestHandler = async (req, res, next) => {
 
 export const renderPhotoCapture: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/photo/index')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/photo/index', { cya })
   } catch (error) {
     next(error)
   }
@@ -197,7 +199,8 @@ export const renderPhotoCapture: RequestHandler = async (req, res, next) => {
 
 export const renderPhotoUpload: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/photo/upload')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/photo/upload', { cya })
   } catch (error) {
     next(error)
   }
@@ -205,7 +208,8 @@ export const renderPhotoUpload: RequestHandler = async (req, res, next) => {
 
 export const renderPhotoReview: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/photo/review')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/photo/review', { cya })
   } catch (error) {
     next(error)
   }
@@ -213,7 +217,8 @@ export const renderPhotoReview: RequestHandler = async (req, res, next) => {
 
 export const renderContactDetails: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/contact/index')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/contact/index', { cya })
   } catch (error) {
     next(error)
   }
@@ -221,7 +226,6 @@ export const renderContactDetails: RequestHandler = async (req, res, next) => {
 
 export const handleContactPreferences: RequestHandler = async (req, res, next) => {
   const { contactPreference } = req.body
-
   if (contactPreference === 'EMAIL') {
     return res.redirect('/practitioners/register/contact/email')
   }
@@ -231,7 +235,8 @@ export const handleContactPreferences: RequestHandler = async (req, res, next) =
 
 export const renderMobile: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/contact/mobile')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/contact/mobile', { cya })
   } catch (error) {
     next(error)
   }
@@ -239,7 +244,8 @@ export const renderMobile: RequestHandler = async (req, res, next) => {
 
 export const renderEmail: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/contact/email')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/contact/email', { cya })
   } catch (error) {
     next(error)
   }
@@ -247,7 +253,8 @@ export const renderEmail: RequestHandler = async (req, res, next) => {
 
 export const renderSetUp: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/set-up')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/set-up', { cya })
   } catch (error) {
     next(error)
   }
@@ -275,7 +282,7 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
 }
 
 export const handleRegister: RequestHandler = async (req, res, next) => {
-  const { firstName, lastName, day, month, year, email, mobile } = res.locals.formData
+  const { firstName, lastName, day, month, year, contactPreference, email, mobile } = res.locals.formData
 
   const data = {
     setupUuid: uuidv4(),
@@ -283,8 +290,8 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     firstName: firstName?.toString() || '',
     lastName: lastName?.toString() || '',
     dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : null,
-    email: email ? email.toString() : null,
-    phoneNumber: mobile ? mobile.toString() : null,
+    email: contactPreference === 'EMAIL' && email ? email.toString() : null, // Only include email if contact preference is EMAIL
+    phoneNumber: contactPreference === 'TEXT' && mobile ? mobile.toString() : null, // Only include mobile if contact preference is TEXT
   }
   try {
     const setup = await esupervisionService.createOffender(data)
@@ -296,14 +303,14 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
 }
 
 export const handleRegisterComplete: RequestHandler = async (req, res, next) => {
-  const { firstName, lastName, email, mobile } = res.locals.formData
+  const { firstName, lastName, contactPreference, email, mobile } = res.locals.formData
   try {
     // Complete PoP registration
     const registerResponse = await esupervisionService.completeOffenderSetup(req.body.setupId)
 
     if (registerResponse) {
       const name = `${firstName} ${lastName}`
-      const contactInfo = [mobile, email].filter(Boolean).join(' and ')
+      const contactInfo = contactPreference === 'EMAIL' ? email : mobile
       // set flash message
       req.flash('success', {
         title: `${name} has been set up to check in online`,

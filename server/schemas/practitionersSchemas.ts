@@ -85,3 +85,7 @@ export const practitionerSchema = z.object({
   email: z.string().email({ message: 'Enter an email address in the correct format, like name@example.com' }),
   uuid: z.string().min(1, 'Enter their UUID'),
 })
+
+export const photoUploadSchema = z.object({
+  photoUpload: z.string().min(1, 'Select a photo to upload'),
+})

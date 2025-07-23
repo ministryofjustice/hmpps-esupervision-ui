@@ -27,9 +27,9 @@
         <li>the person is not wearing a hat or sunglasses</li>
       </ul>
       {% if formData["userPhotoUpload"] == "true" %}
-          <h2 class="govuk-heading-s">Uploaded image</h2>
+        <h2 class="govuk-heading-s">Uploaded image</h2>
       {% else %}
-          <h2 class="govuk-heading-s">Captured image</h2>
+        <h2 class="govuk-heading-s">Captured image</h2>
       {% endif %}
       <div class="es-uploaded-image">
         <span>Image</span>
@@ -37,9 +37,13 @@
       <div class="govuk-button-group">
         <a href="/practitioners/register/contact" class="govuk-button">Yes, continue</a>
         {% if formData["userPhotoUpload"] == "true" %}
-          <a href="/practitioners/register/photo/upload" class="govuk-button govuk-button--secondary">No, upload another photo</a>
+          <a href="/practitioners/register/photo/upload" class="govuk-button govuk-button--secondary"
+            >No, upload another photo</a
+          >
         {% else %}
-          <a href="/practitioners/register/photo" class="govuk-button govuk-button--secondary">No, take another photo</a>
+          <a href="/practitioners/register/photo" class="govuk-button govuk-button--secondary"
+            >No, take another photo</a
+          >
         {% endif %}
       </div>
     </div>

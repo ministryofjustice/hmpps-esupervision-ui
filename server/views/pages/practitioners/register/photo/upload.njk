@@ -1,4 +1,5 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../../../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../layout.njk" %}
@@ -8,7 +9,7 @@
   {{
     govukBackLink({
     text: "Back",
-    href: "/practitioners/register"
+    href: "/practitioners/register/photo"
     })
   }}
 {% endblock %}
@@ -21,43 +22,29 @@
       {{ errorSummary(validationErrors) }}
       <h1 class="govuk-heading-l">{{ title }}</h1>
 
-      <p>Before you take your photo, make sure:</p>
+      <p>Before you upload the photo, make sure:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>the person is in a well lit area</li>
         <li>the person is in front of a plain background</li>
-        <li>the persons face is in the frame</li>
         <li>there is no other person in the photo</li>
         <li>the person is not wearing a hat or sunglasses</li>
       </ul>
 
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-        <p id="photoUploadMessage" class="govuk-error-message"></p>
 
         <div class="govuk-form-group">
-          <label class="govuk-label" for="photoUpload"> Upload an image </label>
+          <label class="govuk-label" for="photoUpload"> Upload a photo </label>
+          <p id="photoUploadMessage" class="govuk-error-message">
+            {{ (validationErrors | findError("photoUpload")).text | default(null) }}
+          </p>
           <div class="govuk-drop-zone" data-module="govuk-file-upload">
             <input class="govuk-file-upload" id="photoUpload" name="photoUpload" type="file" accept="image/*" />
           </div>
         </div>
 
-        <div id="photoPreview">
-          <p>No image selected.</p>
-        </div>
-
-        <div id="meta">
-          <p class="govuk-body">Size: <span id="meta-s"></span></p>
-          <p class="govuk-body">Width: <span id="meta-w"></span></p>
-          <p class="govuk-body">Height: <span id="meta-h"></span></p>
-          <p class="govuk-body">SS Size: <span id="meta-ss"></span></p>
-        </div>
-
-        <div id="screenshot">
-          <p>No image selected.</p>
-        </div>
-
+        <div id="photoPreview"></div>
         <input type="hidden" name="userPhotoUpload" id="userPhotoUpload" value="true" />
-
         <div class="govuk-button-group">
           {{
             govukButton({
@@ -66,7 +53,9 @@
               id: "upload-photo"
             })
           }}
-          <a href="/practitioners/register/photo" class="govuk-link govuk-link--no-visited-state">Take a photo instead</a>
+          <a href="/practitioners/register/photo" class="govuk-link govuk-link--no-visited-state"
+            >Take a photo instead</a
+          >
         </div>
       </form>
     </div>

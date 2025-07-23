@@ -106,7 +106,9 @@
             <dt class="govuk-summary-list__key">Mobile number</dt>
             <dd class="govuk-summary-list__value">{{ formData['mobile'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link govuk-link--no-visited-state" href="/practitioners/register/contact/mobile?checkAnswers=true"
+              <a
+                class="govuk-link govuk-link--no-visited-state"
+                href="/practitioners/register/contact/mobile?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> the mobile number</span></a
               >
             </dd>
@@ -118,7 +120,9 @@
             <dt class="govuk-summary-list__key">Email address</dt>
             <dd class="govuk-summary-list__value">{{ formData['email'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link govuk-link--no-visited-state" href="/practitioners/register/contact/email?checkAnswers=true"
+              <a
+                class="govuk-link govuk-link--no-visited-state"
+                href="/practitioners/register/contact/email?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> the email address</span></a
               >
             </dd>
@@ -163,9 +167,9 @@
 
       <button id="registerButton" class="govuk-button">Confirm and sign-up</button>
 
-      <form id="completeRegistrationForm" method="post" action="/practitioners/register/complete" >
+      <form id="completeRegistrationForm" method="post" action="/practitioners/register/complete">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-        <input type="text" id="setupId" name="setupId" value="{{ setupId }}" />
+        <input type="hidden" id="setupId" name="setupId" value="{{ setupId }}" />
       </form>
     </div>
   </div>

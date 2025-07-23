@@ -17,7 +17,6 @@ const photoUploadInput = document.getElementById('photoUpload-input')
 const photoContentDisplay = document.getElementById('photoPreview')
 const validationMessage = document.getElementById('photoUploadMessage')
 
-const screenshot = document.getElementById('screenshot')
 const registerButton = document.getElementById('registerButton')
 
 if (videoRecorder) {
@@ -122,18 +121,19 @@ if (photoUploadInput) {
 }
 
 function handlePhotoSelection(event) {
+  localStorage.removeItem(IMAGE_SESSION_KEY)
   const file = event.target.files[0]
   photoContentDisplay.textContent = ''
   validationMessage.textContent = ''
 
   // Validate file attached
   if (!file) {
-    showValidationMessage('Select an image file to upload')
+    showValidationMessage('Select a photo to upload')
     return
   }
   // Validate file type
   if (!file.type.startsWith('image/')) {
-    showValidationMessage('Select an image file, for example: .jpg, .jpeg, .png, .gif')
+    showValidationMessage('The selected photo must be a JPG, PNG or GIF’.')
     return
   }
 
@@ -152,15 +152,10 @@ function handlePhotoSelection(event) {
       const ctx = canvas.getContext('2d')
       ctx.drawImage(img, 0, 0, img.width, img.height)
 
-      const screenshotDataUrl = canvas.toDataURL('image/jpeg', 0.8)
+      const screenshot = canvas.toDataURL('image/jpeg', 0.8)
 
       // Store the screenshot in localStorage
-      localStorage.setItem(IMAGE_SESSION_KEY, screenshotDataUrl)
-
-      const screenshotImg = new Image()
-      screenshotImg.src = screenshotDataUrl
-      screenshot.innerHTML = ''
-      screenshot.appendChild(screenshotImg)
+      localStorage.setItem(IMAGE_SESSION_KEY, screenshot)
     }
     img.src = reader.result.toString()
   }

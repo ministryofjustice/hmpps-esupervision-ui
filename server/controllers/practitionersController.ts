@@ -237,16 +237,6 @@ export const renderMobile: RequestHandler = async (req, res, next) => {
   }
 }
 
-export const handleMobile: RequestHandler = async (req, res, next) => {
-  const { contactPreference } = res.locals.formData
-
-  if (contactPreference === 'BOTH') {
-    return res.redirect('/practitioners/register/contact/email')
-  }
-
-  return res.redirect('/practitioners/register/set-up')
-}
-
 export const renderEmail: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/practitioners/register/contact/email')

@@ -18,7 +18,6 @@ import {
   handleContactPreferences,
   renderEmail,
   renderMobile,
-  handleMobile,
   renderSetUp,
   renderCheckAnswers,
   renderCases,
@@ -94,7 +93,11 @@ export default function routes(): Router {
   router.post('/register/contact', validateFormData(contactPreferenceSchema), handleContactPreferences)
 
   get('/register/contact/mobile', renderMobile)
-  router.post('/register/contact/mobile', validateFormData(mobileSchema), handleMobile)
+  router.post(
+    '/register/contact/mobile',
+    validateFormData(mobileSchema),
+    handleRedirect('/practitioners/register/set-up'),
+  )
 
   get('/register/contact/email', renderEmail)
   router.post(

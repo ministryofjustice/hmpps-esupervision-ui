@@ -101,7 +101,7 @@
             >
           </dd>
         </div>
-        {% if formData['contactPreference'] == 'BOTH' or formData['contactPreference'] == 'TEXT' %}
+        {% if formData['contactPreference'] == 'TEXT' %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Mobile number</dt>
             <dd class="govuk-summary-list__value">{{ formData['mobile'] }}</dd>
@@ -115,7 +115,7 @@
           </div>
         {% endif %}
 
-        {% if formData['contactPreference'] == 'BOTH' or formData['contactPreference'] == 'EMAIL' %}
+        {% if formData['contactPreference'] == 'EMAIL' %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Email address</dt>
             <dd class="govuk-summary-list__value">{{ formData['email'] }}</dd>

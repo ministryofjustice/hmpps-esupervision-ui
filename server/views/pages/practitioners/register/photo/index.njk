@@ -33,19 +33,22 @@
           <video id="es-photo-capture__video" class="es-photo-capture__video"></video>
           <span class="es-photo-capture__frame"></span>
         </div>
-        {{
-          govukButton({
-            text: "Take photo",
-            type: "button",
-            id: "take-photo",
-            disabled: true
-          })
-        }}
+        <div class="govuk-button-group">
+          {{
+            govukButton({
+              text: "Take photo",
+              type: "button",
+              id: "take-photo",
+              disabled: true
+            })
+          }}
+          <a href="photo/upload" class="govuk-link govuk-link--no-visited-state">Upload photo instead</a>
+        </div>
       </div>
 
       <form method="POST" id="photoForm">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-        <input type="hidden" name="photoData" id="photoData" />
+        <input type="hidden" name="userPhotoUpload" id="userPhotoUpload" value="false" />
       </form>
 
       <div id="es-photo-capture__error">
@@ -53,7 +56,10 @@
           <h2 class="govuk-heading-m es-heading--error">You need to accept permissions on your device</h2>
           <p>We are unable to access your camera to take a photo. Check your browser settings and permissions.</p>
         </div>
-        <button class="govuk-button" disabled>Take photo</button>
+        <div class="govuk-button-group">
+          <button class="govuk-button" disabled>Take photo</button>
+          <a href="photo/upload" class="govuk-link govuk-link--no-visited-state">Upload photo instead</a>
+        </div>
       </div>
     </div>
   </div>

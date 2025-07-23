@@ -195,6 +195,14 @@ export const renderPhotoCapture: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const renderPhotoUpload: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/register/photo/upload')
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const renderPhotoReview: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/practitioners/register/photo/review')
@@ -259,15 +267,16 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   try {
     const { day, month, year, contactPreference, startDateDay, startDateMonth, startDateYear, frequency } =
       res.locals.formData
-
-    res.locals.dateOfBirth = new Date(`${year}/${month}/${day}`)
+    if (year) {
+      res.locals.dateOfBirth = new Date(`${year}/${month}/${day}`)
+    }
     res.locals.contactPreference = getUserFriendlyString(contactPreference?.toString())
 
     if (startDateYear) {
       res.locals.startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
     }
 
-    res.locals.frequency = getUserFriendlyString(frequency.toString())
+    res.locals.frequency = getUserFriendlyString(frequency?.toString() || 'WEEKLY')
 
     res.render('pages/practitioners/register/check-answers')
   } catch (error) {
@@ -275,57 +284,32 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   }
 }
 
-const dataUrlToBlob = (dataUrl: string) => {
-  const [info, data] = dataUrl.split(',')
-  const mime = info.match(/:(.*?);/)[1]
-  const byteString = atob(data)
-  const bytes = new Uint8Array(byteString.length)
-
-  for (let i = 0; i < byteString.length; i += 1) {
-    bytes[i] = byteString.charCodeAt(i)
-  }
-
-  return new Blob([bytes], { type: mime })
-}
-
 export const handleRegister: RequestHandler = async (req, res, next) => {
-  const { firstName, lastName, day, month, year, email, mobile, photoData } = res.locals.formData
+  const { firstName, lastName, day, month, year, email, mobile } = res.locals.formData
 
   const data = {
     setupUuid: uuidv4(),
     practitionerId: res.locals.user.userId,
-    firstName: firstName.toString() || '',
-    lastName: lastName.toString() || '',
-    dateOfBirth: format(`${year}-${month}-${day}`, 'yyyy-MM-dd'),
+    firstName: firstName?.toString() || '',
+    lastName: lastName?.toString() || '',
+    dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : null,
     email: email ? email.toString() : null,
     phoneNumber: mobile ? mobile.toString() : null,
   }
-
   try {
-    // convert photo data URL to blob
-    const photoBlob = dataUrlToBlob(photoData as string)
-
-    // create PoP record
     const setup = await esupervisionService.createOffender(data)
+    const uploadLocation = await esupervisionService.getProfilePhotoUploadLocation(setup, 'image/jpeg')
+    res.json({ status: 'SUCCESS', message: 'Registration complete', setup, uploadLocation })
+  } catch (error) {
+    res.json({ status: 'ERROR', message: error.message })
+  }
+}
 
-    // get upload location for PoP photo from the API
-    const uploadLocation = await esupervisionService.getProfilePhotoUploadLocation(setup, photoBlob.type)
-
-    // upload PoP photo to location URL
-    const response = await fetch(uploadLocation.url, {
-      method: 'PUT',
-      body: photoBlob,
-      headers: {
-        'Content-Type': photoBlob.type,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to upload profile image')
-    }
-
-    // complete PoP registration
-    const registerResponse = await esupervisionService.completeOffenderSetup(setup)
+export const handleRegisterComplete: RequestHandler = async (req, res, next) => {
+  const { firstName, lastName, email, mobile } = res.locals.formData
+  try {
+    // Complete PoP registration
+    const registerResponse = await esupervisionService.completeOffenderSetup(req.body.setupId)
 
     if (registerResponse) {
       const name = `${firstName} ${lastName}`

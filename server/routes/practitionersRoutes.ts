@@ -12,6 +12,7 @@ import {
   renderDashboard,
   renderRegisterDetails,
   renderPhotoCapture,
+  renderPhotoUpload,
   renderPhotoReview,
   renderContactDetails,
   handleContactPreferences,
@@ -31,6 +32,7 @@ import {
   renderUserCreate,
   handleCreateUser,
   handleStartRegister,
+  handleRegisterComplete,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -39,6 +41,7 @@ import {
   emailSchema,
   setUpSchema,
   practitionerSchema,
+  photoUploadSchema,
 } from '../schemas/practitionersSchemas'
 
 export default function routes(): Router {
@@ -79,6 +82,12 @@ export default function routes(): Router {
 
   get('/register/photo', renderPhotoCapture)
   router.post('/register/photo', handleRedirect('/practitioners/register/photo/review'))
+  get('/register/photo/upload', renderPhotoUpload)
+  router.post(
+    '/register/photo/upload',
+    validateFormData(photoUploadSchema),
+    handleRedirect('/practitioners/register/photo/review'),
+  )
   get('/register/photo/review', renderPhotoReview)
 
   get('/register/contact', renderContactDetails)
@@ -102,7 +111,8 @@ export default function routes(): Router {
   )
 
   get('/register/check-answers', renderCheckAnswers)
-  router.post('/register/check-answers', handleRegister)
+  get('/register/details', handleRegister)
+  router.post('/register/complete', handleRegisterComplete)
 
   return router
 }

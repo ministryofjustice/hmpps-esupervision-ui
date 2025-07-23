@@ -1,9 +1,10 @@
+@use 'govuk-frontend/dist/govuk/index' as gds;
+
 .es-photo-capture {
   &__wrap {
     position: relative;
     height: 444px;
     width: 345px;
-    position: relative;
     background-color: #000;
     margin-bottom: 1rem;
   }
@@ -34,15 +35,31 @@
   }
 }
 
-.es-profile-image {
-  margin-top: 2rem;
+.es-uploaded-image {
   margin-bottom: 2rem;
+  text-align: center;
+
+  span {
+    display: block;
+    background: gds.govuk-colour('light-grey');
+    padding: 1rem;
+    color: gds.$govuk-text-colour;
+    @include gds.govuk-font($size: 19);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    box-shadow:
+      rgba(0, 0, 0, 0.4) 0 1px 2px 0,
+      rgba(0, 0, 0, 0.1) 0 1px 4px 0;
+  }
+}
+
+.es-profile-image {
   max-width: 100%;
-  height: auto;
-  display: block;
-  box-shadow:
-    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
-    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  margin-bottom: 2rem;
 }
 
 .es-profile-image--small {
@@ -50,4 +67,46 @@
   max-height: 250px;
   height: auto;
   display: block;
+}
+
+#photoPreview {
+  position: absolute;
+  visibility: hidden;
+  width: 100%;
+  max-width: 500px;
+  top: 0;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+#screenshot {
+  margin-bottom: 1rem;
+  display: none;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+#meta {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f5f5f5;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  border-radius: 0.25rem;
+  display: none;
+
+  p {
+    margin: 0;
+    padding: 0.25rem 0;
+    color: #333;
+  }
 }

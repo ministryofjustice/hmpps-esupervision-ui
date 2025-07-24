@@ -13,7 +13,7 @@
   {{
     govukBackLink({
       text: "Back",
-      href: "/submission/" + submissionId + "/questions/mental-health"
+      href: "/submission/" + submissionId + "/check-your-answers" if cya else "/submission/" + submissionId + "/questions/mental-health"
     })
   }}
 {% endblock %}

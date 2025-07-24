@@ -12,12 +12,12 @@ import {
   renderDashboard,
   renderRegisterDetails,
   renderPhotoCapture,
+  renderPhotoUpload,
   renderPhotoReview,
   renderContactDetails,
   handleContactPreferences,
   renderEmail,
   renderMobile,
-  handleMobile,
   renderSetUp,
   renderCheckAnswers,
   renderCases,
@@ -31,6 +31,13 @@ import {
   renderUserCreate,
   handleCreateUser,
   handleStartRegister,
+  handleRegisterComplete,
+  renderUpdatePersonalDetails,
+  renderUpdatePhoto,
+  renderUpdateContactDetails,
+  renderUpdateCheckinSettings,
+  renderCheckInVideoDetail,
+  handleCheckInReview,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -39,6 +46,8 @@ import {
   emailSchema,
   setUpSchema,
   practitionerSchema,
+  photoUploadSchema,
+  videoReviewSchema,
 } from '../schemas/practitionersSchemas'
 
 export default function routes(): Router {
@@ -63,11 +72,18 @@ export default function routes(): Router {
   get('/dashboard', renderDashboard)
   get('/dashboard/:filter', renderDashboardFiltered)
   get('/checkin/:checkInId', renderCheckInDetail)
+  router.post('/checkin/:checkInId', validateFormData(videoReviewSchema), handleCheckInReview)
+  get('/checkin/:checkInId/video', renderCheckInVideoDetail)
 
   get('/cases', renderCases)
   get('/cases/:offenderId', renderCaseView)
   get('/cases/:offenderId/invite', renderCreateInvite)
   router.post('/cases/:offenderId/invite', handleCreateInvite)
+
+  get('/cases/:offenderId/update/personal-details', renderUpdatePersonalDetails)
+  get('/cases/:offenderId/update/photo', renderUpdatePhoto)
+  get('/cases/:offenderId/update/contact-details', renderUpdateContactDetails)
+  get('/cases/:offenderId/update/checkin-settings', renderUpdateCheckinSettings)
 
   get('/users', renderUsers)
   get('/users/create', renderUserCreate)
@@ -79,13 +95,23 @@ export default function routes(): Router {
 
   get('/register/photo', renderPhotoCapture)
   router.post('/register/photo', handleRedirect('/practitioners/register/photo/review'))
+  get('/register/photo/upload', renderPhotoUpload)
+  router.post(
+    '/register/photo/upload',
+    validateFormData(photoUploadSchema),
+    handleRedirect('/practitioners/register/photo/review'),
+  )
   get('/register/photo/review', renderPhotoReview)
 
   get('/register/contact', renderContactDetails)
   router.post('/register/contact', validateFormData(contactPreferenceSchema), handleContactPreferences)
 
   get('/register/contact/mobile', renderMobile)
-  router.post('/register/contact/mobile', validateFormData(mobileSchema), handleMobile)
+  router.post(
+    '/register/contact/mobile',
+    validateFormData(mobileSchema),
+    handleRedirect('/practitioners/register/set-up'),
+  )
 
   get('/register/contact/email', renderEmail)
   router.post(
@@ -102,7 +128,8 @@ export default function routes(): Router {
   )
 
   get('/register/check-answers', renderCheckAnswers)
-  router.post('/register/check-answers', handleRegister)
+  get('/register/details', handleRegister)
+  router.post('/register/complete', handleRegisterComplete)
 
   return router
 }

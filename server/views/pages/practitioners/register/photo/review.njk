@@ -7,7 +7,7 @@
   {{
     govukBackLink({
     text: "Back",
-    href: "/practitioners/register/photo"
+    href: "/practitioners/register/photo/upload" if formData['userPhotoUpload'] else "/practitioners/register/photo"
     })
   }}
 {% endblock %}
@@ -26,10 +26,25 @@
         <li>there is no other person in the photo</li>
         <li>the person is not wearing a hat or sunglasses</li>
       </ul>
-      <img src="{{ formData["photoData"] }}" class="es-profile-image" />
+      {% if formData["userPhotoUpload"] == "true" %}
+        <h2 class="govuk-heading-s">Uploaded image</h2>
+      {% else %}
+        <h2 class="govuk-heading-s">Captured image</h2>
+      {% endif %}
+      <div class="es-uploaded-image">
+        <span>Image</span>
+      </div>
       <div class="govuk-button-group">
         <a href="/practitioners/register/contact" class="govuk-button">Yes, continue</a>
-        <a href="/practitioners/register/photo" class="govuk-button govuk-button--secondary">No, take another photo</a>
+        {% if formData["userPhotoUpload"] == "true" %}
+          <a href="/practitioners/register/photo/upload" class="govuk-button govuk-button--secondary"
+            >No, upload another photo</a
+          >
+        {% else %}
+          <a href="/practitioners/register/photo" class="govuk-button govuk-button--secondary"
+            >No, take another photo</a
+          >
+        {% endif %}
       </div>
     </div>
   </div>

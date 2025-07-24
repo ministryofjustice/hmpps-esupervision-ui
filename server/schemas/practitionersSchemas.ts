@@ -20,6 +20,12 @@ export const personsDetailsSchema = z
     },
   )
 
+export const videoReviewSchema = z.object({
+  reviewed: z.enum(['YES', 'NO'], {
+    required_error: 'Select yes if the person is in the video',
+  }),
+})
+
 export const contactPreferenceSchema = z.object({
   contactPreference: z.string({
     required_error: 'Choose how you would like us to send a link',
@@ -84,4 +90,8 @@ export const practitionerSchema = z.object({
     }),
   email: z.string().email({ message: 'Enter an email address in the correct format, like name@example.com' }),
   uuid: z.string().min(1, 'Enter their UUID'),
+})
+
+export const photoUploadSchema = z.object({
+  photoUpload: z.string().min(1, 'Select a photo to upload'),
 })

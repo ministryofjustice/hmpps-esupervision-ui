@@ -81,6 +81,31 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const renderCheckInVideoDetail: RequestHandler = async (req, res, next) => {
+  try {
+    const { checkInId } = req.params
+    const checkIn = await esupervisionService.getCheckin(checkInId)
+    res.render('pages/practitioners/checkins/video', { checkIn })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleCheckInReview: RequestHandler = async (req, res, next) => {
+  try {
+    const { checkInId } = req.params
+    const { reviewed } = res.locals.formData
+    const practitionerUuid = res.locals.user.userId
+
+    await esupervisionService.reviewCheckin(practitionerUuid, checkInId, reviewed === 'YES')
+    req.flash('success', { message: 'Check-in reviewed' })
+
+    res.redirect(`/practitioners/dashboard`)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const renderCases: RequestHandler = async (req, res, next) => {
   try {
     const practitionerUuid = res.locals.user.userId
@@ -98,7 +123,8 @@ export const renderCases: RequestHandler = async (req, res, next) => {
 
 export const renderCaseView: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/cases/view')
+    const { offenderId } = req.params
+    res.render('pages/practitioners/cases/manage', { offenderId })
   } catch (error) {
     next(error)
   }
@@ -107,6 +133,42 @@ export const renderCaseView: RequestHandler = async (req, res, next) => {
 export const renderCreateInvite: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/practitioners/cases/invite')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdatePersonalDetails: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    res.render('pages/practitioners/cases/update/personal-details', { offenderId })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdatePhoto: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    res.render('pages/practitioners/cases/update/photo', { offenderId })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdateContactDetails: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    res.render('pages/practitioners/cases/update/contact-details', { offenderId })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdateCheckinSettings: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    res.render('pages/practitioners/cases/update/checkin-settings', { offenderId })
   } catch (error) {
     next(error)
   }
@@ -181,7 +243,8 @@ export const handleStartRegister: RequestHandler = async (req, res, next) => {
 
 export const renderRegisterDetails: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/index')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/index', { cya })
   } catch (error) {
     next(error)
   }
@@ -189,7 +252,17 @@ export const renderRegisterDetails: RequestHandler = async (req, res, next) => {
 
 export const renderPhotoCapture: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/photo/index')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/photo/index', { cya })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderPhotoUpload: RequestHandler = async (req, res, next) => {
+  try {
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/photo/upload', { cya })
   } catch (error) {
     next(error)
   }
@@ -197,7 +270,8 @@ export const renderPhotoCapture: RequestHandler = async (req, res, next) => {
 
 export const renderPhotoReview: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/photo/review')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/photo/review', { cya })
   } catch (error) {
     next(error)
   }
@@ -205,7 +279,8 @@ export const renderPhotoReview: RequestHandler = async (req, res, next) => {
 
 export const renderContactDetails: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/contact/index')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/contact/index', { cya })
   } catch (error) {
     next(error)
   }
@@ -213,7 +288,6 @@ export const renderContactDetails: RequestHandler = async (req, res, next) => {
 
 export const handleContactPreferences: RequestHandler = async (req, res, next) => {
   const { contactPreference } = req.body
-
   if (contactPreference === 'EMAIL') {
     return res.redirect('/practitioners/register/contact/email')
   }
@@ -223,25 +297,17 @@ export const handleContactPreferences: RequestHandler = async (req, res, next) =
 
 export const renderMobile: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/contact/mobile')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/contact/mobile', { cya })
   } catch (error) {
     next(error)
   }
 }
 
-export const handleMobile: RequestHandler = async (req, res, next) => {
-  const { contactPreference } = res.locals.formData
-
-  if (contactPreference === 'BOTH') {
-    return res.redirect('/practitioners/register/contact/email')
-  }
-
-  return res.redirect('/practitioners/register/set-up')
-}
-
 export const renderEmail: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/contact/email')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/contact/email', { cya })
   } catch (error) {
     next(error)
   }
@@ -249,7 +315,8 @@ export const renderEmail: RequestHandler = async (req, res, next) => {
 
 export const renderSetUp: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/register/set-up')
+    const cya = req.query.checkAnswers === 'true'
+    res.render('pages/practitioners/register/set-up', { cya })
   } catch (error) {
     next(error)
   }
@@ -259,15 +326,16 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   try {
     const { day, month, year, contactPreference, startDateDay, startDateMonth, startDateYear, frequency } =
       res.locals.formData
-
-    res.locals.dateOfBirth = new Date(`${year}/${month}/${day}`)
+    if (year) {
+      res.locals.dateOfBirth = new Date(`${year}/${month}/${day}`)
+    }
     res.locals.contactPreference = getUserFriendlyString(contactPreference?.toString())
 
     if (startDateYear) {
       res.locals.startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
     }
 
-    res.locals.frequency = getUserFriendlyString(frequency.toString())
+    res.locals.frequency = getUserFriendlyString(frequency?.toString() || 'WEEKLY')
 
     res.render('pages/practitioners/register/check-answers')
   } catch (error) {
@@ -275,61 +343,36 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   }
 }
 
-const dataUrlToBlob = (dataUrl: string) => {
-  const [info, data] = dataUrl.split(',')
-  const mime = info.match(/:(.*?);/)[1]
-  const byteString = atob(data)
-  const bytes = new Uint8Array(byteString.length)
-
-  for (let i = 0; i < byteString.length; i += 1) {
-    bytes[i] = byteString.charCodeAt(i)
-  }
-
-  return new Blob([bytes], { type: mime })
-}
-
 export const handleRegister: RequestHandler = async (req, res, next) => {
-  const { firstName, lastName, day, month, year, email, mobile, photoData } = res.locals.formData
+  const { firstName, lastName, day, month, year, contactPreference, email, mobile } = res.locals.formData
 
   const data = {
     setupUuid: uuidv4(),
     practitionerId: res.locals.user.userId,
-    firstName: firstName.toString() || '',
-    lastName: lastName.toString() || '',
-    dateOfBirth: format(`${year}-${month}-${day}`, 'yyyy-MM-dd'),
-    email: email ? email.toString() : null,
-    phoneNumber: mobile ? mobile.toString() : null,
+    firstName: firstName?.toString() || '',
+    lastName: lastName?.toString() || '',
+    dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : null,
+    email: contactPreference === 'EMAIL' && email ? email.toString() : null, // Only include email if contact preference is EMAIL
+    phoneNumber: contactPreference === 'TEXT' && mobile ? mobile.toString() : null, // Only include mobile if contact preference is TEXT
   }
-
   try {
-    // convert photo data URL to blob
-    const photoBlob = dataUrlToBlob(photoData as string)
-
-    // create PoP record
     const setup = await esupervisionService.createOffender(data)
+    const uploadLocation = await esupervisionService.getProfilePhotoUploadLocation(setup, 'image/jpeg')
+    res.json({ status: 'SUCCESS', message: 'Registration complete', setup, uploadLocation })
+  } catch (error) {
+    res.json({ status: 'ERROR', message: error.message })
+  }
+}
 
-    // get upload location for PoP photo from the API
-    const uploadLocation = await esupervisionService.getProfilePhotoUploadLocation(setup, photoBlob.type)
-
-    // upload PoP photo to location URL
-    const response = await fetch(uploadLocation.url, {
-      method: 'PUT',
-      body: photoBlob,
-      headers: {
-        'Content-Type': photoBlob.type,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to upload profile image')
-    }
-
-    // complete PoP registration
-    const registerResponse = await esupervisionService.completeOffenderSetup(setup)
+export const handleRegisterComplete: RequestHandler = async (req, res, next) => {
+  const { firstName, lastName, contactPreference, email, mobile } = res.locals.formData
+  try {
+    // Complete PoP registration
+    const registerResponse = await esupervisionService.completeOffenderSetup(req.body.setupId)
 
     if (registerResponse) {
       const name = `${firstName} ${lastName}`
-      const contactInfo = [mobile, email].filter(Boolean).join(' and ')
+      const contactInfo = contactPreference === 'EMAIL' ? email : mobile
       // set flash message
       req.flash('success', {
         title: `${name} has been set up to check in online`,

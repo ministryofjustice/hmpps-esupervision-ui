@@ -1,0 +1,38 @@
+@use 'govuk-frontend/dist/govuk/index' as gds;
+
+.es-page-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+
+  &__back {
+    display: flex;
+    align-items: center;
+  }
+
+  &__actions {
+    @include gds.govuk-font($size: 19);
+
+    & {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    a {
+      @include gds.govuk-link-style-no-visited-state;
+    }
+  }
+}
+
+.es-flagged-heading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .govuk-tag {
+    max-width: fit-content;
+  }
+}

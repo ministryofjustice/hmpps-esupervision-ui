@@ -8,16 +8,63 @@
 {% block beforeContent %}
   {{
     govukBackLink({
-    text: "Back",
-    href: "/submission/" + submissionId + "/check-your-answers"
+      text: "Back",
+      href: "/submission/" + submissionId + "/check-your-answers" if cya else "/submission/" + submissionId + "/video/record"
     })
   }}
 {% endblock %}
 
 {% block content %}
-  {% if submission.autoIdCheck == 'MATCH' %}
-    {% include "./partials/match.njk" %}
-  {% else %}
-    {% include "./partials/nomatch.njk" %}
-  {% endif %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if submission.autoIdCheck == 'MATCH' %}
+        <h1 class="govuk-heading-l">We have confirmed this is you</h1>
+        <p>We have confirmed this is you. You can now continue to check your answers.</p>
+        <div class="videoRecorder__videoWrap">
+          <video class="videoRecorder__video-preview" id="matchPreview" src="{{ submission.videoUrl }}" controls>
+            Your browser does not support video
+          </video>
+        </div>
+        <div class="govuk-button-group">
+          <a
+            class="govuk-button"
+            data-module="govuk-button"
+            role="button"
+            href="/submission/{{ submissionId }}/check-your-answers"
+            >Continue</a
+          >
+        </div>
+      {% else %}
+        <h1 class="govuk-heading-l">We cannot confirm this is you</h1>
+        <p>
+          We have checked and we cannot confirm this is you. You can try recording again or submit your video anyway.
+        </p>
+        <div class="videoRecorder__videoWrap">
+          <video class="videoRecorder__video-preview" id="noMatchPreview" src="{{ submission.videoUrl }}" controls>
+            Your browser does not support video
+          </video>
+        </div>
+        <p class="govuk-!-font-weight-bold">In your video, make sure:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>you are in a well lit area</li>
+          <li>you are in front of a plain background</li>
+          <li>your face is in the frame</li>
+          <li>you are not wearing a hat or sunglasses</li>
+        </ul>
+        <div class="govuk-button-group">
+          <a class="govuk-button" role="button" href="/submission/{{ submissionId }}/video/record"
+            >Record video again</a
+          >
+          <a
+            class="govuk-button govuk-button--secondary"
+            role="button"
+            data-module="govuk-button"
+            href="/submission/{{ submissionId }}/check-your-answers"
+          >
+            Submit video anyway
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}

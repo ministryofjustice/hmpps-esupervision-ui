@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express'
-import { format } from 'date-fns/format'
+import { format, add } from 'date-fns'
 import { v4 as uuidv4 } from 'uuid'
 import { services } from '../services'
 import Checkin from '../data/models/checkin'
@@ -36,23 +36,41 @@ export const renderDashboardFiltered: RequestHandler = async (req, res, next) =>
     const { filter } = req.params
     const practitionerUuid = res.locals.user.userId
     const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid)
-    const checkIns = filterCheckIns(rawCheckIns)
+    const checkIns = filterCheckIns(rawCheckIns, filter)
     res.render('pages/practitioners/dashboard', { checkIns, filter, practitionerUuid })
   } catch (error) {
     next(error)
   }
 }
 
-const filterCheckIns = (checkIns: Page<Checkin>) => {
-  return checkIns.content.map((checkIn: Checkin) => {
+const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
+  let filteredCheckIns
+
+  switch (filter) {
+    case 'awaiting':
+      filteredCheckIns = checkIns.content.filter((checkIn: Checkin) => checkIn.status === 'CREATED')
+      break
+    case 'reviewed':
+      filteredCheckIns = checkIns.content.filter((checkIn: Checkin) => checkIn.status === 'REVIEWED')
+      break
+    default:
+      filteredCheckIns = checkIns.content.filter((checkIn: Checkin) => checkIn.status === 'SUBMITTED')
+      break
+  }
+
+  if (!filteredCheckIns || filteredCheckIns.length === 0) {
+    return []
+  }
+  return filteredCheckIns.map((checkIn: Checkin) => {
     const { offender, autoIdCheck, dueDate, status } = checkIn
     return {
       checkInId: checkIn.uuid,
       offenderName: `${offender.firstName} ${offender.lastName}`,
       offenderId: offender.uuid,
+      sentTo: offender.email || offender.phoneNumber,
       flagged: autoIdCheck === 'NO_MATCH' || checkIn.flaggedResponses.length > 0,
-      receivedDate: checkIn.submittedOn ? format(new Date(checkIn.submittedOn), 'dd/MM/yyyy') : '',
-      dueDate: format(new Date(dueDate), 'dd/MM/yyyy'),
+      receivedDate: checkIn.submittedOn,
+      dueDate: add(new Date(dueDate), { days: 3 }),
       status: friendlyCheckInStatus(status),
     }
   })
@@ -61,11 +79,11 @@ const filterCheckIns = (checkIns: Page<Checkin>) => {
 const friendlyCheckInStatus = (status: string) => {
   switch (status) {
     case 'CREATED':
-      return 'Not submitted'
+      return 'Link sent'
     case 'SUBMITTED':
-      return 'Received'
+      return 'Checked in'
     case 'REVIEWED':
-      return 'Reviewed'
+      return 'Checked in'
     default:
       return status
   }
@@ -75,6 +93,7 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
     const checkIn = await esupervisionService.getCheckin(checkInId)
+    checkIn.dueDate = add(new Date(checkIn.dueDate), { days: 3 }).toString()
     res.render('pages/practitioners/checkins/view', { checkIn })
   } catch (error) {
     next(error)

@@ -31,7 +31,7 @@
   <h1 class="govuk-heading-l es-flagged-heading">
     {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }} ({{ checkIn.offender.dateOfBirth | gdsDate }})
     {% if checkIn.autoIdCheck == "NO_MATCH" or checkIn.flaggedResponses | length > 0 %}
-      <span class="govuk-tag govuk-tag--yellow">Flagged</span>
+      <span class="govuk-tag govuk-tag--red">Urgent</span>
     {% endif %}
     {% if checkIn.status == "REVIEWED" %}
       {% if checkIn.manualIdCheck == "MATCH" %}
@@ -74,7 +74,7 @@
       <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.mentalHealth | userFriendlyString }}</dd>
       <dd class="govuk-summary-list__actions">
         {% if 'mentalHealth' in checkIn.flaggedResponses %}
-          <span class="govuk-tag govuk-tag--yellow">Flagged</span>
+          <span class="govuk-tag govuk-tag--red">Needs attention</span>
         {% endif %}
       </dd>
     </div>
@@ -87,7 +87,7 @@
       </dd>
       <dd class="govuk-summary-list__actions">
         {% if 'assistance' in checkIn.flaggedResponses %}
-          <span class="govuk-tag govuk-tag--yellow">Flagged</span>
+          <span class="govuk-tag govuk-tag--red">Needs attention</span>
         {% endif %}
       </dd>
     </div>
@@ -147,7 +147,7 @@
       <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.callback | userFriendlyString }}</dd>
       <dd class="govuk-summary-list__actions">
         {% if 'callback' in checkIn.flaggedResponses %}
-          <span class="govuk-tag govuk-tag--yellow">Flagged</span>
+          <span class="govuk-tag govuk-tag--red">Needs attention</span>
         {% endif %}
       </dd>
     </div>
@@ -175,7 +175,7 @@
       </dd>
       <dd class="govuk-summary-list__actions">
         {% if checkIn.autoIdCheck == "NO_MATCH" %}
-          <span class="govuk-tag govuk-tag--yellow">Flagged</span>
+          <span class="govuk-tag govuk-tag--red">Needs attention</span>
         {% endif %}
       </dd>
     </div>

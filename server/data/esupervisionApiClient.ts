@@ -93,10 +93,10 @@ export default class EsupervisionApiClient extends RestClient {
     }
   }
 
-  completeOffenderSetup(offenderSetup: OffenderSetup): Promise<Offender> {
+  completeOffenderSetup(setupId: string): Promise<Offender> {
     return this.post<Offender>(
       {
-        path: `/offender_setup/${offenderSetup.uuid}/complete`,
+        path: `/offender_setup/${setupId}/complete`,
       },
       asSystem(),
     )
@@ -108,6 +108,17 @@ export default class EsupervisionApiClient extends RestClient {
         path: `/offender_checkins/${checkinId}/submit`,
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(submission),
+      },
+      asSystem(),
+    )
+  }
+
+  async reviewCheckin(practitionerUuid: string, checkinId: string, match: boolean): Promise<Checkin> {
+    return this.post<Checkin>(
+      {
+        path: `/offender_checkins/${checkinId}/review`,
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify({ practitioner: practitionerUuid, manualIdCheck: match ? 'MATCH' : 'NO_MATCH' }),
       },
       asSystem(),
     )

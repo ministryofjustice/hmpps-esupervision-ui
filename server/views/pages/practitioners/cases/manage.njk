@@ -1,0 +1,131 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% extends "../layout.njk" %}
+{% set section = "cases" %}
+
+{% set name = [case.firstName, ' ', case.lastName] | join %}
+
+{% block beforeContent %}
+  <div class="es-page-actions">
+    <div class="es-page-actions__back">
+      {{
+        govukBackLink({
+          text: "Back",
+          href: "/practitioners/cases"
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">Manage check ins</span> <span class="govuk-visually-hidden">for</span> Firstname
+    Lastname (dob)
+  </h1>
+  <p>
+    <a href="{{ offenderId }}/invite" class="govuk-button govuk-button--secondary">Invite</a>
+  </p>
+
+  <!-- This section is hidden until API work is completed -->
+  <div hidden="hidden">
+    <div class="es-flex-row">
+      <h2 class="govuk-heading-m">Personal details</h2>
+      <p>
+        <a href="/practitioners/cases/{{ offenderId }}/update/personal-details" class="govuk-link"
+          >Change<span class="govuk-visually-hidden"> personal details</span></a
+        >
+      </p>
+    </div>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">First name</dt>
+        <dd class="govuk-summary-list__value">{{ case.firstName }}</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Last name</dt>
+        <dd class="govuk-summary-list__value">{{ case.lastName }}</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Date of birth</dt>
+        <dd class="govuk-summary-list__value">{{ case.dateOfBirth | gdsDate }}</dd>
+      </div>
+    </dl>
+
+    <div class="es-flex-row">
+      <h2 class="govuk-heading-m">Photo</h2>
+      <p>
+        <a href="/practitioners/cases/{{ offenderId }}/update/photo" class="govuk-link"
+          >Change<span class="govuk-visually-hidden"> photo on file</span></a
+        >
+      </p>
+    </div>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Photo on file</dt>
+        <dd class="govuk-summary-list__value">
+          <img
+            src="{{ "/assets/images/placeholder.png" if case.photoUrl == null else case.photoUrl }}"
+            class="es-profile-image es-profile-image--small"
+            alt="Profile image of {{ name }}"
+          />
+        </dd>
+      </div>
+    </dl>
+
+    <div class="es-flex-row">
+      <h2 class="govuk-heading-m">Contact details</h2>
+      <p>
+        <a href="/practitioners/cases/{{ offenderId }}/update/contact-details" class="govuk-link"
+          >Change<span class="govuk-visually-hidden"> contact details</span></a
+        >
+      </p>
+    </div>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">How does {{ name }} want us to send a link?</dt>
+        <dd class="govuk-summary-list__value">
+          {% if case.emailAddress %}
+            Email
+          {% else %}
+            Text message
+          {% endif %}
+        </dd>
+      </div>
+      {% if case.phoneNumber %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Mobile number</dt>
+          <dd class="govuk-summary-list__value">{{ case.phoneNumber }}</dd>
+        </div>
+      {% endif %}
+      {% if case.emailAddress %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Email address</dt>
+          <dd class="govuk-summary-list__value">{{ case.emailAddress }}</dd>
+        </div>
+      {% endif %}
+    </dl>
+
+    <div class="es-flex-row">
+      <h2 class="govuk-heading-m">Check in settings</h2>
+      <p>
+        <a href="/practitioners/cases/{{ offenderId }}/update/checkin-settings" class="govuk-link"
+          >Change<span class="govuk-visually-hidden"> check in settings</span></a
+        >
+      </p>
+    </div>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Next check in</dt>
+        <dd class="govuk-summary-list__value">{{ case.nextCheckIn | gdsDate }}</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Frequency</dt>
+        <dd class="govuk-summary-list__value">{{ case.frequency }}</dd>
+      </div>
+    </dl>
+  </div>
+{% endblock %}

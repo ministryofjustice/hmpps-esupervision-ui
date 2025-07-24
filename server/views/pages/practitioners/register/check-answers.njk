@@ -76,11 +76,12 @@
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Photo upload</dt>
           <dd class="govuk-summary-list__value">
-            <img src="{{ formData["photoData"] }}" class="es-profile-image--small" />
+            <div class="es-uploaded-image es-uploaded-image--small"></div>
           </dd>
-
           <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="/practitioners/register/photo?checkAnswers=true"
+            <a
+              class="govuk-link govuk-link--no-visited-state"
+              href="/practitioners/register/photo/review?checkAnswers=true"
               >Change<span class="govuk-visually-hidden"> the photo</span></a
             >
           </dd>
@@ -93,29 +94,33 @@
           <dt class="govuk-summary-list__key">How does {{ name }} want us to send a link to the service?</dt>
           <dd class="govuk-summary-list__value">{{ contactPreference }}</dd>
           <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="/practitioners/register/contact?checkAnswers=true"
+            <a class="govuk-link govuk-link--no-visited-state" href="/practitioners/register/contact?checkAnswers=true"
               >Change<span class="govuk-visually-hidden"> contact details notification preference</span></a
             >
           </dd>
         </div>
-        {% if formData['contactPreference'] == 'BOTH' or formData['contactPreference'] == 'TEXT' %}
+        {% if formData['contactPreference'] == 'TEXT' %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Mobile number</dt>
             <dd class="govuk-summary-list__value">{{ formData['mobile'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/practitioners/register/contact/mobile?checkAnswers=true"
+              <a
+                class="govuk-link govuk-link--no-visited-state"
+                href="/practitioners/register/contact/mobile?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> the mobile number</span></a
               >
             </dd>
           </div>
         {% endif %}
 
-        {% if formData['contactPreference'] == 'BOTH' or formData['contactPreference'] == 'EMAIL' %}
+        {% if formData['contactPreference'] == 'EMAIL' %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Email address</dt>
             <dd class="govuk-summary-list__value">{{ formData['email'] }}</dd>
             <dd class="govuk-summary-list__actions">
-              <a class="govuk-link" href="/practitioners/register/contact/email?checkAnswers=true"
+              <a
+                class="govuk-link govuk-link--no-visited-state"
+                href="/practitioners/register/contact/email?checkAnswers=true"
                 >Change<span class="govuk-visually-hidden"> the email address</span></a
               >
             </dd>
@@ -158,9 +163,11 @@
         })
       }}
 
-      <form method="POST">
+      <button id="registerButton" class="govuk-button">Confirm and sign-up</button>
+
+      <form id="completeRegistrationForm" method="post" action="/practitioners/register/complete">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-        <button href="/practitioners/dashboard" class="govuk-button" type="submit">Confirm and sign-up</button>
+        <input type="hidden" id="setupId" name="setupId" value="{{ setupId }}" />
       </form>
     </div>
   </div>

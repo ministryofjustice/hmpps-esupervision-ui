@@ -9,8 +9,9 @@ import CallbackRequested from '../data/models/survey/callbackRequested'
 const { esupervisionService, faceCompareService } = services()
 
 const getSubmissionId = (req: Request): string => req.params.submissionId
-const pageParams = (req: Request): Record<string, string> => {
+const pageParams = (req: Request): Record<string, string | boolean> => {
   return {
+    cya: req.query.checkAnswers === 'true',
     submissionId: getSubmissionId(req),
   }
 }

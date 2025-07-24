@@ -358,7 +358,7 @@ export const handleRegister: RequestHandler = async (req, res, next) => {
     email: contactPreference === 'EMAIL' && email ? email.toString() : null, // Only include email if contact preference is EMAIL
     phoneNumber: contactPreference === 'TEXT' && mobile ? mobile.toString() : null, // Only include mobile if contact preference is TEXT
     firstCheckinDate: format(firstCheckinDate, 'yyyy-MM-dd'),
-    checkinInterval: frequency as CheckinInterval,    
+    checkinInterval: frequency as CheckinInterval,
   }
   try {
     const setup = await esupervisionService.createOffender(data)

@@ -76,8 +76,8 @@
   "dependencies": {
     "@aws-sdk/client-rekognition": "^3.839.0",
     "@aws-sdk/client-sqs": "^3.803.0",
+    "@ministryofjustice/hmpps-auth-clients": "^0.0.1",
     "@ministryofjustice/frontend": "^5.1.4",
-    "@ministryofjustice/hmpps-auth-clients": "^0.0.1-alpha.4",
     "@ministryofjustice/hmpps-monitoring": "^0.0.1",
     "@ministryofjustice/hmpps-rest-client": "^0.0.1",
     "@types/express": "^5.0.3",
@@ -103,7 +103,7 @@
     "passport-oauth2": "^1.8.0",
     "redis": "^4.7.0",
     "source-map-support": "^0.5.21",
-    "superagent": "^10.2.1",
+    "superagent": "^10.2.2",
     "uuid": "^11.1.0",
     "zod": "^3.25.67"
   },

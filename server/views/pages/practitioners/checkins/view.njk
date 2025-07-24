@@ -33,6 +33,14 @@
     {% if checkIn.autoIdCheck == "NO_MATCH" or checkIn.flaggedResponses | length > 0 %}
       <span class="govuk-tag govuk-tag--yellow">Flagged</span>
     {% endif %}
+    {% if checkIn.status == "REVIEWED" %}
+      {% if checkIn.manualIdCheck == "MATCH" %}
+        <span class="govuk-tag govuk-tag--green">Identity confirmed</span>
+      {% endif %}
+      {% if checkIn.manualIdCheck == "NO_MATCH" %}
+        <span class="govuk-tag govuk-tag--red">Identity not confirmed</span>
+      {% endif %}
+    {% endif %}
   </h1>
   {{
     govukSummaryList({

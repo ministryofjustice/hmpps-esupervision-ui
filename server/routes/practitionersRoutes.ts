@@ -32,6 +32,12 @@ import {
   handleCreateUser,
   handleStartRegister,
   handleRegisterComplete,
+  renderUpdatePersonalDetails,
+  renderUpdatePhoto,
+  renderUpdateContactDetails,
+  renderUpdateCheckinSettings,
+  renderCheckInVideoDetail,
+  handleCheckInReview,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -41,6 +47,7 @@ import {
   setUpSchema,
   practitionerSchema,
   photoUploadSchema,
+  videoReviewSchema,
 } from '../schemas/practitionersSchemas'
 
 export default function routes(): Router {
@@ -65,11 +72,18 @@ export default function routes(): Router {
   get('/dashboard', renderDashboard)
   get('/dashboard/:filter', renderDashboardFiltered)
   get('/checkin/:checkInId', renderCheckInDetail)
+  router.post('/checkin/:checkInId', validateFormData(videoReviewSchema), handleCheckInReview)
+  get('/checkin/:checkInId/video', renderCheckInVideoDetail)
 
   get('/cases', renderCases)
   get('/cases/:offenderId', renderCaseView)
   get('/cases/:offenderId/invite', renderCreateInvite)
   router.post('/cases/:offenderId/invite', handleCreateInvite)
+
+  get('/cases/:offenderId/update/personal-details', renderUpdatePersonalDetails)
+  get('/cases/:offenderId/update/photo', renderUpdatePhoto)
+  get('/cases/:offenderId/update/contact-details', renderUpdateContactDetails)
+  get('/cases/:offenderId/update/checkin-settings', renderUpdateCheckinSettings)
 
   get('/users', renderUsers)
   get('/users/create', renderUserCreate)

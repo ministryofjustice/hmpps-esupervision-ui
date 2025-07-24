@@ -81,6 +81,31 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const renderCheckInVideoDetail: RequestHandler = async (req, res, next) => {
+  try {
+    const { checkInId } = req.params
+    const checkIn = await esupervisionService.getCheckin(checkInId)
+    res.render('pages/practitioners/checkins/video', { checkIn })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleCheckInReview: RequestHandler = async (req, res, next) => {
+  try {
+    const { checkInId } = req.params
+    const { reviewed } = res.locals.formData
+    const practitionerUuid = res.locals.user.userId
+
+    await esupervisionService.reviewCheckin(practitionerUuid, checkInId, reviewed === 'YES')
+    req.flash('success', { message: 'Check-in reviewed' })
+
+    res.redirect(`/practitioners/dashboard`)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const renderCases: RequestHandler = async (req, res, next) => {
   try {
     const practitionerUuid = res.locals.user.userId
@@ -98,7 +123,8 @@ export const renderCases: RequestHandler = async (req, res, next) => {
 
 export const renderCaseView: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/cases/view')
+    const { offenderId } = req.params
+    res.render('pages/practitioners/cases/manage', { offenderId })
   } catch (error) {
     next(error)
   }
@@ -107,6 +133,42 @@ export const renderCaseView: RequestHandler = async (req, res, next) => {
 export const renderCreateInvite: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/practitioners/cases/invite')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdatePersonalDetails: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    res.render('pages/practitioners/cases/update/personal-details', { offenderId })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdatePhoto: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    res.render('pages/practitioners/cases/update/photo', { offenderId })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdateContactDetails: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    res.render('pages/practitioners/cases/update/contact-details', { offenderId })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdateCheckinSettings: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    res.render('pages/practitioners/cases/update/checkin-settings', { offenderId })
   } catch (error) {
     next(error)
   }

@@ -20,6 +20,12 @@ export const personsDetailsSchema = z
     },
   )
 
+export const videoReviewSchema = z.object({
+  reviewed: z.enum(['YES', 'NO'], {
+    required_error: 'Select yes if the person is in the video',
+  }),
+})
+
 export const contactPreferenceSchema = z.object({
   contactPreference: z.string({
     required_error: 'Choose how you would like us to send a link',

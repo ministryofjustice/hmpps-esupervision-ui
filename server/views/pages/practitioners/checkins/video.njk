@@ -1,0 +1,45 @@
+{% extends "../layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% set title = "Check-in details" %}
+
+{% block beforeContent %}
+  <div class="es-page-actions">
+    <div class="es-page-actions__back">
+      {{
+        govukBackLink({
+          text: "Back",
+          href: "/practitioners/checkin/" + checkIn.uuid
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-caption-l"
+        >{{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }}
+        ({{ checkIn.offender.dateOfBirth | gdsDate }})</span
+      >
+      <h1 class="govuk-heading-l">Check in video</h1>
+
+      <div class="videoRecorder__videoWrap">
+        <video class="videoRecorder__video-preview" src="{{ checkIn.videoUrl }}" controls>
+          Your browser does not support video
+        </video>
+      </div>
+      <div class="govuk-button-group">
+        <a
+          class="govuk-button"
+          data-module="govuk-button"
+          role="button"
+          href="/practitioners/checkin/{{ checkIn.uuid }}"
+          >Back to check in</a
+        >
+      </div>
+    </div>
+  </div>
+{% endblock %}

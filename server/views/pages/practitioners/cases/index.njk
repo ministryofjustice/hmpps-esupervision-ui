@@ -21,8 +21,6 @@
         <tr class="govuk-table__row">
           <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
           <th class="govuk-table__header" scope="col" aria-sort="none">Date of birth</th>
-          <th class="govuk-table__header" scope="col" aria-sort="none">Telephone</th>
-          <th class="govuk-table__header" scope="col" aria-sort="none">Email</th>
           <th class="govuk-table__header" scope="col"></th>
         </tr>
       </thead>
@@ -30,11 +28,11 @@
         {% for case in cases.content %}
           <tr>
             <td class="govuk-table__cell">{{ case.firstName }} {{ case.lastName }}</td>
-            <td class="govuk-table__cell">{{ case.dateOfBirth | formatDate }}</td>
-            <td class="govuk-table__cell">{{ case.phoneNumber }}</td>
-            <td class="govuk-table__cell">{{ case.email }}</td>
+            <td class="govuk-table__cell">{{ case.dateOfBirth | gdsDate }}</td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
-              <a href="/practitioners/cases/{{ case.uuid }}/invite" class="govuk-link">Invite</a>
+              <a href="/practitioners/cases/{{ case.uuid }}" class="govuk-link"
+                >Manage<span class="govuk-visually-hidden"> {{ case.firstName }} {{ case.lastName }}</span></a
+              >
             </td>
           </tr>
         {% endfor %}

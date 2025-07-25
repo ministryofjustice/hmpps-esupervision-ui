@@ -30,11 +30,11 @@ export default class EsupervisionApiClient extends RestClient {
     super('eSupervision API', config.apis.esupervisionApi, logger, authenticationClient)
   }
 
-  getCheckins(practitionerUuid: string): Promise<Page<Checkin>> {
+  getCheckins(practitionerUuid: string, page: number, size: number): Promise<Page<Checkin>> {
     return this.get<Page<Checkin>>(
       {
         path: '/offender_checkins',
-        query: { practitionerUuid },
+        query: { practitionerUuid, page, size },
       },
       asSystem(),
     )

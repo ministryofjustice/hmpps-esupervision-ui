@@ -1,0 +1,13 @@
+@use 'govuk-frontend/dist/govuk/index' as gds;
+
+.es-page-header {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+
+  @include gds.govuk-media-query(tablet) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

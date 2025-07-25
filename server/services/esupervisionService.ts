@@ -17,8 +17,8 @@ import CheckinUploadLocationResponse from '../data/models/checkinUploadLocationR
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
 
-  getCheckins(practitionerUuid: string): Promise<Page<Checkin>> {
-    return this.esupervisionApiClient.getCheckins(practitionerUuid)
+  getCheckins(practitionerUuid: string, page: number, size: number): Promise<Page<Checkin>> {
+    return this.esupervisionApiClient.getCheckins(practitionerUuid, page, size)
   }
 
   getCheckin(submissionId: string): Promise<Checkin> {

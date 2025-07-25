@@ -23,7 +23,9 @@ export const renderDashboard: RequestHandler = async (req, res, next) => {
     // eslint-disable-next-line prefer-destructuring
     res.locals.successMessage = req.flash('success')[0]
     const practitionerUuid = res.locals.user.userId
-    const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid)
+    const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
+    const size = req.query.size ? parseInt(req.query.size as string, 10) : 60
+    const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid, page, size)
     const checkIns = filterCheckIns(rawCheckIns)
     res.render('pages/practitioners/dashboard', { checkIns, practitionerUuid })
   } catch (error) {
@@ -35,7 +37,9 @@ export const renderDashboardFiltered: RequestHandler = async (req, res, next) =>
   try {
     const { filter } = req.params
     const practitionerUuid = res.locals.user.userId
-    const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid)
+    const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
+    const size = req.query.size ? parseInt(req.query.size as string, 10) : 60
+    const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid, page, size)
     const checkIns = filterCheckIns(rawCheckIns, filter)
     res.render('pages/practitioners/dashboard', { checkIns, filter, practitionerUuid })
   } catch (error) {

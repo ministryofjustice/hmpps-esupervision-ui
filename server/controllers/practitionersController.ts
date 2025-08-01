@@ -150,7 +150,12 @@ export const renderCases: RequestHandler = async (req, res, next) => {
 export const renderCaseView: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    res.render('pages/practitioners/cases/manage', { offenderId })
+    const offender = await esupervisionService.getOffender(offenderId)
+    if (!offender) {
+      res.status(404).redirect('/practitioners/cases') // TODO: show error once ready
+      return
+    }
+    res.render('pages/practitioners/cases/manage', { offenderId, case: offender })
   } catch (error) {
     next(error)
   }

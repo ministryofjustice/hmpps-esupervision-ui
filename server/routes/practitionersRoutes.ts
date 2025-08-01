@@ -131,7 +131,7 @@ export default function routes(): Router {
 
   // The following two routes start and end the setup process on the backend
   // At the moment, `/begin` is called from client (browser), `/complete` is called from server
-  get('/register/begin', handleRegisterBegin)
+  router.post('/register/begin', handleRegisterBegin)
   router.post('/register/complete', handleRegisterComplete)
 
   return router

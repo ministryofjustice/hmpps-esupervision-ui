@@ -42,11 +42,15 @@ const validCircumstances = [
   'NO_HELP',
 ] as const
 
-export const mentalHealthSchema = z
-  .object({
-    mentalHealth: z.enum(['VERY_WELL', 'WELL', 'OK', 'NOT_GREAT', 'STRUGGLING']).describe('Select how you are feeling'),
+const MentalHealthEnum = z
+  .enum(['VERY_WELL', 'WELL', 'OK', 'NOT_GREAT', 'STRUGGLING'], {
+    error: issue => (issue.input === undefined ? 'Select how you are feeling' : issue.message),
   })
-  .required()
+  .describe('Select how you are feeling')
+
+export const mentalHealthSchema = z.object({
+  mentalHealth: MentalHealthEnum,
+})
 
 export const assistanceSchema = z.object({
   assistance: z.preprocess(
@@ -61,12 +65,24 @@ export const assistanceSchema = z.object({
 
 export const callbackSchema = z
   .object({
-    callback: z.enum(['YES', 'NO']).describe('Select yes if you need to speak to your probation practitioner'),
+    callback: z
+      .enum(['YES', 'NO'], {
+        error: issue => {
+          return issue.input === undefined
+            ? 'Select yes if you need to speak to your probation practitioner'
+            : issue.message
+        },
+      })
+      .describe('Select yes if you need to speak to your probation practitioner'),
   })
   .required()
 
 export const checkAnswersSchema = z
   .object({
-    checkAnswers: z.enum(['CONFIRM']).describe('Confirm your details are correct'),
+    checkAnswers: z
+      .enum(['CONFIRM'], {
+        error: issue => (issue.input === undefined ? 'Confirm your details are correct' : issue.message),
+      })
+      .describe('Confirm your details are correct'),
   })
   .required()

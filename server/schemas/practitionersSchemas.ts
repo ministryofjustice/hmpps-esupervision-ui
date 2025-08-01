@@ -22,18 +22,33 @@ export const personsDetailsSchema = z
 
 export const videoReviewSchema = z
   .object({
-    reviewed: z.enum(['YES', 'NO']).describe('Select yes if the person is in the video'),
+    reviewed: z
+      .enum(['YES', 'NO'], {
+        error: issue => (issue.input === undefined ? 'Select yes if the person is in the video' : issue.message),
+      })
+      .describe('Select yes if the person is in the video'),
   })
   .required()
 
 export const contactPreferenceSchema = z
   .object({
-    contactPreference: z.string().describe('Choose how you would like us to send a link'),
+    contactPreference: z
+      .string({
+        error: issue => (issue.input === undefined ? 'Select how you would like us to send a link' : issue.message),
+      })
+      .describe('Choose how you would like us to send a link'),
   })
   .required()
 
 export const emailSchema = z.object({
-  email: z.email().describe('Enter an email address in the correct format, like name@example.com'),
+  email: z
+    .email({
+      error: issue =>
+        issue.input === undefined
+          ? 'Enter an email address in the correct format, like name@example.com'
+          : issue.message,
+    })
+    .describe('Enter an email address in the correct format, like name@example.com'),
 })
 
 export const mobileSchema = z.object({
@@ -50,7 +65,14 @@ export const setUpSchema = z
     startDateDay: z.coerce.number({ message: 'Enter a valid day' }).positive({ message: 'Enter day' }),
     startDateMonth: z.coerce.number({ message: 'Enter a valid month' }).positive({ message: 'Enter month' }),
     startDateYear: z.coerce.number({ message: 'Enter a valid year' }).positive({ message: 'Enter year' }),
-    frequency: z.string().describe('Select how often you would like the person to submit online checks'),
+    frequency: z
+      .string({
+        error: issue =>
+          issue.input === undefined
+            ? 'Select how often you would like the person to submit online checks'
+            : issue.message,
+      })
+      .describe('Select how often you would like the person to submit online checks'),
   })
   .refine(
     ({ startDateDay, startDateMonth, startDateYear }) => {

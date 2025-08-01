@@ -10,10 +10,8 @@ export default function validateFormData(schema: z.ZodTypeAny) {
     if (validationResult.success) {
       req.body = validationResult.data
       next()
-    }
-
-    if (!validationResult.success) {
-      const errorMessages = validationResult.error.errors.map(err => {
+    } else {
+      const errorMessages = validationResult.error.issues.map(err => {
         return {
           text: err.message,
           href: `#${err.path.join('.')}`,
@@ -40,6 +38,6 @@ const zObjectStrict = <T = object>(shape: T) => z.object({ _csrf: z.string().opt
 const zodAlwaysRefine = <T extends z.ZodTypeAny>(zodType: T) =>
   z.any().transform((val, ctx) => {
     const res = zodType.safeParse(val)
-    if (!res.success) res.error.issues.forEach(ctx.addIssue)
+    if (!res.success) res.error.issues.forEach(issue => ctx.addIssue(issue.message))
     return res.data || val
   }) as unknown as T

@@ -21,7 +21,7 @@ import {
   renderSetUp,
   renderCheckAnswers,
   renderCases,
-  handleRegister,
+  handleRegisterBegin,
   renderCheckInDetail,
   renderDashboardFiltered,
   renderCreateInvite,
@@ -128,7 +128,10 @@ export default function routes(): Router {
   )
 
   get('/register/check-answers', renderCheckAnswers)
-  get('/register/details', handleRegister)
+
+  // The following two routes start and end the setup process on the backend
+  // At the moment, `/begin` is called from client (browser), `/complete` is called from server
+  get('/register/begin', handleRegisterBegin)
   router.post('/register/complete', handleRegisterComplete)
 
   return router

@@ -119,12 +119,20 @@
 
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Next check in</dt>
-        <dd class="govuk-summary-list__value">{{ case.nextCheckIn | gdsDate }}</dd>
+        <dt class="govuk-summary-list__key">First check in</dt>
+        <dd class="govuk-summary-list__value">{{ case.firstCheckin | gdsDate }}</dd>
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">Frequency</dt>
-        <dd class="govuk-summary-list__value">{{ case.frequency }}</dd>
+        {% if case.checkinInterval === "WEEKLY" %}
+          <dd class="govuk-summary-list__value">Weekly</dd>
+        {% elif case.checkinInterval === "TWO_WEEKS" %}
+          <dd class="govuk-summary-list__value">Every two weeks</dd>
+        {% elif case.checkinInterval === "FOUR_WEEKS" %}
+          <dd class="govuk-summary-list__value">Every four weeks</dd>
+        {% else %}
+          <dd class="govuk-summary-list__value">{{ case.checkinInterval }}</dd>
+        {% endif %}
       </div>
     </dl>
   </div>

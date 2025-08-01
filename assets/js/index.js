@@ -187,13 +187,16 @@ if (registerButton) {
     // Disable the button to prevent multiple submissions
     registerButton.setAttribute('disabled', 'disabled')
 
-    const registerResult = await fetch(`/practitioners/register/details`, {
-      method: 'GET',
+    const registerResult = await fetch(`/practitioners/register/begin`, {
+      method: 'POST',
+      headers: {
+        'x-csrf-token': document.querySelector('input[name=_csrf]').value,
+      },
     })
       .then(res => res.json())
       .catch(error => {
         // eslint-disable-next-line no-console
-        console.error(error)
+        console.warn(error)
         return { status: 'ERROR', message: `Registration failed` }
       })
 

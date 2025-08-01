@@ -179,49 +179,50 @@ function dataUrlToBlob(dataUrl) {
 }
 
 // Handle the registration button click event on Check Your Answers page
-const dummy = { addEventListener: (event, callback) => {} }(
-  document.querySelector('#registerButton') || dummy,
-).addEventListener('click', async event => {
-  // Disable the button to prevent multiple submissions
-  if (event.target) {
-    event.target.setAttribute('disabled', 'disabled')
-  }
+const dummy = { addEventListener: (_, __) => {} }(document.querySelector('#registerButton') || dummy).addEventListener(
+  'click',
+  async event => {
+    // Disable the button to prevent multiple submissions
+    if (event.target) {
+      event.target.setAttribute('disabled', 'disabled')
+    }
 
-  const registerResult = await fetch(`/practitioners/register/begin`, {
-    method: 'POST',
-    headers: {
-      'x-csrf-token': document.querySelector('input[name=_csrf]').value,
-    },
-  })
-    .then(res => res.json())
-    .catch(error => {
-      // eslint-disable-next-line no-console
-      console.warn(error)
-      return { status: 'ERROR', message: `Registration failed` }
+    const registerResult = await fetch(`/practitioners/register/begin`, {
+      method: 'POST',
+      headers: {
+        'x-csrf-token': document.querySelector('input[name=_csrf]').value,
+      },
     })
-
-  if (registerResult.status === 'SUCCESS') {
-    const { url } = registerResult.uploadLocation
-    // Upload the image to the provided URL
-    const image = localStorage.getItem(IMAGE_SESSION_KEY)
-    if (image) {
-      const uploadImageResult = await fetch(url, {
-        method: 'PUT',
-        body: dataUrlToBlob(image),
-        headers: {
-          'Content-Type': IMAGE_CONTENT_TYPE,
-        },
+      .then(res => res.json())
+      .catch(error => {
+        // eslint-disable-next-line no-console
+        console.warn(error)
+        return { status: 'ERROR', message: `Registration failed` }
       })
 
-      if (uploadImageResult.ok) {
-        // If the upload is successful, submit the form with the setup ID and clear the localStorage
-        localStorage.removeItem(IMAGE_SESSION_KEY)
-        document.getElementById('setupId').value = registerResult.setup.uuid
-        document.getElementById('completeRegistrationForm').submit()
+    if (registerResult.status === 'SUCCESS') {
+      const { url } = registerResult.uploadLocation
+      // Upload the image to the provided URL
+      const image = localStorage.getItem(IMAGE_SESSION_KEY)
+      if (image) {
+        const uploadImageResult = await fetch(url, {
+          method: 'PUT',
+          body: dataUrlToBlob(image),
+          headers: {
+            'Content-Type': IMAGE_CONTENT_TYPE,
+          },
+        })
+
+        if (uploadImageResult.ok) {
+          // If the upload is successful, submit the form with the setup ID and clear the localStorage
+          localStorage.removeItem(IMAGE_SESSION_KEY)
+          document.getElementById('setupId').value = registerResult.setup.uuid
+          document.getElementById('completeRegistrationForm').submit()
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn('Image not found in session storage')
       }
-    } else {
-      // eslint-disable-next-line no-console
-      console.warn('Image not found in session storage')
     }
-  }
-})
+  },
+)

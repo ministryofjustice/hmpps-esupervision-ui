@@ -6,6 +6,8 @@ import Checkin from '../data/models/checkin'
 import Page from '../data/models/page'
 import getUserFriendlyString from '../utils/userFriendlyStrings'
 import CheckinInterval from '../data/models/checkinInterval'
+import logger from '../../logger'
+import { OffenderInfoInput } from '../schemas/practitionersSchemas'
 
 const { esupervisionService } = services()
 
@@ -267,6 +269,7 @@ export const handleStartRegister: RequestHandler = async (req, res, next) => {
 
 export const renderRegisterDetails: RequestHandler = async (req, res, next) => {
   try {
+    // `cya` value determines the back link
     const cya = req.query.checkAnswers === 'true'
     res.render('pages/practitioners/register/index', { cya })
   } catch (error) {
@@ -367,33 +370,43 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   }
 }
 
-export const handleRegister: RequestHandler = async (req, res, next) => {
-  const { firstName, lastName, day, month, year, contactPreference, email, mobile, frequency } = res.locals.formData
-  const { startDateYear, startDateMonth, startDateDay } = res.locals.formData
+export const handleRegisterBegin: RequestHandler = async (req, res, next) => {
+  const parsed = OffenderInfoInput.safeParse(res.locals.formData)
+  if (!parsed.success) {
+    res.status(400).json({ status: 'ERROR', message: 'Invalid data', details: parsed.error.message })
+    return
+  }
+
+  const { firstName, lastName, day, month, year, contactPreference, email, mobile, frequency } = parsed.data
+  const { startDateYear, startDateMonth, startDateDay } = parsed.data
   const firstCheckinDate = new Date(startDateYear as number, (startDateMonth as number) - 1, startDateDay as number)
 
   const data = {
     setupUuid: uuidv4(),
     practitionerId: res.locals.user.userId,
-    firstName: firstName?.toString() || '',
-    lastName: lastName?.toString() || '',
+    firstName,
+    lastName,
     dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : null,
-    email: contactPreference === 'EMAIL' && email ? email.toString() : null, // Only include email if contact preference is EMAIL
-    phoneNumber: contactPreference === 'TEXT' && mobile ? mobile.toString() : null, // Only include mobile if contact preference is TEXT
+    email: contactPreference === 'EMAIL' && email ? email : null,
+    phoneNumber: contactPreference === 'TEXT' && mobile ? mobile : null,
     firstCheckinDate: format(firstCheckinDate, 'yyyy-MM-dd'),
     checkinInterval: frequency as CheckinInterval,
   }
+
   try {
     const setup = await esupervisionService.createOffender(data)
     const uploadLocation = await esupervisionService.getProfilePhotoUploadLocation(setup, 'image/jpeg')
+    logger.info('Registration started', setup)
     res.json({ status: 'SUCCESS', message: 'Registration complete', setup, uploadLocation })
   } catch (error) {
-    res.json({ status: 'ERROR', message: error.message })
+    const statusCode = error?.data?.status || 500
+    res.status(statusCode).json({ status: 'ERROR', message: error?.data?.userMessage || error.message })
   }
 }
 
 export const handleRegisterComplete: RequestHandler = async (req, res, next) => {
   const { firstName, lastName, contactPreference, email, mobile } = res.locals.formData
+  req.session.formData = {}
   try {
     // Complete PoP registration
     const registerResponse = await esupervisionService.completeOffenderSetup(req.body.setupId)

@@ -112,6 +112,21 @@ export const practitionerSchema = z.object({
   uuid: z.string().min(1, 'Enter their UUID'),
 })
 
+export const OffenderInfoInput = z.object({
+  firstName: z.string().nonempty(),
+  lastName: z.string().nonempty(),
+  day: z.nullish(z.coerce.number().min(1).max(31)),
+  month: z.nullish(z.coerce.number().min(1).max(12)),
+  year: z.nullish(z.coerce.number().min(1900).max(2100)),
+  contactPreference: z.enum(['EMAIL', 'TEXT']),
+  email: z.nullish(z.email()),
+  mobile: z.nullish(z.string()),
+  frequency: z.enum(['WEEKLY', 'TWO_WEEKS', 'FOUR_WEEKS']),
+  startDateYear: z.coerce.number().min(2025).max(2100),
+  startDateMonth: z.coerce.number().min(1).max(12),
+  startDateDay: z.coerce.number().min(1).max(31),
+})
+
 export const photoUploadSchema = z.object({
   photoUpload: z.string().min(1, 'Select a photo to upload'),
 })

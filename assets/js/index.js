@@ -8,6 +8,7 @@ mojFrontend.initAll()
 
 const videoRecorder = document.querySelector('[data-module="videoRecorder"]')
 
+const IMAGE_CONTENT_TYPE = 'image/jpeg'
 const IMAGE_SESSION_KEY = 'esImageUpload'
 
 const displayUploadedImage = document.getElementsByClassName('es-uploaded-image')
@@ -17,65 +18,62 @@ const photoUploadInput = document.getElementById('photoUpload-input')
 const photoContentDisplay = document.getElementById('photoPreview')
 const validationMessage = document.getElementById('photoUploadMessage')
 
-const registerButton = document.getElementById('registerButton')
-
 if (videoRecorder) {
   new VideoRecorder(videoRecorder).initVideo()
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  async function capturePhoto(v) {
-    const videoContainer = document.getElementById('es-photo-capture')
-    const videoError = document.getElementById('es-photo-capture__error')
-    const video = v
+async function capturePhoto(v) {
+  const videoContainer = document.getElementById('es-photo-capture')
+  const videoError = document.getElementById('es-photo-capture__error')
+  const video = v
 
-    if (videoContainer && video) {
-      try {
-        hide(videoError)
-        show(videoContainer)
+  if (videoContainer && video) {
+    try {
+      hide(videoError)
+      show(videoContainer)
 
-        const w = 345
-        const h = 444
+      const w = 345
+      const h = 444
 
-        const canvas = document.createElement('canvas')
-        const context = canvas.getContext('2d')
-        const constraints = { video: { width: w, height: h } }
-        const stream = await navigator.mediaDevices.getUserMedia(constraints)
-        const takePhotoButton = document.getElementById('take-photo')
-        const form = document.getElementById('photoForm')
+      const canvas = document.createElement('canvas')
+      const context = canvas.getContext('2d')
+      const constraints = { video: { width: w, height: h } }
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
+      const takePhotoButton = document.getElementById('take-photo')
+      const form = document.getElementById('photoForm')
 
-        video.srcObject = stream
-        await video.play()
+      video.srcObject = stream
+      await video.play()
 
-        canvas.width = w
-        canvas.height = h
+      canvas.width = w
+      canvas.height = h
 
-        videoContainer.appendChild(canvas)
+      videoContainer.appendChild(canvas)
 
-        if (takePhotoButton) {
-          takePhotoButton.removeAttribute('disabled')
-          takePhotoButton.addEventListener('click', async () => {
-            context.drawImage(video, 0, 0, w, h)
-            const dataUrl = canvas.toDataURL('image/jpeg')
-            const img = document.createElement('img')
-            img.src = dataUrl
-            localStorage.setItem(IMAGE_SESSION_KEY, dataUrl)
-            videoContainer.innerHTML = ''
-            videoContainer.appendChild(img)
-            form.submit()
-          })
-        }
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(err)
-        show(videoError)
-        hide(videoContainer)
+      if (takePhotoButton) {
+        takePhotoButton.removeAttribute('disabled')
+        takePhotoButton.addEventListener('click', async () => {
+          context.drawImage(video, 0, 0, w, h)
+          const dataUrl = canvas.toDataURL(IMAGE_CONTENT_TYPE)
+          const img = document.createElement('img')
+          img.src = dataUrl
+          localStorage.setItem(IMAGE_SESSION_KEY, dataUrl)
+          videoContainer.innerHTML = ''
+          videoContainer.appendChild(img)
+          form.submit()
+        })
       }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err)
+      show(videoError)
+      hide(videoContainer)
     }
   }
+}
 
+document.addEventListener('DOMContentLoaded', () => {
   const video = document.getElementById('es-photo-capture__video')
-
   if (video) {
     capturePhoto(video)
   }
@@ -152,7 +150,7 @@ function handlePhotoSelection(event) {
       const ctx = canvas.getContext('2d')
       ctx.drawImage(img, 0, 0, img.width, img.height)
 
-      const screenshot = canvas.toDataURL('image/jpeg', 0.8)
+      const screenshot = canvas.toDataURL(IMAGE_CONTENT_TYPE, 0.8)
 
       // Store the screenshot in localStorage
       localStorage.setItem(IMAGE_SESSION_KEY, screenshot)
@@ -181,11 +179,13 @@ function dataUrlToBlob(dataUrl) {
 }
 
 // Handle the registration button click event on Check Your Answers page
-
-if (registerButton) {
-  registerButton.addEventListener('click', async () => {
+const dummy = { addEventListener: (_, __) => {} }(document.querySelector('#registerButton') || dummy).addEventListener(
+  'click',
+  async event => {
     // Disable the button to prevent multiple submissions
-    registerButton.setAttribute('disabled', 'disabled')
+    if (event.target) {
+      event.target.setAttribute('disabled', 'disabled')
+    }
 
     const registerResult = await fetch(`/practitioners/register/begin`, {
       method: 'POST',
@@ -203,19 +203,26 @@ if (registerButton) {
     if (registerResult.status === 'SUCCESS') {
       const { url } = registerResult.uploadLocation
       // Upload the image to the provided URL
-      const uploadImageResult = await fetch(url, {
-        method: 'PUT',
-        body: dataUrlToBlob(localStorage.getItem(IMAGE_SESSION_KEY).toString()),
-        headers: {
-          'Content-Type': 'image/jpeg',
-        },
-      })
-      if (uploadImageResult) {
-        // If the upload is successful, submit the form with the setup ID and clear the localStorage
-        localStorage.removeItem(IMAGE_SESSION_KEY)
-        document.getElementById('setupId').value = registerResult.setup.uuid
-        document.getElementById('completeRegistrationForm').submit()
+      const image = localStorage.getItem(IMAGE_SESSION_KEY)
+      if (image) {
+        const uploadImageResult = await fetch(url, {
+          method: 'PUT',
+          body: dataUrlToBlob(image),
+          headers: {
+            'Content-Type': IMAGE_CONTENT_TYPE,
+          },
+        })
+
+        if (uploadImageResult.ok) {
+          // If the upload is successful, submit the form with the setup ID and clear the localStorage
+          localStorage.removeItem(IMAGE_SESSION_KEY)
+          document.getElementById('setupId').value = registerResult.setup.uuid
+          document.getElementById('completeRegistrationForm').submit()
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn('Image not found in session storage')
       }
     }
-  })
-}
+  },
+)

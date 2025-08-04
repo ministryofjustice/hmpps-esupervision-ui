@@ -135,6 +135,20 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
+  async getOffender(offenderId: string): Promise<Offender | null> {
+    return this.get<Offender>(
+      {
+        path: `/offenders/${offenderId}`,
+      },
+      asSystem(),
+    ).catch((error): Promise<Offender | null> => {
+      if (error?.responseStatus === 404) {
+        return null
+      }
+      throw error
+    })
+  }
+
   async createCheckin(checkinInfo: CreateCheckinRequest): Promise<Checkin> {
     return this.post<Checkin>(
       {

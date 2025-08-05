@@ -3,11 +3,16 @@
 {% extends "../../layout.njk" %}
 {% set section = "register" %}
 
+{% set backLinkHref = "/practitioners/register/photo/upload" if formData['userPhotoUpload'] else "/practitioners/register/photo" %}
+{% if cya %}
+  {% set backLinkHref = "/practitioners/register/check-answers" %}
+{% endif %}
+
 {% block beforeContent %}
   {{
     govukBackLink({
     text: "Back",
-    href: "/practitioners/register/photo/upload" if formData['userPhotoUpload'] else "/practitioners/register/photo"
+    href: backLinkHref
     })
   }}
 {% endblock %}
@@ -35,13 +40,22 @@
         <span>Image</span>
       </div>
       <div class="govuk-button-group">
-        <a href="/practitioners/register/contact" class="govuk-button">Yes, continue</a>
+        {% if cya %}
+          <a href="/practitioners/register/check-answers" class="govuk-button">Yes, continue</a>
+        {% else %}
+          <a href="/practitioners/register/contact" class="govuk-button">Yes, continue</a>
+        {% endif %}
+
         {% if formData["userPhotoUpload"] == "true" %}
-          <a href="/practitioners/register/photo/upload" class="govuk-button govuk-button--secondary"
+          <a
+            href="/practitioners/register/photo/upload{{ "?checkAnswers=true" if cya else "" }}"
+            class="govuk-button govuk-button--secondary"
             >No, upload another photo</a
           >
         {% else %}
-          <a href="/practitioners/register/photo" class="govuk-button govuk-button--secondary"
+          <a
+            href="/practitioners/register/photo{{ "?checkAnswers=true" if cya else "" }}"
+            class="govuk-button govuk-button--secondary"
             >No, take another photo</a
           >
         {% endif %}

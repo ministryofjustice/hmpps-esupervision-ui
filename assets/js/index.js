@@ -112,11 +112,17 @@ if (displayUploadedImage && uploadedImageData) {
   }
 }
 
-// Handle the photo upload input change event
-
-if (photoUploadInput) {
-  // Photo upload input is present, clear any previous session data
+// If registration personal details page, and has 'start' query string is present
+if (document.getElementById('registerPoPStartPage')) {
+  const url = new URL(window.location.href)
+  // Remove any existing image from localStorage
   localStorage.removeItem(IMAGE_SESSION_KEY)
+  // Remove the 'start' query string from the URL
+  window.history.replaceState({}, '', url.pathname)
+}
+
+// Handle the photo upload input change event
+if (photoUploadInput) {
   photoUploadInput.addEventListener('change', handlePhotoSelection)
 }
 

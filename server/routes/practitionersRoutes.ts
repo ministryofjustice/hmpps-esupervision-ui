@@ -38,6 +38,8 @@ import {
   renderUpdateCheckinSettings,
   renderCheckInVideoDetail,
   handleCheckInReview,
+  validateRegisterPoPData,
+  handlePhotoPost,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -94,13 +96,9 @@ export default function routes(): Router {
   router.post('/register', validateFormData(personsDetailsSchema), handleRedirect('/practitioners/register/photo'))
 
   get('/register/photo', renderPhotoCapture)
-  router.post('/register/photo', handleRedirect('/practitioners/register/photo/review'))
+  router.post('/register/photo', handlePhotoPost)
   get('/register/photo/upload', renderPhotoUpload)
-  router.post(
-    '/register/photo/upload',
-    validateFormData(photoUploadSchema),
-    handleRedirect('/practitioners/register/photo/review'),
-  )
+  router.post('/register/photo/upload', validateFormData(photoUploadSchema), handlePhotoPost)
   get('/register/photo/review', renderPhotoReview)
 
   get('/register/contact', renderContactDetails)
@@ -127,7 +125,7 @@ export default function routes(): Router {
     handleRedirect('/practitioners/register/check-answers'),
   )
 
-  get('/register/check-answers', renderCheckAnswers)
+  router.get('/register/check-answers', validateRegisterPoPData, renderCheckAnswers)
 
   // The following two routes start and end the setup process on the backend
   // At the moment, `/begin` is called from client (browser), `/complete` is called from server

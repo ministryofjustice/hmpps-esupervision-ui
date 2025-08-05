@@ -19,16 +19,14 @@
       })
     }}
   {% endif %}
-<div class="es-page-header">
-
-<div class="es-page-header__title">
-  <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
-</div>
-  <div class="es-page-header__actions">
-  <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button">Add person</a>
+  <div class="es-page-header">
+    <div class="es-page-header__title">
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+    </div>
+    <div class="es-page-header__actions">
+      <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button">Add person</a>
+    </div>
   </div>
-
-</div>
   {{
     mojSubNavigation({
     label: "Sub navigation",
@@ -48,7 +46,7 @@
     })
   }}
 
-  {% if filter == null  %}
+  {% if filter == null %}
 
     {% if checkIns and checkIns | length > 0 %}
       <table class="govuk-table" data-module="moj-sortable-table">
@@ -89,78 +87,73 @@
     {% else %}
       <p class="govuk-body">You have no items that need attention</p>
     {% endif %}
-
   {% endif %}
 
-
-{% if filter == 'reviewed'  %}
-  {% if checkIns and checkIns | length > 0 %}
+  {% if filter == 'reviewed' %}
+    {% if checkIns and checkIns | length > 0 %}
       <table class="govuk-table" data-module="moj-sortable-table">
         <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
-          <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
-          <th class="govuk-table__header" scope="col" aria-sort="none">Reviewed on</th>
-          <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
-        </tr>
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
+            <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
+            <th class="govuk-table__header" scope="col" aria-sort="none">Reviewed on</th>
+            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+          </tr>
         </thead>
         <tbody class="govuk-table__body">
           {% for checkin in checkIns %}
-          <tr>
-            <td class="govuk-table__cell">{{ checkin.offenderName }}</td>
-            <td class="govuk-table__cell">{{ checkin.status }}</td>
-            <td class="govuk-table__cell">{{ checkin.receivedDate | gdsDate }}</td>
-            <td class="govuk-table__cell govuk-table__cell--numeric">
-              <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link"
-              >View<span class="govuk-visually-hidden">
+            <tr>
+              <td class="govuk-table__cell">{{ checkin.offenderName }}</td>
+              <td class="govuk-table__cell">{{ checkin.status }}</td>
+              <td class="govuk-table__cell">{{ checkin.receivedDate | gdsDate }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">
+                <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link"
+                  >View<span class="govuk-visually-hidden">
                     the check-in of {{ checkin.offenderName }} received {{ checkin.receivedDate }}</span
-              >
-              </a>
-            </td>
-          </tr>
+                  >
+                </a>
+              </td>
+            </tr>
           {% endfor %}
         </tbody>
       </table>
-  {% else %}
-    <p class="govuk-body">You have no reviewed items</p>
+    {% else %}
+      <p class="govuk-body">You have no reviewed items</p>
+    {% endif %}
   {% endif %}
-{% endif %}
 
-
-{% if filter == 'awaiting'  %}
-  {% if checkIns and checkIns | length > 0 %}
+  {% if filter == 'awaiting' %}
+    {% if checkIns and checkIns | length > 0 %}
       <table class="govuk-table" data-module="moj-sortable-table">
         <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
-          <th class="govuk-table__header" scope="col" aria-sort="none">Sent to</th>
-          <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
-          <th class="govuk-table__header" scope="col" aria-sort="none">Check in due</th>
-          <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
-        </tr>
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
+            <th class="govuk-table__header" scope="col" aria-sort="none">Sent to</th>
+            <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
+            <th class="govuk-table__header" scope="col" aria-sort="none">Check in due</th>
+            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+          </tr>
         </thead>
         <tbody class="govuk-table__body">
-        {% for checkin in checkIns %}
-        <tr>
-          <td class="govuk-table__cell">{{ checkin.offenderName }}</td>
-          <td class="govuk-table__cell">{{ checkin.sentTo }}</td>
-          <td class="govuk-table__cell">{{ checkin.status }}</td>
-          <td class="govuk-table__cell">{{ checkin.dueDate | gdsDate }}</td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">
-            <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link"
-            >Manage<span class="govuk-visually-hidden">
+          {% for checkin in checkIns %}
+            <tr>
+              <td class="govuk-table__cell">{{ checkin.offenderName }}</td>
+              <td class="govuk-table__cell">{{ checkin.sentTo }}</td>
+              <td class="govuk-table__cell">{{ checkin.status }}</td>
+              <td class="govuk-table__cell">{{ checkin.dueDate | gdsDate }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">
+                <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link"
+                  >Manage<span class="govuk-visually-hidden">
                     the check-in of {{ checkin.offenderName }} due {{ checkin.dueDate }}</span
-            >
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
+                  >
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
-  {% else %}
-    <p class="govuk-body">You have no items that are awaiting check in</p>
+    {% else %}
+      <p class="govuk-body">You have no items that are awaiting check in</p>
+    {% endif %}
   {% endif %}
-{% endif %}
-
-
 {% endblock %}

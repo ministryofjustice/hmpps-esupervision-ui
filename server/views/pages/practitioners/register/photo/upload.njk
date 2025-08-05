@@ -45,6 +45,7 @@
 
         <div id="photoPreview"></div>
         <input type="hidden" name="userPhotoUpload" id="userPhotoUpload" value="true" />
+        <input type="hidden" name="checkYourAnswers" value="{{ cya }}" />
         <div class="govuk-button-group">
           {{
             govukButton({
@@ -53,7 +54,9 @@
               id: "upload-photo"
             })
           }}
-          <a href="/practitioners/register/photo" class="govuk-link govuk-link--no-visited-state"
+          <a
+            href="/practitioners/register/photo{{ "?checkAnswers=true" if cya else "" }}"
+            class="govuk-link govuk-link--no-visited-state"
             >Take a photo instead</a
           >
         </div>

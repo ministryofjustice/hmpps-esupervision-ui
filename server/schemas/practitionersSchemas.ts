@@ -7,7 +7,11 @@ export const personsDetailsSchema = z
     lastName: z.string().min(1, 'Enter their last name'),
     day: z.coerce.number({ message: 'Enter a valid day' }).positive({ message: 'Enter day' }),
     month: z.coerce.number({ message: 'Enter a valid month' }).positive({ message: 'Enter month' }),
-    year: z.coerce.number({ message: 'Enter a valid year' }).positive({ message: 'Enter year' }),
+    year: z.coerce
+      .number({ message: 'Enter a valid year' })
+      .min(1900, { message: 'Enter a valid year' })
+      .max(2100)
+      .positive({ message: 'Enter year' }),
   })
   .refine(
     ({ day, month, year }) => {
@@ -32,6 +36,7 @@ export const videoReviewSchema = z
 
 export const contactPreferenceSchema = z
   .object({
+    checkYourAnswers: z.string(),
     contactPreference: z
       .string({
         error: issue => (issue.input === undefined ? 'Select how you would like us to send a link' : issue.message),
@@ -64,7 +69,11 @@ export const setUpSchema = z
   .object({
     startDateDay: z.coerce.number({ message: 'Enter a valid day' }).positive({ message: 'Enter day' }),
     startDateMonth: z.coerce.number({ message: 'Enter a valid month' }).positive({ message: 'Enter month' }),
-    startDateYear: z.coerce.number({ message: 'Enter a valid year' }).positive({ message: 'Enter year' }),
+    startDateYear: z.coerce
+      .number({ message: 'Enter a valid year' })
+      .min(2025, { message: 'Enter a valid year' })
+      .max(2100, { message: 'Enter a valid year' })
+      .positive({ message: 'Enter year' }),
     frequency: z
       .string({
         error: issue =>
@@ -128,5 +137,6 @@ export const OffenderInfoInput = z.object({
 })
 
 export const photoUploadSchema = z.object({
+  checkYourAnswers: z.string(),
   photoUpload: z.string().min(1, 'Select a photo to upload'),
 })

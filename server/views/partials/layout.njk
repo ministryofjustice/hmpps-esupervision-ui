@@ -17,8 +17,7 @@
   }}
   {{
     govukServiceNavigation({
-      serviceName: journeyName | default(applicationName),
-      serviceUrl: "/submission/" + submissionId + "/" if submissionId else "/"
+      serviceName: journeyName | default(applicationName)
     })
   }}
   {{
@@ -26,7 +25,7 @@
     tag: {
       text: "Private Beta"
     },
-    html: 'This is a new service – your <a class="govuk-link" target="_blank" rel="nofollow" href="https://forms.office.com/pages/responsepage.aspx?id=KEeHxuZx_kGp4S6MNndq2GF5fsslU5tImfiqSSPf6JhUQko3QVg0MkVGRTVYV0dFMEJJUzBZUTIyVCQlQCN0PWcu&route=shorturl">feedback</a> will help us to improve it.'
+    html: 'This is a new service – your <a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="nofollow" href="https://forms.office.com/pages/responsepage.aspx?id=KEeHxuZx_kGp4S6MNndq2GF5fsslU5tImfiqSSPf6JhUQko3QVg0MkVGRTVYV0dFMEJJUzBZUTIyVCQlQCN0PWcu&route=shorturl">feedback (opens in a new tab)</a> will help us to improve it.'
     })
   }}
 {% endblock %}

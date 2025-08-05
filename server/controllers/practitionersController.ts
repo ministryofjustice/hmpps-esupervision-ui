@@ -267,16 +267,20 @@ export const handleCreateUser: RequestHandler = async (req, res, next) => {
   }
 }
 
+// REGISTER POP ROUTES
+
 export const handleStartRegister: RequestHandler = async (req, res, next) => {
   req.session.formData = {}
-  res.redirect(`/practitioners/register`)
+  res.redirect(`/practitioners/register?start=true`)
 }
 
 export const renderRegisterDetails: RequestHandler = async (req, res, next) => {
   try {
     // `cya` value determines the back link
     const cya = req.query.checkAnswers === 'true'
-    res.render('pages/practitioners/register/index', { cya })
+    // `start` value determines if the form is in start mode and will add JS to clear any data in local storage
+    const start = req.query.start === 'true'
+    res.render('pages/practitioners/register/index', { cya, start })
   } catch (error) {
     next(error)
   }
@@ -300,6 +304,11 @@ export const renderPhotoUpload: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const handlePhotoPost: RequestHandler = async (req, res, next) => {
+  const { checkYourAnswers } = req.body
+  return res.redirect(`/practitioners/register/photo/review${checkYourAnswers === 'true' ? '?checkAnswers=true' : ''}`)
+}
+
 export const renderPhotoReview: RequestHandler = async (req, res, next) => {
   try {
     const cya = req.query.checkAnswers === 'true'
@@ -319,12 +328,17 @@ export const renderContactDetails: RequestHandler = async (req, res, next) => {
 }
 
 export const handleContactPreferences: RequestHandler = async (req, res, next) => {
-  const { contactPreference } = req.body
+  const { contactPreference, checkYourAnswers } = req.body
+
   if (contactPreference === 'EMAIL') {
-    return res.redirect('/practitioners/register/contact/email')
+    return res.redirect(
+      `/practitioners/register/contact/email${checkYourAnswers === 'true' ? '?checkAnswers=true' : ''}`,
+    )
   }
 
-  return res.redirect('/practitioners/register/contact/mobile')
+  return res.redirect(
+    `/practitioners/register/contact/mobile${checkYourAnswers === 'true' ? '?checkAnswers=true' : ''}`,
+  )
 }
 
 export const renderMobile: RequestHandler = async (req, res, next) => {
@@ -351,6 +365,16 @@ export const renderSetUp: RequestHandler = async (req, res, next) => {
     res.render('pages/practitioners/register/set-up', { cya })
   } catch (error) {
     next(error)
+  }
+}
+
+export const validateRegisterPoPData: RequestHandler = (req, res, next) => {
+  const parsed = OffenderInfoInput.safeParse(res.locals.formData)
+  if (!parsed.success) {
+    logger.info('Attempted to render CYA, invalid form data, redirecting to start', res.locals.formData)
+    res.redirect('/practitioners/register')
+  } else {
+    next()
   }
 }
 

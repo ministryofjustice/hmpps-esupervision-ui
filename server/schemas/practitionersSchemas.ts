@@ -9,7 +9,7 @@ export const personsDetailsSchema = z
     month: z.coerce.number({ message: 'Enter a valid month' }).positive({ message: 'Enter month' }),
     year: z.coerce
       .number({ message: 'Enter a valid year' })
-      .min(1900, { message: 'Enter year above 1900' })
+      .min(1900, { message: 'Enter a valid year' })
       .max(2100)
       .positive({ message: 'Enter year' }),
   })
@@ -69,7 +69,11 @@ export const setUpSchema = z
   .object({
     startDateDay: z.coerce.number({ message: 'Enter a valid day' }).positive({ message: 'Enter day' }),
     startDateMonth: z.coerce.number({ message: 'Enter a valid month' }).positive({ message: 'Enter month' }),
-    startDateYear: z.coerce.number({ message: 'Enter a valid year' }).positive({ message: 'Enter year' }),
+    startDateYear: z.coerce
+      .number({ message: 'Enter a valid year' })
+      .min(2025, { message: 'Enter a valid year' })
+      .max(2100, { message: 'Enter a valid year' })
+      .positive({ message: 'Enter year' }),
     frequency: z
       .string({
         error: issue =>

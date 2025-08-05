@@ -15,6 +15,7 @@ export const handleRedirect = (url: string): RequestHandler => {
   let redirectUrl = url
   return (req, res) => {
     if (req.query.checkAnswers === 'true') {
+      logger.info('Redirecting to check answers page', { checkAnswers: req.query.checkAnswers })
       redirectUrl = '/practitioners/register/check-answers'
     }
     res.redirect(redirectUrl)
@@ -371,7 +372,7 @@ export const renderSetUp: RequestHandler = async (req, res, next) => {
 export const validateRegisterPoPData: RequestHandler = (req, res, next) => {
   const parsed = OffenderInfoInput.safeParse(res.locals.formData)
   if (!parsed.success) {
-    logger.info('Attempted to render CYA, invalid form data, redirecting to start', res.locals.formData)
+    logger.info('Attempted to render CYA, invalid form data, redirecting to start', { data: res.locals.formData })
     res.redirect('/practitioners/register')
   } else {
     next()

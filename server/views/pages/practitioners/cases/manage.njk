@@ -22,23 +22,21 @@
 {% endblock %}
 
 {% block content %}
-<div class="es-page-header">
-  <h1 class="govuk-heading-l">
-    <span class="govuk-caption-l">Manage check ins</span> <span class="govuk-visually-hidden">for</span> 
-    {{ case.firstName }} {{ case.lastName }} ({{ case.dateOfBirth | gdsDate }})
-  </h1>
-  {% if case.status == "VERIFIED" %}
-    <a href="{{ offenderId }}/invite" class="govuk-button govuk-button--secondary">Invite</a>
-  {% endif %}
-</div>
+  <div class="es-page-header">
+    <h1 class="govuk-heading-l">
+      <span class="govuk-caption-l">Manage check ins</span> <span class="govuk-visually-hidden">for</span>
+      {{ case.firstName }} {{ case.lastName }} ({{ case.dateOfBirth | gdsDate }})
+    </h1>
+    {% if case.status == "VERIFIED" %}
+      <a href="{{ offenderId }}/invite" class="govuk-button govuk-button--secondary">Invite</a>
+    {% endif %}
+  </div>
 
   <!-- This section is hidden until API work is completed -->
   <div>
     <div class="es-flex-row">
       <h2 class="govuk-heading-m">Personal details</h2>
-      <p>
-        {{ changeButton("/practitioners/cases/" + offenderId + "/update/personal-details", "personal details") }}
-      </p>
+      <p>{{ changeButton("/practitioners/cases/" + offenderId + "/update/personal-details", "personal details") }}</p>
     </div>
 
     <dl class="govuk-summary-list">
@@ -62,9 +60,7 @@
 
     <div class="es-flex-row">
       <h2 class="govuk-heading-m">Photo</h2>
-      <p>
-        {{ changeButton("/practitioners/cases/" + offenderId + "/update/photo", "photo on file") }}
-      </p>
+      <p>{{ changeButton("/practitioners/cases/" + offenderId + "/update/photo", "photo on file") }}</p>
     </div>
 
     <dl class="govuk-summary-list">
@@ -82,9 +78,7 @@
 
     <div class="es-flex-row">
       <h2 class="govuk-heading-m">Contact details</h2>
-      <p>
-        {{ changeButton("/practitioners/cases/" + offenderId + "/update/contact-details", "contact details") }}
-      </p>
+      <p>{{ changeButton("/practitioners/cases/" + offenderId + "/update/contact-details", "contact details") }}</p>
     </div>
 
     <dl class="govuk-summary-list">
@@ -114,9 +108,7 @@
 
     <div class="es-flex-row">
       <h2 class="govuk-heading-m">Check in settings</h2>
-      <p>
-        {{ changeButton("/practitioners/cases/" + offenderId + "/update/checkin-settings", "check in settings") }}
-      </p>
+      <p>{{ changeButton("/practitioners/cases/" + offenderId + "/update/checkin-settings", "check in settings") }}</p>
     </div>
 
     <dl class="govuk-summary-list">

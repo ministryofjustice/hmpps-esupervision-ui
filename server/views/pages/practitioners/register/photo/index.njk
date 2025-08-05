@@ -42,12 +42,17 @@
               disabled: true
             })
           }}
-          <a href="photo/upload" class="govuk-link govuk-link--no-visited-state">Upload photo instead</a>
+          <a
+            href="photo/upload{{ "?checkAnswers=true" if cya else "" }}"
+            class="govuk-link govuk-link--no-visited-state"
+            >Upload photo instead</a
+          >
         </div>
       </div>
 
       <form method="POST" id="photoForm">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="checkYourAnswers" value="{{ cya }}" />
         <input type="hidden" name="userPhotoUpload" id="userPhotoUpload" value="false" />
       </form>
 
@@ -58,7 +63,11 @@
         </div>
         <div class="govuk-button-group">
           <button class="govuk-button" disabled>Take photo</button>
-          <a href="photo/upload" class="govuk-link govuk-link--no-visited-state">Upload photo instead</a>
+          <a
+            href="photo/upload{{ "?checkAnswers=true" if cya else "" }}"
+            class="govuk-link govuk-link--no-visited-state"
+            >Upload photo instead</a
+          >
         </div>
       </div>
     </div>

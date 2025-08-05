@@ -12,7 +12,7 @@ preference.njk {% from "govuk/components/button/macro.njk" import govukButton %}
   {{
     govukBackLink({
       text: "Back",
-      href: "/practitioners/register/check-answers" if cya else "/practitioners/register/contact"
+      href: "/practitioners/register/contact?checkAnswers=true" if cya else "/practitioners/register/contact"
     })
   }}
 {% endblock %}

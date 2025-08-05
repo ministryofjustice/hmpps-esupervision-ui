@@ -53,7 +53,7 @@ import {
 } from '../schemas/practitionersSchemas'
 
 export default function routes(): Router {
-  const router = Router({ mergeParams: true })
+  const router = Router()
 
   // practitioner routes all require a login
   const tokenVerificationClient = new VerificationClient(config.apis.tokenVerification, logger)

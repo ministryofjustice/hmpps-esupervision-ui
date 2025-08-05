@@ -112,16 +112,16 @@ if (displayUploadedImage && uploadedImageData) {
   }
 }
 
-// Handle the photo upload input change event
-
+// If registration personal details page, and has 'start' query string is present
 if (document.getElementById('registerPoPStartPage')) {
   const url = new URL(window.location.href)
-
-  // If the page is the registration personal details page, and has 'start' query string remove the image from localStorage
+  // Remove any existing image from localStorage
   localStorage.removeItem(IMAGE_SESSION_KEY)
-  window.history.replaceState({}, '', `${url.pathname}`)
+  // Remove the 'start' query string from the URL
+  window.history.replaceState({}, '', url.pathname)
 }
 
+// Handle the photo upload input change event
 if (photoUploadInput) {
   photoUploadInput.addEventListener('change', handlePhotoSelection)
 }

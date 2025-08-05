@@ -18,6 +18,8 @@ const photoUploadInput = document.getElementById('photoUpload-input')
 const photoContentDisplay = document.getElementById('photoPreview')
 const validationMessage = document.getElementById('photoUploadMessage')
 
+const registerButton = document.getElementById('registerButton')
+
 if (videoRecorder) {
   new VideoRecorder(videoRecorder).initVideo()
 }
@@ -179,9 +181,8 @@ function dataUrlToBlob(dataUrl) {
 }
 
 // Handle the registration button click event on Check Your Answers page
-const dummy = { addEventListener: (_, __) => {} }(document.querySelector('#registerButton') || dummy).addEventListener(
-  'click',
-  async event => {
+if (registerButton) {
+  registerButton.addEventListener('click', async event => {
     // Disable the button to prevent multiple submissions
     if (event.target) {
       event.target.setAttribute('disabled', 'disabled')
@@ -224,5 +225,5 @@ const dummy = { addEventListener: (_, __) => {} }(document.querySelector('#regis
         console.warn('Image not found in session storage')
       }
     }
-  },
-)
+  })
+}

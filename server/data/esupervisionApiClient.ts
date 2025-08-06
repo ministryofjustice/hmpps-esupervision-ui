@@ -11,12 +11,11 @@ import LocationInfo from './models/locationInfo'
 import CheckinSubmission from './models/checkinSubmission'
 import OffenderInfo from './models/offenderInfo'
 import OffenderSetup from './models/offenderSetup'
-import AutomatedIdVerificationResult from './models/automatedIdVerificationResult'
 import Practitioner from './models/pracitioner'
 import PractitionerSetup from './models/pracitionerSetup'
 import Offender from './models/offender'
-import CompareFacesResult from './models/compareFacesResult'
 import OffenderUpdate from './models/offenderUpdate'
+import AutomaticCheckinVerificationResult from './models/automaticCheckinVerificationResult'
 
 /**
  * Specifies content types for possible upload locations for a checkin.

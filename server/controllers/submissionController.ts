@@ -6,7 +6,7 @@ import MentalHealth from '../data/models/survey/mentalHealth'
 import SupportAspect from '../data/models/survey/supportAspect'
 import CallbackRequested from '../data/models/survey/callbackRequested'
 
-const { esupervisionService, faceCompareService } = services()
+const { esupervisionService } = services()
 
 const getSubmissionId = (req: Request): string => req.params.submissionId
 const pageParams = (req: Request): Record<string, string | boolean> => {

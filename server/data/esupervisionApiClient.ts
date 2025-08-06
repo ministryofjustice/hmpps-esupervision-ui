@@ -189,18 +189,7 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  async updateAutomatedIdCheckStatus(checkinId: string, result: AutomatedIdVerificationResult): Promise<Checkin> {
-    return this.post<Checkin>(
-      {
-        path: `/offender_checkins/${checkinId}/auto_id_check`,
-        headers: { 'Content-Type': 'application/json' },
-        query: { result },
-      },
-      asSystem(),
-    )
-  }
-
-  async compareFaces(checkinId: string): Promise<CompareFacesResult> {
+  async autoVerifyCheckinIdentity(checkinId: string): Promise<CompareFacesResult> {
     return this.post<CompareFacesResult>(
       {
         path: `/offender_checkins/${checkinId}/auto_id_verify`,

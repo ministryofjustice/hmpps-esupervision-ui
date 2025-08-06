@@ -74,11 +74,7 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.createPractitioner(practitioner)
   }
 
-  updateAutomatedIdCheckStatus(checkinId: string, result: AutomatedIdVerificationResult): Promise<Checkin> {
-    return this.esupervisionApiClient.updateAutomatedIdCheckStatus(checkinId, result)
-  }
-
-  compareFaces(checkinId: string): Promise<CompareFacesResult> {
-    return this.esupervisionApiClient.compareFaces(checkinId)
+  autoVerifyCheckinIdentity(checkinId: string): Promise<CompareFacesResult> {
+    return this.esupervisionApiClient.autoVerifyCheckinIdentity(checkinId)
   }
 }

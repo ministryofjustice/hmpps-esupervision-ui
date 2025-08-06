@@ -15,6 +15,7 @@ import Offender from '../data/models/offender'
 import CheckinUploadLocationResponse from '../data/models/checkinUploadLocationResponse'
 import CompareFacesResult from '../data/models/compareFacesResult'
 import OffenderUpdate from '../data/models/offenderUpdate'
+import AutomaticCheckinVerificationResult from '../data/models/automaticCheckinVerificationResult'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -74,7 +75,7 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.createPractitioner(practitioner)
   }
 
-  autoVerifyCheckinIdentity(checkinId: string): Promise<CompareFacesResult> {
+  autoVerifyCheckinIdentity(checkinId: string): Promise<AutomaticCheckinVerificationResult> {
     return this.esupervisionApiClient.autoVerifyCheckinIdentity(checkinId)
   }
 }

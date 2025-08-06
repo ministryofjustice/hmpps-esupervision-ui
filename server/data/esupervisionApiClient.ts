@@ -189,8 +189,8 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  async autoVerifyCheckinIdentity(checkinId: string): Promise<CompareFacesResult> {
-    return this.post<CompareFacesResult>(
+  async autoVerifyCheckinIdentity(checkinId: string): Promise<AutomaticCheckinVerificationResult> {
+    return this.post<AutomaticCheckinVerificationResult>(
       {
         path: `/offender_checkins/${checkinId}/auto_id_verify`,
         headers: { 'Content-Type': 'application/json' },

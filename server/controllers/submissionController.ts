@@ -143,10 +143,10 @@ export const handleVideoVerify: RequestHandler = async (req, res, next) => {
     res.setHeader('Cache-Control', 'no-cache')
     res.setHeader('Connection', 'keep-alive')
 
-    const result = await faceCompareService.processSubmission(submissionId)
-    await esupervisionService.updateAutomatedIdCheckStatus(submissionId, result)
+    const result = await esupervisionService.compareFaces(submissionId)
+    await esupervisionService.updateAutomatedIdCheckStatus(submissionId, result.result)
 
-    res.json({ status: 'SUCCESS', result })
+    res.json({ status: 'SUCCESS', result: result.result })
   } catch (error) {
     res.json({ status: 'ERROR', message: error.message })
   }

@@ -15,6 +15,7 @@ import AutomatedIdVerificationResult from './models/automatedIdVerificationResul
 import Practitioner from './models/pracitioner'
 import PractitionerSetup from './models/pracitionerSetup'
 import Offender from './models/offender'
+import CompareFacesResult from './models/compareFacesResult'
 import OffenderUpdate from './models/offenderUpdate'
 
 /**
@@ -194,6 +195,16 @@ export default class EsupervisionApiClient extends RestClient {
         path: `/offender_checkins/${checkinId}/auto_id_check`,
         headers: { 'Content-Type': 'application/json' },
         query: { result },
+      },
+      asSystem(),
+    )
+  }
+
+  async compareFaces(checkinId: string): Promise<CompareFacesResult> {
+    return this.post<CompareFacesResult>(
+      {
+        path: `/offender_checkins/${checkinId}/auto_id_verify`,
+        headers: { 'Content-Type': 'application/json' },
       },
       asSystem(),
     )

@@ -13,6 +13,7 @@ import Practitioner from '../data/models/pracitioner'
 import PractitionerSetup from '../data/models/pracitionerSetup'
 import Offender from '../data/models/offender'
 import CheckinUploadLocationResponse from '../data/models/checkinUploadLocationResponse'
+import CompareFacesResult from '../data/models/compareFacesResult'
 import OffenderUpdate from '../data/models/offenderUpdate'
 
 export default class EsupervisionService {
@@ -75,5 +76,9 @@ export default class EsupervisionService {
 
   updateAutomatedIdCheckStatus(checkinId: string, result: AutomatedIdVerificationResult): Promise<Checkin> {
     return this.esupervisionApiClient.updateAutomatedIdCheckStatus(checkinId, result)
+  }
+
+  compareFaces(checkinId: string): Promise<CompareFacesResult> {
+    return this.esupervisionApiClient.compareFaces(checkinId)
   }
 }

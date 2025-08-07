@@ -1,21 +1,26 @@
-personal-details.njk{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "../../../../partials/errorSummary.njk" import errorSummary %}
 {% from "../../../../partials/validatedDateInput.njk" import validatedDateInput %}
 {% extends "../../layout.njk" %}
 {% set section = "cases" %}
 
-{% set title = "Checkin settings" %}
+{% set title = "Change online check ins" %}
 
 {% block beforeContent %}
-  {{
-    govukBackLink({
-      text: "Back",
-      href: "../"
-    })
-  }}
+  <div class="es-page-actions">
+    <div class="es-page-actions__back">
+      {{
+        govukBackLink({
+          text: "Back",
+          href: "../"
+        })
+      }}
+    </div>
+  </div>
 {% endblock %}
 
 {% block content %}
@@ -26,8 +31,52 @@ personal-details.njk{% from "govuk/components/input/macro.njk" import govukInput
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{
+          validatedDateInput({
+          id: "startDate",
+          prefix: "startDate",
+          title: {
+          text: "When would you like " + offender.name + " to complete their next probation check in?",
+          isPageHeading: false,
+          classes: "govuk-fieldset__legend--m"
+          },
+          hintText: "The person will be sent a notification to use the service from this date.",
+          validationErrors: validationErrors,
+            day: offender.startDateDay,
+            month: offender.startDateMonth,
+            year: offender.startDateYear
+          })
+        }}
+        {{
+          govukRadios({
+          name: "frequency",
+          errorMessage: validationErrors | findError("frequency") | default(null),
+          value: offender.frequency,
+          fieldset: {
+          legend: {
+          text: "How often would you like " + name + " to check in?",
+          isPageHeading: false,
+          classes: "govuk-fieldset__legend--m"
+          }
+          },
+          items: [
+                {
+                  value: "WEEKLY",
+                  text: "Every week"
+                },
+                {
+                  value: "TWO_WEEKS",
+                  text: "Every 2 weeks"
+                },
+                {
+                  value: "FOUR_WEEKS",
+                  text: "Every 4 weeks"
+                }
+              ]
+          })
+        }}
+        {{
           govukButton({
-          text: "Continue"
+          text: "Save changes"
           })
         }}
       </form>

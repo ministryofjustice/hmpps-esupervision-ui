@@ -1,13 +1,21 @@
-import { RequestHandler } from 'express'
-import { format, add } from 'date-fns'
+import { NextFunction, Request, RequestHandler, Response } from 'express'
+import { add, format } from 'date-fns'
 import { v4 as uuidv4 } from 'uuid'
+import { ZodObject } from 'zod'
 import { services } from '../services'
 import Checkin from '../data/models/checkin'
 import Page from '../data/models/page'
 import getUserFriendlyString from '../utils/userFriendlyStrings'
 import CheckinInterval from '../data/models/checkinInterval'
 import logger from '../../logger'
-import { OffenderInfoInput } from '../schemas/practitionersSchemas'
+import {
+  emailSchema,
+  mobileSchema,
+  OffenderInfoInput,
+  personsDetailsSchema,
+  setUpSchema,
+} from '../schemas/practitionersSchemas'
+import OffenderUpdate from '../data/models/offenderUpdate'
 
 const { esupervisionService } = services()
 
@@ -156,6 +164,8 @@ export const renderCaseView: RequestHandler = async (req, res, next) => {
       res.status(404).redirect('/practitioners/cases') // TODO: show error once ready
       return
     }
+    // eslint-disable-next-line prefer-destructuring
+    res.locals.successMessage = req.flash('success')[0]
     res.render('pages/practitioners/cases/manage', { offenderId, case: offender })
   } catch (error) {
     next(error)
@@ -173,7 +183,17 @@ export const renderCreateInvite: RequestHandler = async (req, res, next) => {
 export const renderUpdatePersonalDetails: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    res.render('pages/practitioners/cases/update/personal-details', { offenderId })
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, dateOfBirth } = offender
+    const data = {
+      id: offenderId,
+      firstName,
+      lastName,
+      day: dateOfBirth ? format(new Date(dateOfBirth), 'dd') : '',
+      month: dateOfBirth ? format(new Date(dateOfBirth), 'MM') : '',
+      year: dateOfBirth ? format(new Date(dateOfBirth), 'yyyy') : '',
+    }
+    res.render('pages/practitioners/cases/update/personal-details', { offender: data })
   } catch (error) {
     next(error)
   }
@@ -182,7 +202,14 @@ export const renderUpdatePersonalDetails: RequestHandler = async (req, res, next
 export const renderUpdatePhoto: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    res.render('pages/practitioners/cases/update/photo', { offenderId })
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, phoneNumber } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+      contactPreference: phoneNumber ? 'TEXT' : 'EMAIL',
+    }
+    res.render('pages/practitioners/cases/update/photo', { offender: data })
   } catch (error) {
     next(error)
   }
@@ -191,7 +218,46 @@ export const renderUpdatePhoto: RequestHandler = async (req, res, next) => {
 export const renderUpdateContactDetails: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    res.render('pages/practitioners/cases/update/contact-details', { offenderId })
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, phoneNumber } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+      contactPreference: phoneNumber ? 'TEXT' : 'EMAIL',
+    }
+    res.render('pages/practitioners/cases/update/contact-details', { offender: data })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdateMobile: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, phoneNumber } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+      mobile: phoneNumber,
+    }
+    res.render('pages/practitioners/cases/update/mobile', { offender: data })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdateEmail: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, email } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+      email,
+    }
+    res.render('pages/practitioners/cases/update/email', { offender: data })
   } catch (error) {
     next(error)
   }
@@ -200,7 +266,17 @@ export const renderUpdateContactDetails: RequestHandler = async (req, res, next)
 export const renderUpdateCheckinSettings: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    res.render('pages/practitioners/cases/update/checkin-settings', { offenderId })
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, firstCheckin, checkinInterval } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+      startDateDay: format(new Date(firstCheckin), 'dd'),
+      startDateMonth: format(new Date(firstCheckin), 'MM'),
+      startDateYear: format(new Date(firstCheckin), 'yyyy'),
+      frequency: checkinInterval,
+    }
+    res.render('pages/practitioners/cases/update/checkin-settings', { offender: data })
   } catch (error) {
     next(error)
   }
@@ -263,6 +339,76 @@ export const handleCreateUser: RequestHandler = async (req, res, next) => {
     await esupervisionService.createPractitioner(data)
     req.flash('success', { message: 'Practitioner created successfully' })
     res.redirect('/practitioners/users')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdateOffender = (view: string, schema: string) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const schemas: Record<string, ZodObject> = {
+      personal: personsDetailsSchema,
+      email: emailSchema,
+      mobile: mobileSchema,
+      setup: setUpSchema,
+    }
+    const selectedSchema: ZodObject = schemas[schema] || personsDetailsSchema
+    const formData = req.body
+    const validation = selectedSchema.safeParse(formData)
+    if (!validation.success) {
+      const validationErrors = validation.error.issues.map(err => {
+        return {
+          text: err.message,
+          href: `#${err.path.join('.')}`,
+        }
+      })
+      return res.status(400).render(`pages/practitioners/cases/update/${view}`, {
+        offender: formData,
+        validationErrors,
+      })
+    }
+    return next()
+  }
+}
+export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
+  try {
+    const offender = await esupervisionService.getOffender(req.params.offenderId)
+    const {
+      firstName,
+      lastName,
+      day,
+      month,
+      year,
+      email,
+      mobile,
+      startDateDay,
+      startDateMonth,
+      startDateYear,
+      frequency,
+    } = req.body
+
+    // If contact preference changes, then need to set the previous field to null
+    const updatedEmail = email ?? (mobile ? null : offender.email)
+    const updatedMobile = mobile ?? (email ? null : offender.phoneNumber)
+
+    const data: OffenderUpdate = {
+      requestedBy: res.locals.user.userId,
+      firstName: firstName || offender.firstName,
+      lastName: lastName || offender.lastName,
+      dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : offender.dateOfBirth,
+      email: updatedEmail,
+      phoneNumber: updatedMobile,
+      firstCheckin: startDateYear
+        ? format(`${startDateYear}-${startDateMonth}-${startDateDay}`, 'yyyy-MM-dd')
+        : offender.firstCheckin,
+      checkinInterval: frequency || offender.checkinInterval,
+    }
+
+    await esupervisionService.updateOffender(req.params.offenderId, data)
+    req.flash('success', {
+      title: `Changes have been updated successfully`,
+    })
+    res.redirect(`/practitioners/cases/${req.params.offenderId}`)
   } catch (error) {
     next(error)
   }

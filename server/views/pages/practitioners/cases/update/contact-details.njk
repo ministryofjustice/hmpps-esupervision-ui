@@ -1,30 +1,63 @@
-personal-details.njk{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "../../../../partials/errorSummary.njk" import errorSummary %}
 {% from "../../../../partials/validatedDateInput.njk" import validatedDateInput %}
 {% extends "../../layout.njk" %}
 {% set section = "cases" %}
 
-{% set title = "Contact details" %}
+{% set title = "How does " + offender.name + " want us to send a link to the service?" %}
 
 {% block beforeContent %}
-  {{
-    govukBackLink({
-      text: "Back",
-      href: "../"
-    })
-  }}
+  <div class="es-page-actions">
+    <div class="es-page-actions__back">
+      {{
+        govukBackLink({
+          text: "Back",
+          href: "../"
+        })
+      }}
+    </div>
+  </div>
 {% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ errorSummary(validationErrors) }}
-      <h1 class="govuk-heading-l">{{ title }}</h1>
+
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="checkYourAnswers" value="{{ cya }}" />
+        {{
+          govukRadios({
+          name: "contactPreference",
+          errorMessage: validationErrors | findError("contactPreference") | default(null),
+          value: offender.contactPreference,
+          fieldset: {
+          legend: {
+          text: title,
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+          }
+          },
+          hint: {
+          text: "We will use these details to send a link to " + offender.name + " each time they need to use the check in service."
+          },
+          items: [
+                  {
+                    value: "TEXT",
+                    text: "Text message"
+                  },
+                  {
+                    value: "EMAIL",
+                    text: "Email"
+                  }
+                ]
+          })
+        }}
+
         {{
           govukButton({
           text: "Continue"

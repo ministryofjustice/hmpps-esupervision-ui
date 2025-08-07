@@ -13,6 +13,7 @@ import Practitioner from '../data/models/pracitioner'
 import PractitionerSetup from '../data/models/pracitionerSetup'
 import Offender from '../data/models/offender'
 import CheckinUploadLocationResponse from '../data/models/checkinUploadLocationResponse'
+import OffenderUpdate from '../data/models/offenderUpdate'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -54,6 +55,10 @@ export default class EsupervisionService {
 
   getOffender(offenderId: string): Promise<Offender | null> {
     return this.esupervisionApiClient.getOffender(offenderId)
+  }
+
+  updateOffender(offenderId: string, offenderUpdate: OffenderUpdate): Promise<Offender> {
+    return this.esupervisionApiClient.updateOffender(offenderId, offenderUpdate)
   }
 
   completeOffenderSetup(setupId: string): Promise<Offender> {

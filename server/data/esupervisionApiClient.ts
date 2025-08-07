@@ -15,6 +15,7 @@ import AutomatedIdVerificationResult from './models/automatedIdVerificationResul
 import Practitioner from './models/pracitioner'
 import PractitionerSetup from './models/pracitionerSetup'
 import Offender from './models/offender'
+import OffenderUpdate from './models/offenderUpdate'
 
 /**
  * Specifies content types for possible upload locations for a checkin.
@@ -144,6 +145,22 @@ export default class EsupervisionApiClient extends RestClient {
     ).catch((error): Promise<Offender | null> => {
       if (error?.responseStatus === 404) {
         return null
+      }
+      throw error
+    })
+  }
+
+  async updateOffender(offenderId: string, offenderUpdate: OffenderUpdate): Promise<Offender> {
+    return this.post<Offender>(
+      {
+        path: `/offenders/${offenderId}/details`,
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify(offenderUpdate),
+      },
+      asSystem(),
+    ).catch((error): Promise<Offender> => {
+      if (error?.responseStatus === 404) {
+        throw new Error(`Offender with ID ${offenderId} not found so could not be updated`)
       }
       throw error
     })

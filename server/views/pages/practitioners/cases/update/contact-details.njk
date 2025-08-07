@@ -10,12 +10,16 @@ personal-details.njk{% from "govuk/components/input/macro.njk" import govukInput
 {% set title = "Contact details" %}
 
 {% block beforeContent %}
-  {{
-    govukBackLink({
-      text: "Back",
-      href: "../"
-    })
-  }}
+  <div class="es-page-actions">
+    <div class="es-page-actions__back">
+      {{
+        govukBackLink({
+          text: "Back",
+          href: "../"
+        })
+      }}
+    </div>
+  </div>
 {% endblock %}
 
 {% block content %}

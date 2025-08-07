@@ -10,12 +10,16 @@
 {% set title = "Persons details" %}
 
 {% block beforeContent %}
-  {{
-    govukBackLink({
-      text: "Back",
-      href: "../"
-    })
-  }}
+  <div class="es-page-actions">
+    <div class="es-page-actions__back">
+      {{
+        govukBackLink({
+          text: "Back",
+          href: "../"
+        })
+      }}
+    </div>
+  </div>
 {% endblock %}
 
 {% block content %}
@@ -26,8 +30,49 @@
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{
+          govukInput({
+            label: {
+              text: "First name",
+              classes: "govuk-label--m"
+            },
+            classes: "govuk-!-width-two-thirds",
+            id: "firstName",
+            name: "firstName",
+            errorMessage: validationErrors | findError("firstName"),
+            value: offender.firstName
+          })
+        }}
+        {{
+          govukInput({
+            label: {
+              text: "Last name",
+              classes: "govuk-label--m"
+            },
+            classes: "govuk-!-width-two-thirds",
+            id: "lastName",
+            name: "lastName",
+            errorMessage: validationErrors | findError("lastName"),
+            value: offender.lastName
+          })
+        }}
+        {{
+          validatedDateInput({
+            id: "dob",
+            title: {
+              text:  "Date of birth",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--m"
+            },
+            hintText: "For example, 31 3 1980",
+            validationErrors: validationErrors,
+            day: offender.day,
+            month: offender.month,
+            year: offender.year
+          })
+        }}
+        {{
           govukButton({
-          text: "Continue"
+            text: "Save changes"
           })
         }}
       </form>

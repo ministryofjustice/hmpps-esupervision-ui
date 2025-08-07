@@ -1,13 +1,15 @@
-import { RequestHandler } from 'express'
-import { format, add } from 'date-fns'
+import { NextFunction, Request, RequestHandler, Response } from 'express'
+import { add, format } from 'date-fns'
 import { v4 as uuidv4 } from 'uuid'
+import { ZodObject } from 'zod'
 import { services } from '../services'
 import Checkin from '../data/models/checkin'
 import Page from '../data/models/page'
 import getUserFriendlyString from '../utils/userFriendlyStrings'
 import CheckinInterval from '../data/models/checkinInterval'
 import logger from '../../logger'
-import { OffenderInfoInput } from '../schemas/practitionersSchemas'
+import { emailSchema, mobileSchema, OffenderInfoInput, personsDetailsSchema } from '../schemas/practitionersSchemas'
+import OffenderUpdate from '../data/models/offenderUpdate'
 
 const { esupervisionService } = services()
 
@@ -173,7 +175,17 @@ export const renderCreateInvite: RequestHandler = async (req, res, next) => {
 export const renderUpdatePersonalDetails: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    res.render('pages/practitioners/cases/update/personal-details', { offenderId })
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, dateOfBirth } = offender
+    const data = {
+      id: offenderId,
+      firstName,
+      lastName,
+      day: dateOfBirth ? format(new Date(dateOfBirth), 'dd') : '',
+      month: dateOfBirth ? format(new Date(dateOfBirth), 'MM') : '',
+      year: dateOfBirth ? format(new Date(dateOfBirth), 'yyyy') : '',
+    }
+    res.render('pages/practitioners/cases/update/personal-details', { offender: data })
   } catch (error) {
     next(error)
   }
@@ -263,6 +275,52 @@ export const handleCreateUser: RequestHandler = async (req, res, next) => {
     await esupervisionService.createPractitioner(data)
     req.flash('success', { message: 'Practitioner created successfully' })
     res.redirect('/practitioners/users')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdateOffender = (view: string, schema: string) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const schemas: Record<string, ZodObject> = {
+      personal: personsDetailsSchema,
+      email: emailSchema,
+      mobile: mobileSchema,
+    }
+    const selectedSchema: ZodObject = schemas[schema] || personsDetailsSchema
+    const formData = req.body
+    const validation = selectedSchema.safeParse(formData)
+    if (!validation.success) {
+      const validationErrors = validation.error.issues.map(err => {
+        return {
+          text: err.message,
+          href: `#${err.path.join('.')}`,
+        }
+      })
+      return res.status(400).render(`pages/practitioners/cases/update/${view}`, {
+        offender: formData,
+        validationErrors,
+      })
+    }
+    return next()
+  }
+}
+export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
+  try {
+    const offender = await esupervisionService.getOffender(req.params.offenderId)
+    const { firstName, lastName, day, month, year, email, phoneNumber, firstCheckin, checkinInterval } = req.body
+    const data: OffenderUpdate = {
+      requestedBy: res.locals.user.userId,
+      firstName,
+      lastName,
+      dateOfBirth: format(`${year}-${month}-${day}`, 'yyyy-MM-dd'),
+      email: email || offender.email,
+      phoneNumber: phoneNumber || offender.phoneNumber,
+      firstCheckin: firstCheckin ? format(`${firstCheckin}`, 'yyyy-MM-dd') : offender.firstCheckin,
+      checkinInterval: checkinInterval || offender.checkinInterval,
+    }
+    await esupervisionService.updateOffender(req.params.offenderId, data)
+    res.redirect(`/practitioners/cases/${req.params.offenderId}`)
   } catch (error) {
     next(error)
   }

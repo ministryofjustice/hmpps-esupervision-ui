@@ -40,6 +40,8 @@ import {
   handleCheckInReview,
   validateRegisterPoPData,
   handlePhotoPost,
+  handleUpdateOffender,
+  renderUpdateOffender,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -86,6 +88,12 @@ export default function routes(): Router {
   get('/cases/:offenderId/update/photo', renderUpdatePhoto)
   get('/cases/:offenderId/update/contact-details', renderUpdateContactDetails)
   get('/cases/:offenderId/update/checkin-settings', renderUpdateCheckinSettings)
+
+  router.post(
+    '/cases/:offenderId/update/personal-details',
+    renderUpdateOffender('personal-details', 'personal'),
+    handleUpdateOffender,
+  )
 
   get('/users', renderUsers)
   get('/users/create', renderUserCreate)

@@ -1,4 +1,5 @@
 import OffenderStatus from './offenderStatus'
+import CheckinInterval from './checkinInterval'
 
 export default class Offender {
   uuid: string
@@ -20,4 +21,8 @@ export default class Offender {
 
   // NOTE: not always present!
   photoUrl: string // TODO: parse URL
+
+  firstCheckin: string
+
+  checkinInterval: CheckinInterval
 }

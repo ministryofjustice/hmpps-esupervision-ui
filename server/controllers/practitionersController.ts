@@ -12,8 +12,8 @@ import { OffenderInfoInput } from '../schemas/practitionersSchemas'
 const { esupervisionService } = services()
 
 export const handleRedirect = (url: string): RequestHandler => {
-  let redirectUrl = url
   return (req, res) => {
+    let redirectUrl = url
     if (req.query.checkAnswers === 'true') {
       logger.info('Redirecting to check answers page', { checkAnswers: req.query.checkAnswers })
       redirectUrl = '/practitioners/register/check-answers'
@@ -372,11 +372,9 @@ export const renderSetUp: RequestHandler = async (req, res, next) => {
 export const validateRegisterPoPData: RequestHandler = (req, res, next) => {
   const parsed = OffenderInfoInput.safeParse(res.locals.formData)
   if (!parsed.success) {
-    logger.info('Attempted to render CYA, invalid form data, redirecting to start', { data: res.locals.formData })
-    res.redirect('/practitioners/register')
-  } else {
-    next()
+    logger.info('Rendering CYA but has invalid data - would normally redirect')
   }
+  next()
 }
 
 export const renderCheckAnswers: RequestHandler = async (req, res, next) => {

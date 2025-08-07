@@ -1,4 +1,5 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% extends "../layout.njk" %}
 {% set section = "cases" %}
 
@@ -24,6 +25,17 @@
 {% endblock %}
 
 {% block content %}
+  {% if successMessage %}
+    {{
+      mojAlert({
+        variant: "success",
+        title: successMessage.title,
+        showTitleAsHeading: true,
+        dismissible: false,
+        html: successMessage.message
+      })
+    }}
+  {% endif %}
   <div class="es-page-header">
     <h1 class="govuk-heading-l">
       <span class="govuk-caption-l">Manage check ins</span> <span class="govuk-visually-hidden">for</span>
@@ -35,7 +47,9 @@
   </div>
   <div class="es-flex-row">
     <h2 class="govuk-heading-m">Personal details</h2>
-    <p>{{ changeButton("/practitioners/cases/" + offenderId + "/update/personal-details", "personal details") }}</p>
+    <p>
+      {{ changeButton("/practitioners/cases/" + offenderId + "/update/personal-details", "the personal details for " + name) }}
+    </p>
   </div>
 
   <dl class="govuk-summary-list">
@@ -51,7 +65,7 @@
       <dt class="govuk-summary-list__key">Date of birth</dt>
       <dd class="govuk-summary-list__value">{{ case.dateOfBirth | gdsDate }}</dd>
     </div>
-    <div class="govuk-summary-list__row">
+    <div class="govuk-summary-list__row govuk-visually-hidden">
       <dt class="govuk-summary-list__key">Status</dt>
       <dd class="govuk-summary-list__value">{{ case.status }}</dd>
     </div>
@@ -78,7 +92,9 @@
 
   <div class="es-flex-row">
     <h2 class="govuk-heading-m">Contact details</h2>
-    <p>{{ changeButton("/practitioners/cases/" + offenderId + "/update/contact-details", "contact details") }}</p>
+    <p>
+      {{ changeButton("/practitioners/cases/" + offenderId + "/update/contact-details", "the contact details for " + name) }}
+    </p>
   </div>
   <dl class="govuk-summary-list">
     <div class="govuk-summary-list__row">
@@ -106,7 +122,9 @@
 
   <div class="es-flex-row">
     <h2 class="govuk-heading-m">Check in settings</h2>
-    <p>{{ changeButton("/practitioners/cases/" + offenderId + "/update/checkin-settings", "check in settings") }}</p>
+    <p>
+      {{ changeButton("/practitioners/cases/" + offenderId + "/update/checkin-settings", "the check in settings for " + name) }}
+    </p>
   </div>
 
   <dl class="govuk-summary-list">

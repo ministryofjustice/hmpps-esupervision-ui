@@ -42,6 +42,8 @@ import {
   handlePhotoPost,
   handleUpdateOffender,
   renderUpdateOffender,
+  renderUpdateMobile,
+  renderUpdateEmail,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -87,11 +89,29 @@ export default function routes(): Router {
   get('/cases/:offenderId/update/personal-details', renderUpdatePersonalDetails)
   get('/cases/:offenderId/update/photo', renderUpdatePhoto)
   get('/cases/:offenderId/update/contact-details', renderUpdateContactDetails)
+  get('/cases/:offenderId/update/mobile', renderUpdateMobile)
+  get('/cases/:offenderId/update/email', renderUpdateEmail)
   get('/cases/:offenderId/update/checkin-settings', renderUpdateCheckinSettings)
 
   router.post(
     '/cases/:offenderId/update/personal-details',
     renderUpdateOffender('personal-details', 'personal'),
+    handleUpdateOffender,
+  )
+
+  router.post('/cases/:offenderId/update/contact-details', (req, res) => {
+    if (req.body?.contactPreference === 'TEXT') {
+      res.redirect(`/practitioners/cases/${req.params.offenderId}/update/mobile`)
+    } else {
+      res.redirect(`/practitioners/cases/${req.params.offenderId}/update/email`)
+    }
+  })
+
+  router.post('/cases/:offenderId/update/mobile', renderUpdateOffender('mobile', 'mobile'), handleUpdateOffender)
+  router.post('/cases/:offenderId/update/email', renderUpdateOffender('email', 'email'), handleUpdateOffender)
+  router.post(
+    '/cases/:offenderId/update/checkin-settings',
+    renderUpdateOffender('checkin-settings', 'setup'),
     handleUpdateOffender,
   )
 

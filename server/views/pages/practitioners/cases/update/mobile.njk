@@ -1,33 +1,51 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "../../../../partials/errorSummary.njk" import errorSummary %}
 {% from "../../../../partials/validatedDateInput.njk" import validatedDateInput %}
 {% extends "../../layout.njk" %}
 {% set section = "cases" %}
 
-{% set title = "Photo" %}
+{% set title = "What is " + offender.name + "'s mobile number?" %}
 
 {% block beforeContent %}
-  {{
-    govukBackLink({
-      text: "Back",
-      href: "../"
-    })
-  }}
+  <div class="es-page-actions">
+    <div class="es-page-actions__back">
+      {{
+        govukBackLink({
+          text: "Back",
+          href: "../update/contact-details"
+        })
+      }}
+    </div>
+  </div>
 {% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ errorSummary(validationErrors) }}
-      <h1 class="govuk-heading-l">{{ title }}</h1>
-      <form method="POST">
+      <form method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{
+          govukInput({
+          label: {
+          text: title,
+          classes: "govuk-label--l",
+          isPageHeading: true
+          },
+          id: "mobile",
+          name: "mobile",
+          errorMessage: validationErrors | findError("mobile") | default(null),
+          value: offender.mobile,
+          type: "tel",
+          classes: "govuk-input--width-20"
+          })
+        }}
+
+        {{
           govukButton({
-          text: "Continue"
+          text: "Save changes"
           })
         }}
       </form>

@@ -8,7 +8,13 @@ import Page from '../data/models/page'
 import getUserFriendlyString from '../utils/userFriendlyStrings'
 import CheckinInterval from '../data/models/checkinInterval'
 import logger from '../../logger'
-import { emailSchema, mobileSchema, OffenderInfoInput, personsDetailsSchema } from '../schemas/practitionersSchemas'
+import {
+  emailSchema,
+  mobileSchema,
+  OffenderInfoInput,
+  personsDetailsSchema,
+  setUpSchema,
+} from '../schemas/practitionersSchemas'
 import OffenderUpdate from '../data/models/offenderUpdate'
 
 const { esupervisionService } = services()
@@ -158,6 +164,8 @@ export const renderCaseView: RequestHandler = async (req, res, next) => {
       res.status(404).redirect('/practitioners/cases') // TODO: show error once ready
       return
     }
+    // eslint-disable-next-line prefer-destructuring
+    res.locals.successMessage = req.flash('success')[0]
     res.render('pages/practitioners/cases/manage', { offenderId, case: offender })
   } catch (error) {
     next(error)
@@ -194,7 +202,14 @@ export const renderUpdatePersonalDetails: RequestHandler = async (req, res, next
 export const renderUpdatePhoto: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    res.render('pages/practitioners/cases/update/photo', { offenderId })
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, phoneNumber } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+      contactPreference: phoneNumber ? 'TEXT' : 'EMAIL',
+    }
+    res.render('pages/practitioners/cases/update/photo', { offender: data })
   } catch (error) {
     next(error)
   }
@@ -203,7 +218,46 @@ export const renderUpdatePhoto: RequestHandler = async (req, res, next) => {
 export const renderUpdateContactDetails: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    res.render('pages/practitioners/cases/update/contact-details', { offenderId })
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, phoneNumber } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+      contactPreference: phoneNumber ? 'TEXT' : 'EMAIL',
+    }
+    res.render('pages/practitioners/cases/update/contact-details', { offender: data })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdateMobile: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, phoneNumber } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+      mobile: phoneNumber,
+    }
+    res.render('pages/practitioners/cases/update/mobile', { offender: data })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUpdateEmail: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, email } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+      email,
+    }
+    res.render('pages/practitioners/cases/update/email', { offender: data })
   } catch (error) {
     next(error)
   }
@@ -212,7 +266,17 @@ export const renderUpdateContactDetails: RequestHandler = async (req, res, next)
 export const renderUpdateCheckinSettings: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    res.render('pages/practitioners/cases/update/checkin-settings', { offenderId })
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName, firstCheckin, checkinInterval } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+      startDateDay: format(new Date(firstCheckin), 'dd'),
+      startDateMonth: format(new Date(firstCheckin), 'MM'),
+      startDateYear: format(new Date(firstCheckin), 'yyyy'),
+      frequency: checkinInterval,
+    }
+    res.render('pages/practitioners/cases/update/checkin-settings', { offender: data })
   } catch (error) {
     next(error)
   }
@@ -286,6 +350,7 @@ export const renderUpdateOffender = (view: string, schema: string) => {
       personal: personsDetailsSchema,
       email: emailSchema,
       mobile: mobileSchema,
+      setup: setUpSchema,
     }
     const selectedSchema: ZodObject = schemas[schema] || personsDetailsSchema
     const formData = req.body
@@ -308,18 +373,41 @@ export const renderUpdateOffender = (view: string, schema: string) => {
 export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
   try {
     const offender = await esupervisionService.getOffender(req.params.offenderId)
-    const { firstName, lastName, day, month, year, email, phoneNumber, firstCheckin, checkinInterval } = req.body
-    const data: OffenderUpdate = {
-      requestedBy: res.locals.user.userId,
+    const {
       firstName,
       lastName,
-      dateOfBirth: format(`${year}-${month}-${day}`, 'yyyy-MM-dd'),
-      email: email || offender.email,
-      phoneNumber: phoneNumber || offender.phoneNumber,
-      firstCheckin: firstCheckin ? format(`${firstCheckin}`, 'yyyy-MM-dd') : offender.firstCheckin,
-      checkinInterval: checkinInterval || offender.checkinInterval,
+      day,
+      month,
+      year,
+      email,
+      mobile,
+      startDateDay,
+      startDateMonth,
+      startDateYear,
+      frequency,
+    } = req.body
+
+    // If contact preference changes, then need to set the previous field to null
+    const updatedEmail = email ?? (mobile ? null : offender.email)
+    const updatedMobile = mobile ?? (email ? null : offender.phoneNumber)
+
+    const data: OffenderUpdate = {
+      requestedBy: res.locals.user.userId,
+      firstName: firstName || offender.firstName,
+      lastName: lastName || offender.lastName,
+      dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : offender.dateOfBirth,
+      email: updatedEmail,
+      phoneNumber: updatedMobile,
+      firstCheckin: startDateYear
+        ? format(`${startDateYear}-${startDateMonth}-${startDateDay}`, 'yyyy-MM-dd')
+        : offender.firstCheckin,
+      checkinInterval: frequency || offender.checkinInterval,
     }
+
     await esupervisionService.updateOffender(req.params.offenderId, data)
+    req.flash('success', {
+      title: `Changes have been updated successfully`,
+    })
     res.redirect(`/practitioners/cases/${req.params.offenderId}`)
   } catch (error) {
     next(error)

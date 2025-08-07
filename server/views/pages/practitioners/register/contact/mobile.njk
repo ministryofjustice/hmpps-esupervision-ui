@@ -6,7 +6,7 @@ preference.njk {% from "govuk/components/button/macro.njk" import govukButton %}
 {% set section = "register" %}
 
 {% set name = [formData['firstName'], ' ', formData['lastName']]  | join %}
-{% set title = "What is " + name + "s mobile number?" %}
+{% set title = "What is " + name + "'s mobile number?" %}
 
 {% block beforeContent %}
   {{
@@ -39,7 +39,6 @@ preference.njk {% from "govuk/components/button/macro.njk" import govukButton %}
           classes: "govuk-input--width-20"
           })
         }}
-
         {{
           govukButton({
               text: "Continue"

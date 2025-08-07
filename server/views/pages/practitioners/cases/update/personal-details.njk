@@ -27,6 +27,7 @@
     <div class="govuk-grid-column-two-thirds">
       {{ errorSummary(validationErrors) }}
       <h1 class="govuk-heading-l">{{ title }}</h1>
+      <p>We will use these details to verify the person when they access the service.</p>
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{

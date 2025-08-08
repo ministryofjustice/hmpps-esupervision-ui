@@ -63,7 +63,7 @@
             <tr>
               <td class="govuk-table__cell">{{ checkin.offenderName }}</td>
               <td class="govuk-table__cell">{{ checkin.status }}</td>
-              <td class="govuk-table__cell">{{ checkin.receivedDate  | gdsDate }}</td>
+              <td class="govuk-table__cell">{{ checkin.reviewDueDate  | gdsDate }}</td>
               <td class="govuk-table__cell">
                 {% if checkin.flagged == true %}{{
                   govukTag({
@@ -104,7 +104,7 @@
             <tr>
               <td class="govuk-table__cell">{{ checkin.offenderName }}</td>
               <td class="govuk-table__cell">{{ checkin.status }}</td>
-              <td class="govuk-table__cell">{{ checkin.receivedDate | gdsDate }}</td>
+              <td class="govuk-table__cell">-</td>
               <td class="govuk-table__cell govuk-table__cell--numeric">
                 <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link govuk-link--no-visited-state"
                   >View<span class="govuk-visually-hidden">
@@ -142,9 +142,7 @@
               <td class="govuk-table__cell">{{ checkin.dueDate | gdsDate }}</td>
               <td class="govuk-table__cell govuk-table__cell--numeric">
                 <a href="/practitioners/cases/{{ checkin.offenderId }}" class="govuk-link govuk-link--no-visited-state"
-                  >Manage<span class="govuk-visually-hidden">
-                     case {{ checkin.offenderName }}</span
-                  >
+                  >Manage<span class="govuk-visually-hidden"> case {{ checkin.offenderName }}</span>
                 </a>
               </td>
             </tr>

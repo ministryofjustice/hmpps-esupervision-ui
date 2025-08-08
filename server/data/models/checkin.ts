@@ -32,4 +32,6 @@ export default class Checkin {
   manualIdCheck: ManualIdVerificationResult
 
   flaggedResponses: string[]
+
+  reviewDueDate?: string // TODO: parse datetime
 }

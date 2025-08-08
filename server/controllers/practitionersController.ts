@@ -89,6 +89,7 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
       flagged: autoIdCheck === 'NO_MATCH' || checkIn.flaggedResponses.length > 0 || checkIn.status === 'EXPIRED',
       receivedDate: checkIn.submittedOn,
       dueDate: add(new Date(dueDate), { days: 3 }),
+      reviewDueDate: checkIn.submittedOn ? add(new Date(checkIn.submittedOn), { days: 3 }) : null,
       status: friendlyCheckInStatus(status),
     }
   })
@@ -114,6 +115,10 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
     const { checkInId } = req.params
     const checkIn = await esupervisionService.getCheckin(checkInId)
     checkIn.dueDate = add(new Date(checkIn.dueDate), { days: 3 }).toString()
+    if (checkIn.status === 'SUBMITTED') {
+      checkIn.reviewDueDate = add(new Date(checkIn.submittedOn), { days: 3 }).toString()
+    }
+
     res.render('pages/practitioners/checkins/view', { checkIn })
   } catch (error) {
     next(error)

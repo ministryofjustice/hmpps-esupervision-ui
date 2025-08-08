@@ -30,8 +30,10 @@
   <span class="govuk-caption-l">Check-in</span>
   <h1 class="govuk-heading-l es-flagged-heading">
     {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }} ({{ checkIn.offender.dateOfBirth | gdsDate }})
-    {% if checkIn.autoIdCheck == "NO_MATCH" or checkIn.flaggedResponses | length > 0 or checkIn.status == "EXPIRED" %}
-      <span class="govuk-tag govuk-tag--red">Urgent</span>
+    {% if checkIn.status != "REVIEWED" %}
+      {% if checkIn.autoIdCheck == "NO_MATCH" or checkIn.flaggedResponses | length > 0 or checkIn.status == "EXPIRED" %}
+        <span class="govuk-tag govuk-tag--red">Urgent</span>
+      {% endif %}
     {% endif %}
     {% if checkIn.status == "REVIEWED" %}
       {% if checkIn.manualIdCheck == "MATCH" %}
@@ -43,244 +45,234 @@
     {% endif %}
   </h1>
 
-{% if checkIn.status == "EXPIRED" %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  {% if checkIn.status == "EXPIRED" %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Status</dt>
+            <dd class="govuk-summary-list__value">Not checked in</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Check-in due</dt>
+            <dd class="govuk-summary-list__value">{{ checkIn.dueDate | gdsDate }}</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Review due</dt>
+            <dd class="govuk-summary-list__value">{{ checkIn.reviewDueDate | gdsDate }}</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  {% else %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Status</dt>
+        <dd class="govuk-summary-list__value">Checked in</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Check-in on</dt>
+        <dd class="govuk-summary-list__value">{{ checkIn.submittedOn | gdsDateTime }}</dd>
+      </div>
+      {% if checkIn.status == "REVIEWED" %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Reviewed on</dt>
+          <dd class="govuk-summary-list__value">-</dd>
+        </div>
+      {% else %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Review due</dt>
+          <dd class="govuk-summary-list__value">
+            {% if checkIn.reviewDueDate %}
+              {{ checkIn.reviewDueDate | gdsDate }}
+            {% else %}
+              Not set
+            {% endif %}
+          </dd>
+        </div>
+      {% endif %}
+    </dl>
+
+    <h2 class="govuk-heading-m">Questions</h2>
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Status
+          How {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }} is feeling
         </dt>
-        <dd class="govuk-summary-list__value">
-          Not checked in
+        <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.mentalHealth | userFriendlyString }}</dd>
+        <dd class="govuk-summary-list__actions">
+          {% if 'mentalHealth' in checkIn.flaggedResponses and checkIn.status != "REVIEWED" %}
+            <span class="govuk-tag govuk-tag--red">Needs attention</span>
+          {% endif %}
         </dd>
       </div>
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Check-in due
-        </dt>
+        <dt class="govuk-summary-list__key">Anything they need help with</dt>
         <dd class="govuk-summary-list__value">
-          {{ checkIn.dueDate | gdsDate }}
+          {% for a in checkIn.surveyResponse.assistance | split(",") %}
+            {{ a | userFriendlyString }}{% if not loop.last %},{% endif %}
+          {% endfor %}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          {% if 'assistance' in checkIn.flaggedResponses and checkIn.status != "REVIEWED" %}
+            <span class="govuk-tag govuk-tag--red">Needs attention</span>
+          {% endif %}
         </dd>
       </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Review due
-        </dt>
-        <dd class="govuk-summary-list__value">
 
+      {% if checkIn.surveyResponse.mentalHealthSupport %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Mental health</dt>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.mentalHealthSupport }}</dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+      {% endif %}
+      {% if checkIn.surveyResponse.alcoholSupport %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Alcohol</dt>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.alcoholSupport }}</dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+      {% endif %}
+      {% if checkIn.surveyResponse.drugsSupport %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Drugs</dt>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.drugsSupport }}</dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+      {% endif %}
+      {% if checkIn.surveyResponse.moneySupport %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Money</dt>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.moneySupport }}</dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+      {% endif %}
+      {% if checkIn.surveyResponse.housingSupport %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Housing</dt>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.housingSupport }}</dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+      {% endif %}
+      {% if checkIn.surveyResponse.supportSystemSupport %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Support system</dt>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.supportSystemSupport }}</dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+      {% endif %}
+      {% if checkIn.surveyResponse.otherSupport %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Other</dt>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.otherSupport }}</dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+      {% endif %}
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Contact with practitioner requested</dt>
+        <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.callback | userFriendlyString }}</dd>
+        <dd class="govuk-summary-list__actions">
+          {% if 'callback' in checkIn.flaggedResponses and checkIn.status != "REVIEWED" %}
+            <span class="govuk-tag govuk-tag--red">Needs attention</span>
+          {% endif %}
         </dd>
       </div>
+      {% if checkIn.surveyResponse.callbackDetails %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">What needs to be discussed</dt>
+          <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.callbackDetails }}</dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+      {% endif %}
     </dl>
-  </div>
-</div>
 
-{% else %}
-
-  {{
-    govukSummaryList({
-      rows: [
-      {
-        key: {
-          text: "Check-in due"
-        },
-        value: {
-          text: checkIn.dueDate | gdsDate
-        }
-      },
-      {
-        key: {
-          text: "Check-in received"
-        },
-        value: {
-          text: checkIn.submittedOn | gdsDateTime
-        }
-      }
-    ]
-      })
-  }}
-
-  <h2 class="govuk-heading-m">Questions</h2>
-  <dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">
-        How {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }} is feeling
-      </dt>
-      <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.mentalHealth | userFriendlyString }}</dd>
-      <dd class="govuk-summary-list__actions">
-        {% if 'mentalHealth' in checkIn.flaggedResponses %}
-          <span class="govuk-tag govuk-tag--red">Needs attention</span>
-        {% endif %}
-      </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Anything they need help with</dt>
-      <dd class="govuk-summary-list__value">
-        {% for a in checkIn.surveyResponse.assistance | split(",") %}
-          {{ a | userFriendlyString }}{% if not loop.last %},{% endif %}
-        {% endfor %}
-      </dd>
-      <dd class="govuk-summary-list__actions">
-        {% if 'assistance' in checkIn.flaggedResponses %}
-          <span class="govuk-tag govuk-tag--red">Needs attention</span>
-        {% endif %}
-      </dd>
-    </div>
-
-    {% if checkIn.surveyResponse.mentalHealthSupport %}
+    <h2 class="govuk-heading-m">Identity check</h2>
+    <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Mental health</dt>
-        <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.mentalHealthSupport }}</dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
-    {% endif %}
-    {% if checkIn.surveyResponse.alcoholSupport %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Alcohol</dt>
-        <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.alcoholSupport }}</dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
-    {% endif %}
-    {% if checkIn.surveyResponse.drugsSupport %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Drugs</dt>
-        <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.drugsSupport }}</dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
-    {% endif %}
-    {% if checkIn.surveyResponse.moneySupport %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Money</dt>
-        <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.moneySupport }}</dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
-    {% endif %}
-    {% if checkIn.surveyResponse.housingSupport %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Housing</dt>
-        <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.housingSupport }}</dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
-    {% endif %}
-    {% if checkIn.surveyResponse.supportSystemSupport %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Support system</dt>
-        <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.supportSystemSupport }}</dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
-    {% endif %}
-    {% if checkIn.surveyResponse.otherSupport %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Other</dt>
-        <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.otherSupport }}</dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
-    {% endif %}
-
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Contact with practitioner requested</dt>
-      <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.callback | userFriendlyString }}</dd>
-      <dd class="govuk-summary-list__actions">
-        {% if 'callback' in checkIn.flaggedResponses %}
-          <span class="govuk-tag govuk-tag--red">Needs attention</span>
-        {% endif %}
-      </dd>
-    </div>
-    {% if checkIn.surveyResponse.callbackDetails %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">What needs to be discussed</dt>
-        <dd class="govuk-summary-list__value">{{ checkIn.surveyResponse.callbackDetails }}</dd>
-        <dd class="govuk-summary-list__actions"></dd>
-      </div>
-    {% endif %}
-  </dl>
-
-  <h2 class="govuk-heading-m">Identity check</h2>
-  <dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Image match</dt>
-      <dd class="govuk-summary-list__value">
-        {% if checkIn.autoIdCheck == "MATCH" %}
-          <span>Pass</span>
-          {% elseif checkIn.autoIdCheck == "NO_MATCH" %}
-          <span>Fail</span>
-        {% else %}
-          <span>Not submitted</span>
-        {% endif %}
-      </dd>
-      <dd class="govuk-summary-list__actions">
-        {% if checkIn.autoIdCheck == "NO_MATCH" %}
-          <span class="govuk-tag govuk-tag--red">Needs attention</span>
-        {% endif %}
-      </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Photo on file</dt>
-      <dd class="govuk-summary-list__value">
-        <img
-          src="{{ "/assets/images/placeholder.png" if checkIn.offender.photoUrl == null else checkIn.offender.photoUrl }}"
-          class="es-profile-image es-profile-image--small"
-          alt="Profile image of {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }}"
-        />
-      </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Image from video</dt>
-      <dd class="govuk-summary-list__value">
-        {% if checkIn.snapshotUrl %}
-          <img
-            src="{{ checkIn.snapshotUrl }}"
-            class="es-profile-image es-profile-image--small"
-            alt="Snapshot from video of {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }}"
-          />
-        {% else %}
-          <span>No image available</span>
-        {% endif %}
-      </dd>
-    </div>
-    {% if checkIn.autoIdCheck == "MATCH" or checkIn.autoIdCheck == "NO_MATCH" %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Check in video</dt>
+        <dt class="govuk-summary-list__key">Image match</dt>
         <dd class="govuk-summary-list__value">
-          <a href="/practitioners/checkin/{{ checkIn.uuid }}/video" class="govuk-link">View video</a>
+          {% if checkIn.autoIdCheck == "MATCH" %}
+            <span>Pass</span>
+            {% elseif checkIn.autoIdCheck == "NO_MATCH" %}
+            <span>Fail</span>
+          {% else %}
+            <span>Not submitted</span>
+          {% endif %}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          {% if checkIn.autoIdCheck == "NO_MATCH" and checkIn.status != "REVIEWED" %}
+            <span class="govuk-tag govuk-tag--red">Needs attention</span>
+          {% endif %}
         </dd>
       </div>
-    {% endif %}
-  </dl>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Photo on file</dt>
+        <dd class="govuk-summary-list__value">
+          <img
+            src="{{ "/assets/images/placeholder.png" if checkIn.offender.photoUrl == null else checkIn.offender.photoUrl }}"
+            class="es-profile-image es-profile-image--small"
+            alt="Profile image of {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }}"
+          />
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Image from video</dt>
+        <dd class="govuk-summary-list__value">
+          {% if checkIn.snapshotUrl %}
+            <img
+              src="{{ checkIn.snapshotUrl }}"
+              class="es-profile-image es-profile-image--small"
+              alt="Snapshot from video of {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }}"
+            />
+          {% else %}
+            <span>No image available</span>
+          {% endif %}
+        </dd>
+      </div>
+      {% if checkIn.autoIdCheck == "MATCH" or checkIn.autoIdCheck == "NO_MATCH" %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Check in video</dt>
+          <dd class="govuk-summary-list__value">
+            <a href="/practitioners/checkin/{{ checkIn.uuid }}/video" class="govuk-link">View video</a>
+          </dd>
+        </div>
+      {% endif %}
+    </dl>
 
-  {% if checkIn.status == "SUBMITTED" %}
-    <form method="POST">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-      {{
-        govukRadios({
-        name: "reviewed",
-        errorMessage: validationErrors | findError("reviewed"),
-        fieldset: {
-          legend: {
-            text: "Is the person in the video " + checkIn.offender.firstName + " " + checkIn.offender.lastName + "?",
-            isPageHeading: false,
-            classes: "govuk-fieldset__legend--m"
-          }
-        },
-        items: [
-          {
-            value: "YES",
-            text: "Yes"
+    {% if checkIn.status == "SUBMITTED" %}
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukRadios({
+          name: "reviewed",
+          errorMessage: validationErrors | findError("reviewed"),
+          fieldset: {
+            legend: {
+              text: "Is the person in the video " + checkIn.offender.firstName + " " + checkIn.offender.lastName + "?",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--m"
+            }
           },
-          {
-            value: "NO",
-            text: "No"
-          }
-        ]
-        })
-      }}
-      {{
-        govukButton({
-          text: "Mark as reviewed"
-        })
-      }}
-    </form>
+          items: [
+            {
+              value: "YES",
+              text: "Yes"
+            },
+            {
+              value: "NO",
+              text: "No"
+            }
+          ]
+          })
+        }}
+        {{
+          govukButton({
+            text: "Mark as reviewed"
+          })
+        }}
+      </form>
+    {% endif %}
   {% endif %}
-
-{% endif %}
 {% endblock %}

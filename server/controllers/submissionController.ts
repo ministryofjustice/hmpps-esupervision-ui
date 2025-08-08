@@ -6,7 +6,7 @@ import MentalHealth from '../data/models/survey/mentalHealth'
 import SupportAspect from '../data/models/survey/supportAspect'
 import CallbackRequested from '../data/models/survey/callbackRequested'
 
-const { esupervisionService, faceCompareService } = services()
+const { esupervisionService } = services()
 
 const getSubmissionId = (req: Request): string => req.params.submissionId
 const pageParams = (req: Request): Record<string, string | boolean> => {
@@ -143,10 +143,9 @@ export const handleVideoVerify: RequestHandler = async (req, res, next) => {
     res.setHeader('Cache-Control', 'no-cache')
     res.setHeader('Connection', 'keep-alive')
 
-    const result = await faceCompareService.processSubmission(submissionId)
-    await esupervisionService.updateAutomatedIdCheckStatus(submissionId, result)
+    const result = await esupervisionService.autoVerifyCheckinIdentity(submissionId, 1)
 
-    res.json({ status: 'SUCCESS', result })
+    res.json({ status: 'SUCCESS', result: result.result })
   } catch (error) {
     res.json({ status: 'ERROR', message: error.message })
   }

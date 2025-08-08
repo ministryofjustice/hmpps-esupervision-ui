@@ -8,12 +8,12 @@ import OffenderInfo from '../data/models/offenderInfo'
 import OffenderSetup from '../data/models/offenderSetup'
 import CheckinSubmission from '../data/models/checkinSubmission'
 import CreateCheckinRequest from '../data/models/createCheckinRequest'
-import AutomatedIdVerificationResult from '../data/models/automatedIdVerificationResult'
 import Practitioner from '../data/models/pracitioner'
 import PractitionerSetup from '../data/models/pracitionerSetup'
 import Offender from '../data/models/offender'
 import CheckinUploadLocationResponse from '../data/models/checkinUploadLocationResponse'
 import OffenderUpdate from '../data/models/offenderUpdate'
+import AutomaticCheckinVerificationResult from '../data/models/automaticCheckinVerificationResult'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -73,7 +73,7 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.createPractitioner(practitioner)
   }
 
-  updateAutomatedIdCheckStatus(checkinId: string, result: AutomatedIdVerificationResult): Promise<Checkin> {
-    return this.esupervisionApiClient.updateAutomatedIdCheckStatus(checkinId, result)
+  autoVerifyCheckinIdentity(checkinId: string, numSnapshots: number): Promise<AutomaticCheckinVerificationResult> {
+    return this.esupervisionApiClient.autoVerifyCheckinIdentity(checkinId, numSnapshots)
   }
 }

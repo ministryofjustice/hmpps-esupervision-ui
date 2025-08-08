@@ -189,47 +189,80 @@ function dataUrlToBlob(dataUrl) {
 // Handle the registration button click event on Check Your Answers page
 if (registerButton) {
   registerButton.addEventListener('click', async event => {
-    // Disable the button to prevent multiple submissions
-    if (event.target) {
-      event.target.setAttribute('disabled', 'disabled')
-    }
-
-    const registerResult = await fetch(`/practitioners/register/begin`, {
-      method: 'POST',
-      headers: {
-        'x-csrf-token': document.querySelector('input[name=_csrf]').value,
-      },
-    })
-      .then(res => res.json())
-      .catch(error => {
-        // eslint-disable-next-line no-console
-        console.warn(error)
-        return { status: 'ERROR', message: `Registration failed` }
+    const button = event.target
+    button.setAttribute('disabled', 'disabled')
+    try {
+      const registerResponse = await fetch('/practitioners/register/begin', {
+        method: 'POST',
+        headers: {
+          'x-csrf-token': document.querySelector('input[name=_csrf]').value,
+        },
       })
 
-    if (registerResult.status === 'SUCCESS') {
-      const { url } = registerResult.uploadLocation
-      // Upload the image to the provided URL
-      const image = localStorage.getItem(IMAGE_SESSION_KEY)
-      if (image) {
-        const uploadImageResult = await fetch(url, {
-          method: 'PUT',
-          body: dataUrlToBlob(image),
-          headers: {
-            'Content-Type': IMAGE_CONTENT_TYPE,
-          },
+      if (!registerResponse.ok) {
+        const errorText = await registerResponse.text()
+        throw Object.assign(new Error(`HTTP ${registerResponse.status} error`), {
+          type: 'HTTP_ERROR',
+          status: registerResponse.status,
+          body: errorText,
         })
+      }
 
-        if (uploadImageResult.ok) {
-          // If the upload is successful, submit the form with the setup ID and clear the localStorage
-          localStorage.removeItem(IMAGE_SESSION_KEY)
-          document.getElementById('setupId').value = registerResult.setup.uuid
-          document.getElementById('completeRegistrationForm').submit()
-        }
-      } else {
+      const result = await registerResponse.json()
+
+      if (result.status !== 'SUCCESS') {
+        throw Object.assign(new Error(result.message || 'Registration failed'), {
+          type: 'API_ERROR',
+          code: result.code || 'REGISTRATION_FAILED',
+        })
+      }
+
+      const image = localStorage.getItem(IMAGE_SESSION_KEY)
+      if (!image) {
         // eslint-disable-next-line no-console
         console.warn('Image not found in session storage')
+        return
       }
+
+      const { url } = result.uploadLocation
+      const uploadImageResult = await fetch(url, {
+        method: 'PUT',
+        body: dataUrlToBlob(image),
+        headers: {
+          'Content-Type': IMAGE_CONTENT_TYPE,
+        },
+      })
+
+      if (!uploadImageResult.ok) {
+        const uploadError = await uploadImageResult.text()
+        throw new Error(`Image upload failed: ${uploadImageResult.status} ${uploadError}`)
+      }
+
+      // Success: clear session, set hidden field, and submit form
+      localStorage.removeItem(IMAGE_SESSION_KEY)
+      document.getElementById('setupId').value = result.setup.uuid
+      document.getElementById('completeRegistrationForm').submit()
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Registration process error:', error)
+      showRegistrationError(error.status)
+    } finally {
+      button.removeAttribute('disabled')
     }
   })
+}
+
+function showRegistrationError(statusCode) {
+  let errorMessage = 'An error occurred during registration'
+  if (statusCode === 422) {
+    errorMessage = "The email address or phone number you've entered are already associated with another person"
+  }
+  const errorBanner = document.getElementById('registration-error')
+  const errorBannerContent = document.getElementById('registration-error-content')
+  if (errorBanner) {
+    errorBannerContent.textContent = errorMessage
+    errorBanner.removeAttribute('hidden')
+    errorBanner.focus()
+    errorBanner.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 }

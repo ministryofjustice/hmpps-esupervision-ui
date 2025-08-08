@@ -41,10 +41,11 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  getCheckin(checkinId: string): Promise<Checkin> {
+  getCheckin(checkinId: string, includeUploads?: boolean): Promise<Checkin> {
     return this.get<Checkin>(
       {
         path: `/offender_checkins/${checkinId}`,
+        query: { 'include-uploads': includeUploads },
       },
       asSystem(),
     )

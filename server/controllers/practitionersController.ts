@@ -70,7 +70,9 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
       filteredCheckIns = checkIns.content.filter((checkIn: Checkin) => checkIn.status === 'REVIEWED')
       break
     default:
-      filteredCheckIns = checkIns.content.filter((checkIn: Checkin) => checkIn.status === 'SUBMITTED')
+      filteredCheckIns = checkIns.content.filter(
+        (checkIn: Checkin) => checkIn.status === 'SUBMITTED' || checkIn.status === 'EXPIRED',
+      )
       break
   }
 
@@ -84,7 +86,7 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
       offenderName: `${offender.firstName} ${offender.lastName}`,
       offenderId: offender.uuid,
       sentTo: offender.email || offender.phoneNumber,
-      flagged: autoIdCheck === 'NO_MATCH' || checkIn.flaggedResponses.length > 0,
+      flagged: autoIdCheck === 'NO_MATCH' || checkIn.flaggedResponses.length > 0 || checkIn.status === 'EXPIRED',
       receivedDate: checkIn.submittedOn,
       dueDate: add(new Date(dueDate), { days: 3 }),
       status: friendlyCheckInStatus(status),
@@ -100,6 +102,8 @@ const friendlyCheckInStatus = (status: string) => {
       return 'Checked in'
     case 'REVIEWED':
       return 'Checked in'
+    case 'EXPIRED':
+      return 'Not checked in'
     default:
       return status
   }

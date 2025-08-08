@@ -22,8 +22,8 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getCheckins(practitionerUuid, page, size)
   }
 
-  getCheckin(submissionId: string): Promise<Checkin> {
-    return this.esupervisionApiClient.getCheckin(submissionId)
+  getCheckin(submissionId: string, includeUploads?: boolean): Promise<Checkin> {
+    return this.esupervisionApiClient.getCheckin(submissionId, includeUploads)
   }
 
   getCheckinUploadLocation(

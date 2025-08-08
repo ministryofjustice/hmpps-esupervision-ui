@@ -46,7 +46,7 @@ export default function routes({ esupervisionService }: Services): Router {
       if (submissionId) {
         // lookup submission from the API
         try {
-          res.locals.submission = await esupervisionService.getCheckin(submissionId)
+          res.locals.submission = await esupervisionService.getCheckin(submissionId, true)
           next()
         } catch (err) {
           if (err.responseStatus === 404) {

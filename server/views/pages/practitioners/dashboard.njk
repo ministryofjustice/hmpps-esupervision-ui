@@ -47,7 +47,6 @@
   }}
 
   {% if filter == null %}
-
     {% if checkIns and checkIns | length > 0 %}
       <table class="govuk-table" data-module="moj-sortable-table">
         <thead class="govuk-table__head">
@@ -74,7 +73,7 @@
                 }}{% endif %}
               </td>
               <td class="govuk-table__cell govuk-table__cell--numeric">
-                <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link"
+                <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link govuk-link--no-visited-state"
                   >Review<span class="govuk-visually-hidden">
                     the check-in of {{ checkin.offenderName }} received {{ checkin.receivedDate }}</span
                   >
@@ -107,7 +106,7 @@
               <td class="govuk-table__cell">{{ checkin.status }}</td>
               <td class="govuk-table__cell">{{ checkin.receivedDate | gdsDate }}</td>
               <td class="govuk-table__cell govuk-table__cell--numeric">
-                <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link"
+                <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link govuk-link--no-visited-state"
                   >View<span class="govuk-visually-hidden">
                     the check-in of {{ checkin.offenderName }} received {{ checkin.receivedDate }}</span
                   >
@@ -128,7 +127,7 @@
         <thead class="govuk-table__head">
           <tr class="govuk-table__row">
             <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
-            <th class="govuk-table__header" scope="col" aria-sort="none">Sent to</th>
+            <th class="govuk-table__header" scope="col" aria-sort="none">Link sent to</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Check in due</th>
             <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
@@ -142,9 +141,9 @@
               <td class="govuk-table__cell">{{ checkin.status }}</td>
               <td class="govuk-table__cell">{{ checkin.dueDate | gdsDate }}</td>
               <td class="govuk-table__cell govuk-table__cell--numeric">
-                <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link"
+                <a href="/practitioners/cases/{{ checkin.offenderId }}" class="govuk-link govuk-link--no-visited-state"
                   >Manage<span class="govuk-visually-hidden">
-                    the check-in of {{ checkin.offenderName }} due {{ checkin.dueDate }}</span
+                     case {{ checkin.offenderName }}</span
                   >
                 </a>
               </td>
@@ -153,7 +152,7 @@
         </tbody>
       </table>
     {% else %}
-      <p class="govuk-body">You have no items that are awaiting check in</p>
+      <p class="govuk-body">You are not awaiting any check ins</p>
     {% endif %}
   {% endif %}
 {% endblock %}

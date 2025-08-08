@@ -73,7 +73,7 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.createPractitioner(practitioner)
   }
 
-  autoVerifyCheckinIdentity(checkinId: string): Promise<AutomaticCheckinVerificationResult> {
-    return this.esupervisionApiClient.autoVerifyCheckinIdentity(checkinId)
+  autoVerifyCheckinIdentity(checkinId: string, numSnapshots: number): Promise<AutomaticCheckinVerificationResult> {
+    return this.esupervisionApiClient.autoVerifyCheckinIdentity(checkinId, numSnapshots)
   }
 }

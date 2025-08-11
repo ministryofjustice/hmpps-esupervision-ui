@@ -148,7 +148,7 @@
           </dd>
         </div>
 
-        {% if formData['callbackDetails'] %}
+        {% if formData['callback'] == "YES" and formData['callbackDetails'] %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">What needs to be discussed</dt>
             <dd class="govuk-summary-list__value">{{ formData['callbackDetails'] }}</dd>

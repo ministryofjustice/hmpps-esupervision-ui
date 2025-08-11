@@ -48,12 +48,13 @@ export const renderDashboard: RequestHandler = async (req, res, next) => {
 export const renderDashboardFiltered: RequestHandler = async (req, res, next) => {
   try {
     const { filter } = req.params
+    const { dev } = req.query
     const practitionerUuid = res.locals.user.userId
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
     const size = req.query.size ? parseInt(req.query.size as string, 10) : 60
     const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid, page, size)
     const checkIns = filterCheckIns(rawCheckIns, filter)
-    res.render('pages/practitioners/dashboard', { checkIns, filter, practitionerUuid })
+    res.render('pages/practitioners/dashboard', { checkIns, filter, practitionerUuid, dev })
   } catch (error) {
     next(error)
   }

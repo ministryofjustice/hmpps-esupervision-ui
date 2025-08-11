@@ -4,7 +4,8 @@
 {% extends "../layout.njk" %}
 {% set section = "register" %}
 
-{% set title = "Persons details" %}
+{% set title = "Check your answers before adding the person" %}
+{% set pageTitle = title %}
 {%
   set name = [
     formData['firstName'], ' ', formData['lastName']
@@ -37,8 +38,8 @@
         </div>
       </div>
 
-      <h1 class="govuk-heading-l">Check your answers</h1>
-      <h2 class="govuk-heading-m">Personal details</h2>
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <h2 class="govuk-heading-m">Person's details</h2>
       {{
         govukSummaryList({
           rows: [
@@ -102,7 +103,7 @@
         </div>
       </dl>
 
-      <h2 class="govuk-heading-m">Contact details</h2>
+      <h2 class="govuk-heading-m" id="contact-details">Contact details</h2>
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">How does {{ name }} want us to send a link to the service?</dt>
@@ -177,7 +178,7 @@
         })
       }}
 
-      <button id="registerButton" class="govuk-button">Confirm and sign-up</button>
+      <button id="registerButton" class="govuk-button">Confirm and add person</button>
 
       <form id="completeRegistrationForm" method="post" action="/practitioners/register/complete">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />

@@ -7,7 +7,7 @@
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet" />
 {% endblock %}
 
-{% block pageTitle %}{{ pageTitle | default(applicationName) }}{% endblock %}
+{% block pageTitle %}{{ pageTitle + ' - ' + applicationName if pageTitle else applicationName }}{% endblock %}
 
 {% block header %}
   {{

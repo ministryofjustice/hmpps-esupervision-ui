@@ -120,7 +120,6 @@
       <p class="govuk-body">You have no reviewed items</p>
     {% endif %}
   {% endif %}
-
   {% if filter == 'awaiting' %}
     {% if checkIns and checkIns | length > 0 %}
       <table class="govuk-table" data-module="moj-sortable-table">
@@ -144,6 +143,16 @@
                 <a href="/practitioners/cases/{{ checkin.offenderId }}" class="govuk-link govuk-link--no-visited-state"
                   >Manage<span class="govuk-visually-hidden"> case {{ checkin.offenderName }}</span>
                 </a>
+                {% if dev == "true" %}
+                  <span>
+                    |
+                    <a href="/submission/{{ checkin.checkInId }}" class="govuk-link govuk-link--no-visited-state"
+                      >Check in link<span class="govuk-visually-hidden">
+                        the check-in of {{ checkin.offenderName }} received {{ checkin.receivedDate }}</span
+                      >
+                    </a>
+                  </span>
+                {% endif %}
               </td>
             </tr>
           {% endfor %}

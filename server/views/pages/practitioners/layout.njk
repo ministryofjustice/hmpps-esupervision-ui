@@ -8,7 +8,7 @@
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet" />
 {% endblock %}
 
-{% block pageTitle %}{{ pageTitle | default("Manage probation check ins") }}{% endblock %}
+{% block pageTitle %}{{ pageTitle + " - Manage probation check ins" if pageTitle else "Manage probation check ins" }}{% endblock %}
 {% set environmentName = "Private Beta" %}
 {% block header %}
   <header class="hmpps-header" role="banner">

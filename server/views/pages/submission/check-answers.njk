@@ -5,8 +5,7 @@
 {% from "../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = "Check your answers" %}
-{% set mainClasses = "app-container govuk-body" %}
+{% set pageTitle = "Check your answers before you complete your check in" %}
 
 {% block beforeContent %}
   {{
@@ -22,7 +21,7 @@
     <div class="govuk-grid-column-two-thirds">
       {{ errorSummary(validationErrors) }}
 
-      <h1 class="govuk-heading-l">Check your answers</h1>
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <h2 class="govuk-heading-m">About you</h2>
 
@@ -32,7 +31,7 @@
           <dd class="govuk-summary-list__value">{{ formData['mentalHealth'] | userFriendlyString }}</dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/submission/{{ submissionId }}/questions/mental-health?checkAnswers=true"
-              >Change<span class="govuk-visually-hidden"> your answer on your mental health</span></a
+              >Change<span class="govuk-visually-hidden"> answer for how are you feeling</span></a
             >
           </dd>
         </div>
@@ -45,7 +44,7 @@
           </dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
-              >Change<span class="govuk-visually-hidden"> if there anything you need help with</span></a
+              >Change<span class="govuk-visually-hidden"> answer for is there anything you need help with</span></a
             >
           </dd>
         </div>
@@ -56,7 +55,9 @@
             <dd class="govuk-summary-list__value">{{ formData['mentalHealthSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
               <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
-                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+                >Change<span class="govuk-visually-hidden">
+                  answer for tell us why you need help with mental health</span
+                ></a
               >
             </dd>
           </div>
@@ -68,7 +69,7 @@
             <dd class="govuk-summary-list__value">{{ formData['alcoholSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
               <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
-                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+                >Change<span class="govuk-visually-hidden"> answer for tell us why you need help with alcohol</span></a
               >
             </dd>
           </div>
@@ -79,7 +80,7 @@
             <dd class="govuk-summary-list__value">{{ formData['drugsSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
               <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
-                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+                >Change<span class="govuk-visually-hidden"> answer for tell us why you need help with drugs</span></a
               >
             </dd>
           </div>
@@ -90,7 +91,7 @@
             <dd class="govuk-summary-list__value">{{ formData['moneySupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
               <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
-                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+                >Change<span class="govuk-visually-hidden"> answer for tell us why you need help with money</span></a
               >
             </dd>
           </div>
@@ -101,7 +102,7 @@
             <dd class="govuk-summary-list__value">{{ formData['housingSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
               <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
-                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+                >Change<span class="govuk-visually-hidden"> answer for tell us why you need help with housing</span></a
               >
             </dd>
           </div>
@@ -113,7 +114,9 @@
             <dd class="govuk-summary-list__value">{{ formData['supportSystemSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
               <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
-                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+                >Change<span class="govuk-visually-hidden">
+                  answer for tell us why you need help with your support system</span
+                ></a
               >
             </dd>
           </div>
@@ -125,7 +128,7 @@
             <dd class="govuk-summary-list__value">{{ formData['otherSupport'] }}</dd>
             <dd class="govuk-summary-list__actions">
               <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
-                >Change<span class="govuk-visually-hidden"> your mental health answer</span></a
+                >Change<span class="govuk-visually-hidden"> answer for tell us why you need help </span></a
               >
             </dd>
           </div>
@@ -139,19 +142,19 @@
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/submission/{{ submissionId }}/questions/callback?checkAnswers=true"
               >Change<span class="govuk-visually-hidden">
-                if there anything else you need to speak with your probation officer about</span
+                answer for is there anything else you need to speak with your probation officer about</span
               ></a
             >
           </dd>
         </div>
 
-        {% if formData['callbackDetails'] %}
+        {% if formData['callback'] == "YES" and formData['callbackDetails'] %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">What needs to be discussed</dt>
             <dd class="govuk-summary-list__value">{{ formData['callbackDetails'] }}</dd>
             <dd class="govuk-summary-list__actions">
               <a class="govuk-link" href="/submission/{{ submissionId }}/questions/callback?checkAnswers=true"
-                >Change<span class="govuk-visually-hidden"> your request for additional help answer</span></a
+                >Change<span class="govuk-visually-hidden"> answer for tell us what you need to talk about</span></a
               >
             </dd>
           </div>
@@ -168,7 +171,7 @@
           </dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/submission/{{ submissionId }}/video/view?checkAnswers=true"
-              >View<span class="govuk-visually-hidden"> your video result</span></a
+              >View<span class="govuk-visually-hidden"> video</span></a
             >
           </dd>
         </div>
@@ -184,7 +187,7 @@
             fieldset: {
               legend: {
                 classes: "govuk-fieldset__legend--m",
-                text: "Submit your check in"
+                text: "Complete your check in"
               }
             },
             items: [
@@ -198,7 +201,7 @@
 
         {{
           govukButton({
-            text: "Submit check in"
+            text: "Complete check in"
           })
         }}
       </form>

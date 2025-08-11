@@ -11,7 +11,8 @@
     formData['firstName'], ' ', formData['lastName']
   ] | join
 %}
-{% set title = "Set up check ins" %}
+{% set title = "Set up online check ins" %}
+{% set pageTitle = title %}
 
 {% block beforeContent %}
   {{
@@ -27,6 +28,7 @@
     <div class="govuk-grid-column-two-thirds">
       {{ errorSummary(validationErrors) }}
       <h1 class="govuk-heading-l">{{ title }}</h1>
+      <p>Any in-person check ins will need to be scheduled outside of this service.</p>
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{

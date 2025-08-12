@@ -44,6 +44,8 @@ import {
   renderUpdateOffender,
   renderUpdateMobile,
   renderUpdateEmail,
+  renderStopCheckins,
+  handleStopCheckins,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -92,12 +94,15 @@ export default function routes(): Router {
   get('/cases/:offenderId/update/mobile', renderUpdateMobile)
   get('/cases/:offenderId/update/email', renderUpdateEmail)
   get('/cases/:offenderId/update/checkin-settings', renderUpdateCheckinSettings)
+  get('/cases/:offenderId/update/stop-checkins', renderStopCheckins)
 
   router.post(
     '/cases/:offenderId/update/personal-details',
     renderUpdateOffender('personal-details', 'personal'),
     handleUpdateOffender,
   )
+
+  router.post('/cases/:offenderId/update/stop-checkins', handleStopCheckins)
 
   router.post('/cases/:offenderId/update/contact-details', (req, res) => {
     if (req.body?.contactPreference === 'TEXT') {

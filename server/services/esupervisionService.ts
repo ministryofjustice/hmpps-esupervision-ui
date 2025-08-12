@@ -69,6 +69,10 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.createCheckin(checkin)
   }
 
+  stopCheckins(practitionerUuid: string, offenderId: string, stopCheckinDetails: string): Promise<void> {
+    return this.esupervisionApiClient.stopCheckins(practitionerUuid, offenderId, stopCheckinDetails)
+  }
+
   createPractitioner(practitioner: Practitioner): Promise<PractitionerSetup> {
     return this.esupervisionApiClient.createPractitioner(practitioner)
   }

@@ -140,3 +140,29 @@ export const photoUploadSchema = z.object({
   checkYourAnswers: z.string(),
   photoUpload: z.string().min(1, 'Select a photo to upload'),
 })
+
+export const stopCheckinsSchema = z
+  .object({
+    stopCheckins: z
+      .enum(['YES', 'NO'], {
+        error: issue => {
+          return {
+            message:
+              issue.input === undefined ? 'Select yes if you want to stop check ins for the person' : issue.message,
+          }
+        },
+      })
+      .describe('Select yes if you want to stop check ins for the person'),
+    stopCheckinDetails: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.stopCheckins === 'YES') {
+      if (!data.stopCheckinDetails || data.stopCheckinDetails.trim() === '') {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['stopCheckinDetails'],
+          message: 'Enter the reason for stopping',
+        })
+      }
+    }
+  })

@@ -34,7 +34,13 @@
             <td class="govuk-table__cell">{{ case.firstName }} {{ case.lastName }}</td>
             <td class="govuk-table__cell">{{ case.dateOfBirth | gdsDate }}</td>
             <td class="govuk-table__cell">{{ case.phoneNumber if case.phoneNumber else case.email }}</td>
-            <td class="govuk-table__cell">-</td>
+            <td class="govuk-table__cell">
+              {% if case.status == "INACTIVE" %}
+                Check ins stopped
+              {% else %}
+                -
+              {% endif %}
+            </td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
               <a href="/practitioners/cases/{{ case.uuid }}" class="govuk-link govuk-link--no-visited-state"
                 >Manage<span class="govuk-visually-hidden"> {{ case.firstName }} {{ case.lastName }}</span></a

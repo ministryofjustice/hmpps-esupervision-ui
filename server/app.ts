@@ -37,7 +37,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
 
-  app.use(cookieParser(process.env.COOKIE_SECRET))
+  app.use(cookieParser(`esCookieSecret${process.env.COOKIE_SECRET}`))
   app.use(featureFlags())
 
   nunjucksSetup(app)

@@ -1,8 +1,10 @@
 import express from 'express'
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
+
 // import authorisationMiddleware from './middleware/authorisationMiddleware'
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
@@ -17,6 +19,7 @@ import storeFormDataInSession from './middleware/storeFormDataInSession'
 import routes from './routes'
 import submissionRoutes from './routes/submissionRoutes'
 import practitionersRoutes from './routes/practitionersRoutes'
+import featureFlags from './middleware/featureFlags'
 
 import type { Services } from './services'
 
@@ -33,6 +36,10 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
+
+  app.use(cookieParser(process.env.COOKIE_SECRET))
+  app.use(featureFlags())
+
   nunjucksSetup(app)
   app.use(setUpAuthentication())
   // app.use(authorisationMiddleware())

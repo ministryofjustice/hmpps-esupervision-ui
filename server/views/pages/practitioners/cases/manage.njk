@@ -24,6 +24,13 @@
       }}
     </div>
     <div class="es-page-actions__actions">
+      {% if flags.debugMode == true and case.status == "VERIFIED" %}
+        <div class="es-debug">
+          <a href="{{ offenderId }}/invite" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+            >Invite</a
+          >
+        </div>
+      {% endif %}
       {% if case.status != "INACTIVE" %}
         <a href="/practitioners/cases/{{ offenderId }}/update/stop-checkins" class="govuk-button govuk-button--warning"
           >Stop check ins</a
@@ -160,9 +167,4 @@
       <dd class="govuk-summary-list__value">{{ case.checkinInterval | userFriendlyString }}</dd>
     </div>
   </dl>
-
-  {% if case.status == "VERIFIED" %}
-    <hr class="govuk-section-break govuk-section-break--xl" />
-    <a href="{{ offenderId }}/invite" class="govuk-button govuk-button--secondary">Invite</a>
-  {% endif %}
 {% endblock %}

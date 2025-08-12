@@ -5,7 +5,8 @@
 
 {% set section = "dashboard" %}
 {% set pageTitle = "Check ins" %}
-{% set metaContent = '<h4 class="govuk-heading-xs govuk-!-margin-bottom-1">User ID</h4><p class="govuk-hint govuk-!-font-size-14"><code>' + practitionerUuid + '</code></p>' %}
+
+{% set metaContent = '<div class="es-debug"><h4 class="govuk-heading-xs govuk-!-margin-bottom-1">User ID</h4><p class="govuk-hint govuk-!-font-size-14"><code>' + practitionerUuid + '</code></p></div>' if flags.debugMode == true else '' %}
 
 {% block content %}
   {% if successMessage %}
@@ -143,9 +144,8 @@
                 <a href="/practitioners/cases/{{ checkin.offenderId }}" class="govuk-link govuk-link--no-visited-state"
                   >Manage<span class="govuk-visually-hidden"> case {{ checkin.offenderName }}</span>
                 </a>
-                {% if dev == "true" %}
-                  <span>
-                    |
+                {% if flags.debugMode == true %}
+                  <span class="es-debug">
                     <a href="/submission/{{ checkin.checkInId }}" class="govuk-link govuk-link--no-visited-state"
                       >Check in link<span class="govuk-visually-hidden">
                         the check-in of {{ checkin.offenderName }} received {{ checkin.receivedDate }}</span

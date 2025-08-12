@@ -1,5 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import { add, format } from 'date-fns'
+import { add, format, parse } from 'date-fns'
+
 import { v4 as uuidv4 } from 'uuid'
 import { ZodObject } from 'zod'
 import { services } from '../services'
@@ -14,6 +15,7 @@ import {
   OffenderInfoInput,
   personsDetailsSchema,
   setUpSchema,
+  stopCheckinsSchema,
 } from '../schemas/practitionersSchemas'
 import OffenderUpdate from '../data/models/offenderUpdate'
 
@@ -48,13 +50,12 @@ export const renderDashboard: RequestHandler = async (req, res, next) => {
 export const renderDashboardFiltered: RequestHandler = async (req, res, next) => {
   try {
     const { filter } = req.params
-    const { dev } = req.query
     const practitionerUuid = res.locals.user.userId
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
     const size = req.query.size ? parseInt(req.query.size as string, 10) : 60
     const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid, page, size)
     const checkIns = filterCheckIns(rawCheckIns, filter)
-    res.render('pages/practitioners/dashboard', { checkIns, filter, practitionerUuid, dev })
+    res.render('pages/practitioners/dashboard', { checkIns, filter, practitionerUuid })
   } catch (error) {
     next(error)
   }
@@ -176,6 +177,8 @@ export const renderCaseView: RequestHandler = async (req, res, next) => {
     }
     // eslint-disable-next-line prefer-destructuring
     res.locals.successMessage = req.flash('success')[0]
+    // eslint-disable-next-line prefer-destructuring
+    res.locals.infoMessage = req.flash('info')[0]
     res.render('pages/practitioners/cases/manage', { offenderId, case: offender })
   } catch (error) {
     next(error)
@@ -292,17 +295,69 @@ export const renderUpdateCheckinSettings: RequestHandler = async (req, res, next
   }
 }
 
+export const renderStopCheckins: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    const offender = await esupervisionService.getOffender(offenderId)
+    const { firstName, lastName } = offender
+    const data = {
+      id: offenderId,
+      name: `${firstName} ${lastName}`,
+    }
+    res.render('pages/practitioners/cases/update/stop-checkins', { offender: data })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleStopCheckins: RequestHandler = async (req, res, next) => {
+  try {
+    const { offenderId } = req.params
+    const practitionerUuid = res.locals.user.userId
+    const data = req.body
+    const validation = stopCheckinsSchema.safeParse(data)
+
+    if (!validation.success) {
+      const offender = await esupervisionService.getOffender(offenderId)
+      const { firstName, lastName } = offender
+      const offenderData = {
+        id: offenderId,
+        name: `${firstName} ${lastName}`,
+      }
+      const validationErrors = validation.error.issues.map(err => {
+        return {
+          text: err.message,
+          href: `#${err.path.join('.')}`,
+        }
+      })
+      return res.status(400).render('pages/practitioners/cases/update/stop-checkins', {
+        data,
+        validationErrors,
+        offender: offenderData,
+      })
+    }
+    const { stopCheckins, stopCheckinDetails } = validation.data
+    if (stopCheckins === 'YES') {
+      await esupervisionService.stopCheckins(practitionerUuid, offenderId, stopCheckinDetails)
+      req.flash('info', { title: 'Check-ins stopped', message: `Reason for stopping: ${stopCheckinDetails}` })
+    }
+    return res.redirect(`/practitioners/cases/${offenderId}`)
+  } catch (error) {
+    return next(error)
+  }
+}
+
 export const handleCreateInvite: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
     const { dueDate } = req.body
+    const parsedDate = parse(dueDate, 'd/M/yyyy', new Date())
 
     const data = {
       practitioner: res.locals.user.userId,
       offender: offenderId,
-      dueDate,
+      dueDate: dueDate ? format(parsedDate, 'yyyy-MM-dd') : null,
     }
-
     const response = await esupervisionService.createCheckin(data)
 
     if (response) {

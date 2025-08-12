@@ -178,6 +178,17 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
+  async stopCheckins(practitionerUuid: string, offenderId: string, stopCheckinDetails: string): Promise<void> {
+    return this.post<void>(
+      {
+        path: `/offenders/${offenderId}/deactivate`,
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify({ requestedBy: practitionerUuid, reason: stopCheckinDetails }),
+      },
+      asSystem(),
+    )
+  }
+
   async createPractitioner(practitioner: Practitioner): Promise<PractitionerSetup> {
     return this.post<PractitionerSetup>(
       {

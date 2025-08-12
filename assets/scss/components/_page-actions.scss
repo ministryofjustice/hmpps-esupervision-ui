@@ -3,9 +3,9 @@
 .es-page-actions {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  margin-top: 0.5rem;
+  margin-top: 2rem;
 
   &__back {
     display: flex;
@@ -16,13 +16,10 @@
     @include gds.govuk-font($size: 19);
 
     & {
+      margin-top: 1rem;
       display: flex;
       align-items: center;
       gap: 1rem;
-    }
-
-    a {
-      @include gds.govuk-link-style-no-visited-state;
     }
   }
 }

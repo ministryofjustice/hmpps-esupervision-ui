@@ -1,0 +1,87 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "../../../../partials/errorSummary.njk" import errorSummary %}
+{% from "../../../../partials/validatedDateInput.njk" import validatedDateInput %}
+{% extends "../../layout.njk" %}
+{% set section = "cases" %}
+
+{% set title = "Are you sure you want to stop check ins for " + offender.name + "?" %}
+{% set pageTitle = title %}
+
+{% block beforeContent %}
+  <div class="es-page-actions">
+    <div class="es-page-actions__back">
+      {{
+        govukBackLink({
+        text: "Back",
+        href: "../"
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
+
+
+      {% set stopCheckinDetails %}
+        {{
+          govukTextarea({
+          name: "stopCheckinDetails",
+          id: "stopCheckinDetails",
+          errorMessage: validationErrors | findError("stopCheckinDetails"),
+          value: data.stopCheckinDetails,
+          label: { text: "Explain the reason for stopping" }
+          })
+        }}
+      {% endset -%}
+
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{
+          govukRadios({
+          name: "stopCheckins",
+          errorMessage: validationErrors | findError("stopCheckin"),
+          value: data.stopCheckins,
+          hint: { text: offender.name + " will no longer receive reminders to use the check in service. " },
+          fieldset: {
+          legend: {
+          text: title,
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+          }
+          },
+          items: [
+              {
+                value: "YES",
+                text: "Yes",
+                conditional: { html: stopCheckinDetails }
+              },
+              {
+                value: "NO",
+                text: "No"
+              }
+            ]
+          })
+        }}
+
+        {{
+          govukWarningText({
+          text: "You will not be able to restart check ins for this person. You can still view past check ins. If you want to restart check ins with them you will have to sign them up again.",
+          iconFallbackText: "Warning"
+          })
+        }}
+
+        {{ govukButton({ text: "Continue" }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,5 +1,4 @@
 import express from 'express'
-import createError from 'http-errors'
 import bodyParser from 'body-parser'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
@@ -46,9 +45,15 @@ export default function createApp(services: Services): express.Application {
 
   app.use(routes())
   app.use('/submission/:submissionId', submissionRoutes(services))
-  app.use('/practitioners', practitionersRoutes())
 
-  app.use((req, res, next) => next(createError(404, 'Not found')))
+  app.use('/practitioners', practitionersRoutes())
+  app.use('/practitioners', (req, res) => {
+    res.status(404).render('pages/practitioners/not-found')
+  })
+
+  app.use((req, res) => {
+    res.status(404).render('pages/not-found')
+  })
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
 
   return app

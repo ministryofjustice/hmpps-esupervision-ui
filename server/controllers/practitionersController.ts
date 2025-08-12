@@ -187,7 +187,7 @@ export const renderCaseView: RequestHandler = async (req, res, next) => {
 
 export const renderCreateInvite: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/practitioners/cases/invite')
+    res.render('pages/practitioners/cases/invite', { yesterday: format(add(new Date(), { days: -1 }), 'dd/MM/yyyy') })
   } catch (error) {
     next(error)
   }

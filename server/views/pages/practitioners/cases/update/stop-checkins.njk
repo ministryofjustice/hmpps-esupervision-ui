@@ -49,7 +49,7 @@
         {{
           govukRadios({
           name: "stopCheckins",
-          errorMessage: validationErrors | findError("stopCheckin"),
+          errorMessage: validationErrors | findError("stopCheckins"),
           value: data.stopCheckins,
           hint: { text: offender.name + " will no longer receive reminders to use the check in service. " },
           fieldset: {

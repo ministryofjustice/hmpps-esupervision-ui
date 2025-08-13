@@ -1,28 +1,13 @@
 import { z } from 'zod'
 import { isFuture, isToday } from 'date-fns'
+import { dobSchema } from './shared'
 
 export const personsDetailsSchema = z
   .object({
     firstName: z.string().min(1, 'Enter their first name'),
     lastName: z.string().min(1, 'Enter their last name'),
-    day: z.coerce.number({ message: 'Enter a valid day' }).positive({ message: 'Enter day' }),
-    month: z.coerce.number({ message: 'Enter a valid month' }).positive({ message: 'Enter month' }),
-    year: z.coerce
-      .number({ message: 'Enter a valid year' })
-      .min(1900, { message: 'Enter a valid year' })
-      .max(2100)
-      .positive({ message: 'Enter year' }),
   })
-  .refine(
-    ({ day, month, year }) => {
-      const d = new Date(year, month - 1, day)
-      return d.getDate() === Number(day) && d.getMonth() === Number(month) - 1 && d.getFullYear() === Number(year)
-    },
-    {
-      message: 'Enter a valid date of birth',
-      path: ['dob'],
-    },
-  )
+  .and(dobSchema)
 
 export const videoReviewSchema = z
   .object({

@@ -2,7 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express'
 import { add, format, parse } from 'date-fns'
 
 import { v4 as uuidv4 } from 'uuid'
-import { ZodObject } from 'zod'
+import { ZodIntersection, ZodObject } from 'zod'
 import { services } from '../services'
 import Checkin from '../data/models/checkin'
 import Page from '../data/models/page'
@@ -83,6 +83,12 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
   }
   return filteredCheckIns.map((checkIn: Checkin) => {
     const { offender, autoIdCheck, dueDate, status } = checkIn
+    let reviewDueDate = null
+    if (checkIn.status === 'EXPIRED') {
+      reviewDueDate = add(new Date(checkIn.dueDate), { days: 6 }).toString()
+    } else if (checkIn.submittedOn) {
+      reviewDueDate = add(new Date(checkIn.submittedOn), { days: 3 })
+    }
     return {
       checkInId: checkIn.uuid,
       offenderName: `${offender.firstName} ${offender.lastName}`,
@@ -91,7 +97,7 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
       flagged: autoIdCheck === 'NO_MATCH' || checkIn.flaggedResponses.length > 0 || checkIn.status === 'EXPIRED',
       receivedDate: checkIn.submittedOn,
       dueDate: add(new Date(dueDate), { days: 3 }),
-      reviewDueDate: checkIn.submittedOn ? add(new Date(checkIn.submittedOn), { days: 3 }) : null,
+      reviewDueDate,
       status: friendlyCheckInStatus(status),
     }
   })
@@ -119,6 +125,8 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
     checkIn.dueDate = add(new Date(checkIn.dueDate), { days: 3 }).toString()
     if (checkIn.status === 'SUBMITTED') {
       checkIn.reviewDueDate = add(new Date(checkIn.submittedOn), { days: 3 }).toString()
+    } else if (checkIn.status === 'EXPIRED') {
+      checkIn.reviewDueDate = add(new Date(checkIn.dueDate), { days: 6 }).toString()
     }
 
     res.render('pages/practitioners/checkins/view', { checkIn })
@@ -411,13 +419,13 @@ export const handleCreateUser: RequestHandler = async (req, res, next) => {
 
 export const renderUpdateOffender = (view: string, schema: string) => {
   return (req: Request, res: Response, next: NextFunction): void => {
-    const schemas: Record<string, ZodObject> = {
+    const schemas: Record<string, ZodIntersection | ZodObject> = {
       personal: personsDetailsSchema,
       email: emailSchema,
       mobile: mobileSchema,
       setup: setUpSchema,
     }
-    const selectedSchema: ZodObject = schemas[schema] || personsDetailsSchema
+    const selectedSchema = schemas[schema] || personsDetailsSchema
     const formData = req.body
     const validation = selectedSchema.safeParse(formData)
     if (!validation.success) {

@@ -25,47 +25,48 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
     </div>
     <div class="es-page-header__actions">
-      <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button">Add person</a>
+      <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button" role="button">Add person</a>
     </div>
   </div>
+  <div id="checkInFilter">
   {{
     mojSubNavigation({
-    label: "Sub navigation",
+    label: "Filter check ins",
     items: [{
         text: "Needs attention",
-        href: "/practitioners/dashboard",
+        href: "/practitioners/dashboard#checkInFilter",
         active: true if filter == null else false
       }, {
         text: "Reviewed",
-        href: "/practitioners/dashboard/reviewed",
+        href: "/practitioners/dashboard/reviewed#checkInFilter",
         active: true if filter == "reviewed" else false
       }, {
         text: "Awaiting check in",
-        href: "/practitioners/dashboard/awaiting",
+        href: "/practitioners/dashboard/awaiting#checkInFilter",
         active: true if filter == "awaiting" else false
       }]
     })
   }}
-
+  </div>
   {% if filter == null %}
     {% if checkIns and checkIns | length > 0 %}
-      <table class="govuk-table" data-module="moj-sortable-table">
+      <table class="govuk-table es-table--responsive" data-module="moj-sortable-table">
         <thead class="govuk-table__head">
           <tr class="govuk-table__row">
             <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Review due</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Priority</th>
-            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+            <th class="govuk-table__header govuk-table__cell--numeric" scope="col">Action</th>
           </tr>
         </thead>
         <tbody class="govuk-table__body">
           {% for checkin in checkIns %}
             <tr>
-              <td class="govuk-table__cell">{{ checkin.offenderName }}</td>
-              <td class="govuk-table__cell">{{ checkin.status }}</td>
-              <td class="govuk-table__cell">{{ checkin.reviewDueDate  | gdsDate }}</td>
-              <td class="govuk-table__cell">
+              <td class="govuk-table__cell" data-label="Name">{{ checkin.offenderName }}</td>
+              <td class="govuk-table__cell" data-label="Status">{{ checkin.status }}</td>
+              <td class="govuk-table__cell" data-label="Review due">{{ checkin.reviewDueDate  | gdsDate }}</td>
+              <td class="govuk-table__cell" data-label="Priority">
                 {% if checkin.flagged == true %}{{
                   govukTag({
                     text: "Urgent",
@@ -73,11 +74,10 @@
                   })
                 }}{% endif %}
               </td>
-              <td class="govuk-table__cell govuk-table__cell--numeric">
+              <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Action">
                 <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link govuk-link--no-visited-state"
                   >Review<span class="govuk-visually-hidden">
-                    the check-in of {{ checkin.offenderName }} received {{ checkin.receivedDate }}</span
-                  >
+                    the check-in of {{ checkin.offenderName }}</span>
                 </a>
               </td>
             </tr>
@@ -91,25 +91,25 @@
 
   {% if filter == 'reviewed' %}
     {% if checkIns and checkIns | length > 0 %}
-      <table class="govuk-table" data-module="moj-sortable-table">
+      <table class="govuk-table es-table--responsive" data-module="moj-sortable-table">
         <thead class="govuk-table__head">
           <tr class="govuk-table__row">
             <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Reviewed on</th>
-            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+            <th class="govuk-table__header govuk-table__cell--numeric" scope="col">Action</th>
           </tr>
         </thead>
         <tbody class="govuk-table__body">
           {% for checkin in checkIns %}
             <tr>
-              <td class="govuk-table__cell">{{ checkin.offenderName }}</td>
-              <td class="govuk-table__cell">{{ checkin.status }}</td>
-              <td class="govuk-table__cell">-</td>
-              <td class="govuk-table__cell govuk-table__cell--numeric">
+              <td class="govuk-table__cell" data-label="Name">{{ checkin.offenderName }}</td>
+              <td class="govuk-table__cell" data-label="Status">{{ checkin.status }}</td>
+              <td class="govuk-table__cell" data-label="Reviewed on">-</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Action">
                 <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link govuk-link--no-visited-state"
                   >View<span class="govuk-visually-hidden">
-                    the check-in of {{ checkin.offenderName }} received {{ checkin.receivedDate }}</span
+                    the check-in of {{ checkin.offenderName }} received {{ checkin.receivedDate | gdsDateTime }}</span
                   >
                 </a>
               </td>
@@ -123,26 +123,26 @@
   {% endif %}
   {% if filter == 'awaiting' %}
     {% if checkIns and checkIns | length > 0 %}
-      <table class="govuk-table" data-module="moj-sortable-table">
+      <table class="govuk-table es-table--responsive" data-module="moj-sortable-table">
         <thead class="govuk-table__head">
           <tr class="govuk-table__row">
             <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Link sent to</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Check in due</th>
-            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+            <th class="govuk-table__header govuk-table__cell--numeric" scope="col">Action</th>
           </tr>
         </thead>
         <tbody class="govuk-table__body">
           {% for checkin in checkIns %}
             <tr>
-              <td class="govuk-table__cell">{{ checkin.offenderName }}</td>
-              <td class="govuk-table__cell">{{ checkin.sentTo }}</td>
-              <td class="govuk-table__cell">{{ checkin.status }}</td>
-              <td class="govuk-table__cell">{{ checkin.dueDate | gdsDate }}</td>
-              <td class="govuk-table__cell govuk-table__cell--numeric">
+              <td class="govuk-table__cell" data-label="Name">{{ checkin.offenderName }}</td>
+              <td class="govuk-table__cell" data-label="Link sent to">{{ checkin.sentTo }}</td>
+              <td class="govuk-table__cell" data-label="Status">{{ checkin.status }}</td>
+              <td class="govuk-table__cell" data-label="Check in due">{{ checkin.dueDate | gdsDate }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Action">
                 <a href="/practitioners/cases/{{ checkin.offenderId }}" class="govuk-link govuk-link--no-visited-state"
-                  >Manage<span class="govuk-visually-hidden"> case {{ checkin.offenderName }}</span>
+                  >Manage<span class="govuk-visually-hidden"> case for {{ checkin.offenderName }}</span>
                 </a>
                 {% if flags.debugMode == true %}
                   <span class="es-debug">

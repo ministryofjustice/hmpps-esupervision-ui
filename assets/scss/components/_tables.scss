@@ -1,0 +1,76 @@
+@use 'govuk-frontend/dist/govuk/index' as gds;
+
+.es-table--responsive {
+  .govuk-table__head {
+    display: none;
+    @include gds.govuk-media-query($from: tablet) {
+      display: table-header-group;
+    }
+  }
+
+  .govuk-table__caption {
+    margin-bottom: 10px;
+  }
+
+  .govuk-table__body {
+    tr {
+      margin-bottom: 1rem;
+      display: block;
+      float: left;
+      width: 100%;
+      box-sizing: border-box;
+      border: 2px solid gds.$govuk-border-colour;
+      @include gds.govuk-media-query($from: tablet) {
+        display: table-row;
+        border: none;
+        float: none;
+        margin: 0;
+      }
+
+      th, td {
+        display: block;
+        text-align: right;
+        clear: left;
+        float: left;
+        width: 100%;
+        padding: 10px 10px 8px;
+        box-sizing: border-box;
+        border-bottom: 1px dotted gds.$govuk-border-colour;
+        @include gds.govuk-media-query($from: tablet) {
+          display: table-cell;
+          text-align: left;
+          float: none;
+          clear: none;
+          padding: 10px 20px 10px 0;
+          border-bottom-style: solid;
+          width: auto;
+          &.govuk-table__cell--numeric {
+            text-align: right;
+          }
+        }
+
+        &:before {
+          content: attr(data-label);
+          float: left;
+          font-weight: bold;
+          padding-right: 10px;
+          @include gds.govuk-media-query($from: tablet) {
+            display: none;
+          }
+        }
+
+        &:last-child {
+          border-bottom: none;
+          @include gds.govuk-media-query($from: tablet) {
+            padding-right: 0;
+            border-bottom: 1px solid gds.$govuk-border-colour;
+          }
+        }
+
+        &:empty {
+          display: none;
+        }
+      }
+    }
+  }
+}

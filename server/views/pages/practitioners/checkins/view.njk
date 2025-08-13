@@ -7,13 +7,19 @@
 
 {% set title = "Check-in details" %}
 
+{% set backLinkHref = "/practitioners/dashboard" %}
+
+{% if checkIn.status == "REVIEWED" %}
+{% set backLinkHref = "/practitioners/dashboard/reviewed" %}
+{% endif %}
+
 {% block beforeContent %}
   <div class="es-page-actions">
     <div class="es-page-actions__back">
       {{
         govukBackLink({
           text: "Back",
-          href: "/practitioners/dashboard"
+          href: backLinkHref
         })
       }}
     </div>

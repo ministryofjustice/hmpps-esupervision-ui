@@ -2,7 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express'
 import { add, format, parse } from 'date-fns'
 
 import { v4 as uuidv4 } from 'uuid'
-import { ZodObject } from 'zod'
+import { ZodIntersection, ZodObject } from 'zod'
 import { services } from '../services'
 import Checkin from '../data/models/checkin'
 import Page from '../data/models/page'
@@ -419,13 +419,13 @@ export const handleCreateUser: RequestHandler = async (req, res, next) => {
 
 export const renderUpdateOffender = (view: string, schema: string) => {
   return (req: Request, res: Response, next: NextFunction): void => {
-    const schemas: Record<string, ZodObject> = {
+    const schemas: Record<string, ZodIntersection | ZodObject> = {
       personal: personsDetailsSchema,
       email: emailSchema,
       mobile: mobileSchema,
       setup: setUpSchema,
     }
-    const selectedSchema: ZodObject = schemas[schema] || personsDetailsSchema
+    const selectedSchema = schemas[schema] || personsDetailsSchema
     const formData = req.body
     const validation = selectedSchema.safeParse(formData)
     if (!validation.success) {

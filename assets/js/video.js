@@ -51,16 +51,21 @@ async function initVideo() {
     this.mediaRecorder.ondataavailable = e => this.recordedChunks.push(e.data)
     this.mediaRecorder.onstop = this.handleRecordingComplete.bind(this)
     this.startBtn.disabled = false
+    this.startBtn.ariaDisabled = 'false'
   } catch (error) {
     console.error('Error accessing media devices:', error) // eslint-disable-line no-console
     this.videoContainer.hidden = true
+    this.videoContainer.ariaHidden = 'true'
     this.errorMessage.hidden = false
+    this.errorMessage.ariaHidden = false
   }
 
   this.startBtn.addEventListener('click', () => {
     this.startBtn.disabled = true
+    this.startBtn.ariaDisabled = 'true'
     this.statusTag.textContent = `Recording... ${this.maximumRecordingTime / 1000}s remaining`
     this.statusTag.style.display = 'flex'
+    this.statusTag.ariaLive = 'polite'
 
     this.recordedChunks = []
     this.mediaRecorder.start()
@@ -75,6 +80,7 @@ async function initVideo() {
       if (seconds > 0) {
         this.statusTag.textContent = `Recording... ${seconds}s remaining`
       } else {
+        this.statusTag.ariaLive = 'off'
         clearInterval(interval)
       }
     }, 1000)
@@ -177,10 +183,12 @@ function hideAllScreens() {
   Object.values(this.screens).forEach(screen => {
     const s = screen
     s.hidden = true
+    s.ariaHidden = true
   })
 }
 
 function showScreen(screen) {
   this.hideAllScreens()
   this.screens[screen].hidden = false
+  this.screens[screen].ariaHidden = false
 }

@@ -25,11 +25,7 @@
     </div>
     <div class="es-page-actions__actions">
       {% if flags.debugMode == true and case.status == "VERIFIED" %}
-
-          <a href="{{ offenderId }}/invite" class="govuk-button govuk-button--secondary es-debug"
-            >Invite</a
-          >
-
+        <a href="{{ offenderId }}/invite" class="govuk-button govuk-button--secondary es-debug">Invite</a>
       {% endif %}
       {% if case.status != "INACTIVE" %}
         <a href="/practitioners/cases/{{ offenderId }}/update/stop-checkins" class="govuk-button govuk-button--warning"

@@ -1,6 +1,14 @@
 import { z } from 'zod'
-import { isFuture, isToday } from 'date-fns'
-import { dobSchema } from './shared'
+import { createDateSchema } from './shared'
+
+const dobSchema = createDateSchema({
+  who: 'their',
+  label: 'date of birth',
+  groupPath: 'dob',
+  rules: {
+    mustBeInPast: true,
+  },
+})
 
 export const personsDetailsSchema = z
   .object({
@@ -13,9 +21,10 @@ export const videoReviewSchema = z
   .object({
     reviewed: z
       .enum(['YES', 'NO'], {
-        error: issue => (issue.input === undefined ? 'Select yes if the person is in the video' : issue.message),
+        error: issue =>
+          issue.input === undefined ? 'Select yes if the person in the video is the correct person' : issue.message,
       })
-      .describe('Select yes if the person is in the video'),
+      .describe('Select yes if the person in the video is the correct person'),
   })
   .required()
 
@@ -24,21 +33,15 @@ export const contactPreferenceSchema = z
     checkYourAnswers: z.string(),
     contactPreference: z
       .string({
-        error: issue => (issue.input === undefined ? 'Select how you would like us to send a link' : issue.message),
+        error: issue =>
+          issue.input === undefined ? 'Select how the person would like us to send a link' : issue.message,
       })
-      .describe('Choose how you would like us to send a link'),
+      .describe('Select how the person would like us to send a link'),
   })
   .required()
 
 export const emailSchema = z.object({
-  email: z
-    .email({
-      error: issue =>
-        issue.input === undefined
-          ? 'Enter an email address in the correct format, like name@example.com'
-          : issue.message,
-    })
-    .describe('Enter an email address in the correct format, like name@example.com'),
+  email: z.email({ message: 'Enter an email address in the correct format, like name@example.com' }),
 })
 
 export const mobileSchema = z.object({
@@ -50,48 +53,27 @@ export const mobileSchema = z.object({
     }),
 })
 
-export const setUpSchema = z
-  .object({
-    startDateDay: z.coerce.number({ message: 'Enter a valid day' }).positive({ message: 'Enter day' }),
-    startDateMonth: z.coerce.number({ message: 'Enter a valid month' }).positive({ message: 'Enter month' }),
-    startDateYear: z.coerce
-      .number({ message: 'Enter a valid year' })
-      .min(2025, { message: 'Enter a valid year' })
-      .max(2100, { message: 'Enter a valid year' })
-      .positive({ message: 'Enter year' }),
+const startDateSchema = createDateSchema({
+  who: 'their',
+  label: 'start date',
+  groupPath: 'startDate',
+  prefix: 'startDate',
+  rules: {
+    allowToday: true,
+    mustBeInFuture: true,
+  },
+})
+
+export const setUpSchema = startDateSchema.and(
+  z.object({
     frequency: z
       .string({
         error: issue =>
-          issue.input === undefined
-            ? 'Select how often you would like the person to submit online checks'
-            : issue.message,
+          issue.input === undefined ? 'Select how often you would like the person to check in' : issue.message,
       })
-      .describe('Select how often you would like the person to submit online checks'),
-  })
-  .refine(
-    ({ startDateDay, startDateMonth, startDateYear }) => {
-      const d = new Date(startDateYear, startDateMonth - 1, startDateDay)
-      return (
-        d.getDate() === Number(startDateDay) &&
-        d.getMonth() === Number(startDateMonth) - 1 &&
-        d.getFullYear() === Number(startDateYear)
-      )
-    },
-    {
-      message: 'Enter a valid date',
-      path: ['startDate'],
-    },
-  )
-  .refine(
-    ({ startDateDay, startDateMonth, startDateYear }) => {
-      const d = new Date(startDateYear, startDateMonth - 1, startDateDay)
-      return isFuture(d) || isToday(d)
-    },
-    {
-      message: 'Date must be in the future or today',
-      path: ['startDate'],
-    },
-  )
+      .describe('Select how often you would like the person to check in'),
+  }),
+)
 
 export const practitionerSchema = z.object({
   firstName: z.string().min(1, 'Enter their first name'),
@@ -123,7 +105,7 @@ export const OffenderInfoInput = z.object({
 
 export const photoUploadSchema = z.object({
   checkYourAnswers: z.string(),
-  photoUpload: z.string().min(1, 'Select a photo to upload'),
+  photoUpload: z.string().min(1, 'Select a photo of the person'),
 })
 
 export const stopCheckinsSchema = z

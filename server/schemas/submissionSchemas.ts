@@ -1,5 +1,12 @@
 import { z } from 'zod'
-import { dobSchema } from './shared'
+import { createDateSchema } from './shared'
+
+const dobSchema = createDateSchema({
+  who: 'their',
+  label: 'start date',
+  groupPath: 'startDate',
+  prefix: 'startDate',
+})
 
 export const personalDetailsSchema = z
   .object({
@@ -36,7 +43,7 @@ export const assistanceSchema = z.object({
       if (Array.isArray(val)) return val
       return []
     },
-    z.array(z.enum(validCircumstances)).min(1, 'Select if you need assistance'),
+    z.array(z.enum(validCircumstances)).min(1, "Select what you need help with or select 'No, I do not need help'"),
   ),
 })
 
@@ -45,12 +52,10 @@ export const callbackSchema = z
     callback: z
       .enum(['YES', 'NO'], {
         error: issue => {
-          return issue.input === undefined
-            ? 'Select yes if you need to speak to your probation practitioner'
-            : issue.message
+          return issue.input === undefined ? 'Select yes if you need to speak to your probation officer' : issue.message
         },
       })
-      .describe('Select yes if you need to speak to your probation practitioner'),
+      .describe('Select yes if you need to speak to your probation officer'),
   })
   .required()
 

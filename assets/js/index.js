@@ -100,7 +100,7 @@ const hide = el => {
 if (displayUploadedImage && uploadedImageData) {
   const img = new Image()
   img.src = uploadedImageData
-  img.alt = 'Uploaded image preview'
+  img.alt = `Image of ${displayUploadedImage[0].dataset.person || 'the person'} added for identification`
   img.classList.add('es-profile-image')
 
   img.onload = () => {

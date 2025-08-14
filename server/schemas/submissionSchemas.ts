@@ -2,10 +2,12 @@ import { z } from 'zod'
 import { createDateSchema } from './shared'
 
 const dobSchema = createDateSchema({
-  who: 'their',
-  label: 'start date',
-  groupPath: 'startDate',
-  prefix: 'startDate',
+  who: 'your',
+  label: 'date of birth',
+  groupPath: 'dob',
+  rules: {
+    mustBeInPast: true,
+  },
 })
 
 export const personalDetailsSchema = z

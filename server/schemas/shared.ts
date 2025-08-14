@@ -80,7 +80,7 @@ export function createDateSchema({
         } else {
           ctx.addIssue({
             code: 'custom',
-            message: `${label} must only contain numbers`,
+            message: `${sentenceCaseLabel} must only contain numbers`,
             path: ['dob'],
           })
         }

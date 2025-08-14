@@ -10,7 +10,7 @@
 {% set backLinkHref = "/practitioners/dashboard" %}
 
 {% if checkIn.status == "REVIEWED" %}
-{% set backLinkHref = "/practitioners/dashboard/reviewed" %}
+  {% set backLinkHref = "/practitioners/dashboard/reviewed" %}
 {% endif %}
 
 {% block beforeContent %}

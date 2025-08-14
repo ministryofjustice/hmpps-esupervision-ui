@@ -25,28 +25,30 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
     </div>
     <div class="es-page-header__actions">
-      <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button" role="button">Add person</a>
+      <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button" role="button"
+        >Add person</a
+      >
     </div>
   </div>
   <div id="checkInFilter">
-  {{
-    mojSubNavigation({
-    label: "Filter check ins",
-    items: [{
-        text: "Needs attention",
-        href: "/practitioners/dashboard#checkInFilter",
-        active: true if filter == null else false
-      }, {
-        text: "Reviewed",
-        href: "/practitioners/dashboard/reviewed#checkInFilter",
-        active: true if filter == "reviewed" else false
-      }, {
-        text: "Awaiting check in",
-        href: "/practitioners/dashboard/awaiting#checkInFilter",
-        active: true if filter == "awaiting" else false
-      }]
-    })
-  }}
+    {{
+      mojSubNavigation({
+      label: "Filter check ins",
+      items: [{
+          text: "Needs attention",
+          href: "/practitioners/dashboard#checkInFilter",
+          active: true if filter == null else false
+        }, {
+          text: "Reviewed",
+          href: "/practitioners/dashboard/reviewed#checkInFilter",
+          active: true if filter == "reviewed" else false
+        }, {
+          text: "Awaiting check in",
+          href: "/practitioners/dashboard/awaiting#checkInFilter",
+          active: true if filter == "awaiting" else false
+        }]
+      })
+    }}
   </div>
   {% if filter == null %}
     {% if checkIns and checkIns | length > 0 %}
@@ -57,7 +59,7 @@
             <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Review due</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Priority</th>
-            <th class="govuk-table__header govuk-table__cell--numeric" scope="col">Action</th>
+            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Action</th>
           </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -76,8 +78,7 @@
               </td>
               <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Action">
                 <a href="/practitioners/checkin/{{ checkin.checkInId }}" class="govuk-link govuk-link--no-visited-state"
-                  >Review<span class="govuk-visually-hidden">
-                    the check-in of {{ checkin.offenderName }}</span>
+                  >Review<span class="govuk-visually-hidden"> the check-in of {{ checkin.offenderName }}</span>
                 </a>
               </td>
             </tr>
@@ -97,7 +98,7 @@
             <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Reviewed on</th>
-            <th class="govuk-table__header govuk-table__cell--numeric" scope="col">Action</th>
+            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Action</th>
           </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -130,7 +131,7 @@
             <th class="govuk-table__header" scope="col" aria-sort="none">Link sent to</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Status</th>
             <th class="govuk-table__header" scope="col" aria-sort="none">Check in due</th>
-            <th class="govuk-table__header govuk-table__cell--numeric" scope="col">Action</th>
+            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Action</th>
           </tr>
         </thead>
         <tbody class="govuk-table__body">

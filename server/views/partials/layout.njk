@@ -1,5 +1,6 @@
 {% extends "govuk/template.njk" %}
 {% from "govuk/components/header/macro.njk" import govukHeader %}
+{% from "govuk/components/footer/macro.njk" import govukFooter %}
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
@@ -7,11 +8,18 @@
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet" />
 {% endblock %}
 
-{% block pageTitle %}{{ pageTitle + ' - ' + applicationName if pageTitle else applicationName }}{% endblock %}
+{% block pageTitle %}
+{% set pageTitlePrefix = "" %}
+{% if validationErrors %}
+  {% set pageTitlePrefix = "Error - " %}
+{% endif %}
+{{ pageTitlePrefix + pageTitle + ' - ' + applicationName if pageTitle else pageTitlePrefix + applicationName }}
+{% endblock %}
 
 {% block header %}
   {{
     govukHeader({
+      homepageUrl: "https://www.gov.uk",
       classes: "govuk-header--full-width-border"
     })
   }}
@@ -31,6 +39,23 @@
 {% endblock %}
 
 {% block bodyStart %}
+{% endblock %}
+
+{% block footer %}
+{{ govukFooter({
+  meta: {
+  items: [
+        {
+          href: "/accessibility",
+          text: "Accessibility statement"
+        },
+        {
+          href: "/privacy",
+          text: "Privacy"
+        }
+      ]
+  }
+  }) }}
 {% endblock %}
 
 {% block bodyEnd %}

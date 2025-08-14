@@ -33,12 +33,12 @@
 
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
-        <div class="govuk-form-group">
+        {% set validationError = validationErrors | findError("photoUpload") %}
+        <div class="govuk-form-group {% if validationError %}govuk-form-group--error{% endif %}">
           <label class="govuk-label" for="photoUpload"> Upload a photo </label>
-          <p id="photoUploadMessage" class="govuk-error-message">
-            {{ (validationErrors | findError("photoUpload")).text | default(null) }}
-          </p>
+          {% if validationError %}
+            <p id="photoUploadMessage" class="govuk-error-message">{{ validationError.text }}</p>
+          {% endif %}
           <div class="govuk-drop-zone" data-module="govuk-file-upload">
             <input class="govuk-file-upload" id="photoUpload" name="photoUpload" type="file" accept="image/*" />
           </div>

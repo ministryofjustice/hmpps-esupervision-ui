@@ -51,6 +51,7 @@ export default function createApp(services: Services): express.Application {
   app.use(populateValidationErrors())
 
   app.use(routes())
+
   app.use('/submission/:submissionId', submissionRoutes(services))
 
   app.use('/practitioners', practitionersRoutes())

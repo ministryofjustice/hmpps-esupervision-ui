@@ -100,7 +100,7 @@ const hide = el => {
 if (displayUploadedImage && uploadedImageData) {
   const img = new Image()
   img.src = uploadedImageData
-  img.alt = 'Uploaded image preview'
+  img.alt = `Image of ${displayUploadedImage[0].dataset.person || 'the person'} added for identification`
   img.classList.add('es-profile-image')
 
   img.onload = () => {
@@ -134,12 +134,12 @@ function handlePhotoSelection(event) {
 
   // Validate file attached
   if (!file) {
-    showValidationMessage('Select a photo to upload')
+    showValidationMessage('Select a photo of the person')
     return
   }
   // Validate file type
   if (!file.type.startsWith('image/')) {
-    showValidationMessage('The selected photo must be a JPG, PNG or GIF’.')
+    showValidationMessage('The selected file must be a JPG, PNG, HEIF or GIF’.')
     return
   }
 

@@ -86,8 +86,8 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
     let reviewDueDate = null
     if (checkIn.status === 'EXPIRED') {
       reviewDueDate = add(new Date(checkIn.dueDate), { days: 6 }).toString()
-    } else if (checkIn.submittedOn) {
-      reviewDueDate = add(new Date(checkIn.submittedOn), { days: 3 })
+    } else if (checkIn.submittedAt) {
+      reviewDueDate = add(new Date(checkIn.submittedAt), { days: 3 })
     }
     return {
       checkInId: checkIn.uuid,
@@ -95,7 +95,7 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
       offenderId: offender.uuid,
       sentTo: offender.email || offender.phoneNumber,
       flagged: autoIdCheck === 'NO_MATCH' || checkIn.flaggedResponses.length > 0 || checkIn.status === 'EXPIRED',
-      receivedDate: checkIn.submittedOn,
+      receivedDate: checkIn.submittedAt,
       dueDate: add(new Date(dueDate), { days: 3 }),
       reviewDueDate,
       status: friendlyCheckInStatus(status),
@@ -121,10 +121,10 @@ const friendlyCheckInStatus = (status: string) => {
 export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
-    const checkIn = await esupervisionService.getCheckin(checkInId)
+    const { checkin: checkIn } = await esupervisionService.getCheckin(checkInId)
     checkIn.dueDate = add(new Date(checkIn.dueDate), { days: 3 }).toString()
     if (checkIn.status === 'SUBMITTED') {
-      checkIn.reviewDueDate = add(new Date(checkIn.submittedOn), { days: 3 }).toString()
+      checkIn.reviewDueDate = add(new Date(checkIn.submittedAt), { days: 3 }).toString()
     } else if (checkIn.status === 'EXPIRED') {
       checkIn.reviewDueDate = add(new Date(checkIn.dueDate), { days: 6 }).toString()
     }
@@ -138,8 +138,8 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
 export const renderCheckInVideoDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
-    const checkIn = await esupervisionService.getCheckin(checkInId)
-    res.render('pages/practitioners/checkins/video', { checkIn })
+    const { checkin: checkIn, checkinLogs } = await esupervisionService.getCheckin(checkInId)
+    res.render('pages/practitioners/checkins/video', { checkIn, checkinLogs })
   } catch (error) {
     next(error)
   }

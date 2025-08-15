@@ -13,23 +13,25 @@ export default class Checkin {
 
   offender: PersonOnProbation
 
-  submittedOn: string // TODO: parse datetime
+  submittedAt?: string // TODO: parse datetime
 
   questions: string // TODO: find out structure
 
-  surveyResponse: SurveyResponse
+  surveyResponse?: SurveyResponse
 
   createdBy: string // TODO: parse uuid
 
   createdAt: string // TODO: parse datetime
 
-  reviewedBy: string // TODO: parse uuid
+  reviewedBy?: string // TODO: parse uuid
+
+  reviewedAt?: string
 
   videoUrl: string // TODO: parse url?
 
-  autoIdCheck: AutomatedIdVerificationResult
+  autoIdCheck?: AutomatedIdVerificationResult
 
-  manualIdCheck: ManualIdVerificationResult
+  manualIdCheck?: ManualIdVerificationResult
 
   flaggedResponses: string[]
 

@@ -21,7 +21,7 @@
         <h1 class="govuk-heading-l">We have confirmed this is you</h1>
         <p>We have confirmed this is you. You can now continue to check your answers.</p>
         <div class="videoRecorder__videoWrap">
-          <video class="videoRecorder__video-preview" id="matchPreview" src="{{ submission.videoUrl }}" controls>
+          <video class="videoRecorder__video-preview" id="matchPreview" src="{{ submission.checkin.videoUrl }}" controls>
             Your browser does not support video
           </video>
         </div>
@@ -40,7 +40,7 @@
           We have checked and we cannot confirm this is you. You can try recording again or submit your video anyway.
         </p>
         <div class="videoRecorder__videoWrap">
-          <video class="videoRecorder__video-preview" id="noMatchPreview" src="{{ submission.videoUrl }}" controls>
+          <video class="videoRecorder__video-preview" id="noMatchPreview" src="{{ submission.checkin.videoUrl }}" controls>
             Your browser does not support video
           </video>
         </div>

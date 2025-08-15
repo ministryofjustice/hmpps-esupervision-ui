@@ -13,6 +13,7 @@ import PractitionerSetup from '../data/models/pracitionerSetup'
 import Offender from '../data/models/offender'
 import CheckinUploadLocationResponse from '../data/models/checkinUploadLocationResponse'
 import OffenderUpdate from '../data/models/offenderUpdate'
+import OffenderCheckinResponse from '../data/models/offenderCheckinResponse'
 import AutomaticCheckinVerificationResult from '../data/models/automaticCheckinVerificationResult'
 
 export default class EsupervisionService {
@@ -22,7 +23,7 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getCheckins(practitionerUuid, page, size)
   }
 
-  getCheckin(submissionId: string, includeUploads?: boolean): Promise<Checkin> {
+  getCheckin(submissionId: string, includeUploads?: boolean): Promise<OffenderCheckinResponse> {
     return this.esupervisionApiClient.getCheckin(submissionId, includeUploads)
   }
 

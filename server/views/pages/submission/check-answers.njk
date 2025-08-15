@@ -167,7 +167,7 @@
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Video check</dt>
           <dd class="govuk-summary-list__value">
-            {{ 'We have confirmed this is you' if submission.autoIdCheck == 'MATCH' else 'We cannot confirm this is you' }}
+            {{ 'We have confirmed this is you' if submission.checkin.autoIdCheck == 'MATCH' else 'We cannot confirm this is you' }}
           </dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/submission/{{ submissionId }}/video/view?checkAnswers=true"

@@ -1,10 +1,13 @@
-import { RequestHandler, Request } from 'express'
+import { RequestHandler, Request, Response } from 'express'
 import { isEqual } from 'date-fns'
 import logger from '../../logger'
 import { services } from '../services'
 import MentalHealth from '../data/models/survey/mentalHealth'
 import SupportAspect from '../data/models/survey/supportAspect'
 import CallbackRequested from '../data/models/survey/callbackRequested'
+import OffenderCheckinResponse from '../data/models/offenderCheckinResponse'
+
+type SubmissionLocals = { submission: OffenderCheckinResponse }
 
 const { esupervisionService } = services()
 
@@ -53,12 +56,12 @@ export const renderVerify: RequestHandler = async (req, res, next) => {
   }
 }
 
-export const handleVerify: RequestHandler = async (req, res, next) => {
+export const handleVerify: RequestHandler = async (req, res: Response<object, SubmissionLocals>, next) => {
   const { submissionId } = req.params
   const { firstName, lastName, day, month, year } = req.body
   const dateOfBirth = new Date(`${year}-${month}-${day} 00:00 UTC`)
 
-  const checkIn = res.locals.submission
+  const checkIn = res.locals.submission.checkin
 
   const { offender } = checkIn
   const offDob = new Date(`${offender.dateOfBirth} 00:00 UTC`)
@@ -81,13 +84,13 @@ export const renderVideoInform: RequestHandler = async (req, res, next) => {
   }
 }
 
-export const renderVideoRecord: RequestHandler = async (req, res, next) => {
+export const renderVideoRecord: RequestHandler = async (req, res: Response<object, SubmissionLocals>, next) => {
   try {
     const { submissionId } = req.params
     const videoContentType = 'video/mp4'
     const frameContentType = 'image/jpeg'
 
-    const checkIn = res.locals.submission
+    const checkIn = res.locals.submission.checkin
     const offenderPhoto = checkIn.offender.photoUrl
     // fetch the offender photo and create a blob
     const offenderReferencePhoto = await fetch(offenderPhoto).then(response => {
@@ -222,7 +225,7 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   }
 }
 
-export const handleSubmission: RequestHandler = async (req, res, next) => {
+export const handleSubmission: RequestHandler = async (req, res: Response<object, SubmissionLocals>, next) => {
   const {
     mentalHealth,
     mentalHealthSupport,
@@ -245,7 +248,7 @@ export const handleSubmission: RequestHandler = async (req, res, next) => {
 
   const submissionId = getSubmissionId(req)
   const submission = {
-    offender: res.locals.submission.offender.uuid,
+    offender: res.locals.submission.checkin.offender.uuid,
     survey: {
       version: '2025-07-10@pilot',
       mentalHealth: mentalHealth as MentalHealth,

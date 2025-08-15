@@ -15,6 +15,7 @@ import Practitioner from './models/pracitioner'
 import PractitionerSetup from './models/pracitionerSetup'
 import Offender from './models/offender'
 import OffenderUpdate from './models/offenderUpdate'
+import OffenderCheckinResponse from './models/offenderCheckinResponse'
 import AutomaticCheckinVerificationResult from './models/automaticCheckinVerificationResult'
 
 /**
@@ -41,8 +42,8 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  getCheckin(checkinId: string, includeUploads?: boolean): Promise<Checkin> {
-    return this.get<Checkin>(
+  getCheckin(checkinId: string, includeUploads?: boolean): Promise<OffenderCheckinResponse> {
+    return this.get<OffenderCheckinResponse>(
       {
         path: `/offender_checkins/${checkinId}`,
         query: { 'include-uploads': includeUploads },

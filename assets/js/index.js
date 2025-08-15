@@ -98,17 +98,19 @@ const hide = el => {
 // Display the uploaded image if it exists in localStorage and the container is present
 
 if (displayUploadedImage && uploadedImageData) {
-  const img = new Image()
-  img.src = uploadedImageData
-  img.alt = `Image of ${displayUploadedImage[0].dataset.person || 'the person'} added for identification`
-  img.classList.add('es-profile-image')
+  if (displayUploadedImage[0]) {
+    const img = new Image()
+    img.src = uploadedImageData
+    img.alt = `Image of ${displayUploadedImage[0].dataset.person || 'the person'} added for identification`
+    img.classList.add('es-profile-image')
 
-  img.onload = () => {
-    forEach(displayUploadedImage, uploadedImageContainer => {
-      const image = uploadedImageContainer
-      image.innerHTML = ''
-      image.appendChild(img)
-    })
+    img.onload = () => {
+      forEach(displayUploadedImage, uploadedImageContainer => {
+        const image = uploadedImageContainer
+        image.innerHTML = ''
+        image.appendChild(img)
+      })
+    }
   }
 }
 

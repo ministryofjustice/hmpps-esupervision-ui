@@ -1,0 +1,14 @@
+{% extends "./layout.njk" %}
+{% set pageTitle = "You cannot use this service" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+    <p>You do not have permission to access it. </p>
+    <p>If you think you should have access, contact the support inbox at <a href="mailto:{{ supportEmailAddress }}"
+                                                                            class="govuk-link">{{ supportEmailAddress }}</a>.
+    </p>
+  </div>
+</div>
+{% endblock %}

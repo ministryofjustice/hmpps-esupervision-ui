@@ -121,7 +121,7 @@ const friendlyCheckInStatus = (status: string) => {
 export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
-    const checkIn = await esupervisionService.getCheckin(checkInId)
+    const { checkin: checkIn } = await esupervisionService.getCheckin(checkInId)
     checkIn.dueDate = add(new Date(checkIn.dueDate), { days: 3 }).toString()
     if (checkIn.status === 'SUBMITTED') {
       checkIn.reviewDueDate = add(new Date(checkIn.submittedOn), { days: 3 }).toString()
@@ -138,8 +138,8 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
 export const renderCheckInVideoDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
-    const checkIn = await esupervisionService.getCheckin(checkInId)
-    res.render('pages/practitioners/checkins/video', { checkIn })
+    const { checkin: checkIn, checkinLogs } = await esupervisionService.getCheckin(checkInId)
+    res.render('pages/practitioners/checkins/video', { checkIn, checkinLogs })
   } catch (error) {
     next(error)
   }

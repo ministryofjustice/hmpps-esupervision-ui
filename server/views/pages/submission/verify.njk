@@ -1,3 +1,4 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
@@ -17,6 +18,15 @@
 {% endblock %}
 
 {% block content %}
+  {% if errorMessage %}
+    {{
+      govukNotificationBanner({
+        html: '<p class="govuk-body">' + errorMessage.title + '</p>',
+        type: 'error',
+        titleId: 'error-title'
+      })
+    }}
+  {% endif %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ errorSummary(validationErrors) }}

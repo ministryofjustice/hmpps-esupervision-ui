@@ -70,32 +70,32 @@
                 <span class="hmpps-header__link__sub-text">Manage your details</span>
               </a>
             </li>
+            <li class="hmpps-header__navigation__item">
+              <a data-qa="signOut" class="hmpps-header__link" href="/sign-out">Sign out</a>
+            </li>
           {% endif %}
-
-          <li class="hmpps-header__navigation__item">
-            <a data-qa="signOut" class="hmpps-header__link" href="/sign-out">Sign out</a>
-          </li>
         </ul>
       </nav>
     </div>
   </header>
-
-  {{
-    govukServiceNavigation({
-      navigation: [
-        {
-          href: "/practitioners/dashboard",
-          text: "Check ins",
-          active: true if section == "dashboard" else false
-        },
-        {
-          href: "/practitioners/cases",
-          text: "Cases",
-          active: true if section == "cases" else false
-        }
-      ]
-    })
-  }}
+  {% if user %}
+    {{
+      govukServiceNavigation({
+        navigation: [
+          {
+            href: "/practitioners/dashboard",
+            text: "Check ins",
+            active: true if section == "dashboard" else false
+          },
+          {
+            href: "/practitioners/cases",
+            text: "Cases",
+            active: true if section == "cases" else false
+          }
+        ]
+      })
+    }}
+  {% endif %}
 {% endblock %}
 
 {% block footer %}
@@ -152,17 +152,19 @@
             <li class="govuk-footer__inline-list-item">
               <a class="govuk-footer__link" href="/practitioners/privacy"> Privacy </a>
             </li>
-            {% if flags.debugMode != true %}
-              <li class="govuk-footer__inline-list-item">
-                <a class="govuk-footer__link" href="?es-debugMode=on"> Debug </a>
-              </li>
-            {% else %}
-              <li class="govuk-footer__inline-list-item">
-                <a class="es-debug govuk-footer__link" href="?es-debugMode=off"> Hide debug </a>
-              </li>
-              <li class="govuk-footer__inline-list-item">
-                <span class="es-debug"> Logged in as: <code>{{ user.userId }}</code> </span>
-              </li>
+            {% if user %}
+              {% if flags.debugMode != true %}
+                <li class="govuk-footer__inline-list-item">
+                  <a class="govuk-footer__link" href="?es-debugMode=on"> Debug </a>
+                </li>
+              {% else %}
+                <li class="govuk-footer__inline-list-item">
+                  <a class="es-debug govuk-footer__link" href="?es-debugMode=off"> Hide debug </a>
+                </li>
+                <li class="govuk-footer__inline-list-item">
+                  <span class="es-debug"> Logged in as: <code>{{ user.userId }}</code> </span>
+                </li>
+              {% endif %}
             {% endif %}
           </ul>
 

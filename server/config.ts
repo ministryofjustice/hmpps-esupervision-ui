@@ -28,6 +28,14 @@ const auditConfig = () => {
   }
 }
 
+function getAuthorisedUserRoles(): Array<string> {
+  const roles = get('AUTHORISED_USER_ROLES', '', requiredInProduction)
+  return roles.split(',').flatMap(roleStr => {
+    const role = roleStr.trim()
+    return role === '' ? [] : [role]
+  })
+}
+
 export default {
   serviceName: 'Submit a remote check-in',
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
@@ -37,6 +45,7 @@ export default {
   production,
   https: process.env.NO_HTTPS === 'true' ? false : production,
   staticResourceCacheDuration: '1h',
+  authorisedUserRoles: getAuthorisedUserRoles(),
   redis: {
     enabled: get('REDIS_ENABLED', 'false', requiredInProduction) === 'true',
     host: get('REDIS_HOST', 'localhost', requiredInProduction),

@@ -64,12 +64,21 @@ export const renderDashboardFiltered: RequestHandler = async (req, res, next) =>
 const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
   let filteredCheckIns
 
+  // NOTE: the checkin status tries to capture the state of the checkin
+  // in relation to the offender's "happy path", and may seem not accurate when
+  // looking at it from a different perspective, e.g., why don't we mark
+  // an expired checkin as REVIEWED if the practitioner has reviewed it?
+  // The answer is that it would be trying to squeeze more than one dimensions
+  // into a one 1D variable.
+
   switch (filter) {
     case 'awaiting':
       filteredCheckIns = checkIns.content.filter((checkIn: Checkin) => checkIn.status === 'CREATED')
       break
     case 'reviewed':
-      filteredCheckIns = checkIns.content.filter((checkIn: Checkin) => checkIn.status === 'REVIEWED')
+      filteredCheckIns = checkIns.content.filter(
+        (checkIn: Checkin) => checkIn.status === 'REVIEWED' || (checkIn.status === 'EXPIRED' && checkIn.reviewedAt),
+      )
       break
     default:
       filteredCheckIns = checkIns.content.filter(
@@ -97,6 +106,7 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
       flagged: autoIdCheck === 'NO_MATCH' || checkIn.flaggedResponses.length > 0 || checkIn.status === 'EXPIRED',
       receivedDate: checkIn.submittedAt,
       dueDate: add(new Date(dueDate), { days: 3 }),
+      reviewedAt: checkIn.reviewedAt,
       reviewDueDate,
       status: friendlyCheckInStatus(status),
     }
@@ -121,7 +131,7 @@ const friendlyCheckInStatus = (status: string) => {
 export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
-    const { checkin: checkIn } = await esupervisionService.getCheckin(checkInId)
+    const { checkin: checkIn, checkinLogs } = await esupervisionService.getCheckin(checkInId)
     checkIn.dueDate = add(new Date(checkIn.dueDate), { days: 3 }).toString()
     if (checkIn.status === 'SUBMITTED') {
       checkIn.reviewDueDate = add(new Date(checkIn.submittedAt), { days: 3 }).toString()
@@ -129,7 +139,9 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
       checkIn.reviewDueDate = add(new Date(checkIn.dueDate), { days: 6 }).toString()
     }
 
-    res.render('pages/practitioners/checkins/view', { checkIn })
+    const notSubmittedLog = checkinLogs.logs.filter(log => log.logEntryType === 'OFFENDER_CHECKIN_NOT_SUBMITTED').pop()
+
+    res.render('pages/practitioners/checkins/view', { checkIn, notSubmittedLog })
   } catch (error) {
     next(error)
   }
@@ -145,14 +157,27 @@ export const renderCheckInVideoDetail: RequestHandler = async (req, res, next) =
   }
 }
 
+interface CheckInFormData {
+  idVerification?: string
+  missedCheckinComment?: string
+}
+
 export const handleCheckInReview: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
-    const { reviewed } = res.locals.formData
+    const formData = res.locals.formData as CheckInFormData
+    const { idVerification, missedCheckinComment } = formData
     const practitionerUuid = res.locals.user.userId
 
-    await esupervisionService.reviewCheckin(practitionerUuid, checkInId, reviewed === 'YES')
-    req.flash('success', { message: 'Check-in reviewed' })
+    const checkIn = await esupervisionService.getCheckin(checkInId)
+
+    if (checkIn.checkin.status === 'EXPIRED') {
+      await esupervisionService.reviewCheckin(practitionerUuid, checkInId, null, missedCheckinComment)
+      req.flash('success', { message: 'Missed check-in reviewed' })
+    } else {
+      await esupervisionService.reviewCheckin(practitionerUuid, checkInId, idVerification === 'YES')
+      req.flash('success', { message: 'Check-in reviewed' })
+    }
 
     res.redirect(`/practitioners/dashboard`)
   } catch (error) {

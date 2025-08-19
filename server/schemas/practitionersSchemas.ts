@@ -17,9 +17,20 @@ export const personsDetailsSchema = z
   })
   .and(dobSchema)
 
-export const videoReviewSchema = z
+export const expiredCheckinReviewSchema = z
   .object({
-    reviewed: z
+    checkinStatus: z.literal(['EXPIRED']),
+    missedCheckinComment: z
+      .string()
+      .nonempty({ message: 'Enter the reason they did not complete their checkin' })
+      .describe('Enter the reason they did not complete their checkin'),
+  })
+  .required()
+
+export const submittedCheckinReviewSchema = z
+  .object({
+    checkinStatus: z.literal(['SUBMITTED']),
+    idVerification: z
       .enum(['YES', 'NO'], {
         error: issue =>
           issue.input === undefined ? 'Select yes if the person in the video is the correct person' : issue.message,
@@ -27,6 +38,11 @@ export const videoReviewSchema = z
       .describe('Select yes if the person in the video is the correct person'),
   })
   .required()
+
+export const videoReviewSchema = z.discriminatedUnion('checkinStatus', [
+  expiredCheckinReviewSchema,
+  submittedCheckinReviewSchema,
+])
 
 export const contactPreferenceSchema = z
   .object({

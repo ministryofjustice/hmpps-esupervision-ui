@@ -42,8 +42,13 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.submitCheckin(checkinId, submission)
   }
 
-  reviewCheckin(practitionerUuid: string, checkinId: string, match: boolean): Promise<Checkin> {
-    return this.esupervisionApiClient.reviewCheckin(practitionerUuid, checkinId, match)
+  reviewCheckin(
+    practitionerUuid: string,
+    checkinId: string,
+    match?: boolean,
+    missedCheckinComment?: string,
+  ): Promise<Checkin> {
+    return this.esupervisionApiClient.reviewCheckin(practitionerUuid, checkinId, match, missedCheckinComment)
   }
 
   createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {

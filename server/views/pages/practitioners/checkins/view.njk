@@ -2,6 +2,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% extends "../layout.njk" %}
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
 
@@ -70,6 +71,36 @@
             <dd class="govuk-summary-list__value">{{ checkIn.reviewDueDate | gdsDate }}</dd>
           </div>
         </dl>
+        {% set noCheckinLabel = "Why did " + checkIn.offender.firstName + " " + checkIn.offender.lastName + " not complete their check-in?" %}
+        {% if notSubmittedLog %}
+          <h2 class="govuk-heading-m">{{ noCheckinLabel }}</h2>
+          <p>{{ notSubmittedLog.comment }}</p>
+        {% else %}
+          <form method="POST">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            <input type="hidden" name="checkinStatus" value="{{ checkIn.status }}" />
+            {{
+              govukTextarea({
+                name: "missedCheckinComment",
+                id: "missed-checkin-comment",
+                label: {
+                  text: noCheckinLabel,
+                  classes: "govuk-label--m",
+                  isPageHeading: false
+                },
+                hint: {
+                  text: "For example, the person did not have access to device"
+                },
+                errorMessage: validationErrors | findError("missedCheckinComment")
+              })
+            }}
+            {{
+              govukButton({
+                text: "Mark as reviewed"
+              })
+            }}
+          {% endif %}
+      </form>
       </div>
     </div>
   {% else %}
@@ -92,7 +123,7 @@
           <dt class="govuk-summary-list__key">Review due</dt>
           <dd class="govuk-summary-list__value">
             {% if checkIn.reviewDueDate %}
-              {{ checkIn.reviewDueDate | gdsDate }}
+              {{ checkIn.reviewDueDate | gdsDateTime }}
             {% else %}
               Not set
             {% endif %}
@@ -252,10 +283,11 @@
     {% if checkIn.status == "SUBMITTED" %}
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="checkinStatus" value="{{ checkIn.status }}" />
         {{
           govukRadios({
-          name: "reviewed",
-          errorMessage: validationErrors | findError("reviewed"),
+          name: "idVerification",
+          errorMessage: validationErrors | findError("idVerification"),
           fieldset: {
             legend: {
               text: "Is the person in the video " + checkIn.offender.firstName + " " + checkIn.offender.lastName + "?",

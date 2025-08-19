@@ -5,6 +5,7 @@ export declare module 'express-session' {
   interface SessionData {
     returnTo: string
     nowInMinutes: number
+    submissionAuthorized?: number
     formData?: {
       circumstances?: string | string[]
       policeContact?: string

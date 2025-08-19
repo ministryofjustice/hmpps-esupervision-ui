@@ -50,7 +50,9 @@ export const renderIndex: RequestHandler = async (req, res, next) => {
 
 export const renderVerify: RequestHandler = async (req, res, next) => {
   try {
-    res.render('pages/submission/verify', pageParams(req))
+    const errors = req.flash('error')
+
+    res.render('pages/submission/verify', { ...pageParams(req), errorMessage: errors[0] })
   } catch (error) {
     next(error)
   }
@@ -73,6 +75,8 @@ export const handleVerify: RequestHandler = async (req, res: Response<object, Su
   if (!isMatch) {
     return res.render('pages/submission/no-match-found', { firstName, lastName, dateOfBirth, submissionId })
   }
+
+  req.session.submissionAuthorized = Date.now()
   return res.redirect(`/submission/${submissionId}/questions/mental-health`)
 }
 
@@ -275,6 +279,7 @@ export const handleSubmission: RequestHandler = async (req, res: Response<object
 
 export const renderConfirmation: RequestHandler = async (req, res, next) => {
   try {
+    req.session = null
     res.render('pages/submission/confirmation', pageParams(req))
   } catch (error) {
     next(error)

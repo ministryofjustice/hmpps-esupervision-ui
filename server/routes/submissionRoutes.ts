@@ -1,4 +1,5 @@
 import { type RequestHandler, Router } from 'express'
+import protectSubmission from '../middleware/submissionMiddleware'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import validateFormData from '../middleware/validateFormData'
 import {
@@ -32,7 +33,8 @@ import { Services } from '../services'
 
 export default function routes({ esupervisionService }: Services): Router {
   const router = Router({ mergeParams: true })
-  const get = (routePath: string | string[], handler: RequestHandler) => router.get(routePath, asyncMiddleware(handler))
+  const get = (routePath: string | string[], ...handlers: RequestHandler[]) =>
+    router.get(routePath, ...handlers.map(handler => asyncMiddleware(handler)))
 
   // all submission routes require a valid submission
   // fetch from the API and return a 404 if the submission doesn't exist
@@ -46,8 +48,15 @@ export default function routes({ esupervisionService }: Services): Router {
       if (submissionId) {
         // lookup submission from the API
         try {
-          res.locals.submission = await esupervisionService.getCheckin(submissionId, true)
-          next()
+          const checkinResponse = await esupervisionService.getCheckin(submissionId, true)
+          if (checkinResponse.checkin.status === 'SUBMITTED' && req.originalUrl.endsWith('/confirmation')) {
+            next()
+          } else if (checkinResponse.checkin.status !== 'CREATED') {
+            notFound()
+          } else {
+            res.locals.submission = checkinResponse
+            next()
+          }
         } catch (err) {
           if (err.responseStatus === 404) {
             notFound()
@@ -67,22 +76,27 @@ export default function routes({ esupervisionService }: Services): Router {
   get('/verify', renderVerify)
   router.post('/verify', validateFormData(personalDetailsSchema), handleVerify)
 
-  get('/questions/mental-health', renderQuestionsMentalHealth)
+  get('/questions/mental-health', protectSubmission, renderQuestionsMentalHealth)
   router.post('/questions/mental-health', validateFormData(mentalHealthSchema), handleRedirect('/questions/assistance'))
 
-  get('/questions/assistance', renderAssistance)
-  router.post('/questions/assistance', validateFormData(assistanceSchema), handleAssistance)
+  get('/questions/assistance', protectSubmission, renderAssistance)
+  router.post('/questions/assistance', protectSubmission, validateFormData(assistanceSchema), handleAssistance)
 
-  get('/questions/callback', renderQuestionsCallback)
-  router.post('/questions/callback', validateFormData(callbackSchema), handleRedirect('/video/inform'))
+  get('/questions/callback', protectSubmission, renderQuestionsCallback)
+  router.post(
+    '/questions/callback',
+    protectSubmission,
+    validateFormData(callbackSchema),
+    handleRedirect('/video/inform'),
+  )
 
-  get('/video/inform', renderVideoInform)
-  get('/video/record', renderVideoRecord)
-  get('/video/verify', handleVideoVerify)
-  get('/video/view', renderViewVideo)
+  get('/video/inform', protectSubmission, renderVideoInform)
+  get('/video/record', protectSubmission, renderVideoRecord)
+  get('/video/verify', protectSubmission, handleVideoVerify)
+  get('/video/view', protectSubmission, renderViewVideo)
 
-  get('/check-your-answers', renderCheckAnswers)
-  router.post('/check-your-answers', validateFormData(checkAnswersSchema), handleSubmission)
+  get('/check-your-answers', protectSubmission, renderCheckAnswers)
+  router.post('/check-your-answers', protectSubmission, validateFormData(checkAnswersSchema), handleSubmission)
 
   get('/confirmation', renderConfirmation)
 

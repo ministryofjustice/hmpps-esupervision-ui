@@ -29,7 +29,7 @@ const auditConfig = () => {
 }
 
 function getAuthorisedUserRoles(): Array<string> {
-  const roles = get('AUTHORISED_USER_ROLES', '', requiredInProduction)
+  const roles = get('AUTHORISED_USER_ROLES', '')
   return roles.split(',').flatMap(roleStr => {
     const role = roleStr.trim()
     return role === '' ? [] : [role]

@@ -71,7 +71,7 @@ export default function routes(): Router {
     return res.redirect('/sign-in')
   })
 
-  router.use(authorisationMiddleware(['ROLE_ESUPERVISION__PRACTITIONER__RW']))
+  router.use(authorisationMiddleware(config.authorisedUserRoles))
   router.use(setUpCurrentUser())
 
   const get = (routePath: string | string[], handler: RequestHandler) => router.get(routePath, asyncMiddleware(handler))

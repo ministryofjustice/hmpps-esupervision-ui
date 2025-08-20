@@ -13,7 +13,8 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
       const { authorities: roles = [] } = jwtDecode(res.locals.user.token) as { authorities?: string[] }
 
       if (authorisedAuthorities.length && !roles.some(role => authorisedAuthorities.includes(role))) {
-        logger.error('User is not authorised to access this')
+        logger.error('User is not authorised to access practitioner dashboard')
+        logger.error(`User roles: ${roles}, required one of: ${authorisedRoles}`)
         return res.redirect('/authError')
       }
 

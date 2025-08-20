@@ -8,14 +8,9 @@ const protectSubmission: RequestHandler = (req, res, next) => {
     const { submissionId } = req.params
 
     req.session.submissionAuthorized = undefined
-    req.session.formData.firstName = undefined
-    req.session.formData.lastName = undefined
-    req.session.formData.day = undefined
-    req.session.formData.month = undefined
-    req.session.formData.year = undefined
+    req.session.formData = undefined
 
-    req.flash('error', { title: 'Your session has expired. Please start again.' })
-    return res.redirect(`/submission/${submissionId}/verify`)
+    return res.render('pages/submission/timeout', { checkinUrl: `/submission/${submissionId}/verify` })
   }
   return next()
 }

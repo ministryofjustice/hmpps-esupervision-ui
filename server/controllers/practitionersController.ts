@@ -139,9 +139,9 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
       checkIn.reviewDueDate = add(new Date(checkIn.dueDate), { days: 6 }).toString()
     }
 
-    const notSubmittedLog = checkinLogs.logs.filter(log => log.logEntryType === 'OFFENDER_CHECKIN_NOT_SUBMITTED').pop()
+    const missedCheckin = checkinLogs.logs.filter(log => log.logEntryType === 'OFFENDER_CHECKIN_NOT_SUBMITTED').pop()
 
-    res.render('pages/practitioners/checkins/view', { checkIn, notSubmittedLog })
+    res.render('pages/practitioners/checkins/view', { checkIn, missedCheckin })
   } catch (error) {
     next(error)
   }

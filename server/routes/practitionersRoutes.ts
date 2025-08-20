@@ -77,7 +77,7 @@ export default function routes(): Router {
   const get = (routePath: string | string[], handler: RequestHandler) => router.get(routePath, asyncMiddleware(handler))
 
   get('/', renderDashboard)
-  get('/privacy', (req, res, next) => {
+  get('/privacy-notice', (req, res, next) => {
     res.render('pages/practitioners/privacy')
   })
   get('/accessibility', (req, res, next) => {

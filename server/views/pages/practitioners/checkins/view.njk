@@ -55,6 +55,7 @@
   </h1>
 
   {% if checkIn.status == "EXPIRED" %}
+    {% set noCheckinLabel = "Why did " + checkIn.offender.firstName + " " + checkIn.offender.lastName + " not complete their check-in?" %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <dl class="govuk-summary-list">
@@ -66,16 +67,29 @@
             <dt class="govuk-summary-list__key">Check-in due</dt>
             <dd class="govuk-summary-list__value">{{ checkIn.dueDate | gdsDate }}</dd>
           </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Review due</dt>
-            <dd class="govuk-summary-list__value">{{ checkIn.reviewDueDate | gdsDate }}</dd>
-          </div>
+          {% if checkIn.reviewedAt %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Reviewed on</dt>
+              <dd class="govuk-summary-list__value">{% if checkIn.reviewedAt %}{{ checkIn.reviewedAt | gdsDate }}{% else %}-{% endif %}</dd>
+            </div>
+          {% else %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Review due</dt>
+              <dd class="govuk-summary-list__value">
+                {% if checkIn.reviewDueDate %}
+                  {{ checkIn.reviewDueDate | gdsDateTime }}
+                {% else %}
+                  Not set
+                {% endif %}
+              </dd>
+            </div>
+          {% endif %}
+          {% if missedCheckin %}
+            <dt class="govuk-summary-list__key">{{ noCheckinLabel }}</dt>
+            <dd class="govuk-summary-list__value">{{ missedCheckin.comment }}</dd>
+          {% endif %}
         </dl>
-        {% set noCheckinLabel = "Why did " + checkIn.offender.firstName + " " + checkIn.offender.lastName + " not complete their check-in?" %}
-        {% if notSubmittedLog %}
-          <h2 class="govuk-heading-m">{{ noCheckinLabel }}</h2>
-          <p>{{ notSubmittedLog.comment }}</p>
-        {% else %}
+        {% if not missedCheckin %}
           <form method="POST">
             <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
             <input type="hidden" name="checkinStatus" value="{{ checkIn.status }}" />
@@ -116,7 +130,7 @@
       {% if checkIn.status == "REVIEWED" %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Reviewed on</dt>
-          <dd class="govuk-summary-list__value">-</dd>
+          <dd class="govuk-summary-list__value">{% if checkIn.reviewedAt %}{{ checkIn.reviewedAt | gdsDate }}{% else %}-{% endif %}</dd>
         </div>
       {% else %}
         <div class="govuk-summary-list__row">

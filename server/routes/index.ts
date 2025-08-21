@@ -9,7 +9,7 @@ export default function routes(): Router {
     return res.render('pages/index')
   })
 
-  get('/privacy', (req, res, next) => {
+  get('/privacy-notice', (req, res, next) => {
     res.render('pages/privacy')
   })
 

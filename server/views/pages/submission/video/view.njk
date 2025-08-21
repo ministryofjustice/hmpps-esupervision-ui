@@ -17,7 +17,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      {% if submission.autoIdCheck == 'MATCH' %}
+      {% if submission.autoIdCheck == 'MATCH' or autoVerifyResult == 'MATCH' %}
         <h1 class="govuk-heading-l">We have confirmed this is you</h1>
         <p>We have confirmed this is you. You can now continue to check your answers.</p>
         <div class="videoRecorder__videoWrap">

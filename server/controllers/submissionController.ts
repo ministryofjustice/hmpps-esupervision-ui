@@ -13,8 +13,10 @@ const { esupervisionService } = services()
 
 const getSubmissionId = (req: Request): string => req.params.submissionId
 const pageParams = (req: Request): Record<string, string | boolean> => {
+  const cya = req.query.checkAnswers === 'true'
   return {
-    cya: req.query.checkAnswers === 'true',
+    cya,
+    autoVerifyResult: cya ? (req.session.formData.autoVerifyResult as string) : '',
     submissionId: getSubmissionId(req),
   }
 }
@@ -151,6 +153,7 @@ export const handleVideoVerify: RequestHandler = async (req, res, next) => {
     res.setHeader('Connection', 'keep-alive')
 
     const result = await esupervisionService.autoVerifyCheckinIdentity(submissionId, 1)
+    req.session.formData.autoVerifyResult = result.result
 
     res.json({ status: 'SUCCESS', result: result.result })
   } catch (error) {

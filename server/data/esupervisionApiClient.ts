@@ -17,7 +17,7 @@ import Offender from './models/offender'
 import OffenderUpdate from './models/offenderUpdate'
 import OffenderCheckinResponse from './models/offenderCheckinResponse'
 import AutomaticCheckinVerificationResult from './models/automaticCheckinVerificationResult'
-import { OffenderUpdateError } from './offenderUpdateError'
+import OffenderUpdateError from './offenderUpdateError'
 
 /**
  * Specifies content types for possible upload locations for a checkin.

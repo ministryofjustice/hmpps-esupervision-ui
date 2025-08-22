@@ -37,6 +37,8 @@
             <td class="govuk-table__cell" data-label="Next check in">
               {% if case.status == "INACTIVE" %}
                 Check ins stopped
+              {% elif case.nextCheckinDate %}
+                {{ case.nextCheckinDate | gdsDate }}
               {% else %}
                 -
               {% endif %}

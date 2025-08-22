@@ -2,11 +2,10 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../../../../partials/errorSummary.njk" import errorSummary %}
-{% from "../../../../partials/validatedDateInput.njk" import validatedDateInput %}
 {% extends "../../layout.njk" %}
 {% set section = "cases" %}
 
-{% set title = "What is " + offender.name + "'s email address?" %}
+{% set title = "What is " + offender.firstName + " " + offender.lastName + "'s email address?" %}
 
 {% block beforeContent %}
   <div class="es-page-actions">

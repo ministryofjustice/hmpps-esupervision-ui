@@ -17,6 +17,7 @@ import Offender from './models/offender'
 import OffenderUpdate from './models/offenderUpdate'
 import OffenderCheckinResponse from './models/offenderCheckinResponse'
 import AutomaticCheckinVerificationResult from './models/automaticCheckinVerificationResult'
+import OffenderUpdateError from './offenderUpdateError'
 
 /**
  * Specifies content types for possible upload locations for a checkin.
@@ -173,7 +174,9 @@ export default class EsupervisionApiClient extends RestClient {
       asSystem(),
     ).catch((error): Promise<Offender> => {
       if (error?.responseStatus === 404) {
-        throw new Error(`Offender with ID ${offenderId} not found so could not be updated`)
+        throw new OffenderUpdateError(`Offender with ID ${offenderId} not found so could not be updated`, 404)
+      } else if (error?.responseStatus === 400 || error?.responseStatus === 422) {
+        throw new OffenderUpdateError(`Offender with ID ${offenderId} could not be updated`, 400)
       }
       throw error
     })

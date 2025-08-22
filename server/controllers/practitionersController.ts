@@ -198,7 +198,7 @@ export const renderCases: RequestHandler = async (req, res, next) => {
     const getNextCheckinDate = (offender: Offender): Date | undefined => {
       try {
         return calculalteNextCheckinDate(now, parse(offender.firstCheckin, 'yyyy-MM-dd', now), offender.checkinInterval)
-      } catch (_) {
+      } catch {
         return undefined
       }
     }

@@ -626,6 +626,7 @@ export const handleContactPreferences: RequestHandler = async (req, res, next) =
 
 export const renderMobile: RequestHandler = async (req, res, next) => {
   try {
+    req.session.formData.email = undefined
     const cya = req.query.checkAnswers === 'true'
     res.render('pages/practitioners/register/contact/mobile', { cya })
   } catch (error) {
@@ -635,6 +636,7 @@ export const renderMobile: RequestHandler = async (req, res, next) => {
 
 export const renderEmail: RequestHandler = async (req, res, next) => {
   try {
+    req.session.formData.mobile = undefined
     const cya = req.query.checkAnswers === 'true'
     res.render('pages/practitioners/register/contact/email', { cya })
   } catch (error) {

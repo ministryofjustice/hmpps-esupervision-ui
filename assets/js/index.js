@@ -132,7 +132,9 @@ function handlePhotoSelection(event) {
   localStorage.removeItem(IMAGE_SESSION_KEY)
   const file = event.target.files[0]
   photoContentDisplay.textContent = ''
-  validationMessage.textContent = ''
+  if (validationMessage) {
+    validationMessage.textContent = ''
+  }
 
   // Validate file attached
   if (!file) {
@@ -147,8 +149,8 @@ function handlePhotoSelection(event) {
 
   // Read the image
   const reader = new FileReader()
+  const img = new Image()
   reader.onload = () => {
-    const img = new Image()
     img.onload = () => {
       photoContentDisplay.innerHTML = ''
       photoContentDisplay.appendChild(img)
@@ -166,6 +168,13 @@ function handlePhotoSelection(event) {
       localStorage.setItem(IMAGE_SESSION_KEY, screenshot)
     }
     img.src = reader.result.toString()
+
+    const preview = document.querySelector('#photoPreview')
+    if (preview) {
+      preview.innerHTML = ''
+      preview.appendChild(img)
+      preview.style.visibility = 'visible'
+    }
   }
   reader.onerror = () => {
     showValidationMessage('Error reading the file, try again')
@@ -174,7 +183,9 @@ function handlePhotoSelection(event) {
 }
 
 function showValidationMessage(message) {
-  validationMessage.textContent = message
+  if (validationMessage) {
+    validationMessage.textContent = message
+  }
 }
 
 function dataUrlToBlob(dataUrl) {

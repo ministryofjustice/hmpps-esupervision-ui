@@ -70,11 +70,12 @@
 }
 
 #photoPreview {
-  position: absolute;
+  position: relative;
   visibility: hidden;
   width: 100%;
-  max-width: 500px;
-  top: 0;
+  max-width: 300px;
+  overflow: clip;
+  padding-bottom: 30px;
 
   img {
     max-width: 100%;

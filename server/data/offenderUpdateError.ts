@@ -9,6 +9,6 @@ export default class OffenderUpdateError extends Error {
   constructor(message: string, status: number) {
     super(message)
     this.message = 'Offender could not be updated'
-    this.status = 400
+    this.status = status
   }
 }

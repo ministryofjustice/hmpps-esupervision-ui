@@ -34,7 +34,7 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getCheckinUploadLocation(submissionId, contentTypes)
   }
 
-  getOffenders(practitionerUuid: string, page: number, size: number): Promise<Page<OffenderInfo>> {
+  getOffenders(practitionerUuid: string, page: number, size: number): Promise<Page<Offender>> {
     return this.esupervisionApiClient.getOffenders(practitionerUuid, page, size)
   }
 

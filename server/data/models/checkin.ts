@@ -1,8 +1,8 @@
 import CheckinStatus from './checkinStatus'
-import PersonOnProbation from './personOnProbation'
 import AutomatedIdVerificationResult from './automatedIdVerificationResult'
 import ManualIdVerificationResult from './manualIdVerificationResult'
 import SurveyResponse from './survey/surveyResponse'
+import Offender from './offender'
 
 export default class Checkin {
   uuid: string
@@ -11,7 +11,7 @@ export default class Checkin {
 
   dueDate: string // TODO: parse datetime
 
-  offender: PersonOnProbation
+  offender: Offender
 
   submittedAt?: string // TODO: parse datetime
 

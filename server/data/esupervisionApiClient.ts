@@ -53,8 +53,8 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  getOffenders(practitionerUuid: string, page: number, size: number): Promise<Page<OffenderInfo>> {
-    return this.get<Page<OffenderInfo>>(
+  getOffenders(practitionerUuid: string, page: number, size: number): Promise<Page<Offender>> {
+    return this.get<Page<Offender>>(
       {
         path: '/offenders',
         query: { practitionerUuid, page, size },

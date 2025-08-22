@@ -1,4 +1,5 @@
-import { format, isValid, parseISO } from 'date-fns'
+import { addDays, format, isValid, parseISO, startOfDay, isBefore, differenceInDays } from 'date-fns'
+import CheckinInterval from '../data/models/checkinInterval'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -51,4 +52,32 @@ export const sentenceCase = (val: string, startsWithUppercase: boolean = true): 
   const words = val.split(/\s+/)
   const sentence = words.map(lowercaseExceptAcronym).join(' ')
   return startsWithUppercase ? sentence.charAt(0).toUpperCase() + sentence.slice(1) : sentence
+}
+
+const CheckinIntervalValues = new Map([
+  [CheckinInterval.Weekly, 7],
+  [CheckinInterval.TwoWeeks, 14],
+  [CheckinInterval.FourWeeks, 28],
+])
+
+export const calculalteNextCheckinDate = (
+  now: Date,
+  firstCheckin: Date,
+  checkinInterval: CheckinInterval,
+): Date | undefined => {
+  const today = startOfDay(now)
+
+  if (isBefore(today, firstCheckin)) {
+    return firstCheckin
+  }
+
+  const daysSinceFirstCheckin = differenceInDays(today, firstCheckin)
+  const intervalValue = CheckinIntervalValues.get(checkinInterval)
+  let result: Date | undefined
+  if (intervalValue) {
+    const intervalsPassed = Math.floor(daysSinceFirstCheckin / intervalValue)
+    result = addDays(firstCheckin, (intervalsPassed + 1) * intervalValue)
+  }
+
+  return result
 }

@@ -2,11 +2,10 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../../../../partials/errorSummary.njk" import errorSummary %}
-{% from "../../../../partials/validatedDateInput.njk" import validatedDateInput %}
 {% extends "../../layout.njk" %}
 {% set section = "cases" %}
 
-{% set title = "What is " + offender.name + "'s mobile number?" %}
+{% set title = "What is " + offender.firstName + " " + offender.lastName + "'s mobile number?" %}
 
 {% block beforeContent %}
   <div class="es-page-actions">
@@ -37,7 +36,7 @@
           id: "mobile",
           name: "mobile",
           errorMessage: validationErrors | findError("mobile") | default(null),
-          value: offender.mobile,
+          value: offender.phoneNumber,
           type: "tel",
           classes: "govuk-input--width-20"
           })

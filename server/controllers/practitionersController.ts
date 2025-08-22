@@ -18,6 +18,7 @@ import {
   stopCheckinsSchema,
 } from '../schemas/practitionersSchemas'
 import OffenderUpdate from '../data/models/offenderUpdate'
+import OffenderUpdateError from '../data/offenderUpdateError'
 
 const { esupervisionService } = services()
 
@@ -279,15 +280,10 @@ export const renderUpdateContactDetails: RequestHandler = async (req, res, next)
 
 export const renderUpdateMobile: RequestHandler = async (req, res, next) => {
   try {
+    res.locals.formData.email = undefined
     const { offenderId } = req.params
     const offender = await esupervisionService.getOffender(offenderId)
-    const { firstName, lastName, phoneNumber } = offender
-    const data = {
-      id: offenderId,
-      name: `${firstName} ${lastName}`,
-      mobile: phoneNumber,
-    }
-    res.render('pages/practitioners/cases/update/mobile', { offender: data })
+    res.render('pages/practitioners/cases/update/mobile', { offender })
   } catch (error) {
     next(error)
   }
@@ -295,15 +291,10 @@ export const renderUpdateMobile: RequestHandler = async (req, res, next) => {
 
 export const renderUpdateEmail: RequestHandler = async (req, res, next) => {
   try {
+    res.locals.formData.mobile = undefined
     const { offenderId } = req.params
     const offender = await esupervisionService.getOffender(offenderId)
-    const { firstName, lastName, email } = offender
-    const data = {
-      id: offenderId,
-      name: `${firstName} ${lastName}`,
-      email,
-    }
-    res.render('pages/practitioners/cases/update/email', { offender: data })
+    res.render('pages/practitioners/cases/update/email', { offender })
   } catch (error) {
     next(error)
   }
@@ -468,6 +459,7 @@ export const renderUpdateOffender = (view: string, schema: string) => {
     return next()
   }
 }
+
 export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
   try {
     const offender = await esupervisionService.getOffender(req.params.offenderId)
@@ -502,13 +494,43 @@ export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
       checkinInterval: frequency || offender.checkinInterval,
     }
 
-    await esupervisionService.updateOffender(req.params.offenderId, data)
+    const result = esupervisionService.updateOffender(req.params.offenderId, data)
+    try {
+      await result
+    } catch (error) {
+      if (error instanceof OffenderUpdateError) {
+        if (updatedEmail) {
+          return res.status(400).render('pages/practitioners/cases/update/email', {
+            validationErrors: [
+              {
+                text: 'Could not update contact information, email possibly in use',
+                href: '#email',
+              },
+            ],
+            offender: { ...offender, email: updatedEmail },
+          })
+        }
+        if (updatedMobile) {
+          return res.status(400).render('pages/practitioners/cases/update/mobile', {
+            validationErrors: [
+              {
+                text: 'Could not update contact information, mobile number possibly in use',
+                href: '#mobile',
+              },
+            ],
+            offender: { ...offender, phoneNumber: updatedMobile },
+          })
+        }
+      }
+      throw error
+    }
+
     req.flash('success', {
       title: `Changes have been updated successfully`,
     })
-    res.redirect(`/practitioners/cases/${req.params.offenderId}`)
+    return res.redirect(`/practitioners/cases/${req.params.offenderId}`)
   } catch (error) {
-    next(error)
+    return next(error)
   }
 }
 

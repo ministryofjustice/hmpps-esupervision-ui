@@ -39,12 +39,12 @@ export const renderDashboard: RequestHandler = async (req, res, next) => {
   try {
     // eslint-disable-next-line prefer-destructuring
     res.locals.successMessage = req.flash('success')[0]
-    const practitionerUuid = res.locals.user.userId
+    const practitioner = res.locals.user
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
     const size = req.query.size ? parseInt(req.query.size as string, 10) : 60
-    const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid, page, size)
+    const rawCheckIns = await esupervisionService.getCheckins(practitioner, page, size)
     const checkIns = filterCheckIns(rawCheckIns)
-    res.render('pages/practitioners/dashboard', { checkIns, practitionerUuid })
+    res.render('pages/practitioners/dashboard', { checkIns, practitionerUuid: practitioner.userId })
   } catch (error) {
     next(error)
   }
@@ -53,12 +53,12 @@ export const renderDashboard: RequestHandler = async (req, res, next) => {
 export const renderDashboardFiltered: RequestHandler = async (req, res, next) => {
   try {
     const { filter } = req.params
-    const practitionerUuid = res.locals.user.userId
+    const practitioner = res.locals.user
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
     const size = req.query.size ? parseInt(req.query.size as string, 10) : 60
-    const rawCheckIns = await esupervisionService.getCheckins(practitionerUuid, page, size)
+    const rawCheckIns = await esupervisionService.getCheckins(practitioner, page, size)
     const checkIns = filterCheckIns(rawCheckIns, filter)
-    res.render('pages/practitioners/dashboard', { checkIns, filter, practitionerUuid })
+    res.render('pages/practitioners/dashboard', { checkIns, filter, practitionerUuid: practitioner.userId })
   } catch (error) {
     next(error)
   }
@@ -170,15 +170,15 @@ export const handleCheckInReview: RequestHandler = async (req, res, next) => {
     const { checkInId } = req.params
     const formData = res.locals.formData as CheckInFormData
     const { idVerification, missedCheckinComment } = formData
-    const practitionerUuid = res.locals.user.userId
+    const practitioner = res.locals.user
 
     const checkIn = await esupervisionService.getCheckin(checkInId)
 
     if (checkIn.checkin.status === 'EXPIRED') {
-      await esupervisionService.reviewCheckin(practitionerUuid, checkInId, null, missedCheckinComment)
+      await esupervisionService.reviewCheckin(practitioner, checkInId, null, missedCheckinComment)
       req.flash('success', { message: 'Missed check-in reviewed' })
     } else {
-      await esupervisionService.reviewCheckin(practitionerUuid, checkInId, idVerification === 'YES')
+      await esupervisionService.reviewCheckin(practitioner, checkInId, idVerification === 'YES')
       req.flash('success', { message: 'Check-in reviewed' })
     }
 
@@ -190,7 +190,7 @@ export const handleCheckInReview: RequestHandler = async (req, res, next) => {
 
 export const renderCases: RequestHandler = async (req, res, next) => {
   try {
-    const practitionerUuid = res.locals.user.userId
+    const practitioner = res.locals.user
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
     const size = req.query.size ? parseInt(req.query.size as string, 10) : 20
 
@@ -203,7 +203,7 @@ export const renderCases: RequestHandler = async (req, res, next) => {
       }
     }
 
-    const cases = await esupervisionService.getOffenders(practitionerUuid, page, size)
+    const cases = await esupervisionService.getOffenders(practitioner, page, size)
     const content = cases.content.map((offender: Offender) => {
       const nextCheckinDate = getNextCheckinDate(offender)
       return { ...offender, nextCheckinDate }
@@ -211,7 +211,12 @@ export const renderCases: RequestHandler = async (req, res, next) => {
 
     // eslint-disable-next-line prefer-destructuring
     res.locals.successMessage = req.flash('success')[0]
-    res.render('pages/practitioners/cases/index', { cases: { content }, practitionerUuid, page, size })
+    res.render('pages/practitioners/cases/index', {
+      cases: { content },
+      practitionerUuid: practitioner.userId,
+      page,
+      size,
+    })
   } catch (error) {
     next(error)
   }
@@ -353,7 +358,7 @@ export const renderStopCheckins: RequestHandler = async (req, res, next) => {
 export const handleStopCheckins: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
-    const practitionerUuid = res.locals.user.userId
+    const practitioner = res.locals.user
     const data = req.body
     const validation = stopCheckinsSchema.safeParse(data)
 
@@ -378,7 +383,7 @@ export const handleStopCheckins: RequestHandler = async (req, res, next) => {
     }
     const { stopCheckins, stopCheckinDetails } = validation.data
     if (stopCheckins === 'YES') {
-      await esupervisionService.stopCheckins(practitionerUuid, offenderId, stopCheckinDetails)
+      await esupervisionService.stopCheckins(practitioner, offenderId, stopCheckinDetails)
       req.flash('info', { title: 'Check-ins stopped', message: `Reason for stopping: ${stopCheckinDetails}` })
     }
     return res.redirect(`/practitioners/cases/${offenderId}`)
@@ -394,7 +399,7 @@ export const handleCreateInvite: RequestHandler = async (req, res, next) => {
     const parsedDate = parse(dueDate, 'd/M/yyyy', new Date())
 
     const data = {
-      practitioner: res.locals.user.userId,
+      practitioner: res.locals.user.externalId(),
       offender: offenderId,
       dueDate: dueDate ? format(parsedDate, 'yyyy-MM-dd') : null,
     }
@@ -498,7 +503,7 @@ export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
     const updatedMobile = mobile ?? (email ? null : offender.phoneNumber)
 
     const data: OffenderUpdate = {
-      requestedBy: res.locals.user.userId,
+      requestedBy: res.locals.user.externalId(),
       firstName: firstName || offender.firstName,
       lastName: lastName || offender.lastName,
       dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : offender.dateOfBirth,
@@ -695,7 +700,7 @@ export const handleRegisterBegin: RequestHandler = async (req, res, next) => {
 
   const data = {
     setupUuid: uuidv4(),
-    practitionerId: res.locals.user.userId,
+    practitionerId: res.locals.user.externalId(),
     firstName,
     lastName,
     dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : null,

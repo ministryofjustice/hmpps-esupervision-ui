@@ -1,9 +1,10 @@
 import CheckinInterval from './checkinInterval'
+import { ExternalUserId } from './loggedInUser'
 
 export default class OffenderInfo {
   setupUuid: string
 
-  practitionerId: string
+  practitionerId: ExternalUserId
 
   firstName: string
 

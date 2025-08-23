@@ -15,12 +15,13 @@ import CheckinUploadLocationResponse from '../data/models/checkinUploadLocationR
 import OffenderUpdate from '../data/models/offenderUpdate'
 import OffenderCheckinResponse from '../data/models/offenderCheckinResponse'
 import AutomaticCheckinVerificationResult from '../data/models/automaticCheckinVerificationResult'
+import { ExternalUser } from '../data/models/loggedInUser'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
 
-  getCheckins(practitionerUuid: string, page: number, size: number): Promise<Page<Checkin>> {
-    return this.esupervisionApiClient.getCheckins(practitionerUuid, page, size)
+  getCheckins(practitioner: ExternalUser, page: number, size: number): Promise<Page<Checkin>> {
+    return this.esupervisionApiClient.getCheckins(practitioner.externalId(), page, size)
   }
 
   getCheckin(submissionId: string, includeUploads?: boolean): Promise<OffenderCheckinResponse> {
@@ -34,8 +35,8 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getCheckinUploadLocation(submissionId, contentTypes)
   }
 
-  getOffenders(practitionerUuid: string, page: number, size: number): Promise<Page<Offender>> {
-    return this.esupervisionApiClient.getOffenders(practitionerUuid, page, size)
+  getOffenders(practitioner: ExternalUser, page: number, size: number): Promise<Page<Offender>> {
+    return this.esupervisionApiClient.getOffenders(practitioner.externalId(), page, size)
   }
 
   submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {
@@ -43,12 +44,12 @@ export default class EsupervisionService {
   }
 
   reviewCheckin(
-    practitionerUuid: string,
+    practitioner: ExternalUser,
     checkinId: string,
     match?: boolean,
     missedCheckinComment?: string,
   ): Promise<Checkin> {
-    return this.esupervisionApiClient.reviewCheckin(practitionerUuid, checkinId, match, missedCheckinComment)
+    return this.esupervisionApiClient.reviewCheckin(practitioner.externalId(), checkinId, match, missedCheckinComment)
   }
 
   createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {
@@ -75,8 +76,8 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.createCheckin(checkin)
   }
 
-  stopCheckins(practitionerUuid: string, offenderId: string, stopCheckinDetails: string): Promise<void> {
-    return this.esupervisionApiClient.stopCheckins(practitionerUuid, offenderId, stopCheckinDetails)
+  stopCheckins(practitioner: ExternalUser, offenderId: string, stopCheckinDetails: string): Promise<void> {
+    return this.esupervisionApiClient.stopCheckins(practitioner.externalId(), offenderId, stopCheckinDetails)
   }
 
   createPractitioner(practitioner: Practitioner): Promise<PractitionerSetup> {

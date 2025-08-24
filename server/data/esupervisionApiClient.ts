@@ -38,7 +38,7 @@ export default class EsupervisionApiClient extends RestClient {
     return this.get<Page<Checkin>>(
       {
         path: '/offender_checkins',
-        query: { practitionerUuid: practitionerId, page, size },
+        query: { practitioner: practitionerId, page, size },
       },
       asSystem(),
     )
@@ -58,7 +58,7 @@ export default class EsupervisionApiClient extends RestClient {
     return this.get<Page<Offender>>(
       {
         path: '/offenders',
-        query: { practitionerUuid: practitionerId, page, size },
+        query: { practitioner: practitionerId, page, size },
       },
       asSystem(),
     )

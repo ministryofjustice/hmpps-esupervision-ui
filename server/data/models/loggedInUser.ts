@@ -46,7 +46,6 @@ export default class LoggedInUser {
   }
 
   externalId(): ExternalUserId {
-    // TODO: this will change to username!
-    return this.userId
+    return this.userName
   }
 }

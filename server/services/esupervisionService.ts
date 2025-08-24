@@ -1,15 +1,11 @@
 import EsupervisionApiClient, { CheckinUploadContentTypes } from '../data/esupervisionApiClient'
 import Page from '../data/models/page'
 import Checkin from '../data/models/checkin'
-
 import LocationInfo from '../data/models/locationInfo'
-
 import OffenderInfo from '../data/models/offenderInfo'
 import OffenderSetup from '../data/models/offenderSetup'
 import CheckinSubmission from '../data/models/checkinSubmission'
 import CreateCheckinRequest from '../data/models/createCheckinRequest'
-import Practitioner from '../data/models/pracitioner'
-import PractitionerSetup from '../data/models/pracitionerSetup'
 import Offender from '../data/models/offender'
 import CheckinUploadLocationResponse from '../data/models/checkinUploadLocationResponse'
 import OffenderUpdate from '../data/models/offenderUpdate'
@@ -78,10 +74,6 @@ export default class EsupervisionService {
 
   stopCheckins(practitioner: ExternalUser, offenderId: string, stopCheckinDetails: string): Promise<void> {
     return this.esupervisionApiClient.stopCheckins(practitioner.externalId(), offenderId, stopCheckinDetails)
-  }
-
-  createPractitioner(practitioner: Practitioner): Promise<PractitionerSetup> {
-    return this.esupervisionApiClient.createPractitioner(practitioner)
   }
 
   autoVerifyCheckinIdentity(checkinId: string, numSnapshots: number): Promise<AutomaticCheckinVerificationResult> {

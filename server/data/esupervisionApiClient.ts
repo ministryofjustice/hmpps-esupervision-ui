@@ -11,8 +11,6 @@ import LocationInfo from './models/locationInfo'
 import CheckinSubmission from './models/checkinSubmission'
 import OffenderInfo from './models/offenderInfo'
 import OffenderSetup from './models/offenderSetup'
-import Practitioner from './models/pracitioner'
-import PractitionerSetup from './models/pracitionerSetup'
 import Offender from './models/offender'
 import OffenderUpdate from './models/offenderUpdate'
 import OffenderCheckinResponse from './models/offenderCheckinResponse'
@@ -200,17 +198,6 @@ export default class EsupervisionApiClient extends RestClient {
         path: `/offenders/${offenderId}/deactivate`,
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify({ requestedBy: practitionerId, reason: stopCheckinDetails }),
-      },
-      asSystem(),
-    )
-  }
-
-  async createPractitioner(practitioner: Practitioner): Promise<PractitionerSetup> {
-    return this.post<PractitionerSetup>(
-      {
-        path: '/practitioners',
-        headers: { 'Content-Type': 'application/json' },
-        data: JSON.stringify(practitioner),
       },
       asSystem(),
     )

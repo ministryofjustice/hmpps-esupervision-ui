@@ -427,33 +427,6 @@ export const renderUsers: RequestHandler = async (req, res, next) => {
   }
 }
 
-export const renderUserCreate: RequestHandler = async (req, res, next) => {
-  try {
-    res.render('pages/practitioners/users/create')
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const handleCreateUser: RequestHandler = async (req, res, next) => {
-  try {
-    const { uuid, firstName, lastName, email, mobile } = res.locals.formData
-    const data = {
-      uuid: uuid.toString() || '',
-      firstName: firstName.toString() || '',
-      lastName: lastName.toString() || '',
-      email: email ? email.toString() : null,
-      phoneNumber: mobile ? mobile.toString() : null,
-      roles: ['ROLE_PRACTITIONER'],
-    }
-    await esupervisionService.createPractitioner(data)
-    req.flash('success', { message: 'Practitioner created successfully' })
-    res.redirect('/practitioners/users')
-  } catch (error) {
-    next(error)
-  }
-}
-
 export const renderUpdateOffender = (view: string, schema: string) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const schemas: Record<string, ZodIntersection | ZodObject> = {

@@ -1,5 +1,7 @@
+import { ExternalUserId } from './loggedInUser'
+
 export default class CreateCheckinRequest {
-  practitioner: string // TODO: require uuid?
+  practitioner: ExternalUserId
 
   offender: string // TODO: require uuid?
 

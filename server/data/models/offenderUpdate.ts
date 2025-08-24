@@ -1,7 +1,8 @@
 import CheckinInterval from './checkinInterval'
+import { ExternalUserId } from './loggedInUser'
 
 export default class OffenderUpdate {
-  requestedBy: string
+  requestedBy: ExternalUserId
 
   firstName?: string
 

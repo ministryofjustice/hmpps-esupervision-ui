@@ -3,6 +3,7 @@ import AutomatedIdVerificationResult from './automatedIdVerificationResult'
 import ManualIdVerificationResult from './manualIdVerificationResult'
 import SurveyResponse from './survey/surveyResponse'
 import Offender from './offender'
+import { ExternalUserId } from './loggedInUser'
 
 export default class Checkin {
   uuid: string
@@ -19,11 +20,11 @@ export default class Checkin {
 
   surveyResponse?: SurveyResponse
 
-  createdBy: string // TODO: parse uuid
+  createdBy: ExternalUserId
 
   createdAt: string // TODO: parse datetime
 
-  reviewedBy?: string // TODO: parse uuid
+  reviewedBy?: ExternalUserId
 
   reviewedAt?: string
 

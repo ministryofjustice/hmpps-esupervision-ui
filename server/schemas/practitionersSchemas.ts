@@ -91,19 +91,6 @@ export const setUpSchema = startDateSchema.and(
   }),
 )
 
-export const practitionerSchema = z.object({
-  firstName: z.string().min(1, 'Enter their first name'),
-  lastName: z.string().min(1, 'Enter their last name'),
-  mobile: z
-    .string()
-    .trim()
-    .regex(/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/, {
-      message: 'Enter a phone number, like 07700 900 982',
-    }),
-  email: z.string().email({ message: 'Enter an email address in the correct format, like name@example.com' }),
-  uuid: z.string().min(1, 'Enter their UUID'),
-})
-
 export const OffenderInfoInput = z.object({
   firstName: z.string().nonempty(),
   lastName: z.string().nonempty(),

@@ -50,7 +50,6 @@ import {
   mobileSchema,
   emailSchema,
   setUpSchema,
-  practitionerSchema,
   photoUploadSchema,
   videoReviewSchema,
 } from '../schemas/practitionersSchemas'

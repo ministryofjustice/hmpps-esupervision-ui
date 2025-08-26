@@ -27,9 +27,6 @@ import {
   renderCreateInvite,
   renderCaseView,
   handleCreateInvite,
-  renderUsers,
-  renderUserCreate,
-  handleCreateUser,
   handleStartRegister,
   handleRegisterComplete,
   renderUpdatePersonalDetails,
@@ -53,7 +50,6 @@ import {
   mobileSchema,
   emailSchema,
   setUpSchema,
-  practitionerSchema,
   photoUploadSchema,
   videoReviewSchema,
 } from '../schemas/practitionersSchemas'
@@ -125,10 +121,6 @@ export default function routes(): Router {
     renderUpdateOffender('checkin-settings', 'setup'),
     handleUpdateOffender,
   )
-
-  get('/users', renderUsers)
-  get('/users/create', renderUserCreate)
-  router.post('/users/create', validateFormData(practitionerSchema), handleCreateUser)
 
   get('/register/start', handleStartRegister)
   get('/register', renderRegisterDetails)

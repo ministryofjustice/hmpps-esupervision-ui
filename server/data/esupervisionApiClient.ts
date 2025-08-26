@@ -11,13 +11,12 @@ import LocationInfo from './models/locationInfo'
 import CheckinSubmission from './models/checkinSubmission'
 import OffenderInfo from './models/offenderInfo'
 import OffenderSetup from './models/offenderSetup'
-import Practitioner from './models/pracitioner'
-import PractitionerSetup from './models/pracitionerSetup'
 import Offender from './models/offender'
 import OffenderUpdate from './models/offenderUpdate'
 import OffenderCheckinResponse from './models/offenderCheckinResponse'
 import AutomaticCheckinVerificationResult from './models/automaticCheckinVerificationResult'
 import OffenderUpdateError from './offenderUpdateError'
+import { ExternalUserId } from './models/loggedInUser'
 
 /**
  * Specifies content types for possible upload locations for a checkin.
@@ -33,11 +32,11 @@ export default class EsupervisionApiClient extends RestClient {
     super('eSupervision API', config.apis.esupervisionApi, logger, authenticationClient)
   }
 
-  getCheckins(practitionerUuid: string, page: number, size: number): Promise<Page<Checkin>> {
+  getCheckins(practitionerId: ExternalUserId, page: number, size: number): Promise<Page<Checkin>> {
     return this.get<Page<Checkin>>(
       {
         path: '/offender_checkins',
-        query: { practitionerUuid, page, size },
+        query: { practitioner: practitionerId, page, size },
       },
       asSystem(),
     )
@@ -53,11 +52,11 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  getOffenders(practitionerUuid: string, page: number, size: number): Promise<Page<Offender>> {
+  getOffenders(practitionerId: ExternalUserId, page: number, size: number): Promise<Page<Offender>> {
     return this.get<Page<Offender>>(
       {
         path: '/offenders',
-        query: { practitionerUuid, page, size },
+        query: { practitioner: practitionerId, page, size },
       },
       asSystem(),
     )
@@ -118,13 +117,13 @@ export default class EsupervisionApiClient extends RestClient {
   }
 
   async reviewCheckin(
-    practitionerUuid: string,
+    practitionerId: ExternalUserId,
     checkinId: string,
     match?: boolean,
     missedCheckinComment?: string,
   ): Promise<Checkin> {
     const requestBody = {
-      practitioner: practitionerUuid,
+      practitioner: practitionerId,
       manualIdCheck: match ? 'MATCH' : 'NO_MATCH',
       missedCheckinComment,
     }
@@ -193,23 +192,12 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  async stopCheckins(practitionerUuid: string, offenderId: string, stopCheckinDetails: string): Promise<void> {
+  async stopCheckins(practitionerId: ExternalUserId, offenderId: string, stopCheckinDetails: string): Promise<void> {
     return this.post<void>(
       {
         path: `/offenders/${offenderId}/deactivate`,
         headers: { 'Content-Type': 'application/json' },
-        data: JSON.stringify({ requestedBy: practitionerUuid, reason: stopCheckinDetails }),
-      },
-      asSystem(),
-    )
-  }
-
-  async createPractitioner(practitioner: Practitioner): Promise<PractitionerSetup> {
-    return this.post<PractitionerSetup>(
-      {
-        path: '/practitioners',
-        headers: { 'Content-Type': 'application/json' },
-        data: JSON.stringify(practitioner),
+        data: JSON.stringify({ requestedBy: practitionerId, reason: stopCheckinDetails }),
       },
       asSystem(),
     )

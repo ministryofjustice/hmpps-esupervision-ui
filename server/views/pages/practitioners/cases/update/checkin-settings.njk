@@ -53,7 +53,7 @@
           value: offender.frequency,
           fieldset: {
           legend: {
-          text: "How often would you like " + name + " to check in?",
+          text: "How often would you like " + offender.name + " to check in?",
           isPageHeading: false,
           classes: "govuk-fieldset__legend--m"
           }
@@ -70,6 +70,10 @@
                 {
                   value: "FOUR_WEEKS",
                   text: "Every 4 weeks"
+                },
+                {
+                  value: "EIGHT_WEEKS",
+                  text: "Every 8 weeks"
                 }
               ]
           })

@@ -100,7 +100,7 @@ export const OffenderInfoInput = z.object({
   contactPreference: z.enum(['EMAIL', 'TEXT']),
   email: z.nullish(z.email()),
   mobile: z.nullish(z.string()),
-  frequency: z.enum(['WEEKLY', 'TWO_WEEKS', 'FOUR_WEEKS']),
+  frequency: z.enum(['WEEKLY', 'TWO_WEEKS', 'FOUR_WEEKS', 'EIGHT_WEEKS']),
   startDateYear: z.coerce.number().min(2025).max(2100),
   startDateMonth: z.coerce.number().min(1).max(12),
   startDateDay: z.coerce.number().min(1).max(31),

@@ -384,7 +384,6 @@ export const handleStopCheckins: RequestHandler = async (req, res, next) => {
     const { stopCheckins, stopCheckinDetails } = validation.data
     if (stopCheckins === 'YES') {
       await esupervisionService.stopCheckins(practitioner, offenderId, stopCheckinDetails)
-      req.flash('info', { title: 'Check-ins stopped', message: `Reason for stopping: ${stopCheckinDetails}` })
     }
     return res.redirect(`/practitioners/cases/${offenderId}`)
   } catch (error) {

@@ -37,6 +37,7 @@
 {% endblock %}
 
 {% block content %}
+
   {% if successMessage %}
     {{
       mojAlert({
@@ -48,17 +49,18 @@
       })
     }}
   {% endif %}
-  {% if infoMessage %}
+
+  {% if case.status == "INACTIVE" %}
     {{
       mojAlert({
         variant: "info",
-        title: infoMessage.title,
+        title: 'Check-ins stopped',
         showTitleAsHeading: true,
-        dismissible: false,
-        html: infoMessage.message
+        dismissible: false
       })
     }}
   {% endif %}
+
   <div class="es-page-header">
     <h1 class="govuk-heading-l">
       <span class="govuk-caption-l">Manage check ins</span> <span class="govuk-visually-hidden">for</span>

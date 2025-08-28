@@ -40,7 +40,7 @@
   <h1 class="govuk-heading-l es-flagged-heading">
     {{ checkIn.offender.firstName }} {{ checkIn.offender.lastName }} ({{ checkIn.offender.dateOfBirth | gdsDate }})
     {% if checkIn.status != "REVIEWED" %}
-      {% if checkIn.autoIdCheck == "NO_MATCH" or checkIn.flaggedResponses | length > 0 or checkIn.status == "EXPIRED" %}
+      {% if checkIn.autoIdCheck == "NO_MATCH" or checkIn.flaggedResponses | length > 0 or (checkIn.status == "EXPIRED" and not checkIn.reviewedAt) %}
         <span class="govuk-tag govuk-tag--red">Urgent</span>
       {% endif %}
     {% endif %}
@@ -96,7 +96,7 @@
             {{
               govukTextarea({
                 name: "missedCheckinComment",
-                id: "missed-checkin-comment",
+                id: "missedCheckinComment",
                 label: {
                   text: noCheckinLabel,
                   classes: "govuk-label--m",

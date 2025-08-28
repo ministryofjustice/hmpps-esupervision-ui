@@ -6,6 +6,7 @@ const definitions: Record<string, string> = {
   WEEKLY: 'Every week',
   TWO_WEEKS: 'Every 2 weeks',
   FOUR_WEEKS: 'Every 4 weeks',
+  EIGHT_WEEKS: 'Every 8 weeks',
   VERY_WELL: 'Very well',
   WELL: 'Well',
   NOT_GREAT: 'Not great',

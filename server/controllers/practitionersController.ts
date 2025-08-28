@@ -85,7 +85,7 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
       break
     default:
       filteredCheckIns = checkIns.content.filter(
-        (checkIn: Checkin) => checkIn.status === 'SUBMITTED' || checkIn.status === 'EXPIRED',
+        (checkIn: Checkin) => checkIn.status === 'SUBMITTED' || (checkIn.status === 'EXPIRED' && !checkIn.reviewedAt),
       )
       break
   }
@@ -411,16 +411,6 @@ export const handleCreateInvite: RequestHandler = async (req, res, next) => {
     }
 
     res.redirect(`/practitioners/cases/`)
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const renderUsers: RequestHandler = async (req, res, next) => {
-  try {
-    // eslint-disable-next-line prefer-destructuring
-    res.locals.successMessage = req.flash('success')[0]
-    res.render('pages/practitioners/users/index')
   } catch (error) {
     next(error)
   }

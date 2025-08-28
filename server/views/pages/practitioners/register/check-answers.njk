@@ -81,6 +81,19 @@
                   }
                 ]
               }
+            },
+            {
+              key: { text: "Case reference number (CRN)" },
+              value: { text: formData['crn'] },
+              actions: {
+              items: [
+                        {
+                          href: "/practitioners/register?checkAnswers=true",
+                          text: "Change",
+                          visuallyHiddenText: " case reference number"
+                        }
+                      ]
+              }
             }
           ]
         })

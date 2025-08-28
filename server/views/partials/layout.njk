@@ -9,11 +9,11 @@
 {% endblock %}
 
 {% block pageTitle %}
-{% set pageTitlePrefix = "" %}
-{% if validationErrors %}
-  {% set pageTitlePrefix = "Error - " %}
-{% endif %}
-{{ pageTitlePrefix + pageTitle + ' - ' + applicationName if pageTitle else pageTitlePrefix + applicationName }}
+  {% set pageTitlePrefix = "" %}
+  {% if validationErrors %}
+    {% set pageTitlePrefix = "Error - " %}
+  {% endif %}
+  {{ pageTitlePrefix + pageTitle + ' - ' + applicationName if pageTitle else pageTitlePrefix + applicationName }}
 {% endblock %}
 
 {% block header %}
@@ -42,20 +42,22 @@
 {% endblock %}
 
 {% block footer %}
-{{ govukFooter({
-  meta: {
-  items: [
-        {
-          href: "/accessibility",
-          text: "Accessibility statement"
-        },
-        {
-          href: "/privacy-notice",
-          text: "Privacy"
-        }
-      ]
-  }
-  }) }}
+  {{
+    govukFooter({
+    meta: {
+    items: [
+          {
+            href: "/accessibility",
+            text: "Accessibility statement"
+          },
+          {
+            href: "/privacy-notice",
+            text: "Privacy"
+          }
+        ]
+    }
+    })
+  }}
 {% endblock %}
 
 {% block bodyEnd %}

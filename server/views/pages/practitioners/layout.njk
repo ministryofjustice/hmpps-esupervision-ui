@@ -9,11 +9,11 @@
 {% endblock %}
 
 {% block pageTitle %}
-{% set pageTitlePrefix = "" %}
-{% if validationErrors %}
-  {% set pageTitlePrefix = "Error - " %}
-{% endif %}
-{{ pageTitlePrefix + pageTitle + " - Manage probation check ins" if pageTitle else pageTitlePrefix + "Manage probation check ins" }}
+  {% set pageTitlePrefix = "" %}
+  {% if validationErrors %}
+    {% set pageTitlePrefix = "Error - " %}
+  {% endif %}
+  {{ pageTitlePrefix + pageTitle + " - Manage probation check ins" if pageTitle else pageTitlePrefix + "Manage probation check ins" }}
 {% endblock %}
 {% set environmentName = "Private Beta" %}
 {% block header %}

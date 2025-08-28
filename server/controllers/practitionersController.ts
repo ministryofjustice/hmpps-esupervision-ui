@@ -252,11 +252,12 @@ export const renderUpdatePersonalDetails: RequestHandler = async (req, res, next
   try {
     const { offenderId } = req.params
     const offender = await esupervisionService.getOffender(offenderId)
-    const { firstName, lastName, dateOfBirth } = offender
+    const { firstName, lastName, dateOfBirth, crn } = offender
     const data = {
       id: offenderId,
       firstName,
       lastName,
+      crn,
       day: dateOfBirth ? format(new Date(dateOfBirth), 'dd') : '',
       month: dateOfBirth ? format(new Date(dateOfBirth), 'MM') : '',
       year: dateOfBirth ? format(new Date(dateOfBirth), 'yyyy') : '',
@@ -459,6 +460,7 @@ export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
     const {
       firstName,
       lastName,
+      crn,
       day,
       month,
       year,
@@ -478,6 +480,7 @@ export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
       requestedBy: res.locals.user.externalId(),
       firstName: firstName || offender.firstName,
       lastName: lastName || offender.lastName,
+      crn: crn || offender.crn,
       dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : offender.dateOfBirth,
       email: updatedEmail,
       phoneNumber: updatedMobile,
@@ -666,7 +669,7 @@ export const handleRegisterBegin: RequestHandler = async (req, res, next) => {
     return
   }
 
-  const { firstName, lastName, day, month, year, contactPreference, email, mobile, frequency } = parsed.data
+  const { firstName, lastName, day, month, year, crn, contactPreference, email, mobile, frequency } = parsed.data
   const { startDateYear, startDateMonth, startDateDay } = parsed.data
   const firstCheckinDate = new Date(startDateYear as number, (startDateMonth as number) - 1, startDateDay as number)
 
@@ -676,6 +679,7 @@ export const handleRegisterBegin: RequestHandler = async (req, res, next) => {
     firstName,
     lastName,
     dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : null,
+    crn,
     email: contactPreference === 'EMAIL' && email ? email : null,
     phoneNumber: contactPreference === 'TEXT' && mobile ? mobile : null,
     firstCheckinDate: format(firstCheckinDate, 'yyyy-MM-dd'),

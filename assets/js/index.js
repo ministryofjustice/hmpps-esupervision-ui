@@ -247,8 +247,12 @@ if (registerButton) {
       })
 
       if (!uploadImageResult.ok) {
-        const uploadError = await uploadImageResult.text()
-        throw new Error(`Image upload failed: ${uploadImageResult.status} ${uploadError}`)
+        const uploadError = await uploadImageResult.text().catch(() => '')
+        throw Object.assign(new Error(`Image upload failed: ${uploadImageResult.status}`), {
+          type: 'UPLOAD_ERROR',
+          status: uploadImageResult.status,
+          body: uploadError,
+        })
       }
 
       // Success: clear session, set hidden field, and submit form
@@ -258,17 +262,25 @@ if (registerButton) {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Registration process error:', error)
-      showRegistrationError(error.status)
+      showRegistrationError(error)
     } finally {
       button.removeAttribute('disabled')
     }
   })
 }
 
-function showRegistrationError(statusCode) {
+function showRegistrationError(error) {
   let errorMessage = 'An error occurred during registration'
-  if (statusCode === 422) {
-    errorMessage = "The email address or phone number you've entered are already associated with another person"
+  let messageDetail = ''
+
+  const parsed = error.body ? JSON.parse(error.body) : {}
+  if (parsed && typeof parsed.message === 'string') {
+    messageDetail = parsed.message
+  }
+
+  // Show friendlier messages for known error cases
+  if (error.status === 422 && messageDetail.toLowerCase().includes('contact information already in use')) {
+    errorMessage = "The email address or phone number you've entered is already associated with another person"
   }
   const errorBanner = document.getElementById('registration-error')
   const errorBannerContent = document.getElementById('registration-error-content')

@@ -279,8 +279,8 @@ function showRegistrationError(error) {
   }
 
   // Show friendlier messages for known error cases
-  if (error.status === 422 && messageDetail.toLowerCase().includes('contact information already in use')) {
-    errorMessage = "The email address or phone number you've entered is already associated with another person"
+  if (error.status === 422 && messageDetail.toLowerCase().includes('contact information')) {
+    errorMessage = "The CRN, email address or phone number you've entered is already associated with another person"
   }
   const errorBanner = document.getElementById('registration-error')
   const errorBannerContent = document.getElementById('registration-error-content')

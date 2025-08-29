@@ -495,6 +495,17 @@ export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
       await result
     } catch (error) {
       if (error instanceof OffenderUpdateError) {
+        if (crn) {
+          return res.status(400).render('pages/practitioners/cases/update/personal-details', {
+            validationErrors: [
+              {
+                text: 'CRN already in use',
+                href: '#crn',
+              },
+            ],
+            offender: { ...offender, firstName, lastName, day, month, year, crn },
+          })
+        }
         if (updatedEmail) {
           return res.status(400).render('pages/practitioners/cases/update/email', {
             validationErrors: [

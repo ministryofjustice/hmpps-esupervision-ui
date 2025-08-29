@@ -1,4 +1,4 @@
-import { addDays, format, isValid, parseISO, startOfDay, isBefore, differenceInDays } from 'date-fns'
+import { addDays, format, isValid, parseISO, startOfDay, differenceInDays, isAfter } from 'date-fns'
 import CheckinInterval from '../data/models/checkinInterval'
 
 const properCase = (word: string): string =>
@@ -58,16 +58,17 @@ const CheckinIntervalValues = new Map([
   [CheckinInterval.Weekly, 7],
   [CheckinInterval.TwoWeeks, 14],
   [CheckinInterval.FourWeeks, 28],
+  [CheckinInterval.EightWeeks, 56],
 ])
 
-export const calculalteNextCheckinDate = (
+export const calculateNextCheckinDate = (
   now: Date,
   firstCheckin: Date,
   checkinInterval: CheckinInterval,
 ): Date | undefined => {
   const today = startOfDay(now)
 
-  if (isBefore(today, firstCheckin)) {
+  if (!isAfter(today, firstCheckin)) {
     return firstCheckin
   }
 

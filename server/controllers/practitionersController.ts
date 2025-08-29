@@ -19,7 +19,7 @@ import {
 } from '../schemas/practitionersSchemas'
 import OffenderUpdate from '../data/models/offenderUpdate'
 import OffenderUpdateError from '../data/offenderUpdateError'
-import { calculalteNextCheckinDate } from '../utils/utils'
+import { calculateNextCheckinDate } from '../utils/utils'
 import Offender from '../data/models/offender'
 
 const { esupervisionService } = services()
@@ -197,7 +197,7 @@ export const renderCases: RequestHandler = async (req, res, next) => {
     const now = new Date()
     const getNextCheckinDate = (offender: Offender): Date | undefined => {
       try {
-        return calculalteNextCheckinDate(now, parse(offender.firstCheckin, 'yyyy-MM-dd', now), offender.checkinInterval)
+        return calculateNextCheckinDate(now, parse(offender.firstCheckin, 'yyyy-MM-dd', now), offender.checkinInterval)
       } catch {
         return undefined
       }

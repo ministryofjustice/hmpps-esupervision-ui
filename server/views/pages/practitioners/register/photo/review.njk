@@ -19,6 +19,7 @@
 
 {% set title = "Does this photo meet the rules?" %}
 {% set pageTitle = title %}
+{% set name = [formData['firstName'], ' ', formData['lastName']]  | join %}
 
 {% block content %}
   <div class="govuk-grid-row">

@@ -8,6 +8,8 @@ export default class Offender {
 
   lastName: string
 
+  crn: string
+
   dateOfBirth: string // TODO: parse date
 
   status: OffenderStatus

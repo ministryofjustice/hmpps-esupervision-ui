@@ -10,12 +10,21 @@ const dobSchema = createDateSchema({
   },
 })
 
+const crnRegeex = /^[A-Za-z]\d{6}$/
+
 export const personsDetailsSchema = z
   .object({
     firstName: z.string().min(1, 'Enter their first name'),
     lastName: z.string().min(1, 'Enter their last name'),
   })
   .and(dobSchema)
+  .and(
+    z.object({
+      crn: z.string().regex(crnRegeex, {
+        message: 'Enter their CRN. For example, A123456',
+      }),
+    }),
+  )
 
 export const expiredCheckinReviewSchema = z
   .object({
@@ -97,6 +106,7 @@ export const OffenderInfoInput = z.object({
   day: z.nullish(z.coerce.number().min(1).max(31)),
   month: z.nullish(z.coerce.number().min(1).max(12)),
   year: z.nullish(z.coerce.number().min(1900).max(2100)),
+  crn: z.string().regex(crnRegeex),
   contactPreference: z.enum(['EMAIL', 'TEXT']),
   email: z.nullish(z.email()),
   mobile: z.nullish(z.string()),

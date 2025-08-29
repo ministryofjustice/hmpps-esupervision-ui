@@ -8,6 +8,8 @@ export default class OffenderUpdate {
 
   lastName?: string
 
+  crn?: string
+
   dateOfBirth?: string
 
   email?: string

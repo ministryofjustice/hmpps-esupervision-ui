@@ -6,11 +6,12 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
+    margin-bottom: -2rem;
   }
 
   & {
     margin-top: 1rem;
-    margin-bottom: -2rem;
+
   }
 
   &__back {
@@ -27,6 +28,15 @@
       align-items: center;
       gap: 1rem;
     }
+
+    .govuk-link {
+      width: 100%;
+      text-align: center;
+      @include gds.govuk-media-query(tablet) {
+        width: auto;
+      }
+    }
+
   }
 }
 

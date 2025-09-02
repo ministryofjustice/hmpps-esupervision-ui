@@ -54,6 +54,7 @@ async function initVideo() {
     this.startBtn.ariaDisabled = 'false'
   } catch (error) {
     console.error('Error accessing media devices:', error) // eslint-disable-line no-console
+    document.title = `Error: ${document.title}`
     this.videoContainer.hidden = true
     this.videoContainer.ariaHidden = 'true'
     this.errorMessage.hidden = false

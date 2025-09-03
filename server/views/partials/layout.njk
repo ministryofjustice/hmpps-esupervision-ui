@@ -17,12 +17,7 @@
 {% endblock %}
 
 {% block header %}
-  {{
-    govukHeader({
-      homepageUrl: "https://www.gov.uk",
-      classes: "govuk-header--full-width-border"
-    })
-  }}
+  {% include "partials/header.njk" %}
   {{
     govukServiceNavigation({
       serviceName: serviceName

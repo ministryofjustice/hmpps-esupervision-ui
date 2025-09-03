@@ -19,7 +19,7 @@ import {
 } from '../schemas/practitionersSchemas'
 import OffenderUpdate from '../data/models/offenderUpdate'
 import OffenderUpdateError from '../data/offenderUpdateError'
-import { calculalteNextCheckinDate } from '../utils/utils'
+import { calculateNextCheckinDate } from '../utils/utils'
 import Offender from '../data/models/offender'
 
 const { esupervisionService } = services()
@@ -85,7 +85,7 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
       break
     default:
       filteredCheckIns = checkIns.content.filter(
-        (checkIn: Checkin) => checkIn.status === 'SUBMITTED' || checkIn.status === 'EXPIRED',
+        (checkIn: Checkin) => checkIn.status === 'SUBMITTED' || (checkIn.status === 'EXPIRED' && !checkIn.reviewedAt),
       )
       break
   }
@@ -197,7 +197,7 @@ export const renderCases: RequestHandler = async (req, res, next) => {
     const now = new Date()
     const getNextCheckinDate = (offender: Offender): Date | undefined => {
       try {
-        return calculalteNextCheckinDate(now, parse(offender.firstCheckin, 'yyyy-MM-dd', now), offender.checkinInterval)
+        return calculateNextCheckinDate(now, parse(offender.firstCheckin, 'yyyy-MM-dd', now), offender.checkinInterval)
       } catch {
         return undefined
       }
@@ -412,16 +412,6 @@ export const handleCreateInvite: RequestHandler = async (req, res, next) => {
     }
 
     res.redirect(`/practitioners/cases/`)
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const renderUsers: RequestHandler = async (req, res, next) => {
-  try {
-    // eslint-disable-next-line prefer-destructuring
-    res.locals.successMessage = req.flash('success')[0]
-    res.render('pages/practitioners/users/index')
   } catch (error) {
     next(error)
   }

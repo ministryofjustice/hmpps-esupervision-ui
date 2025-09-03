@@ -10,6 +10,8 @@ export default class OffenderInfo {
 
   lastName: string
 
+  crn: string
+
   dateOfBirth: string
 
   email: string

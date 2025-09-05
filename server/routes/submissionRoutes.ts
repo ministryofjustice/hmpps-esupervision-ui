@@ -44,6 +44,9 @@ export default function routes({ esupervisionService }: Services): Router {
       const notFound = () => {
         res.render('pages/submission/not-found')
       }
+      const expired = () => {
+        res.render('pages/submission/expired')
+      }
 
       if (submissionId) {
         // lookup submission from the API
@@ -51,6 +54,8 @@ export default function routes({ esupervisionService }: Services): Router {
           const checkinResponse = await esupervisionService.getCheckin(submissionId, true)
           if (checkinResponse.checkin.status === 'SUBMITTED' && req.originalUrl.endsWith('/confirmation')) {
             next()
+          } else if (checkinResponse.checkin.status === 'EXPIRED') {
+            expired()
           } else if (checkinResponse.checkin.status !== 'CREATED') {
             notFound()
           } else {

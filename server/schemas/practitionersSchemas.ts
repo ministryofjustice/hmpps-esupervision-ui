@@ -21,7 +21,7 @@ export const personsDetailsSchema = z
   .and(
     z.object({
       crn: z.string().regex(crnRegeex, {
-        message: 'Enter their CRN. For example, A123456',
+        message: 'Enter their case reference number, like A123456',
       }),
     }),
   )

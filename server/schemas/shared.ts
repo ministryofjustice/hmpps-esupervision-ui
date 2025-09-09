@@ -96,11 +96,25 @@ export function createDateSchema({
         missingParts.push('4 numbers for the year')
       }
 
-      if (missingParts.length) {
+      function getPathForMissingParts(mp: string[]): string[] {
+        if (mp.length === 1) {
+          switch (mp[0]) {
+            case 'day':
+              return [dayKey]
+            case 'month':
+              return [monthKey]
+            default:
+              return [yearKey]
+          }
+        }
+        return [groupPath]
+      }
+
+      if (missingParts.length > 0) {
         ctx.addIssue({
           code: 'custom',
           message: dateValidationMessage(sentenceCaseLabel, missingParts),
-          path: [groupPath],
+          path: getPathForMissingParts(missingParts),
         })
         return
       }

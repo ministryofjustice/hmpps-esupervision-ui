@@ -6,10 +6,24 @@ import VideoRecorder from './video'
 govukFrontend.initAll()
 mojFrontend.initAll()
 
+// Accessibility
+
 const { hash } = window.location
 if (hash === '#main-content') {
   // When the page loads and the URL has a hash of #main-content, remove it because Express JS is retaining it in the URL after a redirect
   window.history.replaceState(null, null, ' ')
+}
+
+const invalidElements = document.querySelectorAll(
+  '.govuk-input--error',
+  '.govuk-select--error',
+  '.govuk-textarea--error',
+)
+if (invalidElements.length) {
+  // Add aria-invalid to all inputs with error
+  forEach(invalidElements, element => {
+    element.setAttribute('aria-invalid', 'true')
+  })
 }
 
 const videoRecorder = document.querySelector('[data-module="videoRecorder"]')

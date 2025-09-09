@@ -3,7 +3,7 @@ import config from '../config'
 
 const protectSubmission: RequestHandler = (req, res, next) => {
   const sessionStart = req.session.submissionAuthorized
-  const sessionTimeout = config.session.ofenderSessionTimeoutMinutes * 60 * 1000
+  const sessionTimeout = config.session.offenderSessionTimeoutMinutes * 60 * 1000
   if (!sessionStart || Date.now() - sessionStart > sessionTimeout) {
     const { submissionId } = req.params
 

@@ -123,6 +123,24 @@ export function createDateSchema({
       const month = parseInt(monthRaw, 10)
       const year = parseInt(yearRaw, 10)
 
+      if (day < 1 || day > 31) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `${sentenceCaseLabel} must be a real date`,
+          path: [dayKey],
+        })
+        return
+      }
+
+      if (month < 1 || month > 12) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `${sentenceCaseLabel} must be a real date`,
+          path: [monthKey],
+        })
+        return
+      }
+
       const monthIndex = month - 1
       if (!isExists(year, monthIndex, day)) {
         ctx.addIssue({

@@ -6,6 +6,12 @@ import VideoRecorder from './video'
 govukFrontend.initAll()
 mojFrontend.initAll()
 
+const { hash } = window.location
+if (hash === '#main-content') {
+  // When the page loads and the URL has a hash of #main-content, remove it because Express JS is retaining it in the URL after a redirect
+  window.history.replaceState(null, null, ' ')
+}
+
 const videoRecorder = document.querySelector('[data-module="videoRecorder"]')
 
 const IMAGE_CONTENT_TYPE = 'image/jpeg'

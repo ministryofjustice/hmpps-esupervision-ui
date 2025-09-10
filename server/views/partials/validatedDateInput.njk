@@ -25,6 +25,15 @@
     {% if errors %}{{ errors.text }}{% endif %}
   {% endmacro %}
 
+{% set mergedDateError = joinErrors(dateError) | lower | trim %}
+{% set additionalDateError = false %}
+{% set additionalDayError = "day" in mergedDateError %}
+{% set additionalMonthError = "month" in mergedDateError %}
+{% set additionalYearError = "year" in mergedDateError %}
+{% if additionalDayError == false and additionalMonthError == false  and additionalYearError == false and mergedDateError  %}
+  {% set additionalDateError = true %}
+{% endif %}
+
   {{
     govukDateInput({
       id: id,
@@ -50,25 +59,34 @@
           id: dayLabel,
           label: 'Day',
           name: dayLabel,
-          classes: 'govuk-input--width-2' + (' govuk-input--error' if dayError),
+          classes: 'govuk-input--width-2' + (' govuk-input--error' if dayError or additionalDayError or additionalDateError),
           value: day,
-          autocomplete: 'bday-day'
+          autocomplete: 'bday-day',
+          attributes: {
+            'aria-describedby': 'dob-error' if dayError or additionalDayError or additionalDateError else undefined
+          }
         },
         {
           id: monthLabel,
           label: 'Month',
           name: monthLabel,
-          classes: 'govuk-input--width-2' + (' govuk-input--error' if monthError),
+          classes: 'govuk-input--width-2' + (' govuk-input--error' if monthError or additionalMonthError or additionalDateError),
           value: month,
-          autocomplete: 'bday-month'
+          autocomplete: 'bday-month',
+          attributes: {
+            'aria-describedby': 'dob-error' if monthError or additionalMonthError or additionalDateError else undefined
+          }
         },
         {
           id: yearLabel,
           label: 'Year',
           name: yearLabel,
-          classes: 'govuk-input--width-4' + (' govuk-input--error' if yearError),
+          classes: 'govuk-input--width-4' + (' govuk-input--error' if yearError or additionalYearError or additionalDateError),
           value: year,
-          autocomplete: 'bday-year'
+          autocomplete: 'bday-year',
+          attributes: {
+            'aria-describedby': 'dob-error' if yearError or additionalYearError or additionalDateError else undefined
+          }
         }
       ]
     })

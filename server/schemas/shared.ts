@@ -96,11 +96,25 @@ export function createDateSchema({
         missingParts.push('4 numbers for the year')
       }
 
-      if (missingParts.length) {
+      function getPathForMissingParts(mp: string[]): string[] {
+        if (mp.length === 1) {
+          switch (mp[0]) {
+            case 'day':
+              return [dayKey]
+            case 'month':
+              return [monthKey]
+            default:
+              return [yearKey]
+          }
+        }
+        return [groupPath]
+      }
+
+      if (missingParts.length > 0) {
         ctx.addIssue({
           code: 'custom',
           message: dateValidationMessage(sentenceCaseLabel, missingParts),
-          path: [groupPath],
+          path: getPathForMissingParts(missingParts),
         })
         return
       }
@@ -109,12 +123,31 @@ export function createDateSchema({
       const month = parseInt(monthRaw, 10)
       const year = parseInt(yearRaw, 10)
 
+      const dayInvalid = day < 1 || day > 31
+      const monthInvalid = month < 1 || month > 12
+      const yearInvalid = year < 1900 || year > 2100
+
       const monthIndex = month - 1
-      if (!isExists(year, monthIndex, day)) {
+      let path: string[] | null = null
+
+      if (dayInvalid && !monthInvalid) {
+        // Highlight day error if day is invalid but month is OK
+        path = [dayKey]
+      } else if (!dayInvalid && monthInvalid) {
+        // Highlight month error if month is invalid but day is OK
+        path = [monthKey]
+      } else if (dayInvalid && monthInvalid) {
+        // Both day and month are invalid, highlight date group
+        path = [groupPath]
+      } else if (yearInvalid || !isExists(year, monthIndex, day)) {
+        path = [groupPath]
+      }
+
+      if (path) {
         ctx.addIssue({
           code: 'custom',
           message: `${sentenceCaseLabel} must be a real date`,
-          path: [groupPath],
+          path,
         })
         return
       }

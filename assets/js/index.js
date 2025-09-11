@@ -26,6 +26,33 @@ if (invalidElements.length) {
   })
 }
 
+// When a link within an error summary is clicked, set focus to the relevant input
+// If the target is a date field wrapper then set focus to the first invalid input within it
+
+const errorSummaryLinks = document.querySelectorAll('.govuk-error-summary__list a')
+if (errorSummaryLinks.length) {
+  forEach(errorSummaryLinks, link => {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href')
+      if (href && href.startsWith('#')) {
+        const target = document.querySelector(href)
+        if (target) {
+          e.preventDefault()
+          const dateInput = target.closest('.govuk-date-input')
+          if (dateInput) {
+            const firstInvalidInput = dateInput.querySelector('.govuk-input--error')
+            if (firstInvalidInput) {
+              firstInvalidInput.focus()
+            }
+          } else {
+            target.focus()
+          }
+        }
+      }
+    })
+  })
+}
+
 const videoRecorder = document.querySelector('[data-module="videoRecorder"]')
 
 const IMAGE_CONTENT_TYPE = 'image/jpeg'

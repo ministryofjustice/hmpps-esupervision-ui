@@ -21,6 +21,7 @@ export function dateValidationMessage(label: string, missing: Array<string>) {
 
   // Build a list of missing parts
   const withArticles = readable.map(p => (p === '4 numbers for the year' ? p : `a ${p}`))
+  if (withArticles.length === 1 && withArticles[0] === '4 numbers for the year') return 'Year must include 4 numbers'
   if (withArticles.length === 1) return `${label} must include ${withArticles[0]}`
   if (withArticles.length === 2) return `${label} must include ${withArticles[0]} and ${withArticles[1]}`
   return `${label} must include ${withArticles.slice(0, -1).join(', ')} and ${withArticles.slice(-1)}`

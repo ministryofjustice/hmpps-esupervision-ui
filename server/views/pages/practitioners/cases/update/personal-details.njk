@@ -72,20 +72,20 @@
           })
         }}
         {{
-        govukInput({
-        label: {
-        text: "Case reference number (CRN)",
-        classes: "govuk-label--m"
-        },
-        classes: "govuk-input--width-10 govuk-input--extra-letter-spacing",
-        hint: {
-        text: "This will be used to link check ins to the person in nDelius"
-        },
-        id: "crn",
-        name: "crn",
-        errorMessage: validationErrors | findError("crn"),
-        value: offender.crn
-        })
+          govukInput({
+          label: {
+          text: "Case reference number (CRN)",
+          classes: "govuk-label--m"
+          },
+          classes: "govuk-input--width-10 govuk-input--extra-letter-spacing",
+          hint: {
+          text: "This will be used to link check ins to the person in nDelius"
+          },
+          id: "crn",
+          name: "crn",
+          errorMessage: validationErrors | findError("crn"),
+          value: offender.crn
+          })
         }}
         {{
           govukButton({

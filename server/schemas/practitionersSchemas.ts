@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { isBefore, isValid, parse, startOfToday } from 'date-fns'
 import { createDateSchema } from './shared'
 
 const dobSchema = createDateSchema({
@@ -66,39 +67,76 @@ export const contactPreferenceSchema = z
   .required()
 
 export const emailSchema = z.object({
-  email: z.email({ message: 'Enter an email address in the correct format, like name@example.com' }),
+  email: z
+    .string()
+    .trim()
+    .superRefine((val, ctx) => {
+      if (!val) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Enter the person’s email address',
+        })
+        return
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Enter an email address in the correct format, like name@example.com',
+        })
+      }
+    }),
 })
 
 export const mobileSchema = z.object({
   mobile: z
     .string()
     .trim()
-    .regex(/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/, {
-      message: 'Enter a phone number, like 07700 900 982',
+    .superRefine((val, ctx) => {
+      if (!/^[0-9+\s()]*$/.test(val)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Phone number must only contain numbers',
+        })
+        return
+      }
+      if (!/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/.test(val)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Enter a phone number, like 07700 900 982',
+        })
+      }
     }),
 })
 
-const startDateSchema = createDateSchema({
-  who: 'their',
-  label: 'start date',
-  groupPath: 'startDate',
-  prefix: 'startDate',
-  rules: {
-    allowToday: true,
-    mustBeInFuture: true,
-  },
-})
+export const futureDateField = (label = 'Date', emptyCustomMessage?: string) =>
+  z
+    .string()
+    .trim()
+    .superRefine((val, ctx) => {
+      if (!val) {
+        ctx.addIssue({ code: 'custom', message: emptyCustomMessage || `Enter ${label.toLowerCase()}` })
+        return
+      }
+      const parsed = parse(val, 'd/M/yyyy', new Date())
+      if (!isValid(parsed)) {
+        ctx.addIssue({ code: 'custom', message: `${label} must be a real date` })
+        return
+      }
+      const candidate = new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate())
+      if (isBefore(candidate, startOfToday())) {
+        ctx.addIssue({ code: 'custom', message: `${label} must be today or in the future` })
+      }
+    })
 
-export const setUpSchema = startDateSchema.and(
-  z.object({
-    frequency: z
-      .string({
-        error: issue =>
-          issue.input === undefined ? 'Select how often you would like the person to check in' : issue.message,
-      })
-      .describe('Select how often you would like the person to check in'),
-  }),
-)
+export const setUpSchema = z.object({
+  startDate: futureDateField('Start date', 'Enter the date you would like the person to complete their first check in'),
+  frequency: z
+    .string({
+      error: issue =>
+        issue.input === undefined ? 'Select how often you would like the person to check in' : issue.message,
+    })
+    .describe('Select how often you would like the person to check in'),
+})
 
 export const OffenderInfoInput = z.object({
   firstName: z.string().nonempty(),
@@ -111,9 +149,7 @@ export const OffenderInfoInput = z.object({
   email: z.nullish(z.email()),
   mobile: z.nullish(z.string()),
   frequency: z.enum(['WEEKLY', 'TWO_WEEKS', 'FOUR_WEEKS', 'EIGHT_WEEKS']),
-  startDateYear: z.coerce.number().min(2025).max(2100),
-  startDateMonth: z.coerce.number().min(1).max(12),
-  startDateDay: z.coerce.number().min(1).max(31),
+  startDate: z.string(),
 })
 
 export const photoUploadSchema = z.object({

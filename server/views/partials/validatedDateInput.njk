@@ -25,14 +25,14 @@
     {% if errors %}{{ errors.text }}{% endif %}
   {% endmacro %}
 
-{% set mergedDateError = joinErrors(dateError) | lower | trim %}
-{% set additionalDateError = false %}
-{% set additionalDayError = "day" in mergedDateError %}
-{% set additionalMonthError = "month" in mergedDateError %}
-{% set additionalYearError = "year" in mergedDateError %}
-{% if additionalDayError == false and additionalMonthError == false  and additionalYearError == false and mergedDateError  %}
-  {% set additionalDateError = true %}
-{% endif %}
+  {% set mergedDateError = joinErrors(dateError) | lower | trim %}
+  {% set additionalDateError = false %}
+  {% set additionalDayError = "day" in mergedDateError %}
+  {% set additionalMonthError = "month" in mergedDateError %}
+  {% set additionalYearError = "year" in mergedDateError %}
+  {% if additionalDayError == false and additionalMonthError == false  and additionalYearError == false and mergedDateError %}
+    {% set additionalDateError = true %}
+  {% endif %}
 
   {{
     govukDateInput({

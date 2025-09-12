@@ -5,6 +5,7 @@ import express from 'express'
 import fs from 'fs'
 import { get as getKeypath } from 'lodash'
 import { format } from 'date-fns/format'
+import { isValid, parse, parseISO } from 'date-fns'
 import { initialiseName } from './utils'
 import config from '../config'
 import logger from '../../logger'
@@ -73,11 +74,29 @@ export default function nunjucksSetup(app: express.Express): void {
     return str.split(sep).map(item => item.trim())
   })
 
-  njkEnv.addFilter('gdsDate', (date: string) => {
-    if (!date) {
-      return ''
+  njkEnv.addFilter('gdsDate', (input?: string | Date | null) => {
+    if (!input) return ''
+
+    let d: Date | null = null
+
+    if (input instanceof Date) {
+      d = isValid(input) ? input : null
+    } else if (typeof input === 'string') {
+      const s = input.trim()
+      if (!s) return ''
+
+      // ISO-like strings
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+        d = parse(s, 'yyyy-MM-dd', new Date())
+      } else if (/^\d{4}-\d{2}-\d{2}[T ]/.test(s)) {
+        d = parseISO(s)
+      } else {
+        d = parse(s, 'd/M/yyyy', new Date())
+      }
     }
-    const d = new Date(date)
+
+    if (!d || !isValid(d)) return ''
+
     return format(d, 'd MMMM yyyy')
   })
 

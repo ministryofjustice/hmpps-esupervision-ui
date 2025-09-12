@@ -330,9 +330,7 @@ export const renderUpdateCheckinSettings: RequestHandler = async (req, res, next
     const data = {
       id: offenderId,
       name: `${firstName} ${lastName}`,
-      startDateDay: format(new Date(firstCheckin), 'dd'),
-      startDateMonth: format(new Date(firstCheckin), 'MM'),
-      startDateYear: format(new Date(firstCheckin), 'yyyy'),
+      startDate: format(new Date(firstCheckin), 'dd/MM/yyyy'),
       frequency: checkinInterval,
     }
     res.render('pages/practitioners/cases/update/checkin-settings', { offender: data })
@@ -447,24 +445,13 @@ export const renderUpdateOffender = (view: string, schema: string) => {
 export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
   try {
     const offender = await esupervisionService.getOffender(req.params.offenderId)
-    const {
-      firstName,
-      lastName,
-      crn,
-      day,
-      month,
-      year,
-      email,
-      mobile,
-      startDateDay,
-      startDateMonth,
-      startDateYear,
-      frequency,
-    } = req.body
+    const { firstName, lastName, crn, day, month, year, email, mobile, startDate, frequency } = req.body
 
     // If contact preference changes, then need to set the previous field to null
     const updatedEmail = email ?? (mobile ? null : offender.email)
     const updatedMobile = mobile ?? (email ? null : offender.phoneNumber)
+
+    const parseStartDate = startDate ? parse(startDate, 'd/M/yyyy', new Date()) : null
 
     const data: OffenderUpdate = {
       requestedBy: res.locals.user.externalId(),
@@ -474,9 +461,7 @@ export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
       dateOfBirth: year ? format(`${year}-${month}-${day}`, 'yyyy-MM-dd') : offender.dateOfBirth,
       email: updatedEmail,
       phoneNumber: updatedMobile,
-      firstCheckin: startDateYear
-        ? format(`${startDateYear}-${startDateMonth}-${startDateDay}`, 'yyyy-MM-dd')
-        : offender.firstCheckin,
+      firstCheckin: parseStartDate ? format(`${parseStartDate}`, 'yyyy-MM-dd') : offender.firstCheckin,
       checkinInterval: frequency || offender.checkinInterval,
     }
 
@@ -628,7 +613,8 @@ export const renderEmail: RequestHandler = async (req, res, next) => {
 export const renderSetUp: RequestHandler = async (req, res, next) => {
   try {
     const cya = req.query.checkAnswers === 'true'
-    res.render('pages/practitioners/register/set-up', { cya })
+    const yesterday = format(add(new Date(), { days: -1 }), 'dd/MM/yyyy')
+    res.render('pages/practitioners/register/set-up', { cya, yesterday })
   } catch (error) {
     next(error)
   }
@@ -644,17 +630,11 @@ export const validateRegisterPoPData: RequestHandler = (req, res, next) => {
 
 export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
   try {
-    const { day, month, year, contactPreference, startDateDay, startDateMonth, startDateYear, frequency } =
-      res.locals.formData
+    const { day, month, year, contactPreference, frequency } = res.locals.formData
     if (year) {
       res.locals.dateOfBirth = new Date(`${year}/${month}/${day}`)
     }
     res.locals.contactPreference = getUserFriendlyString(contactPreference?.toString())
-
-    if (startDateYear) {
-      res.locals.startDate = new Date(`${startDateYear}/${startDateMonth}/${startDateDay}`)
-    }
-
     res.locals.frequency = getUserFriendlyString(frequency?.toString() || 'WEEKLY')
 
     res.render('pages/practitioners/register/check-answers')
@@ -671,8 +651,8 @@ export const handleRegisterBegin: RequestHandler = async (req, res, next) => {
   }
 
   const { firstName, lastName, day, month, year, crn, contactPreference, email, mobile, frequency } = parsed.data
-  const { startDateYear, startDateMonth, startDateDay } = parsed.data
-  const firstCheckinDate = new Date(startDateYear as number, (startDateMonth as number) - 1, startDateDay as number)
+  const { startDate } = parsed.data
+  const firstCheckinDate = parse(startDate, 'd/M/yyyy', new Date())
 
   const data = {
     setupUuid: uuidv4(),

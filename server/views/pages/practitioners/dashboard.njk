@@ -67,7 +67,7 @@
             <tr>
               <td class="govuk-table__cell" data-label="Name">{{ checkin.offenderName }}</td>
               <td class="govuk-table__cell" data-label="Status">{{ checkin.status }}</td>
-              <td class="govuk-table__cell" data-label="Review due">{{ checkin.reviewDueDate  | gdsDate }}</td>
+              <td class="govuk-table__cell" data-label="Review due">{{ checkin.reviewDueDate  | gdsDate }} &nbsp;</td>
               <td class="govuk-table__cell" data-label="Priority">
                 {% if checkin.flagged == true %}{{
                   govukTag({

@@ -4,7 +4,7 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "../../../../partials/errorSummary.njk" import errorSummary %}
-{% from "../../../../partials/validatedDateInput.njk" import validatedDateInput %}
+{%- from "moj/components/date-picker/macro.njk" import mojDatePicker -%}
 {% extends "../../layout.njk" %}
 {% set section = "cases" %}
 
@@ -30,22 +30,24 @@
       <h1 class="govuk-heading-l">{{ title }}</h1>
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
         {{
-          validatedDateInput({
+          mojDatePicker({
           id: "startDate",
-          prefix: "startDate",
-          title: {
-          text: "When would you like " + offender.name + " to complete their next probation check in?",
-          isPageHeading: false,
-          classes: "govuk-fieldset__legend--m"
+          name: "startDate",
+          minDate: yesterday,
+          value: offender.startDate,
+          label: {
+          text: "When would you like " + offender.name + " to complete their first check in?",
+          classes: "govuk-label--m"
           },
-          hintText: "The person will be sent a notification to use the service from this date.",
-          validationErrors: validationErrors,
-            day: offender.startDateDay,
-            month: offender.startDateMonth,
-            year: offender.startDateYear
+          hint: {
+          text: "The person will be sent a notification to use the service from this date."
+          },
+          errorMessage: validationErrors | findError("startDate") | default(null)
           })
         }}
+
         {{
           govukRadios({
           name: "frequency",

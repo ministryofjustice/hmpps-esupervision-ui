@@ -63,7 +63,7 @@ const uploadedImageData = localStorage.getItem(IMAGE_SESSION_KEY)
 
 const photoUploadInput = document.getElementById('photoUpload-input')
 const photoContentDisplay = document.getElementById('photoPreview')
-const validationMessage = document.getElementById('photoUploadMessage')
+let validationMessage = document.getElementById('photoUploadMessage')
 
 const registerButton = document.getElementById('registerButton')
 
@@ -178,8 +178,14 @@ if (photoUploadInput) {
 function handlePhotoSelection(event) {
   localStorage.removeItem(IMAGE_SESSION_KEY)
   const file = event.target.files[0]
+  const field = event.target
   photoContentDisplay.textContent = ''
   if (validationMessage) {
+    const closestFormGroup = field.closest('.govuk-form-group')
+    if (closestFormGroup) {
+      closestFormGroup.classList.remove('govuk-form-group--error')
+      field.removeAttribute('aria-describedby')
+    }
     validationMessage.textContent = ''
   }
 
@@ -188,9 +194,18 @@ function handlePhotoSelection(event) {
     showValidationMessage('Select a photo of the person')
     return
   }
+
   // Validate file type
   if (!file.type.startsWith('image/')) {
-    showValidationMessage('The selected file must be a JPG, PNG, HEIF or GIF’.')
+    field.value = ''
+    showValidationMessage('The selected file must be a JPG, PNG, HEIF or GIF')
+    return
+  }
+
+  // Validate file is not empty
+  if (file.size < 100000) {
+    field.value = ''
+    showValidationMessage('The selected file is empty or too small')
     return
   }
 
@@ -229,12 +244,6 @@ function handlePhotoSelection(event) {
   reader.readAsDataURL(file)
 }
 
-function showValidationMessage(message) {
-  if (validationMessage) {
-    validationMessage.textContent = message
-  }
-}
-
 function dataUrlToBlob(dataUrl) {
   const [info, data] = dataUrl.split(',')
   const mime = info.match(/:(.*?);/)[1]
@@ -244,6 +253,25 @@ function dataUrlToBlob(dataUrl) {
     bytes[i] = byteString.charCodeAt(i)
   }
   return new Blob([bytes], { type: mime })
+}
+
+function showValidationMessage(message) {
+  const closestFormGroup = photoUploadInput.closest('.govuk-form-group')
+  closestFormGroup.classList.add('govuk-form-group--error')
+  if (validationMessage) {
+    validationMessage.textContent = message
+  } else {
+    let errorMessage = closestFormGroup.querySelector('.govuk-error-message')
+    if (!errorMessage) {
+      errorMessage = document.createElement('span')
+      errorMessage.className = 'govuk-error-message'
+      errorMessage.id = 'photoUploadMessage'
+      closestFormGroup.insertBefore(errorMessage, closestFormGroup.querySelector('.govuk-drop-zone'))
+      validationMessage = errorMessage
+    }
+    errorMessage.textContent = message
+    photoUploadInput.setAttribute('aria-describedby', 'photoUploadMessage')
+  }
 }
 
 // Handle the registration button click event on Check Your Answers page

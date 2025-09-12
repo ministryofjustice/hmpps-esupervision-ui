@@ -70,7 +70,9 @@
           {% if checkIn.reviewedAt %}
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key">Reviewed on</dt>
-              <dd class="govuk-summary-list__value">{% if checkIn.reviewedAt %}{{ checkIn.reviewedAt | gdsDate }}{% else %}-{% endif %}</dd>
+              <dd class="govuk-summary-list__value">
+                {% if checkIn.reviewedAt %}{{ checkIn.reviewedAt | gdsDate }}{% else %}-{% endif %}
+              </dd>
             </div>
           {% else %}
             <div class="govuk-summary-list__row">
@@ -113,8 +115,8 @@
                 text: "Mark as reviewed"
               })
             }}
-          {% endif %}
-      </form>
+          </form>
+        {% endif %}
       </div>
     </div>
   {% else %}
@@ -130,7 +132,9 @@
       {% if checkIn.status == "REVIEWED" %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Reviewed on</dt>
-          <dd class="govuk-summary-list__value">{% if checkIn.reviewedAt %}{{ checkIn.reviewedAt | gdsDate }}{% else %}-{% endif %}</dd>
+          <dd class="govuk-summary-list__value">
+            {% if checkIn.reviewedAt %}{{ checkIn.reviewedAt | gdsDate }}{% else %}-{% endif %}
+          </dd>
         </div>
       {% else %}
         <div class="govuk-summary-list__row">

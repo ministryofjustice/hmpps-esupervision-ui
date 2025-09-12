@@ -1,5 +1,5 @@
 ---
-# Per environment values which override defaults in hmpps-template-typescript/values.yaml
+# Per environment values which override defaults in hmpps-esupervision-ui/values.yaml
 
 generic-service:
   ingress:

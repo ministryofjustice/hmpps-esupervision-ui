@@ -173,13 +173,14 @@ export const handleCheckInReview: RequestHandler = async (req, res, next) => {
     const practitioner = res.locals.user
 
     const checkIn = await esupervisionService.getCheckin(checkInId)
+    const name = `${checkIn.checkin.offender.firstName} ${checkIn.checkin.offender.lastName}`
 
     if (checkIn.checkin.status === 'EXPIRED') {
       await esupervisionService.reviewCheckin(practitioner, checkInId, null, missedCheckinComment)
-      req.flash('success', { message: 'Missed check-in reviewed' })
+      req.flash('success', { message: `You have reviewed ${name}’s missed check in` })
     } else {
       await esupervisionService.reviewCheckin(practitioner, checkInId, idVerification === 'YES')
-      req.flash('success', { message: 'Check-in reviewed' })
+      req.flash('success', { message: `You have reviewed ${name}’s check in` })
     }
 
     res.redirect(`/practitioners/dashboard`)

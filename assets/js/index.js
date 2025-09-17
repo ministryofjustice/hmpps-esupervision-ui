@@ -366,3 +366,42 @@ function showRegistrationError(error) {
     errorBanner.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 }
+
+// Sticky action bar
+// When the action bar reaches the top of the viewport, it sticks to the top
+// A spacer element is used to prevent content jump when the bar becomes sticky
+// A sentinel element is used to detect when the bar reaches the top of the viewport
+
+const bar = document.getElementById('stickyActionBar')
+const spacer = document.getElementById('stickyActionSpacer')
+const sentinel = document.getElementById('stickyActionSentinel')
+
+const setSpacer = () => {
+  if (bar.classList.contains('stuck')) {
+    spacer.style.height = `${bar.offsetHeight}px`
+  }
+}
+
+const io = new IntersectionObserver(
+  ([entry]) => {
+    const shouldStick = entry.intersectionRatio === 0
+
+    if (shouldStick && !bar.classList.contains('stuck')) {
+      bar.classList.add('stuck')
+      setSpacer() // reserve space to avoid jump
+    } else if (!shouldStick && bar.classList.contains('stuck')) {
+      bar.classList.remove('stuck')
+      spacer.style.height = ''
+    }
+  },
+  {
+    threshold: 0,
+    rootMargin: '0px 0px -1px 0px',
+  },
+)
+
+if (bar && spacer && sentinel) {
+  const ro = new ResizeObserver(setSpacer)
+  ro.observe(bar)
+  io.observe(sentinel)
+}

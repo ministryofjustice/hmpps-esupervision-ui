@@ -12,6 +12,8 @@ import OffenderUpdate from '../data/models/offenderUpdate'
 import OffenderCheckinResponse from '../data/models/offenderCheckinResponse'
 import AutomaticCheckinVerificationResult from '../data/models/automaticCheckinVerificationResult'
 import { ExternalUser } from '../data/models/loggedInUser'
+import PractitionerInfo from '../data/models/practitioner'
+import PractitionerStats from '../data/models/practitionerStats'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -78,5 +80,34 @@ export default class EsupervisionService {
 
   autoVerifyCheckinIdentity(checkinId: string, numSnapshots: number): Promise<AutomaticCheckinVerificationResult> {
     return this.esupervisionApiClient.autoVerifyCheckinIdentity(checkinId, numSnapshots)
+  }
+
+  getPractitionerByUsername(username: string): Promise<PractitionerInfo | null> {
+    return this.esupervisionApiClient.getPractitionerByUsername(username)
+  }
+
+  getOffenderCountByPractitioner(): PractitionerStats[] {
+    return [
+      { practitioner: 'Amelia Clarke', siteName: 'Watford', registrationCount: 5 },
+      { practitioner: 'Oliver Patel', siteName: 'Watford', registrationCount: 3 },
+      { practitioner: 'Hannah McBride', siteName: 'Watford', registrationCount: 7 },
+      { practitioner: 'James O’Connor', siteName: 'Watford', registrationCount: 2 },
+      { practitioner: 'Grace Ahmed', siteName: 'Truro', registrationCount: 8 },
+      { practitioner: 'Daniel Roberts', siteName: 'Truro', registrationCount: 1 },
+      { practitioner: 'Sophie Nguyen', siteName: 'Truro', registrationCount: 6 },
+      { practitioner: 'Liam Gallagher', siteName: 'Truro', registrationCount: 4 },
+      { practitioner: 'Priya Desai', siteName: 'Workington', registrationCount: 9 },
+      { practitioner: 'Marcus Wright', siteName: 'Workington', registrationCount: 3 },
+      { practitioner: 'Emily Johnson', siteName: 'Workington', registrationCount: 2 },
+      { practitioner: 'Tom Richardson', siteName: 'Workington', registrationCount: 7 },
+      { practitioner: 'Aisha Khan', siteName: 'Stains', registrationCount: 10 },
+      { practitioner: 'Matthew Price', siteName: 'Stains', registrationCount: 5 },
+      { practitioner: 'Charlotte Evans', siteName: 'Stains', registrationCount: 6 },
+      { practitioner: 'William Scott', siteName: 'Stains', registrationCount: 2 },
+      { practitioner: 'Isabel Turner', siteName: 'Stains', registrationCount: 4 },
+      { practitioner: 'Benjamin Hall', siteName: 'Stains', registrationCount: 7 },
+      { practitioner: 'Rachel Lewis', siteName: 'Stains', registrationCount: 3 },
+      { practitioner: 'Ethan Morgan', siteName: 'Stains', registrationCount: 6 },
+    ]
   }
 }

@@ -1,0 +1,31 @@
+{% extends "../layout.njk" %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% set section = "data" %}
+{% set pageTitle = "Data" %}
+
+
+{% block content %}
+<h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th scope="col" class="govuk-table__header">&nbsp;</th>
+    {% for site in totalCheckinsBySite %}
+    <th scope="col" class="govuk-table__header">{{ site.siteName }}</th>
+    {% endfor %}
+  </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+  <tr class="govuk-table__row">
+    <th class="govuk-table__header" scope="row">Number of PoPs sign up per pilot site</th>
+    {% for site in totalCheckinsBySite %}
+    <td class="govuk-table__cell">{{ site.totalRegistrations }}</td>
+    {% endfor %}
+  </tr>
+  </tbody>
+</table>
+
+{% endblock %}

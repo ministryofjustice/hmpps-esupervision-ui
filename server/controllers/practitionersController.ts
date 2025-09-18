@@ -70,7 +70,7 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
   // NOTE: the checkin status tries to capture the state of the checkin
   // in relation to the offender's "happy path", and may seem not accurate when
   // looking at it from a different perspective, e.g., why don't we mark
-  // an expired checkin as REVIEWED if the practitioner has reviewed it?
+  // an expired checkin as REVIEWED if the practitioner.ts has reviewed it?
   // The answer is that it would be trying to squeeze more than one dimensions
   // into a one 1D variable.
 
@@ -697,6 +697,47 @@ export const handleRegisterComplete: RequestHandler = async (req, res, next) => 
       // redirect to dashboard
       res.redirect('/practitioners/dashboard')
     }
+  } catch (error) {
+    next(error)
+  }
+}
+
+// Data
+export const renderDataDashboard: RequestHandler = async (req, res, next) => {
+  try {
+    let totalCheckinsBySite
+    const checkinsByPractitioner = esupervisionService.getOffenderCountByPractitioner()
+
+    if (checkinsByPractitioner) {
+      totalCheckinsBySite = Object.entries(
+        checkinsByPractitioner.reduce<Record<string, number>>((acc, { siteName, registrationCount }) => {
+          acc[siteName] = (acc[siteName] || 0) + registrationCount
+          return acc
+        }, {}),
+      )
+        .map(([siteName, totalRegistrations]) => ({ siteName, totalRegistrations }))
+        .sort((a, b) => a.siteName.localeCompare(b.siteName))
+    }
+
+    res.render('pages/practitioners/data/dashboard', { totalCheckinsBySite })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUserInfo: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/data/user')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleGetUserInfo: RequestHandler = async (req, res, next) => {
+  try {
+    const { username } = req.body
+    const practitioner = await esupervisionService.getPractitionerByUsername(username)
+    res.render('pages/practitioners/data/user', { practitioner })
   } catch (error) {
     next(error)
   }

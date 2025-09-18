@@ -19,13 +19,6 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
           <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
-          <p>In your video:</p>
-          <ul class="govuk-list govuk-list--bullet">
-            <li>you do not need to speak</li>
-            <li>don’t worry about how you look</li>
-            <li>make sure your whole face is visible and well lit</li>
-            <li>make sure you are not wearing a hat or sunglasses</li>
-          </ul>
           <div
             class="videoRecorder__container"
             id="videoContainer"
@@ -37,10 +30,11 @@
           >
             <div class="videoRecorder__videoWrap">
               <video id="video" class="videoRecorder__video" autoplay muted playsinline></video>
+              <span class="videoRecorder__frame"></span>
               <canvas id="canvas" hidden></canvas>
               <div id="statusTag" class="govuk-tag govuk-tag--red videoRecorder__tag"></div>
             </div>
-            <button id="startBtn" class="govuk-button" disabled aria-disabled="true">Start recording</button>
+
           </div>
           <div class="videoRecorder__error" id="errorMessage" hidden>
             <div class="govuk-inset-text es-inset-text--error">
@@ -53,8 +47,19 @@
           </div>
         </div>
       </div>
+      <div id="stickyActionBar" class="sticky-action-bar">
+        <div class="sticky-action-bar__inner">
+        <button id="startBtn" class="govuk-button" disabled aria-disabled="true">Start recording</button>
+        </div>
+      </div>
+      <div id="stickyActionSpacer" aria-hidden="true"></div>
+      <div id="stickyActionSentinel" aria-hidden="true"></div>
     </div>
   </div>
+
+
+
+
   {% include "./partials/loading.njk" %}
   {% include "./partials/match.njk" %}
   {% include "./partials/nomatch.njk" %}

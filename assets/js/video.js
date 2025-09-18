@@ -21,6 +21,7 @@ export default function VideoRecorder() {
 
   this.videoFormat = 'video/mp4'
   this.imageFormat = 'image/jpeg'
+  this.countdownTime = 3000 // 3 seconds
   this.screenShotTime = 2000 // 2 seconds
   this.maximumRecordingTime = 5000 // 5 seconds
   this.loadingScreenDelay = 3000 // 3 seconds
@@ -41,12 +42,22 @@ VideoRecorder.prototype.uploadFile = uploadFile
 VideoRecorder.prototype.uploadAndRekognition = uploadAndRekognition
 VideoRecorder.prototype.showScreen = showScreen
 VideoRecorder.prototype.hideAllScreens = hideAllScreens
+VideoRecorder.prototype.handleRecording = handleRecording
 
 async function initVideo() {
   try {
     this.showScreen('record')
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: 'user',
+        width: { exact: 480 },
+        height: { exact: 640 },
+      },
+      audio: false,
+    })
     this.video.srcObject = stream
+    this.video.width = this.video.parentElement.clientWidth
+    this.video.height = this.video.parentElement.clientHeight
     this.mediaRecorder = new MediaRecorder(stream)
     this.mediaRecorder.ondataavailable = e => this.recordedChunks.push(e.data)
     this.mediaRecorder.onstop = this.handleRecordingComplete.bind(this)
@@ -64,41 +75,60 @@ async function initVideo() {
   this.startBtn.addEventListener('click', () => {
     this.startBtn.disabled = true
     this.startBtn.ariaDisabled = 'true'
-    this.statusTag.textContent = `Recording... ${this.maximumRecordingTime / 1000}s remaining`
     this.statusTag.style.display = 'flex'
     this.statusTag.ariaLive = 'polite'
 
-    this.recordedChunks = []
-    this.mediaRecorder.start()
-
-    // Screenshot at 2s
-    setTimeout(this.captureScreenshot.bind(this), this.screenShotTime)
-
-    // Countdown tag
-    let seconds = this.maximumRecordingTime / 1000
-    const interval = setInterval(() => {
-      seconds -= 1
-      if (seconds > 0) {
-        this.statusTag.textContent = `Recording... ${seconds}s remaining`
-      } else {
-        this.statusTag.ariaLive = 'off'
-        clearInterval(interval)
+    // Countdown before starting recording
+    let countdown = this.countdownTime / 1000
+    this.statusTag.textContent = `We will start recording in ${countdown} seconds`
+    const countdownInterval = setInterval(() => {
+      countdown -= 1
+      if (countdown > 0) {
+        this.statusTag.textContent = `We will start recording in ${countdown} seconds`
       }
     }, 1000)
 
-    // Stop at 5s
     setTimeout(() => {
-      if (this.mediaRecorder.state === 'recording') {
-        this.mediaRecorder.stop()
-      }
-    }, this.maximumRecordingTime)
+      clearInterval(countdownInterval)
+      this.handleRecording()
+    }, this.countdownTime)
   })
+}
+
+function handleRecording() {
+  this.statusTag.classList.add('status--recording')
+  this.statusTag.textContent = `Recording: ${this.maximumRecordingTime / 1000}s left`
+
+  this.recordedChunks = []
+  this.mediaRecorder.start()
+
+  // Screenshot at 2s
+  setTimeout(this.captureScreenshot.bind(this), this.screenShotTime)
+
+  // Countdown tag
+  let seconds = this.maximumRecordingTime / 1000
+  const interval = setInterval(() => {
+    seconds -= 1
+    if (seconds > 0) {
+      this.statusTag.textContent = `Recording: ${seconds}s left`
+    } else {
+      this.statusTag.ariaLive = 'off'
+      clearInterval(interval)
+    }
+  }, 1000)
+
+  // Stop at 5s
+  setTimeout(() => {
+    if (this.mediaRecorder.state === 'recording') {
+      this.mediaRecorder.stop()
+    }
+  }, this.maximumRecordingTime)
 }
 
 function captureScreenshot() {
   const ctx = this.canvas.getContext('2d')
-  this.canvas.width = this.video.videoWidth
-  this.canvas.height = this.video.videoHeight
+  this.canvas.width = this.video.width
+  this.canvas.height = this.video.height
   ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height)
   this.canvas.toBlob(blob => {
     this.screenshotBlob = blob

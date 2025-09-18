@@ -36,7 +36,9 @@
             {% endif %}
           >
             <div class="videoRecorder__videoWrap">
-              <video id="video" class="videoRecorder__video" autoplay muted playsinline></video>
+              <div class="videoRecorder__flipped">
+                <video id="video" class="videoRecorder__video" autoplay muted playsinline></video>
+              </div>
               <canvas id="canvas" hidden></canvas>
               <div id="statusTag" class="govuk-tag govuk-tag--red videoRecorder__tag"></div>
             </div>

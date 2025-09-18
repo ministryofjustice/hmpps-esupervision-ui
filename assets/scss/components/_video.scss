@@ -59,6 +59,10 @@
   display: block;
 }
 
+.videoRecorder__flipped {
+  transform: scaleX(-1)
+}
+
 @keyframes pulse {
   0% {
     transform: scale(0.95);

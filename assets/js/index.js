@@ -102,6 +102,8 @@ async function capturePhoto(v) {
       if (takePhotoButton) {
         takePhotoButton.removeAttribute('disabled')
         takePhotoButton.addEventListener('click', async () => {
+          context.translate(canvas.width, 0)
+          context.scale(-1, 1)
           context.drawImage(video, 0, 0, w, h)
           const dataUrl = canvas.toDataURL(IMAGE_CONTENT_TYPE)
           const img = document.createElement('img')

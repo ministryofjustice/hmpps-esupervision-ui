@@ -100,6 +100,8 @@ function captureScreenshot() {
   this.canvas.width = this.video.videoWidth
   this.canvas.height = this.video.videoHeight
   ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height)
+  ctx.translate(this.canvas.width, 0)
+  ctx.scale(-1, 1)
   this.canvas.toBlob(blob => {
     this.screenshotBlob = blob
   }, this.imageFormat)

@@ -79,6 +79,8 @@ async function initVideo() {
     this.statusTag.style.display = 'flex'
     this.statusTag.ariaLive = 'polite'
 
+    this.video.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
     // Countdown before starting recording
     let countdown = this.countdownTime / 1000
     this.statusTag.textContent = `We will start recording in ${countdown} seconds`

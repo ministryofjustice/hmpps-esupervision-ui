@@ -81,8 +81,8 @@ async function capturePhoto(v) {
       hide(videoError)
       show(videoContainer)
 
-      const w = 345
-      const h = 444
+      const w = 480
+      const h = 640
 
       const canvas = document.createElement('canvas')
       const context = canvas.getContext('2d')

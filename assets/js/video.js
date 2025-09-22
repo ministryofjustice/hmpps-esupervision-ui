@@ -46,18 +46,19 @@ VideoRecorder.prototype.handleRecording = handleRecording
 
 async function initVideo() {
   try {
+    const w = 480
+    const h = 640
     this.showScreen('record')
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
-        facingMode: 'user',
-        width: { exact: 480 },
-        height: { exact: 640 },
+        advanced: [
+          { height: w, width: h, aspectRatio: Math.round((h / w) * 100) / 100 },
+          { height: h, width: w, aspectRatio: Math.round((w / h) * 100) / 100 },
+        ],
       },
       audio: false,
     })
     this.video.srcObject = stream
-    this.video.width = this.video.parentElement.clientWidth
-    this.video.height = this.video.parentElement.clientHeight
     this.mediaRecorder = new MediaRecorder(stream)
     this.mediaRecorder.ondataavailable = e => this.recordedChunks.push(e.data)
     this.mediaRecorder.onstop = this.handleRecordingComplete.bind(this)
@@ -77,6 +78,8 @@ async function initVideo() {
     this.startBtn.ariaDisabled = 'true'
     this.statusTag.style.display = 'flex'
     this.statusTag.ariaLive = 'polite'
+
+    this.video.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
     // Countdown before starting recording
     let countdown = this.countdownTime / 1000
@@ -127,8 +130,8 @@ function handleRecording() {
 
 function captureScreenshot() {
   const ctx = this.canvas.getContext('2d')
-  this.canvas.width = this.video.width
-  this.canvas.height = this.video.height
+  this.canvas.width = this.video.videoWidth
+  this.canvas.height = this.video.videoHeight
   ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height)
   this.canvas.toBlob(blob => {
     this.screenshotBlob = blob

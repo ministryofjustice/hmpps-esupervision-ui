@@ -330,11 +330,18 @@ export const renderUpdateCheckinSettings: RequestHandler = async (req, res, next
     const { firstName, lastName, firstCheckin, checkinInterval } = offender
     const data = {
       id: offenderId,
-      name: `${firstName} ${lastName}`,
+      firstName,
+      lastName,
       startDate: format(new Date(firstCheckin), 'dd/MM/yyyy'),
       frequency: checkinInterval,
     }
-    res.render('pages/practitioners/cases/update/checkin-settings', { offender: data })
+    const yesterday = format(add(new Date(), { days: -1 }), 'dd/MM/yyyy')
+    const nextCheckinDate = format(
+      calculateNextCheckinDate(new Date(), new Date(firstCheckin), checkinInterval),
+      'dd/MM/yyyy',
+    )
+
+    res.render('pages/practitioners/cases/update/checkin-settings', { offender: data, yesterday, nextCheckinDate })
   } catch (error) {
     next(error)
   }
@@ -417,7 +424,7 @@ export const handleCreateInvite: RequestHandler = async (req, res, next) => {
 }
 
 export const renderUpdateOffender = (view: string, schema: string) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const schemas: Record<string, ZodIntersection | ZodObject> = {
       personal: personsDetailsSchema,
       email: emailSchema,
@@ -428,14 +435,20 @@ export const renderUpdateOffender = (view: string, schema: string) => {
     const formData = req.body
     const validation = selectedSchema.safeParse(formData)
     if (!validation.success) {
+      const { offenderId } = req.params
+      const offenderDb = await esupervisionService.getOffender(offenderId)
       const validationErrors = validation.error.issues.map(err => {
         return {
           text: err.message,
           href: `#${err.path.join('.')}`,
         }
       })
+      const yesterday = format(add(new Date(), { days: -1 }), 'dd/MM/yyyy')
+      const nextCheckinDate = formData.startDate
       return res.status(400).render(`pages/practitioners/cases/update/${view}`, {
-        offender: formData,
+        offender: { ...offenderDb, ...formData },
+        yesterday,
+        nextCheckinDate,
         validationErrors,
       })
     }

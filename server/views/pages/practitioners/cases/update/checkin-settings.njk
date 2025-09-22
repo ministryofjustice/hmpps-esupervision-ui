@@ -9,6 +9,7 @@
 {% set section = "cases" %}
 
 {% set title = "Change online check ins" %}
+{% set name = offender.firstName + " " + offender.lastName %}
 
 {% block beforeContent %}
   <div class="es-page-actions">
@@ -36,9 +37,9 @@
           id: "startDate",
           name: "startDate",
           minDate: yesterday,
-          value: offender.startDate,
+          value: nextCheckinDate,
           label: {
-          text: "When would you like " + offender.name + " to complete their first check in?",
+          text: "When would you like " + name + " to complete their first check in?",
           classes: "govuk-label--m"
           },
           hint: {
@@ -55,7 +56,7 @@
           value: offender.frequency,
           fieldset: {
           legend: {
-          text: "How often would you like " + offender.name + " to check in?",
+          text: "How often would you like " + name + " to check in?",
           isPageHeading: false,
           classes: "govuk-fieldset__legend--m"
           }

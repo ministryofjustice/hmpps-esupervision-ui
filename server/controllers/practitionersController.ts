@@ -16,6 +16,7 @@ import {
   personsDetailsSchema,
   setUpSchema,
   stopCheckinsSchema,
+  updateSetUpSchema,
 } from '../schemas/practitionersSchemas'
 import OffenderUpdate from '../data/models/offenderUpdate'
 import OffenderUpdateError from '../data/offenderUpdateError'
@@ -429,7 +430,7 @@ export const renderUpdateOffender = (view: string, schema: string) => {
       personal: personsDetailsSchema,
       email: emailSchema,
       mobile: mobileSchema,
-      setup: setUpSchema,
+      setup: updateSetUpSchema,
     }
     const selectedSchema = schemas[schema] || personsDetailsSchema
     const formData = req.body

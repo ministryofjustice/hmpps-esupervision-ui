@@ -97,7 +97,7 @@ async function initVideo() {
 
 function handleRecording() {
   this.statusTag.classList.add('status--recording')
-  this.statusTag.textContent = `Recording: ${this.maximumRecordingTime / 1000}s left`
+  this.statusTag.textContent = `Recording: ${this.maximumRecordingTime / 1000} seconds left`
 
   this.recordedChunks = []
   this.mediaRecorder.start()
@@ -110,7 +110,7 @@ function handleRecording() {
   const interval = setInterval(() => {
     seconds -= 1
     if (seconds > 0) {
-      this.statusTag.textContent = `Recording: ${seconds}s left`
+      this.statusTag.textContent = `Recording: ${seconds} second${seconds === 1 ? '' : 's'} left`
     } else {
       this.statusTag.ariaLive = 'off'
       clearInterval(interval)

@@ -14,7 +14,6 @@ import {
   mobileSchema,
   OffenderInfoInput,
   personsDetailsSchema,
-  setUpSchema,
   stopCheckinsSchema,
   updateSetUpSchema,
 } from '../schemas/practitionersSchemas'

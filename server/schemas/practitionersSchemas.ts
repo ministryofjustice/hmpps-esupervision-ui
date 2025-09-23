@@ -138,6 +138,16 @@ export const setUpSchema = z.object({
     .describe('Select how often you would like the person to check in'),
 })
 
+export const updateSetUpSchema = z.object({
+  startDate: futureDateField('Start date', 'Enter the date you would like the person to complete their next check in'),
+  frequency: z
+    .string({
+      error: issue =>
+        issue.input === undefined ? 'Select how often you would like the person to check in' : issue.message,
+    })
+    .describe('Select how often you would like the person to check in'),
+})
+
 export const OffenderInfoInput = z.object({
   firstName: z.string().nonempty(),
   lastName: z.string().nonempty(),

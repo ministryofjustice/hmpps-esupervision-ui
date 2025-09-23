@@ -97,7 +97,7 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
     const { offender, autoIdCheck, dueDate, status } = checkIn
     let reviewDueDate = null
     if (checkIn.status === 'EXPIRED') {
-      reviewDueDate = add(new Date(checkIn.dueDate), { days: 6 }).toString()
+      reviewDueDate = add(new Date(checkIn.dueDate), { days: 6 })
     } else if (checkIn.submittedAt) {
       reviewDueDate = add(new Date(checkIn.submittedAt), { days: 3 })
     }

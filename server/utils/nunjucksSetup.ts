@@ -95,7 +95,14 @@ export default function nunjucksSetup(app: express.Express): void {
       }
     }
 
-    if (!d || !isValid(d)) return ''
+    if (!isValid(d)) {
+      try {
+        d = new Date(String(input))
+      } catch (e) {
+        logger.error(e, `Could not parse date -> ${input}`)
+        return ''
+      }
+    }
 
     return format(d, 'd MMMM yyyy')
   })

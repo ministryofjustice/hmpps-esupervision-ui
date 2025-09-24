@@ -79,7 +79,7 @@
               <dt class="govuk-summary-list__key">Review due</dt>
               <dd class="govuk-summary-list__value">
                 {% if checkIn.reviewDueDate %}
-                  {{ checkIn.reviewDueDate | gdsDateTime }}
+                  {{ checkIn.reviewDueDate | gdsDate }}
                 {% else %}
                   Not set
                 {% endif %}

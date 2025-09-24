@@ -15,6 +15,7 @@
     z-index: 1;
     display: block;
     object-fit: cover;
+    transform: scaleX(-1);
   }
 
   &__frame {

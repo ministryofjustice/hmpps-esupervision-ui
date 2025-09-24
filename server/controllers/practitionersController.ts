@@ -139,7 +139,7 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
     if (checkIn.status === 'SUBMITTED') {
       checkIn.reviewDueDate = add(new Date(checkIn.submittedAt), { days: 3 }).toString()
     } else if (checkIn.status === 'EXPIRED') {
-      checkIn.reviewDueDate = add(new Date(checkIn.dueDate), { days: 6 }).toString()
+      checkIn.reviewDueDate = add(new Date(checkIn.dueDate), { days: 3 }).toString()
     }
 
     const missedCheckin = checkinLogs.logs.filter(log => log.logEntryType === 'OFFENDER_CHECKIN_NOT_SUBMITTED').pop()
@@ -189,20 +189,20 @@ export const handleCheckInReview: RequestHandler = async (req, res, next) => {
   }
 }
 
+const getNextCheckinDate = (offender: Offender): Date | undefined => {
+  const now = new Date()
+  try {
+    return calculateNextCheckinDate(now, parse(offender.firstCheckin, 'yyyy-MM-dd', now), offender.checkinInterval)
+  } catch {
+    return undefined
+  }
+}
+
 export const renderCases: RequestHandler = async (req, res, next) => {
   try {
     const practitioner = res.locals.user
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
     const size = req.query.size ? parseInt(req.query.size as string, 10) : 20
-
-    const now = new Date()
-    const getNextCheckinDate = (offender: Offender): Date | undefined => {
-      try {
-        return calculateNextCheckinDate(now, parse(offender.firstCheckin, 'yyyy-MM-dd', now), offender.checkinInterval)
-      } catch {
-        return undefined
-      }
-    }
 
     const cases = await esupervisionService.getOffenders(practitioner, page, size)
     const content = cases.content.map((offender: Offender) => {
@@ -231,11 +231,12 @@ export const renderCaseView: RequestHandler = async (req, res, next) => {
       res.status(404).redirect('/practitioners/cases') // TODO: show error once ready
       return
     }
+    const nextCheckinDate = getNextCheckinDate(offender)
     // eslint-disable-next-line prefer-destructuring
     res.locals.successMessage = req.flash('success')[0]
     // eslint-disable-next-line prefer-destructuring
     res.locals.infoMessage = req.flash('info')[0]
-    res.render('pages/practitioners/cases/manage', { offenderId, case: offender })
+    res.render('pages/practitioners/cases/manage', { offenderId, case: offender, nextCheckinDate })
   } catch (error) {
     next(error)
   }

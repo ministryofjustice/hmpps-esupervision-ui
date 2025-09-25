@@ -75,7 +75,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.839.0",
-    "@ministryofjustice/frontend": "^5.1.4",
+    "@ministryofjustice/frontend": "^5.2.0",
     "@ministryofjustice/hmpps-auth-clients": "^0.0.1",
     "@ministryofjustice/hmpps-monitoring": "^0.0.1",
     "@ministryofjustice/hmpps-rest-client": "^0.0.1",
@@ -92,7 +92,7 @@
     "date-fns": "^4.1.0",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
-    "govuk-frontend": "^5.11.0",
+    "govuk-frontend": "^5.12.0",
     "helmet": "^8.1.0",
     "http-errors": "^2.0.0",
     "jwt-decode": "^4.0.0",
@@ -105,7 +105,7 @@
     "source-map-support": "^0.5.21",
     "superagent": "^10.2.2",
     "uuid": "^11.1.0",
-    "zod": "^4.0.14"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.3",

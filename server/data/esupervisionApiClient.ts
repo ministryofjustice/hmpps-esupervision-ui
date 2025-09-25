@@ -18,6 +18,7 @@ import AutomaticCheckinVerificationResult from './models/automaticCheckinVerific
 import OffenderUpdateError from './offenderUpdateError'
 import { ExternalUserId } from './models/loggedInUser'
 import PractitionerInfo from './models/practitioner'
+import PractitionerStats from './models/practitionerStats'
 
 /**
  * Specifies content types for possible upload locations for a checkin.
@@ -230,5 +231,14 @@ export default class EsupervisionApiClient extends RestClient {
       }
       throw error
     })
+  }
+
+  async getOffenderCountByPractitioner(): Promise<PractitionerStats[]> {
+    return this.get<PractitionerStats[]>(
+      {
+        path: '/stats/practitioner/registrations',
+      },
+      asSystem(),
+    )
   }
 }

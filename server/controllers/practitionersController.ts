@@ -70,7 +70,7 @@ const filterCheckIns = (checkIns: Page<Checkin>, filter: string = 'as') => {
   // NOTE: the checkin status tries to capture the state of the checkin
   // in relation to the offender's "happy path", and may seem not accurate when
   // looking at it from a different perspective, e.g., why don't we mark
-  // an expired checkin as REVIEWED if the practitioner.ts has reviewed it?
+  // an expired checkin as REVIEWED if the practitioner has reviewed it?
   // The answer is that it would be trying to squeeze more than one dimensions
   // into a one 1D variable.
 
@@ -706,7 +706,7 @@ export const handleRegisterComplete: RequestHandler = async (req, res, next) => 
 export const renderDataDashboard: RequestHandler = async (req, res, next) => {
   try {
     let totalCheckinsBySite
-    const checkinsByPractitioner = esupervisionService.getOffenderCountByPractitioner()
+    const checkinsByPractitioner = await esupervisionService.getOffenderCountByPractitioner()
 
     if (checkinsByPractitioner) {
       totalCheckinsBySite = Object.entries(

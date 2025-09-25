@@ -43,6 +43,9 @@ import {
   renderUpdateEmail,
   renderStopCheckins,
   handleStopCheckins,
+  renderDataDashboard,
+  renderUserInfo,
+  handleGetUserInfo,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -162,6 +165,11 @@ export default function routes(): Router {
   // At the moment, `/begin` is called from client (browser), `/complete` is called from server
   router.post('/register/begin', handleRegisterBegin)
   router.post('/register/complete', handleRegisterComplete)
+
+  // Data dashboard
+  get('/data', renderDataDashboard)
+  get('/data/user', renderUserInfo)
+  router.post('/data/user', handleGetUserInfo)
 
   return router
 }

@@ -1,0 +1,61 @@
+{% extends "../layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set section = "data" %}
+{% set pageTitle = "Get user info" %}
+
+
+{% block content %}
+<div class="govuk-grid-row" {{ "id=registerPoPStartPage" if start }}>
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+    <form method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{
+        govukInput({
+          label: {
+            text: "nDelius ID",
+            classes: "govuk-label--m"
+          },
+          classes: "govuk-!-width-two-thirds",
+          id: "username",
+          name: "username",
+          errorMessage: validationErrors | findError("username"),
+          value: formData["username"]
+        })
+      }}
+      <button type="submit" class="govuk-button">Get user info</button>
+    </form>
+
+    {% if practitioner %}
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Username
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ practitioner.username }}
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Name
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ practitioner.name }}
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Email address
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{  practitioner.email }}
+        </dd>
+      </div>
+    </dl>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

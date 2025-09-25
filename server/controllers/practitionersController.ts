@@ -715,3 +715,44 @@ export const handleRegisterComplete: RequestHandler = async (req, res, next) => 
     next(error)
   }
 }
+
+// Data
+export const renderDataDashboard: RequestHandler = async (req, res, next) => {
+  try {
+    let totalCheckinsBySite
+    const checkinsByPractitioner = await esupervisionService.getOffenderCountByPractitioner()
+
+    if (checkinsByPractitioner) {
+      totalCheckinsBySite = Object.entries(
+        checkinsByPractitioner.reduce<Record<string, number>>((acc, { siteName, registrationCount }) => {
+          acc[siteName] = (acc[siteName] || 0) + registrationCount
+          return acc
+        }, {}),
+      )
+        .map(([siteName, totalRegistrations]) => ({ siteName, totalRegistrations }))
+        .sort((a, b) => a.siteName.localeCompare(b.siteName))
+    }
+
+    res.render('pages/practitioners/data/dashboard', { totalCheckinsBySite })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderUserInfo: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/data/user')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleGetUserInfo: RequestHandler = async (req, res, next) => {
+  try {
+    const { username } = req.body
+    const practitioner = await esupervisionService.getPractitionerByUsername(username)
+    res.render('pages/practitioners/data/user', { practitioner })
+  } catch (error) {
+    next(error)
+  }
+}

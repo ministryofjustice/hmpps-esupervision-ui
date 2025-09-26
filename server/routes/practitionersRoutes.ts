@@ -88,7 +88,8 @@ export default function routes(): Router {
   router.post('/checkin/:checkInId', validateFormData(videoReviewSchema), handleCheckInReview)
   get('/checkin/:checkInId/video', renderCheckInVideoDetail)
 
-  get('/cases', renderCases)
+  get('/cases', renderCases(false))
+  get('/cases/stopped', renderCases(true))
   get('/cases/:offenderId', renderCaseView)
   get('/cases/:offenderId/invite', renderCreateInvite)
   router.post('/cases/:offenderId/invite', handleCreateInvite)

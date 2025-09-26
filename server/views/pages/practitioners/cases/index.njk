@@ -1,6 +1,9 @@
-{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
-{% from "../../../partials/pagination.njk" import pagination %}
 {% extends "../layout.njk" %}
+
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{% from "../../../partials/pagination.njk" import pagination %}
+
 {% set section = "cases" %}
 
 {% block content %}
@@ -17,6 +20,22 @@
     <h1 class="govuk-heading-l">Cases</h1>
     <a href="/practitioners/register/start" class="govuk-button" data-module="govuk-button" role="button">Add person</a>
   </div>
+<div id="casesFilter">
+  {{
+  mojSubNavigation({
+  label: "Filter check ins",
+  items: [{
+          text: "Active",
+          href: "/practitioners/cases#casesFilter",
+          active: true if stopped == false else false
+        }, {
+          text: "Stopped",
+          href: "/practitioners/cases/stopped#casesFilter",
+          active: true if stopped == true else false
+        }]
+  })
+  }}
+</div>
   {% if cases.content | length > 0 %}
     <table class="govuk-table es-table--responsive" data-module="moj-sortable-table">
       <thead class="govuk-table__head">

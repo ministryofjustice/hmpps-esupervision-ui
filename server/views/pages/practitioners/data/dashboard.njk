@@ -14,16 +14,20 @@
   <tr class="govuk-table__row">
     <th scope="col" class="govuk-table__header">&nbsp;</th>
     {% for site in totalCheckinsBySite %}
-    <th scope="col" class="govuk-table__header">{{ site.siteName }}</th>
+    <th scope="col" class="govuk-table__header">{{ site.siteName | capitalize }}</th>
     {% endfor %}
+    <th scope="col" class="govuk-table__header es-table__cell--highlight">Total</th>
   </tr>
   </thead>
   <tbody class="govuk-table__body">
   <tr class="govuk-table__row">
     <th class="govuk-table__header" scope="row">Number of PoPs sign up per pilot site</th>
+    {% set total = 0 %}
     {% for site in totalCheckinsBySite %}
     <td class="govuk-table__cell">{{ site.totalRegistrations }}</td>
+    {% set total = total + site.totalRegistrations %}
     {% endfor %}
+    <td class="govuk-table__cell es-table__cell--highlight">{{ total }}</td>
   </tr>
   </tbody>
 </table>

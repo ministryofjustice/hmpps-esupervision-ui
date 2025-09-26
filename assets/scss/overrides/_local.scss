@@ -31,3 +31,14 @@
   outline: 3px solid #f499be;
   color: #000;
 }
+
+.es-table__cell--highlight {
+  background-color: gds.govuk-colour("light-grey");
+  border-left: 2px solid gds.$govuk-border-colour;
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  &:last-child {
+    padding-right: 1rem;
+  }
+}

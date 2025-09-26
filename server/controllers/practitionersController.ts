@@ -198,30 +198,39 @@ const getNextCheckinDate = (offender: Offender): Date | undefined => {
   }
 }
 
-export const renderCases: RequestHandler = async (req, res, next) => {
-  try {
-    const practitioner = res.locals.user
-    const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
-    const size = req.query.size ? parseInt(req.query.size as string, 10) : 20
+export const renderCases =
+  (showStopped = false): RequestHandler =>
+  async (req, res, next) => {
+    try {
+      const practitioner = res.locals.user
+      const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
+      const size = req.query.size ? parseInt(req.query.size as string, 10) : 20
 
-    const cases = await esupervisionService.getOffenders(practitioner, page, size)
-    const content = cases.content.map((offender: Offender) => {
-      const nextCheckinDate = getNextCheckinDate(offender)
-      return { ...offender, nextCheckinDate }
-    })
+      const cases = await esupervisionService.getOffenders(practitioner, page, size)
 
-    // eslint-disable-next-line prefer-destructuring
-    res.locals.successMessage = req.flash('success')[0]
-    res.render('pages/practitioners/cases/index', {
-      cases: { content },
-      practitionerUuid: practitioner.userId,
-      page,
-      size,
-    })
-  } catch (error) {
-    next(error)
+      const filteredCases = cases.content.filter((offender: Offender) =>
+        showStopped ? offender.status === 'INACTIVE' : offender.status !== 'INACTIVE',
+      )
+
+      const content = filteredCases.map(offender => ({
+        ...offender,
+        nextCheckinDate: getNextCheckinDate(offender),
+      }))
+
+      // eslint-disable-next-line prefer-destructuring
+      res.locals.successMessage = req.flash('success')[0]
+
+      res.render('pages/practitioners/cases/index', {
+        cases: { content },
+        practitionerUuid: practitioner.userId,
+        page,
+        size,
+        stopped: showStopped,
+      })
+    } catch (error) {
+      next(error)
+    }
   }
-}
 
 export const renderCaseView: RequestHandler = async (req, res, next) => {
   try {

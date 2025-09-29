@@ -19,7 +19,7 @@
       {{
         govukBackLink({
           text: "Back",
-          href: "/practitioners/cases"
+          href: "/practitioners/cases/stopped" if case.status == "INACTIVE" else "/practitioners/cases"
         })
       }}
     </div>

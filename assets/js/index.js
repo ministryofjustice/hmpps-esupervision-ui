@@ -203,7 +203,7 @@ function handlePhotoSelection(event) {
   }
 
   // Validate file is not empty
-  if (file.size < 100000) {
+  if (file.size < 1000) {
     field.value = ''
     showValidationMessage('The selected file is empty or too small')
     return

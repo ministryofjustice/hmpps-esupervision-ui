@@ -78,7 +78,7 @@ export const handleVerify: RequestHandler = async (req, res: Response<object, Su
     return res.render('pages/submission/no-match-found', { firstName, lastName, dateOfBirth, submissionId })
   }
 
-  req.session.submissionAuthorized = Date.now()
+  req.session.submissionAuthorized = submissionId
   return res.redirect(`/submission/${submissionId}/questions/mental-health`)
 }
 

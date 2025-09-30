@@ -23,6 +23,13 @@
       serviceName: serviceName
     })
   }}
+{% if submissionAuthorized %}
+  <div class="es-authorised-banner">
+    <div class="govuk-width-container">
+      <p>Authorised for check in ID: {{ submissionAuthorized }}</p>
+    </div>
+  </div>
+{% endif %}
   {{
     govukPhaseBanner({
     tag: {
@@ -57,4 +64,10 @@
 
 {% block bodyEnd %}
   <script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
+  {% if submissionAuthorized %}
+  <script>
+    const submissionId = "{{ submissionAuthorized }}";
+  </script>
+  <script type="module" src="{{ '/assets/js/timeout.js' | assetMap }}"></script>
+  {% endif %}
 {% endblock %}

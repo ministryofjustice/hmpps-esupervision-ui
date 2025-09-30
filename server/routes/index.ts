@@ -1,5 +1,6 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
+import protectSubmission from '../middleware/submissionMiddleware'
 
 export default function routes(): Router {
   const router = Router()

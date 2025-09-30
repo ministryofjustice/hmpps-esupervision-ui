@@ -27,4 +27,6 @@ export default class Offender {
   firstCheckin: string
 
   checkinInterval: CheckinInterval
+
+  deactivationEntry?: { createdAt: string; comment: string; uuid: string }
 }

@@ -31,6 +31,7 @@
         <a href="/practitioners/cases/{{ offenderId }}/update/stop-checkins" class="govuk-button govuk-button--warning"
           >Stop check ins</a
         >
+
       {% endif %}
     </div>
   </div>
@@ -56,11 +57,11 @@
         variant: "info",
         title: 'Check-ins stopped',
         showTitleAsHeading: true,
+        html: 'Reason for stopping: ' + case.deactivationEntry.comment,
         dismissible: false
       })
     }}
   {% endif %}
-
   <div class="es-page-header">
     <h1 class="govuk-heading-l">
       <span class="govuk-caption-l">Manage check ins</span> <span class="govuk-visually-hidden">for</span>

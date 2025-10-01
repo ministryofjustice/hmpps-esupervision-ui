@@ -204,7 +204,7 @@ export const renderCases =
     try {
       const practitioner = res.locals.user
       const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
-      const size = req.query.size ? parseInt(req.query.size as string, 10) : 20
+      const size = req.query.size ? parseInt(req.query.size as string, 10) : 50
 
       const cases = await esupervisionService.getOffenders(practitioner, page, size)
 

@@ -17,5 +17,9 @@ export default function routes(): Router {
     res.render('pages/accessibility')
   })
 
+  get('/.well-known/appspecific/com.chrome.devtools.json', async (req, res, next) => {
+    return res.status(404).render('pages/error')
+  })
+
   return router
 }

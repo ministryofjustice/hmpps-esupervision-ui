@@ -167,18 +167,6 @@ export default function routes(): Router {
   router.post('/register/begin', handleRegisterBegin)
   router.post('/register/complete', handleRegisterComplete)
 
-  // Session management routes
-
-  get('/timeout', (req, res) => {
-    const submissionId = req.session.submissionAuthorized
-    req.session = null
-    res.render('pages/submission/timeout', { submissionId })
-  })
-
-  get('/keepalive', (req, res) => {
-    res.json({ status: 'OK' })
-  })
-
   // Data dashboard
   get('/data', renderDataDashboard)
   get('/data/user', renderUserInfo)

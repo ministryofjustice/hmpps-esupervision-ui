@@ -1,12 +1,12 @@
-function SessionTimeOutModal() {
+function SessionTimeOutModal(submissionId) {
   this.modal = null
   this.modalId = 'es-session-timeout-modal'
-  this.inactivityCountdownTime = document.body.dataset.timeout || 0.1 // minutes
+  this.inactivityCountdownTime = document.body.dataset.timeout || 30 // minutes
   this.modalCountdownTime = document.body.dataset.modalcount || 300 // seconds
   this.modalTimeout = null
   this.urls = {
-    renew: '/session/keepalive',
-    logout: '/session/timeout',
+    renew: `/submission/${submissionId}/keepalive`,
+    logout: `/submission/${submissionId}/timeout`,
   }
   this.modalHtml = `
         <div class="es-modal" role="dialog" aria-modal="true" id="${this.modalId}">
@@ -15,7 +15,7 @@ function SessionTimeOutModal() {
                 <p class="govuk-body">For your security, we will sign you out in <strong>${this.formatTime(this.modalCountdownTime)}</strong>.</p>
                 <div class="es-modal__actions govuk-button-group">
                     <button class="govuk-button" id="es-timeout-action-renew">Stay signed in</button>
-                    <a class="govuk-link" id="es-timeout-action-logout" href="#" role="button">Sign out</a>
+                    <a class="govuk-link govuk-link--no-visited-state" id="es-timeout-action-logout" href="${this.urls.logout}">Sign out</a>
                 </div>
             </div>
         </div>`
@@ -50,9 +50,7 @@ SessionTimeOutModal.prototype.showModal = function showModal() {
 
 SessionTimeOutModal.prototype.modalEvents = function modalEvents() {
   const renewButton = document.getElementById('es-timeout-action-renew')
-  const logoutButton = document.getElementById('es-timeout-action-logout')
   renewButton.addEventListener('click', this.renewSession.bind(this))
-  logoutButton.addEventListener('click', this.logout.bind(this))
 }
 
 SessionTimeOutModal.prototype.startModalCountdown = function startModalCountdown() {
@@ -63,7 +61,7 @@ SessionTimeOutModal.prototype.startModalCountdown = function startModalCountdown
     countdownDisplay.textContent = `${this.formatTime(countdownTime)}`
     if (countdownTime <= 0) {
       clearInterval(this.modalTimeout)
-      this.logout('autoSignOut')
+      window.location.href = this.urls.logout
     }
   }, 1000)
 }
@@ -83,10 +81,12 @@ SessionTimeOutModal.prototype.renewSession = function renewSession(e) {
         this.hideModal()
         this.startInactivityCountdown()
       } else {
-        console.error('Failed to renew session')
+        console.error('Failed to renew session') // eslint-disable-line no-console
       }
     })
-    .catch(error => console.error('Error:', error))
+    .catch(
+      error => console.error('Error:', error), // eslint-disable-line no-console
+    )
 }
 
 SessionTimeOutModal.prototype.hideModal = function hideModal() {
@@ -94,11 +94,8 @@ SessionTimeOutModal.prototype.hideModal = function hideModal() {
   this.modal.remove()
 }
 
-SessionTimeOutModal.prototype.logout = function logout(action) {
-  window.location.href = this.urls.logout
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-  const sessionTimeOutModal = new SessionTimeOutModal()
+document.addEventListener('DOMContentLoaded', function pageLoad() {
+  const { submissionId } = document.body.dataset
+  const sessionTimeOutModal = new SessionTimeOutModal(submissionId)
   sessionTimeOutModal.init()
 })

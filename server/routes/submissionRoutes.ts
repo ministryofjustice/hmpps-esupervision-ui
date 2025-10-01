@@ -30,6 +30,7 @@ import {
 } from '../schemas/submissionSchemas'
 
 import { Services } from '../services'
+import logger from '../../logger'
 
 export default function routes({ esupervisionService }: Services): Router {
   const router = Router({ mergeParams: true })
@@ -104,6 +105,21 @@ export default function routes({ esupervisionService }: Services): Router {
   router.post('/check-your-answers', protectSubmission, validateFormData(checkAnswersSchema), handleSubmission)
 
   get('/confirmation', renderConfirmation)
+
+  // Session management routes
+
+  // Timeout route to handle session expiration
+  get('/timeout', (req, res) => {
+    const { submissionId } = req.params
+    logger.info(`User session timed out for submissionId ${submissionId}`)
+    req.session.submissionAuthorized = null
+    res.render('pages/submission/timeout', { submissionId })
+  })
+
+  // Keepalive route for session management
+  get('/keepalive', (req, res) => {
+    res.json({ status: 'OK' })
+  })
 
   return router
 }

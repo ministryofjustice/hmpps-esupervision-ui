@@ -3,10 +3,10 @@ import { RequestHandler } from 'express'
 const protectSubmission: RequestHandler = (req, res, next) => {
   const { submissionAuthorized } = req.session
   if (!submissionAuthorized) {
-    return res.redirect('/practitioners/submission/timeout')
+    const { submissionId } = req.params
+    return res.render('pages/submission/timeout', { submissionId })
   }
   res.locals.submissionAuthorized = submissionAuthorized
-  console.log('Submission authorized...', submissionAuthorized)
   return next()
 }
 

@@ -68,106 +68,132 @@
       {{ case.firstName }} {{ case.lastName }} ({{ case.dateOfBirth | gdsDate }})
     </h1>
   </div>
-  <div class="es-flex-row">
-    <h2 class="govuk-heading-m">Personal details</h2>
-    <p>
-      {{ changeButton(case.status, "/practitioners/cases/" + offenderId + "/update/personal-details", "the personal details for " + name) }}
-    </p>
+
+  <div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">
+        Personal details
+      </h2>
+      <ul class="govuk-summary-card__actions">
+        <li class="govuk-summary-card__action">
+          {{ changeButton(case.status, "/practitioners/cases/" + offenderId + "/update/personal-details", "the personal details for " + name) }}
+        </li>
+      </ul>
+    </div>
+    <div class="govuk-summary-card__content">
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">First name</dt>
+          <dd class="govuk-summary-list__value">{{ case.firstName }}</dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Last name</dt>
+          <dd class="govuk-summary-list__value">{{ case.lastName }}</dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Date of birth</dt>
+          <dd class="govuk-summary-list__value">{{ case.dateOfBirth | gdsDate }}</dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Case reference number (CRN)</dt>
+          <dd class="govuk-summary-list__value">{{ case.crn }}</dd>
+        </div>
+      </dl>
+    </div>
   </div>
 
-  <dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">First name</dt>
-      <dd class="govuk-summary-list__value">{{ case.firstName }}</dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Last name</dt>
-      <dd class="govuk-summary-list__value">{{ case.lastName }}</dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Date of birth</dt>
-      <dd class="govuk-summary-list__value">{{ case.dateOfBirth | gdsDate }}</dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Case reference number (CRN)</dt>
-      <dd class="govuk-summary-list__value">{{ case.crn }}</dd>
-    </div>
-    <div class="govuk-summary-list__row govuk-visually-hidden">
-      <dt class="govuk-summary-list__key">Status</dt>
-      <dd class="govuk-summary-list__value">{{ case.status }}</dd>
-    </div>
-  </dl>
 
   {# Only show photo and contact details if they are active #}
   {% if case.status != "INACTIVE" %}
-    <div class="es-flex-row">
-      <h2 class="govuk-heading-m">Photo</h2>
-    </div>
-    <dl class="govuk-summary-list">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Photo on file</dt>
-        <dd class="govuk-summary-list__value">
-          <img
-            src="{{ "/assets/images/placeholder.png" if case.photoUrl == null else case.photoUrl }}"
-            class="es-profile-image es-profile-image--small"
-            alt="Profile image of {{ name }}"
-          />
-        </dd>
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">
+          Photo
+        </h2>
       </div>
-    </dl>
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Photo on file</dt>
+            <dd class="govuk-summary-list__value">
+              <img
+                src="{{ "/assets/images/placeholder.png" if case.photoUrl == null else case.photoUrl }}"
+                class="es-profile-image es-profile-image--small"
+                alt="Profile image of {{ name }}"
+              />
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
     {% set contactPreference = "text" if case.phoneNumber else "email" %}
-    <div class="es-flex-row">
-      <h2 class="govuk-heading-m">Contact details</h2>
-      <p>
-        {{ changeButton(case.status, "/practitioners/cases/" + offenderId + "/update/contact-details", "the contact details for " + name) }}
-      </p>
-    </div>
-    <dl class="govuk-summary-list">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">How does {{ name }} want us to send a link?</dt>
-        <dd class="govuk-summary-list__value">
-          {% if contactPreference == "text" %}
-            Text message
-          {% else %}
-            Email
-          {% endif %}
-        </dd>
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">
+          Contact details
+        </h2>
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">
+            {{ changeButton(case.status, "/practitioners/cases/" + offenderId + "/update/contact-details", "the contact details for " + name) }}
+          </li>
+        </ul>
       </div>
-      {% if contactPreference == "text" %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Mobile number</dt>
-          <dd class="govuk-summary-list__value">{{ case.phoneNumber }}</dd>
-        </div>
-      {% else %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Email address</dt>
-          <dd class="govuk-summary-list__value">{{ case.email }}</dd>
-        </div>
-      {% endif %}
-    </dl>
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">How does {{ name }} want us to send a link?</dt>
+            <dd class="govuk-summary-list__value">
+              {% if contactPreference == "text" %}
+                Text message
+              {% else %}
+                Email
+              {% endif %}
+            </dd>
+          </div>
+          {% if contactPreference == "text" %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Mobile number</dt>
+              <dd class="govuk-summary-list__value">{{ case.phoneNumber }}</dd>
+            </div>
+          {% else %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Email address</dt>
+              <dd class="govuk-summary-list__value">{{ case.email }}</dd>
+            </div>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
   {% endif %}
 
-  <div class="es-flex-row">
-    <h2 class="govuk-heading-m">Check in settings</h2>
-    <p>
-      {{ changeButton(case.status, "/practitioners/cases/" + offenderId + "/update/checkin-settings", "the check in settings for " + name) }}
-    </p>
+  <div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">
+        Check in settings
+      </h2>
+      <ul class="govuk-summary-card__actions">
+        <li class="govuk-summary-card__action">
+          {{ changeButton(case.status, "/practitioners/cases/" + offenderId + "/update/checkin-settings", "the check in settings for " + name) }}
+        </li>
+      </ul>
+    </div>
+    <div class="govuk-summary-card__content">
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Next check in</dt>
+          <dd class="govuk-summary-list__value">
+            {% if case.status == "INACTIVE" %}
+              Check ins stopped
+            {% else %}
+            {{ nextCheckinDate | gdsDate }}
+            {% endif %}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Frequency</dt>
+          <dd class="govuk-summary-list__value">{{ case.checkinInterval | userFriendlyString }}</dd>
+        </div>
+      </dl>
+    </div>
   </div>
-
-  <dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Next check in</dt>
-      <dd class="govuk-summary-list__value">
-        {% if case.status == "INACTIVE" %}
-          Check ins stopped
-        {% else %}
-        {{ nextCheckinDate | gdsDate }}
-        {% endif %}
-      </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">Frequency</dt>
-      <dd class="govuk-summary-list__value">{{ case.checkinInterval | userFriendlyString }}</dd>
-    </div>
-  </dl>
 {% endblock %}

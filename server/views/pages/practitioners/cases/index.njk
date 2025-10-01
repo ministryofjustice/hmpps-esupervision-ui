@@ -42,8 +42,10 @@
         <tr class="govuk-table__row">
           <th class="govuk-table__header" scope="col" aria-sort="ascending">Name</th>
           <th class="govuk-table__header" scope="col" aria-sort="none">Date of birth</th>
+          {% if stopped == false %}
           <th class="govuk-table__header" scope="col" aria-sort="none">Contact details</th>
           <th class="govuk-table__header" scope="col" aria-sort="none">Next check in</th>
+          {% endif %}
           <th class="govuk-table__header govuk-table__header--numeric" scope="col">Action</th>
         </tr>
       </thead>
@@ -52,21 +54,21 @@
           <tr>
             <td class="govuk-table__cell" data-label="Name">{{ case.firstName }} {{ case.lastName }}</td>
             <td class="govuk-table__cell" data-label="Date of birth">{{ case.dateOfBirth | gdsDate }}</td>
+            {% if stopped == false %}
             <td class="govuk-table__cell" data-label="Contact details">
               {{ case.phoneNumber if case.phoneNumber else case.email }}&nbsp;
             </td>
             <td class="govuk-table__cell" data-label="Next check in">
-              {% if case.status == "INACTIVE" %}
-                Check ins stopped
-              {% elif case.nextCheckinDate %}
+              {% if case.nextCheckinDate %}
                 {{ case.nextCheckinDate | gdsDate }}
               {% else %}
                 -
               {% endif %}
             </td>
+            {% endif %}
             <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Action">
               <a href="/practitioners/cases/{{ case.uuid }}" class="govuk-link govuk-link--no-visited-state"
-                >Manage<span class="govuk-visually-hidden"> {{ case.firstName }} {{ case.lastName }}</span></a
+                >{{ "Manage" if stopped == false else "View" }}<span class="govuk-visually-hidden"> {{ case.firstName }} {{ case.lastName }}</span></a
               >
             </td>
           </tr>

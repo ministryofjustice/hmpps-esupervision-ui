@@ -1,7 +1,11 @@
-import Page from './page'
+import Page, { PageElement } from './page'
 
 export default class IndexPage extends Page {
   constructor() {
-    super('Submit a remote check-in')
+    super('Check ins')
   }
+
+  headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
+
+  headerPhaseBanner = (): PageElement => cy.get('[data-qa=header-phase-banner]')
 }

@@ -1,6 +1,6 @@
-import IndexPage from '../../pages'
-import AuthManageDetailsPage from '../../pages/authManageDetails'
-import AuthSignInPage from '../../pages/authSignIn'
+import DashboardPage from '../../pages/practitioner/dashboardPage'
+import AuthManageDetailsPage from '../../pages/authManageDetailsPage'
+import AuthSignInPage from '../../pages/authSignInPage'
 import Page from '../../pages/page'
 
 context('Sign In', () => {
@@ -31,36 +31,36 @@ context('Sign In', () => {
 
   it('User name visible in header', () => {
     cy.signIn({ failOnStatusCode: false })
-    const indexPage = Page.verifyOnPage(IndexPage)
-    indexPage.headerUserName().should('contain.text', 'J. Smith')
+    const dashboardPage = Page.verifyOnPage(DashboardPage)
+    dashboardPage.headerUserName().should('contain.text', 'J. Smith')
   })
 
   it('Phase banner visible in header', () => {
     cy.signIn({ failOnStatusCode: false })
-    const indexPage = Page.verifyOnPage(IndexPage)
-    indexPage.headerPhaseBanner().should('contain.text', 'Private Beta')
+    const dashboardPage = Page.verifyOnPage(DashboardPage)
+    dashboardPage.headerPhaseBanner().should('contain.text', 'Private Beta')
   })
 
   it('User can sign out', () => {
     cy.signIn({ failOnStatusCode: false })
-    const indexPage = Page.verifyOnPage(IndexPage)
-    indexPage.signOut().click()
+    const dashboardPage = Page.verifyOnPage(DashboardPage)
+    dashboardPage.signOut().click()
     Page.verifyOnPage(AuthSignInPage)
   })
 
   it('User can manage their details', () => {
     cy.signIn({ failOnStatusCode: false })
     cy.task('stubAuthManageDetails')
-    const indexPage = Page.verifyOnPage(IndexPage)
+    const dashboardPage = Page.verifyOnPage(DashboardPage)
 
-    indexPage.manageDetails().get('a').invoke('removeAttr', 'target')
-    indexPage.manageDetails().click()
+    dashboardPage.manageDetails().get('a').invoke('removeAttr', 'target')
+    dashboardPage.manageDetails().click()
     Page.verifyOnPage(AuthManageDetailsPage)
   })
 
   it('Token verification failure takes user to sign in page', () => {
     cy.signIn({ failOnStatusCode: false })
-    Page.verifyOnPage(IndexPage)
+    Page.verifyOnPage(DashboardPage)
     cy.task('stubVerifyToken', false)
 
     cy.visit('/')
@@ -69,7 +69,7 @@ context('Sign In', () => {
 
   it('Token verification failure clears user session', () => {
     cy.signIn({ failOnStatusCode: false })
-    const indexPage = Page.verifyOnPage(IndexPage)
+    const dashboardPage = Page.verifyOnPage(DashboardPage)
     cy.task('stubVerifyToken', false)
 
     cy.visit('/')
@@ -80,6 +80,6 @@ context('Sign In', () => {
 
     cy.signIn({ failOnStatusCode: false })
 
-    indexPage.headerUserName().contains('B. Brown')
+    dashboardPage.headerUserName().contains('B. Brown')
   })
 })

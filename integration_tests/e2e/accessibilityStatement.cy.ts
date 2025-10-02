@@ -1,4 +1,4 @@
-import AccessibilityStatementPage from '../pages/accessibilityStatement/accessibilityStatementPage'
+import AccessibilityStatementPage from '../pages/accessibilityStatementPage'
 import Page from '../pages/page'
 
 context('Accessibility statement', () => {

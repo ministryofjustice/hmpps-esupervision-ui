@@ -1,6 +1,6 @@
-import Page, { PageElement } from '../page'
+import Page, { PageElement } from '../../page'
 
-export default class RegisterPersonPage extends Page {
+export default class EnterPersonalDetailsPage extends Page {
   constructor() {
     super("Person's details")
   }
@@ -33,11 +33,5 @@ export default class RegisterPersonPage extends Page {
     this.monthField().type(person.month)
     this.yearField().type(person.year)
     this.crnField().type(person.crn)
-  }
-
-  static generateValidCrn = (): string => {
-    const capitalLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26))
-    const numbers = Math.floor(100000 + Math.random() * 900000).toString()
-    return `${capitalLetter}${numbers}`
   }
 }

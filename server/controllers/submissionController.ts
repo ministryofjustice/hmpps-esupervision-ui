@@ -32,7 +32,6 @@ export const handleRedirect = (submissionPath: string): RequestHandler => {
     const { submissionId } = req.params
     const basePath = `/submission/${submissionId}`
     let redirectUrl = `${basePath}${submissionPath}`
-    logger.info('handleRedirect: ', { checkAnswers: req.query.checkAnswers, redirectUrl })
 
     if (req.query.checkAnswers === 'true') {
       redirectUrl = `${basePath}/check-your-answers`
@@ -78,7 +77,8 @@ export const handleVerify: RequestHandler = async (req, res: Response<object, Su
     return res.render('pages/submission/no-match-found', { firstName, lastName, dateOfBirth, submissionId })
   }
 
-  req.session.submissionAuthorized = Date.now()
+  req.session.submissionAuthorized = submissionId
+  logger.info(`User is verified and check in authorised for submissionId ${submissionId}`)
   return res.redirect(`/submission/${submissionId}/questions/mental-health`)
 }
 

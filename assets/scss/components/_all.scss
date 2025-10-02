@@ -1,5 +1,7 @@
+@use "authorised-banner";
 @use 'header';
 @use 'loader';
+@use "modal";
 @use 'page-actions';
 @use 'page-header';
 @use 'pane';

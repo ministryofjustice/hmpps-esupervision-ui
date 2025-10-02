@@ -3,7 +3,7 @@ export declare module 'express-session' {
   interface SessionData {
     returnTo: string
     nowInMinutes: number
-    submissionAuthorized?: number
+    submissionAuthorized?: string
     formData?: {
       circumstances?: string | string[]
       policeContact?: string
@@ -29,7 +29,9 @@ export declare global {
     interface Request {
       verified?: boolean
       id: string
+
       flash(type: string, message: string | ErrorMessages | Array<ErrorSummary> | Record<string, unknown>): number
+
       logout(done: (err: unknown) => void): void
     }
 

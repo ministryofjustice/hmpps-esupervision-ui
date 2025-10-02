@@ -57,4 +57,10 @@
 
 {% block bodyEnd %}
   <script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
+  {% if submissionAuthorized %}
+  <script type="application/javascript">
+    document.body.dataset.submissionId = "{{ submissionId }}";
+  </script>
+  <script type="module" src="{{ '/assets/js/timeout.js' | assetMap }}"></script>
+  {% endif %}
 {% endblock %}

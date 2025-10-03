@@ -21,6 +21,8 @@ import OffenderUpdate from '../data/models/offenderUpdate'
 import OffenderUpdateError from '../data/offenderUpdateError'
 import { calculateNextCheckinDate } from '../utils/utils'
 import Offender from '../data/models/offender'
+import PractitionerStats from '../data/models/practitionerStats'
+import Stats from '../data/models/stats'
 
 const { esupervisionService } = services()
 
@@ -728,21 +730,10 @@ export const handleRegisterComplete: RequestHandler = async (req, res, next) => 
 // Data
 export const renderDataDashboard: RequestHandler = async (req, res, next) => {
   try {
-    let totalCheckinsBySite
-    const checkinsByPractitioner = await esupervisionService.getOffenderCountByPractitioner()
+    const totalCheckinsBySite: Map<string, number> = new Map()
+    const stats = await esupervisionService.getCheckinStats()
 
-    if (checkinsByPractitioner) {
-      totalCheckinsBySite = Object.entries(
-        checkinsByPractitioner.reduce<Record<string, number>>((acc, { siteName, registrationCount }) => {
-          acc[siteName] = (acc[siteName] || 0) + registrationCount
-          return acc
-        }, {}),
-      )
-        .map(([siteName, totalRegistrations]) => ({ siteName, totalRegistrations }))
-        .sort((a, b) => a.siteName.localeCompare(b.siteName))
-    }
-
-    res.render('pages/practitioners/data/dashboard', { totalCheckinsBySite })
+    res.render('pages/practitioners/data/dashboard', { stats })
   } catch (error) {
     next(error)
   }

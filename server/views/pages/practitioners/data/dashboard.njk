@@ -8,13 +8,14 @@
 
 
 {% block content %}
+{% set totalCheckinsBySite = stats.offendersPerSite %}
 <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 <table class="govuk-table">
   <thead class="govuk-table__head">
   <tr class="govuk-table__row">
     <th scope="col" class="govuk-table__header">&nbsp;</th>
     {% for site in totalCheckinsBySite %}
-    <th scope="col" class="govuk-table__header">{{ site.siteName | capitalize }}</th>
+      <th scope="col" class="govuk-table__header">{{ site.location | capitalize }}</th>
     {% endfor %}
     <th scope="col" class="govuk-table__header es-table__cell--highlight">Total</th>
   </tr>
@@ -24,12 +25,62 @@
     <th class="govuk-table__header" scope="row">Number of PoPs sign up per pilot site</th>
     {% set total = 0 %}
     {% for site in totalCheckinsBySite %}
-    <td class="govuk-table__cell">{{ site.totalRegistrations }}</td>
-    {% set total = total + site.totalRegistrations %}
+      <td class="govuk-table__cell">{{ site.count }}</td>
+    {% set total = total + site.count %}
     {% endfor %}
     <td class="govuk-table__cell es-table__cell--highlight">{{ total }}</td>
   </tr>
   </tbody>
 </table>
+
+{% if stats.sentCheckinsPerSite and stats.sentCheckinsPerSite.length > 0 %}
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">&nbsp;</th>
+      {% for site in stats.sentCheckinsPerSite %}
+        <th scope="col" class="govuk-table__header">{{ site.location | capitalize }}</th>
+      {% endfor %}
+      <th scope="col" class="govuk-table__header es-table__cell--highlight">Total</th>
+    </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header" scope="row">Number of invites sent</th>
+      {% set total = 0 %}
+      {% for site in stats.sentCheckinsPerSite %}
+        <td class="govuk-table__cell">{{ site.count }}</td>
+        {% set total = total + site.count %}
+      {% endfor %}
+      <td class="govuk-table__cell es-table__cell--highlight">{{ total }}</td>
+    </tr>
+    </tbody>
+  </table>
+{% endif %}
+
+{% if stats.completedCheckinsPerSite and stats.completedCheckinsPerSite.length > 0 %}
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">&nbsp;</th>
+      {% for site in stats.completedCheckinsPerSite %}
+        <th scope="col" class="govuk-table__header">{{ site.location | capitalize }}</th>
+      {% endfor %}
+      <th scope="col" class="govuk-table__header es-table__cell--highlight">Total</th>
+    </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header" scope="row">Completed check ins</th>
+      {% set total = 0 %}
+      {% for site in stats.completedCheckinsPerSite %}
+        <td class="govuk-table__cell">{{ site.count }}</td>
+        {% set total = total + site.count %}
+      {% endfor %}
+      <td class="govuk-table__cell es-table__cell--highlight">{{ total }}</td>
+    </tr>
+    </tbody>
+  </table>
+{% endif %}
 
 {% endblock %}

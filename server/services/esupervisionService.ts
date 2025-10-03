@@ -14,6 +14,7 @@ import AutomaticCheckinVerificationResult from '../data/models/automaticCheckinV
 import { ExternalUser } from '../data/models/loggedInUser'
 import PractitionerInfo from '../data/models/practitioner'
 import PractitionerStats from '../data/models/practitionerStats'
+import Stats from '../data/models/stats'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -88,5 +89,9 @@ export default class EsupervisionService {
 
   getOffenderCountByPractitioner(): Promise<PractitionerStats[]> {
     return this.esupervisionApiClient.getOffenderCountByPractitioner()
+  }
+
+  getCheckinStats(): Promise<Stats> {
+    return this.esupervisionApiClient.getCheckinStats()
   }
 }

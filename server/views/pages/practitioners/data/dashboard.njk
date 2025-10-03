@@ -33,12 +33,12 @@
   </tbody>
 </table>
 
-{% if stats.sentCheckinsPerSite and stats.sentCheckinsPerSite.length > 0 %}
+{% if stats.invitesPerSite and stats.invitesPerSite.length > 0 %}
   <table class="govuk-table">
     <thead class="govuk-table__head">
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header">&nbsp;</th>
-      {% for site in stats.sentCheckinsPerSite %}
+      {% for site in stats.invitesPerSite %}
         <th scope="col" class="govuk-table__header">{{ site.location | capitalize }}</th>
       {% endfor %}
       <th scope="col" class="govuk-table__header es-table__cell--highlight">Total</th>
@@ -48,7 +48,7 @@
     <tr class="govuk-table__row">
       <th class="govuk-table__header" scope="row">Number of invites sent</th>
       {% set total = 0 %}
-      {% for site in stats.sentCheckinsPerSite %}
+      {% for site in stats.invitesPerSite %}
         <td class="govuk-table__cell">{{ site.count }}</td>
         {% set total = total + site.count %}
       {% endfor %}

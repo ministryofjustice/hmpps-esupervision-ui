@@ -10,7 +10,7 @@ export type SiteCountOnNthDay = {
 }
 
 export default class Stats {
-  checkinsPerSite: SiteCount[]
+  invitesPerSite: SiteCount[]
 
   completedCheckinsPerSite: SiteCount[]
 

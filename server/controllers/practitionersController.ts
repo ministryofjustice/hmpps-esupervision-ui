@@ -21,8 +21,6 @@ import OffenderUpdate from '../data/models/offenderUpdate'
 import OffenderUpdateError from '../data/offenderUpdateError'
 import { calculateNextCheckinDate } from '../utils/utils'
 import Offender from '../data/models/offender'
-import PractitionerStats from '../data/models/practitionerStats'
-import Stats from '../data/models/stats'
 
 const { esupervisionService } = services()
 
@@ -730,7 +728,6 @@ export const handleRegisterComplete: RequestHandler = async (req, res, next) => 
 // Data
 export const renderDataDashboard: RequestHandler = async (req, res, next) => {
   try {
-    const totalCheckinsBySite: Map<string, number> = new Map()
     const stats = await esupervisionService.getCheckinStats()
 
     res.render('pages/practitioners/data/dashboard', { stats })

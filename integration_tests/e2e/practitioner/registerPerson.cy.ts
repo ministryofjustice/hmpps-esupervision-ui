@@ -1,4 +1,4 @@
-import DashboardPage from '../../pages/practitioner/dashboardPage'
+import DashboardPage from '../../pages/practitioner/cases/dashboardPage'
 import Page from '../../pages/page'
 import CheckYourAnswersPage from '../../pages/practitioner/register/checkAnswersPage'
 import ContactPreferencePage from '../../pages/practitioner/register/contact/contactPreferencePage'

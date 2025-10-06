@@ -1,4 +1,4 @@
-import DashboardPage from '../../pages/practitioner/dashboardPage'
+import DashboardPage from '../../pages/practitioner/cases/dashboardPage'
 import AuthManageDetailsPage from '../../pages/authManageDetailsPage'
 import AuthSignInPage from '../../pages/authSignInPage'
 import Page from '../../pages/page'
@@ -76,10 +76,10 @@ context('Sign In', () => {
     Page.verifyOnPage(AuthSignInPage)
 
     cy.task('stubVerifyToken', true)
-    cy.task('stubSignIn', { name: 'bobby brown' })
+    cy.task('stubSignIn', { name: 'Joe Bloggs' })
 
     cy.signIn({ failOnStatusCode: false })
 
-    dashboardPage.headerUserName().contains('B. Brown')
+    dashboardPage.headerUserName().contains('J. Bloggs')
   })
 })

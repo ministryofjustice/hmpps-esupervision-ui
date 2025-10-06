@@ -13,6 +13,10 @@ export default abstract class Page {
     cy.get('h1').contains(this.title)
   }
 
+  headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
+
+  headerPhaseBanner = (): PageElement => cy.get('[data-qa=header-phase-banner]')
+
   signOut = (): PageElement => cy.get('[data-qa=signOut]')
 
   manageDetails = (): PageElement => cy.get('[data-qa=manageDetails]')

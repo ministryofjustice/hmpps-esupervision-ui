@@ -4,18 +4,12 @@ import { faker } from '@faker-js/faker'
 import { stubFor } from './wiremock'
 import generateValidCrn from '../support/utils'
 
-const practitioner = 'AUTH_USER'
+const practitionerUsername = 'AUTH_USER'
 const offenderStatuses = ['INITIAL', 'VERIFIED', 'INACTIVE']
 const checkinIntervals = ['WEEKLY', 'TWO_WEEKS', 'FOUR_WEEKS', 'EIGHT_WEEKS']
-const checkinStatus = ['CREATED', 'SUBMITTED', 'REVIEWED', 'EXPIRED']
+const checkinStatuses = ['CREATED', 'SUBMITTED', 'REVIEWED', 'EXPIRED']
 
-/**
- * Creates a single mock offender object.
- * Tests can provide overrides for specific fields.
- * @param overrides - An object with properties to override the defaults.
- * @returns A mock offender object.
- */
-const createMockOffender = (overrides = {}) => {
+export const createMockOffender = (overrides = {}) => {
   return {
     uuid: faker.string.uuid(),
     firstName: faker.person.firstName(),
@@ -23,7 +17,7 @@ const createMockOffender = (overrides = {}) => {
     crn: generateValidCrn(),
     dateOfBirth: faker.date.birthdate().toISOString().slice(0, 10),
     status: faker.helpers.arrayElement(offenderStatuses),
-    practitioner,
+    practitioner: practitionerUsername,
     createdAt: faker.date.recent({ days: 10 }).toISOString(),
     email: faker.internet.email(),
     phoneNumber: faker.phone.number(),
@@ -34,20 +28,15 @@ const createMockOffender = (overrides = {}) => {
   }
 }
 
-/**
- * Creates a single mock check-in object for a given offender.
- * @param offender - The offender object this check-in belongs to.
- * @returns A mock check-in object.
- */
-const createMockCheckin = offender => {
+const createMockCheckin = (offender, overrides = {}) => {
   return {
     uuid: faker.string.uuid(),
-    status: faker.helpers.arrayElement(checkinStatus),
+    status: faker.helpers.arrayElement(checkinStatuses),
     dueDate: faker.date.future({ years: 1 }).toISOString().slice(0, 10),
     offender,
     submittedAt: null,
     surveyResponse: null,
-    createdBy: practitioner,
+    createdBy: practitionerUsername,
     createdAt: faker.date.recent({ days: 3 }).toISOString(),
     reviewedBy: null,
     reviewedAt: null,
@@ -56,8 +45,24 @@ const createMockCheckin = offender => {
     autoIdCheck: null,
     manualIdCheck: null,
     flaggedResponses: [],
+    ...overrides,
   }
 }
+
+const createDefaultOffenders = () => [
+  createMockOffender({ status: 'VERIFIED' }),
+  createMockOffender({ status: 'INACTIVE' }),
+  createMockOffender({ status: 'INITIAL' }),
+]
+
+const createDefaultCheckins = () => [
+  createMockCheckin(createMockOffender(), { status: 'SUBMITTED' }),
+  createMockCheckin(createMockOffender(), { status: 'REVIEWED', reviewedAt: faker.date.recent().toISOString() }),
+  createMockCheckin(createMockOffender(), { status: 'CREATED' }),
+  createMockCheckin(createMockOffender(), { status: 'EXPIRED' }),
+]
+
+// Stubs
 
 export default {
   stubPing: (httpStatus = 200): SuperAgentRequest => {
@@ -73,7 +78,7 @@ export default {
       },
     })
   },
-  stubOffenders: (offenders = Array.from({ length: 5 }, () => createMockOffender())): SuperAgentRequest => {
+  stubOffenders: (offenders = createDefaultOffenders()): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',
@@ -89,9 +94,20 @@ export default {
       },
     })
   },
-  stubOffenderCheckins: (
-    checkins = [createMockCheckin(createMockOffender({ firstName: 'Frodo', lastName: 'Baggins' }))],
-  ): SuperAgentRequest => {
+  stubGetOffender: (offender): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/offenders/${offender.uuid}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: offender,
+      },
+    })
+  },
+  stubOffenderCheckins: (checkins = createDefaultCheckins()): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'GET',

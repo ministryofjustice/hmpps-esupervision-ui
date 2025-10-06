@@ -44,14 +44,14 @@ describe('authorisationMiddleware', () => {
     expect(res.redirect).not.toHaveBeenCalled()
   })
 
-  // it('should redirect when user has no authorised roles', () => {
-  //   const res = createResWithToken({ authorities: [] })
-  //
-  //   authorisationMiddleware(['SOME_REQUIRED_ROLE'])(req, res, next)
-  //
-  //   expect(next).not.toHaveBeenCalled()
-  //   expect(res.redirect).toHaveBeenCalledWith('/authError')
-  // })
+  it('should redirect when user has no authorised roles', () => {
+    const res = createResWithToken({ authorities: [] })
+
+    authorisationMiddleware(['SOME_REQUIRED_ROLE'])(req, res, next)
+
+    expect(next).not.toHaveBeenCalled()
+    expect(res.redirect).toHaveBeenCalledWith('/authError')
+  })
 
   it('should return next when user has authorised role', () => {
     const res = createResWithToken({ authorities: ['ROLE_SOME_REQUIRED_ROLE'] })

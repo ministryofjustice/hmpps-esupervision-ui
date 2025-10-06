@@ -27,7 +27,7 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
         } else {
           logger.error(`User ${name} (${userName}) is not authorised to access dashboard`)
           logger.error(`User has roles '${roles}', required one of ${authorisedAuthorities}`)
-          // return res.redirect('/authError')
+          return res.redirect('/authError')
         }
       }
 

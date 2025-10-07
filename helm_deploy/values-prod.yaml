@@ -11,6 +11,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api.prison.service.justice.gov.uk'
     ESUPERVISION_API_URL: 'https://esupervision-api.hmpps.service.justice.gov.uk'
     AUDIT_ENABLED: 'false'
+    AUTHORISED_USER_ROLES: 'ROLE_ESUPERVISION__PRACTITIONER__RW'
 
 generic-prometheus-alerts:
   alertSeverity: hmpps_esupervision_alerts_prod

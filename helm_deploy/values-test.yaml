@@ -14,6 +14,7 @@ generic-service:
     ESUPERVISION_API_URL: 'https://esupervision-api-test.hmpps.service.justice.gov.uk'
     ENVIRONMENT_NAME: TEST
     AUDIT_ENABLED: 'false'
+    AUTHORISED_USER_ROLES: 'ROLE_ESUPERVISION__PRACTITIONER__RW'
 
 generic-prometheus-alerts:
   alertSeverity: hmpps_esupervision_alerts_nonprod

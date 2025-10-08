@@ -23,7 +23,7 @@ export default class DashboardPage extends Page {
 
   successBanner = (): PageElement => cy.get('.moj-alert--success')
 
-  successBannerTitle = (): PageElement => this.successBanner().find('.moj-alert__title')
+  successBannerTitle = () => cy.get('.moj-alert--success').find('.moj-alert__heading')
 
-  successBannerMessage = (): PageElement => this.successBanner().find('.moj-alert__message')
+  successBannerMessage = () => this.successBanner().find('.moj-alert__content')
 }

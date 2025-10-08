@@ -1,16 +1,25 @@
 import type { SuperAgentRequest } from 'superagent'
-import { faker } from '@faker-js/faker'
-
+import { faker } from '@faker-js/faker/locale/en_GB'
+import Offender from '../../server/data/models/offender'
 import { stubFor } from './wiremock'
-import generateValidCrn from '../support/utils'
+import { generateValidCrn, generateValidUKMobileNumber } from '../support/utils'
+import OffenderStatus from '../../server/data/models/offenderStatus'
+import CheckinInterval from '../../server/data/models/checkinInterval'
+import CheckinStatus from '../../server/data/models/checkinStatus'
 
 const practitionerUsername = 'AUTH_USER'
-const offenderStatuses = ['INITIAL', 'VERIFIED', 'INACTIVE']
-const checkinIntervals = ['WEEKLY', 'TWO_WEEKS', 'FOUR_WEEKS', 'EIGHT_WEEKS']
-const checkinStatuses = ['CREATED', 'SUBMITTED', 'REVIEWED', 'EXPIRED']
+const offenderStatuses = [OffenderStatus.Initial, OffenderStatus.Verified, OffenderStatus.Inactive]
+const checkinIntervals = [
+  CheckinInterval.Weekly,
+  CheckinInterval.TwoWeeks,
+  CheckinInterval.FourWeeks,
+  CheckinInterval.EightWeeks,
+]
+const checkinStatuses = [CheckinStatus.Created, CheckinStatus.Submitted, CheckinStatus.Reviewed, CheckinStatus.Expired]
 
-export const createMockOffender = (overrides = {}) => {
-  return {
+export const createMockOffender = (overrides: Partial<Offender> = {}): Offender => {
+  const offenderStatus = overrides.status || faker.helpers.arrayElement(offenderStatuses)
+  const offender = {
     uuid: faker.string.uuid(),
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
@@ -20,12 +29,21 @@ export const createMockOffender = (overrides = {}) => {
     practitioner: practitionerUsername,
     createdAt: faker.date.recent({ days: 10 }).toISOString(),
     email: faker.internet.email(),
-    phoneNumber: faker.phone.number(),
-    photoUrl: null,
+    phoneNumber: generateValidUKMobileNumber(),
+    photoUrl: faker.image.personPortrait(),
     firstCheckin: faker.date.soon({ days: 7 }).toISOString().slice(0, 10),
     checkinInterval: faker.helpers.arrayElement(checkinIntervals),
+    deactivationEntry:
+      offenderStatus === OffenderStatus.Inactive
+        ? {
+            uuid: faker.string.uuid(),
+            comment: faker.lorem.sentence(),
+            createdAt: faker.date.recent().toISOString(),
+          }
+        : null,
     ...overrides,
   }
+  return offender
 }
 
 const createMockCheckin = (offender, overrides = {}) => {
@@ -50,9 +68,9 @@ const createMockCheckin = (offender, overrides = {}) => {
 }
 
 const createDefaultOffenders = () => [
-  createMockOffender({ status: 'VERIFIED' }),
-  createMockOffender({ status: 'INACTIVE' }),
-  createMockOffender({ status: 'INITIAL' }),
+  createMockOffender({ status: OffenderStatus.Verified }),
+  createMockOffender({ status: OffenderStatus.Inactive }),
+  createMockOffender({ status: OffenderStatus.Initial }),
 ]
 
 const createDefaultCheckins = () => [
@@ -124,27 +142,44 @@ export default {
     })
   },
 
-  stubCreateOffender: (httpStatus = 200): SuperAgentRequest => {
+  stubStopCheckins: offender => {
+    const stoppedOffender = {
+      ...offender,
+      status: 'INACTIVE',
+      deactivationEntry: {
+        comment: 'Case has been transferred.',
+        deactivatedBy: practitionerUsername,
+        deactivationDate: new Date().toISOString(),
+      },
+    }
+
     return stubFor({
       request: {
         method: 'POST',
-        urlPattern: `/offender_setup`,
+        urlPattern: `/offenders/${offender.uuid}/deactivate`,
       },
       response: {
-        status: httpStatus,
+        status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: {
-          setupUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-          practitionerId: 'string',
-          firstName: 'string',
-          lastName: 'string',
-          crn: 'strings',
-          dateOfBirth: '2025-10-02',
-          email: 'string',
-          phoneNumber: 'string',
-          firstCheckinDate: '2025-10-02',
-          checkinInterval: 'WEEKLY',
-        },
+        jsonBody: stoppedOffender,
+      },
+    })
+  },
+  stubCreateOffender: (offenderData = createMockOffender()) => {
+    const response = {
+      uuid: offenderData.uuid,
+      practitioner: practitionerUsername,
+      createdAt: new Date().toISOString(),
+    }
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPath: `/offender_setup`,
+      },
+      response: {
+        status: 201,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: response,
       },
     })
   },
@@ -152,7 +187,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPattern: `/offender_setup/.+?/upload_location\\?content-type=.+?`,
+        urlPathPattern: `/offender_setup/.+?/upload_location`,
       },
       response: {
         status: httpStatus,
@@ -170,7 +205,7 @@ export default {
     return stubFor({
       request: {
         method: 'PUT',
-        urlPattern: `/fake-s3-upload`,
+        urlPath: `/fake-s3-upload`,
       },
       response: {
         status: httpStatus,

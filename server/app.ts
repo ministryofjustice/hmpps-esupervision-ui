@@ -30,6 +30,9 @@ export default function createApp(services: Services): express.Application {
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
 
+  // don't send X-Powered-By header
+  app.disable('x-powered-by')
+
   app.use(appInsightsMiddleware())
   app.use(setUpHealthChecks(services.applicationInfo))
   // app.use(setUpWebSecurity())

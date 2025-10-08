@@ -1,192 +1,90 @@
 # HMPPS eSupervision
 
 [![repo standards badge](https://img.shields.io/endpoint?labelColor=231f20&color=005ea5&style=flat&label=MoJ%20Compliant&url=https%3A%2F%2Foperations-engineering-reports-prod.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fendpoint%2Fhmpps-template-typescript&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABmJLR0QA/wD/AP+gvaeTAAAHJElEQVRYhe2YeYyW1RWHnzuMCzCIglBQlhSV2gICKlHiUhVBEAsxGqmVxCUUIV1i61YxadEoal1SWttUaKJNWrQUsRRc6tLGNlCXWGyoUkCJ4uCCSCOiwlTm6R/nfPjyMeDY8lfjSSZz3/fee87vnnPu75z3g8/kM2mfqMPVH6mf35t6G/ZgcJ/836Gdug4FjgO67UFn70+FDmjcw9xZaiegWX29lLLmE3QV4Glg8x7WbFfHlFIebS/ANj2oDgX+CXwA9AMubmPNvuqX1SnqKGAT0BFoVE9UL1RH7nSCUjYAL6rntBdg2Q3AgcAo4HDgXeBAoC+wrZQyWS3AWcDSUsomtSswEtgXaAGWlVI2q32BI0spj9XpPww4EVic88vaC7iq5Hz1BvVf6v3qe+rb6ji1p3pWrmtQG9VD1Jn5br+Knmm70T9MfUh9JaPQZu7uLsR9gEsJb3QF9gOagO7AuUTom1LpCcAkoCcwQj0VmJregzaipA4GphNe7w/MBearB7QLYCmlGdiWSm4CfplTHwBDgPHAFmB+Ah8N9AE6EGkxHLhaHU2kRhXc+cByYCqROs05NQq4oR7Lnm5xE9AL+GYC2gZ0Jmjk8VLKO+pE4HvAyYRnOwOH5N7NhMd/WKf3beApYBWwAdgHuCLn+tatbRtgJv1awhtd838LEeq30/A7wN+AwcBt+bwpD9AdOAkYVkpZXtVdSnlc7QI8BlwOXFmZ3oXkdxfidwmPrQXeA+4GuuT08QSdALxC3OYNhBe/TtzON4EziZBXD36o+q082BxgQuqvyYL6wtBY2TyEyJ2DgAXAzcC1+Xxw3RlGqiuJ6vE6QS9VGZ/7H02DDwAvELTyMDAxbfQBvggMAAYR9LR9J2cluH7AmnzuBowFFhLJ/wi7yiJgGXBLPq8A7idy9kPgvAQPcC9wERHSVcDtCfYj4E7gr8BRqWMjcXmeB+4tpbyG2kG9Sl2tPqF2Uick8B+7szyfvDhR3Z7vvq/2yqpynnqNeoY6v7LvevUU9QN1fZ3OTeppWZmeyzRoVu+rhbaHOledmoQ7LRd3SzBVeUo9Wf1DPs9X90/jX8m/e9Rn1Mnqi7nuXXW5+rK6oU7n64mjszovxyvVh9WeDcTVnl5KmQNcCMwvpbQA1xE8VZXhwDXAz4FWIkfnAlcBAwl6+SjD2wTcmPtagZnAEuA3dTp7qyNKKe8DW9UeBCeuBsbsWKVOUPvn+MRKCLeq16lXqLPVFvXb6r25dlaGdUx6cITaJ8fnpo5WI4Wuzcjcqn5Y8eI/1F+n3XvUA1N3v4ZamIEtpZRX1Y6Z/DUK2g84GrgHuDqTehpBCYend94jbnJ34DDgNGArQT9bict3Y3p1ZCnlSoLQb0sbgwjCXpY2blc7llLW1UAMI3o5CD4bmuOlwHaC6xakgZ4Z+ibgSxnOgcAI4uavI27jEII7909dL5VSrimlPKgeQ6TJCZVQjwaOLaW8BfyWbPEa1SaiTH1VfSENd85NDxHt1plA71LKRvX4BDaAKFlTgLeALtliDUqPrSV6SQCBlypgFlbmIIrCDcAl6nPAawmYhlLKFuB6IrkXAadUNj6TXlhDcCNEB/Jn4FcE0f4UWEl0NyWNvZxGTs89z6ZnatIIrCdqcCtRJmcCPwCeSN3N1Iu6T4VaFhm9n+riypouBnepLsk9p6p35fzwvDSX5eVQvaDOzjnqzTl+1KC53+XzLINHd65O6lD1DnWbepPBhQ3q2jQyW+2oDkkAtdt5udpb7W+Q/OFGA7ol1zxu1tc8zNHqXercfDfQIOZm9fR815Cpt5PnVqsr1F51wI9QnzU63xZ1o/rdPPmt6enV6sXqHPVqdXOCe1rtrg5W7zNI+m712Ir+cer4POiqfHeJSVe1Raemwnm7xD3mD1E/Z3wIjcsTdlZnqO8bFeNB9c30zgVG2euYa69QJ+9G90lG+99bfdIoo5PU4w362xHePxl1slMab6tV72KUxDvzlAMT8G0ZohXq39VX1bNzzxij9K1Qb9lhdGe931B/kR6/zCwY9YvuytCsMlj+gbr5SemhqkyuzE8xau4MP865JvWNuj0b1YuqDkgvH2GkURfakly01Cg7Cw0+qyXxkjojq9Lw+vT2AUY+DlF/otYq1Ixc35re2V7R8aTRg2KUv7+ou3x/14PsUBn3NG51S0XpG0Z9PcOPKWSS0SKNUo9Rv2Mmt/G5WpPF6pHGra7Jv410OVsdaz217AbkAPX3ubkm240belCuudT4Rp5p/DyC2lf9mfq1iq5eFe8/lu+K0YrVp0uret4nAkwlB6vzjI/1PxrlrTp/oNHbzTJI92T1qAT+BfW49MhMg6JUp7ehY5a6Tl2jjmVvitF9fxo5Yq8CaAfAkzLMnySt6uz/1k6bPx59CpCNxGfoSKA30IPoH7cQXdArwCOllFX/i53P5P9a/gNkKpsCMFRuFAAAAABJRU5ErkJggg==)](https://operations-engineering-reports-prod.cloud-platform.service.justice.gov.uk/public-report/hmpps-template-typescript)
-[![Docker Repository on ghcr](https://img.shields.io/badge/ghcr.io-repository-2496ED.svg?logo=docker)](https://ghcr.io/ministryofjustice/hmpps-template-typescript)
+[![Docker Repository on ghcr](https://img.shields.io/badge/ghcr.io-repository-2496ED.svg?logo=docker)](https://ghcr.io/ministryofjustice/hmpps-esupervision-ui)
 
-Template github repo used for new Typescript based projects.
+Front end for the E-supervision project. It relies on the [E-supervision API](https://github.com/ministryofjustice/hmpps-esupervision-api)
+for persistence and interaction with cloud resources.
 
-# Instructions
+## Running locally
 
-If this is a HMPPS project then the project will be created as part of bootstrapping -
-see https://github.com/ministryofjustice/hmpps-project-bootstrap. You are able to specify a template application using
-the `github_template_repo` attribute to clone without the need to manually do this yourself within GitHub.
+Note that running all dependencies using Docker compose is currently blocked by [ESUP-783](https://dsdmoj.atlassian.net/browse/ESUP-783).
 
-This project is community managed by the mojdt `#typescript` slack channel.
-Please raise any questions or queries there. Contributions welcome!
+### Install node
 
-Our security policy is located [here](https://github.com/ministryofjustice/hmpps-template-typescript/security/policy).
+The recommended way to install node is using [nvm](https://github.com/nvm-sh/nvm)
+After installing NVM you can install node with
 
-More information about the template project including features can be
-found [here](https://dsdmoj.atlassian.net/wiki/spaces/NDSS/pages/3488677932/Typescript+template+project).
+    > nvm install
+    > nvm use
 
-Documentation to create new service is located [here](https://tech-docs.hmpps.service.justice.gov.uk/applicationplatform/newservice-GHA/).
+The `node` and `npm` commands should now exist on your PATH:
 
-## Creating a Cloud Platform namespace
+    > node --version
 
-When deploying to a new namespace, you may wish to use the
-[templates project namespace](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-templates-dev)
-as the basis for your new namespace. This namespace contains both the kotlin and typescript template projects, which
-is the usual way that projects are setup. This namespace includes an AWS elasticache setup - which is required by this
-template project.
+install app dependencies
 
-Copy this folder and update all the existing namespace references. If you only need the typescript configuration then
-remove all kotlin references. Submit a PR to the Cloud Platform team in #ask-cloud-platform. Further instructions from
-the Cloud Platform team can be found in
-the [Cloud Platform User Guide](https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide)
+   > npm install
 
-## Renaming from HMPPS Template Typescript - github Actions
+### Configure the API
 
-Once the new repository is deployed. Navigate to the repository in github, and select the `Actions` tab.
-Click the link to `Enable Actions on this repository`.
+Configure the API according to the instructions in the [API README](https://github.com/ministryofjustice/hmpps-esupervision-api). This involves
+running the API dependencies (auth, postgres, localstack) using Docker compose and running the API directly using Gradle. Once the API is running
+its health endpoint should return a healthy status:
 
-Find the Action workflow named: `rename-project-create-pr` and click `Run workflow`. This workflow will
-execute the `rename-project.bash` and create Pull Request for you to review. Review the PR and merge.
+    curl http://localhost:8080/health
 
-Note: ideally this workflow would run automatically however due to a recent change github Actions are not
-enabled by default on newly created repos. There is no way to enable Actions other then to click the button in the UI.
-If this situation changes we will update this project so that the workflow is triggered during the bootstrap project.
-Further reading: <https://github.community/t/workflow-isnt-enabled-in-repos-generated-from-template/136421>
+### Initial configuration
 
-The script takes six arguments:
+Create a local config file from the `.env.example` config
 
-### New project name
+    cp .env.example .env
 
-This should start with `hmpps-` e.g. `hmpps-prison-visits` so that it can be easily distinguished in github from
-other departments projects. Try to avoid using abbreviations so that others can understand easily what your project is.
+The settings defined in this file are automatically loaded into the environment when running the UI application.
 
-### Slack channel for release notifications
+### Configure OAuth client
 
-By default, release notifications are only enabled for production. The github pipeline configuration can be amended to send
-release notifications for deployments to other environments if required. Note that if the configuration is amended,
-the slack channel should then be amended to your own team's channel as `hmpps-releases` (previously called `dps-releases`) is strictly for production release
-notifications. If the slack channel is set to something other than `hmpps-releases`, production release notifications
-will still automatically go to `hmpps-releases` as well. This is configured by by setting a github actions environment variable called `RELEASE_NOTIFICATIONS_SLACK_CHANNEL_ID`.
+A `client_credentials` OAuth client is required to authenticate calls from the UI to the API. The auth server should be running as part of the
+API dependencies. Navigate to `http://localhost:8090/auth/ui/` in the browser and login as the admin user. Scroll to the bottom of the page and click `Add Client`.
 
-### Slack channel for pipeline security notifications
+Configure a new client with the following properties:
 
-Ths channel should be specific to your team and is for daily / weekly security scanning job results. It is your team's
-responsibility to keep up-to-date with security issues and update your application so that these jobs pass. You will
-only be notified if the jobs fail. The scan results can always be found in github actions and results are sent to the github security tab. This is
-configured by setting github actions environment variable called `SECURITY_ALERTS_SLACK_CHANNEL_ID`.
+* Client ID: esupervision-ui
+* Approved Scopes: read, write
+* Authorities: ESUPERVISION__ESUPERVISION_UI
+* Grant Types: client_credentials
 
-### Non production kubernetes alerts
+After saving the client you should be shown a screen containing the client id and client secret. Open your `.env` file and configure the client details:
 
-By default Prometheus alerts are created in the application namespaces to monitor your application e.g. if your
-application is crash looping, there are a significant number of errors from the ingress. Since Prometheus runs in
-cloud platform AlertManager needs to be setup first with your channel. Please see
-[Create your own custom alerts](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html)
-in the Cloud Platform user guide. Once that is setup then the `custom severity label` can be used for
-`alertSeverity` in the `helm_deploy/values-*.yaml` configuration.
+```shell
+# Credentials for API calls
+CLIENT_CREDS_CLIENT_ID=esupervision-ui
+CLIENT_CREDS_CLIENT_SECRET='<client secret>'
+```
 
-Normally it is worth setting up two separate labels and therefore two separate slack channels - one for your production
-alerts and one for your non-production alerts. Using the same channel can mean that production alerts are sometimes
-lost within non-production issues.
+Note if you stop the auth container this client will need to be re-created and the UI configured with a new secret.
 
-### Production kubernetes alerts
+##### Test OAuth client
 
-This is the severity label for production, determined by the `custom severity label`. See the above
-#non-production-kubernetes-alerts for more information. This is configured in `helm_deploy/values-prod.yaml`.
+You should now be able to obtain a token from the local auth server:
 
-### Product ID
+    > curl -XPOST -u 'esupervision-ui:<client secret>' http://localhost:8090/auth/oauth/token?grant_type=client_credentials
 
-This is so that we can link a component to a product and thus provide team and product information in the Developer
-Portal. Refer to the developer portal at https://developer-portal.hmpps.service.justice.gov.uk/products to find your
-product id. This is configured in `helm_deploy/<project_name>/values.yaml`.
+If the response is successful it should return a JSON document containing an `access_token` key containing the token. Copy the token and you should be able to use it to authenticated to the API:
 
-## Manually branding from template app
+    > curl -H 'Authorization: Bearer <access_token>' http://localhost:8080/stats/practitioner/registrations
+    > []
 
-Run the `rename-project.bash` without any arguments. This will prompt for the six required parameters and create a PR.
-The script requires a recent version of `bash` to be installed, as well as GNU `sed` in the path.
+### Run the application
 
-## Oauth2 Credentials
+Run the application using npm:
 
-The template project is set up to run with two sets of credentials, each one support a different oauth2 flows.
-These need to be requested from the auth team by filling in
-this [template](https://dsdmoj.atlassian.net/browse/HAAR-140) and raising on their slack channel.
+    > npm run start:dev
 
-### Auth Code flow
-
-These are used to allow authenticated users to access the application. After the user is redirected from auth back to
-the application, the typescript app will use the returned auth code to request a JWT token for that user containing the
-user's roles. The JWT token will be verified and then stored in the user's session.
-
-These credentials are configured using the following env variables:
-
-- AUTH_CODE_CLIENT_ID
-- AUTH_CODE_CLIENT_SECRET
-
-### Client Credentials flow
-
-These are used by the application to request tokens to make calls to APIs. These are system accounts that will have
-their own sets of roles.
-
-Most API calls that occur as part of the request/response cycle will be on behalf of a user.
-To make a call on behalf of a user, a username should be passed when requesting a system token. The username will then
-become part of the JWT and can be used downstream for auditing purposes.
-
-These tokens are cached until expiration.
-
-These credentials are configured using the following env variables:
-
-- CLIENT_CREDS_CLIENT_ID
-- CLIENT_CREDS_CLIENT_SECRET
-
-### Dependencies
-
-### HMPPS Auth
-
-To allow authenticated users to access your application you need to point it to a running instance of `hmpps-auth`.
-By default the application is configured to run against an instance running in docker that can be started
-via `docker-compose`.
-
-**NB:** It's common for developers to run against the instance of auth running in the development/T3 environment for
-local development.
-Most APIs don't have images with cached data that you can run with docker: setting up realistic stubbed data in sync
-across a variety of services is very difficult.
-
-### REDIS
-
-When deployed to an environment with multiple pods we run applications with an instance of REDIS/Elasticache to provide
-a distributed cache of sessions.
-The template app is, by default, configured not to use REDIS when running locally.
-
-## Running the app via docker-compose
-
-The easiest way to run the app is to use docker compose to create the service and all dependencies.
-
-`docker compose pull`
-
-`docker compose up`
-
-### Running the app for development
-
-To start the main services excluding the example typescript template app:
-
-`docker compose up --scale=app=0`
-
-Create an environment file by copying `.env.example` -> `.env`
-Environment variables set in here will be available when running `start:dev`
-
-Install dependencies using `npm install`, ensuring you are using `node v20`
-
-Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder
-to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json`
-and the github pipeline build config.
-
-And then, to build the assets and start the app with esbuild:
-
-`npm run start:dev`
-
-### Logging in with a test user
-
-Once the application is running you should then be able to login with:
+the site should be available at `http://localhost:3000` you can login as the test user
 
 username: AUTH_USER
 password: password123456
-
-To request specific users and roles then raise a PR
-to [update the seed data](https://github.com/ministryofjustice/hmpps-auth/blob/main/src/main/resources/db/dev/data/auth/V900_3__users.sql)
-for the in-memory DB used by Auth
 
 ### Run linter
 
@@ -214,6 +112,13 @@ And then either, run tests in headless mode with:
 Or run tests with the cypress UI:
 
 `npm run int-test-ui`
+
+## Deployments
+
+The UI is deployed to each environment by the `hmpps-esupervision-ui` [helm](https://helm.sh/) chart. Any new configuration
+parameters should be added to the service environment in either the `values.yaml` file, or in each of the `values-{environment}.yaml`
+files if the values differ by environment. Sensitive values should be added as secrets within each deployment namespace and referenced
+in the `namespace-secrets` section of the `values.yaml` file.
 
 ## Change log
 

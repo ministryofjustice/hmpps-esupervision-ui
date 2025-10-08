@@ -2,6 +2,6 @@
 
 // export default class Error500Page extends Page {
 //   constructor() {
-//     super('service-unavailable')
+//     super('Sorry, there is a problem with the service')
 //   }
 // }

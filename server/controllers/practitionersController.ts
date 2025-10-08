@@ -21,6 +21,7 @@ import OffenderUpdate from '../data/models/offenderUpdate'
 import OffenderUpdateError from '../data/offenderUpdateError'
 import { calculateNextCheckinDate } from '../utils/utils'
 import Offender from '../data/models/offender'
+import { indexByLocation } from '../utils/indexByLocation'
 
 const { esupervisionService } = services()
 
@@ -729,8 +730,36 @@ export const handleRegisterComplete: RequestHandler = async (req, res, next) => 
 export const renderDataDashboard: RequestHandler = async (req, res, next) => {
   try {
     const stats = await esupervisionService.getCheckinStats()
+    // Get a list of all sites from the offendersPerSite data and sort alphabetically
+    const sites = stats.offendersPerSite.map(site => site.location).sort()
 
-    res.render('pages/practitioners/data/dashboard', { stats })
+    const offendersByLocation = indexByLocation(stats.offendersPerSite, r => r.count)
+    const invitesByLocation = indexByLocation(stats.invitesPerSite, r => r.count)
+    const completedByLocation = indexByLocation(stats.completedCheckinsPerSite, r => r.count)
+    const completedByLocationOnDay1 = indexByLocation(
+      stats.completedCheckinsPerNth.filter(r => r.day === 1),
+      r => r.count,
+    )
+    const completedByLocationOnDay2 = indexByLocation(
+      stats.completedCheckinsPerNth.filter(r => r.day === 2),
+      r => r.count,
+    )
+    const completedByLocationOnDay3 = indexByLocation(
+      stats.completedCheckinsPerNth.filter(r => r.day === 3),
+      r => r.count,
+    )
+    const mismatchByLocation = indexByLocation(stats.automatedIdCheckAccuracy, r => r.mismatchCount)
+
+    res.render('pages/practitioners/data/dashboard', {
+      sites,
+      offendersByLocation,
+      invitesByLocation,
+      completedByLocation,
+      completedByLocationOnDay1,
+      completedByLocationOnDay2,
+      completedByLocationOnDay3,
+      mismatchByLocation,
+    })
   } catch (error) {
     next(error)
   }

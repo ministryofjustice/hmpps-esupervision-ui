@@ -9,6 +9,25 @@ export type SiteCountOnNthDay = {
   day: number
 }
 
+export type SiteCheckinAverage = {
+  location: string
+  completedAvg: number
+  completedStdDev: number
+  expiredAvg: number
+  expiredStdDev: number
+  offenderCount: number
+  missedPercentage: number
+}
+
+export type IdCheckAccuracy = {
+  location: string
+  mismatchCount: number
+  falsePositivesAvg: number
+  falsePositiveStdDev: number
+  falseNegativesAvg: number
+  falseNegativesStdDev: number
+}
+
 export default class Stats {
   invitesPerSite: SiteCount[]
 
@@ -17,4 +36,8 @@ export default class Stats {
   completedCheckinsPerNth: SiteCountOnNthDay[]
 
   offendersPerSite: SiteCount[]
+
+  checkinAverages: SiteCheckinAverage[]
+
+  automatedIdCheckAccuracy: IdCheckAccuracy[]
 }

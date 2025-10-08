@@ -1,11 +1,19 @@
 import type { SuperAgentRequest } from 'superagent'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import Offender from '../../server/data/models/offender'
+import Checkin from '../../server/data/models/checkin'
+
 import { stubFor } from './wiremock'
 import { generateValidCrn, generateValidUKMobileNumber } from '../support/utils'
 import OffenderStatus from '../../server/data/models/offenderStatus'
 import CheckinInterval from '../../server/data/models/checkinInterval'
 import CheckinStatus from '../../server/data/models/checkinStatus'
+import AutomatedIdVerificationResult from '../../server/data/models/automatedIdVerificationResult'
+import CallbackRequested from '../../server/data/models/survey/callbackRequested'
+import MentalHealth from '../../server/data/models/survey/mentalHealth'
+import SupportAspect from '../../server/data/models/survey/supportAspect'
+
+// mock generators
 
 const practitionerUsername = 'AUTH_USER'
 const offenderStatuses = [OffenderStatus.Initial, OffenderStatus.Verified, OffenderStatus.Inactive]
@@ -15,8 +23,6 @@ const checkinIntervals = [
   CheckinInterval.FourWeeks,
   CheckinInterval.EightWeeks,
 ]
-const checkinStatuses = [CheckinStatus.Created, CheckinStatus.Submitted, CheckinStatus.Reviewed, CheckinStatus.Expired]
-
 export const createMockOffender = (overrides: Partial<Offender> = {}): Offender => {
   const offenderStatus = overrides.status || faker.helpers.arrayElement(offenderStatuses)
   const offender = {
@@ -46,25 +52,53 @@ export const createMockOffender = (overrides: Partial<Offender> = {}): Offender 
   return offender
 }
 
-const createMockCheckin = (offender, overrides = {}) => {
-  return {
+export const createMockCheckin = (offender: Offender, overrides: Partial<Checkin> = {}): Checkin => {
+  const status = overrides.status || faker.helpers.arrayElement(Object.values(CheckinStatus))
+  const checkin: Checkin = {
     uuid: faker.string.uuid(),
-    status: faker.helpers.arrayElement(checkinStatuses),
+    status,
     dueDate: faker.date.future({ years: 1 }).toISOString().slice(0, 10),
     offender,
-    submittedAt: null,
-    surveyResponse: null,
+    questions: '{}',
     createdBy: practitionerUsername,
     createdAt: faker.date.recent({ days: 3 }).toISOString(),
+    submittedAt: null,
+    surveyResponse: null,
     reviewedBy: null,
     reviewedAt: null,
     videoUrl: null,
-    snapshotUrl: null,
     autoIdCheck: null,
     manualIdCheck: null,
     flaggedResponses: [],
+    reviewDueDate: null,
     ...overrides,
   }
+
+  if (checkin.status === CheckinStatus.Submitted || checkin.status === CheckinStatus.Reviewed) {
+    checkin.submittedAt = faker.date.recent().toISOString()
+    checkin.videoUrl = 'path/to/video.mp4'
+    checkin.autoIdCheck = faker.helpers.arrayElement([
+      AutomatedIdVerificationResult.Match,
+      AutomatedIdVerificationResult.NoMatch,
+      null,
+    ])
+    checkin.surveyResponse = {
+      version: '1.0',
+      mentalHealth: faker.helpers.arrayElement(Object.values(MentalHealth)),
+      assistance: faker.helpers.arrayElements(Object.values(SupportAspect)),
+      callback: faker.helpers.arrayElement(Object.values(CallbackRequested)),
+      mentalHealthSupport: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      alcoholSupport: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      drugsSupport: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      moneySupport: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      housingSupport: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      supportSystemSupport: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      otherSupport: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      callbackDetails: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+    }
+  }
+
+  return checkin
 }
 
 const createDefaultOffenders = () => [
@@ -74,10 +108,13 @@ const createDefaultOffenders = () => [
 ]
 
 const createDefaultCheckins = () => [
-  createMockCheckin(createMockOffender(), { status: 'SUBMITTED' }),
-  createMockCheckin(createMockOffender(), { status: 'REVIEWED', reviewedAt: faker.date.recent().toISOString() }),
-  createMockCheckin(createMockOffender(), { status: 'CREATED' }),
-  createMockCheckin(createMockOffender(), { status: 'EXPIRED' }),
+  createMockCheckin(createMockOffender(), { status: CheckinStatus.Submitted }),
+  createMockCheckin(createMockOffender(), {
+    status: CheckinStatus.Reviewed,
+    reviewedAt: faker.date.recent().toISOString(),
+  }),
+  createMockCheckin(createMockOffender(), { status: CheckinStatus.Created }),
+  createMockCheckin(createMockOffender(), { status: CheckinStatus.Expired }),
 ]
 
 // Stubs
@@ -96,6 +133,7 @@ export default {
       },
     })
   },
+  // offenders
   stubOffenders: (offenders = createDefaultOffenders()): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -122,46 +160,6 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: offender,
-      },
-    })
-  },
-  stubOffenderCheckins: (checkins = createDefaultCheckins()): SuperAgentRequest => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: `/offender_checkins\\?practitioner=.+?`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: {
-          pagination: { pageNumber: 0, pageSize: 20 },
-          content: checkins,
-        },
-      },
-    })
-  },
-
-  stubStopCheckins: offender => {
-    const stoppedOffender = {
-      ...offender,
-      status: 'INACTIVE',
-      deactivationEntry: {
-        comment: 'Case has been transferred.',
-        deactivatedBy: practitionerUsername,
-        deactivationDate: new Date().toISOString(),
-      },
-    }
-
-    return stubFor({
-      request: {
-        method: 'POST',
-        urlPattern: `/offenders/${offender.uuid}/deactivate`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: stoppedOffender,
       },
     })
   },
@@ -227,6 +225,79 @@ export default {
           offender: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
           createdAt: '2025-10-02T11:14:45.948Z',
         },
+      },
+    })
+  },
+
+  // checkins
+  stubOffenderCheckins: (checkins = createDefaultCheckins()): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/offender_checkins\\?practitioner=.+?`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          pagination: { pageNumber: 0, pageSize: 20 },
+          content: checkins,
+        },
+      },
+    })
+  },
+  stubGetCheckin: (checkin: Checkin): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPath: `/offender_checkins/${checkin.uuid}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          checkin,
+          checkinLogs: { logs: [] },
+        },
+      },
+    })
+  },
+
+  stubStopCheckins: offender => {
+    const stoppedOffender = {
+      ...offender,
+      status: 'INACTIVE',
+      deactivationEntry: {
+        comment: 'Case has been transferred.',
+        deactivatedBy: practitionerUsername,
+        deactivationDate: new Date().toISOString(),
+      },
+    }
+
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: `/offenders/${offender.uuid}/deactivate`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: stoppedOffender,
+      },
+    })
+  },
+
+  stubReviewCheckin: (checkin: Checkin): SuperAgentRequest => {
+    const reviewedCheckin = { ...checkin, status: CheckinStatus.Reviewed }
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPathPattern: `/offender_checkins/${checkin.uuid}/review`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: reviewedCheckin,
       },
     })
   },

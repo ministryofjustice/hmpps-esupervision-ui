@@ -15,7 +15,8 @@ export type SiteCheckinAverage = {
   completedStdDev: number
   expiredAvg: number
   expiredStdDev: number
-  offenderCount: number
+  completedTotal: number
+  expiredTotal: number
   missedPercentage: number
 }
 

@@ -181,6 +181,27 @@ export default {
       },
     })
   },
+  stubUpdateOffender: (offender, httpStatus = 200): SuperAgentRequest => {
+    const response = {
+      status: httpStatus,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody:
+        httpStatus < 400
+          ? offender
+          : {
+              userMessage: 'Could not update contact information, email possibly in use',
+            },
+    }
+
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: `/offenders/${offender.uuid}/details`,
+      },
+      response,
+    })
+  },
+
   stubGetProfilePhotoUploadLocation: (httpStatus = 200): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -262,7 +283,20 @@ export default {
       },
     })
   },
-
+  stubUpdateCheckinSettings: (offender: Offender, httpStatus = 200): SuperAgentRequest => {
+    const response = {
+      status: httpStatus,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: offender,
+    }
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: `/offenders/${offender.uuid}/checkin-settings`,
+      },
+      response,
+    })
+  },
   stubStopCheckins: offender => {
     const stoppedOffender = {
       ...offender,

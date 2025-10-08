@@ -11,8 +11,6 @@ import TakePhotoPage from '../../pages/practitioner/register/photo/takePhotoPage
 import UploadPhotoPage from '../../pages/practitioner/register/photo/uploadPhotoPage'
 import SetUpCheckInPage from '../../pages/practitioner/register/setupOnlineCheckinsPage'
 import { generateValidUKMobileNumber, generateValidCrn } from '../../support/utils'
-import stubs from '../../mockApis/esupervisionApi'
-import stubsToken from '../../mockApis/tokenVerification'
 
 describe('Register person', () => {
   beforeEach(() => {

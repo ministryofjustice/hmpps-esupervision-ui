@@ -33,7 +33,7 @@ export const createMockOffender = (overrides: Partial<Offender> = {}): Offender 
     dateOfBirth: faker.date.birthdate().toISOString().slice(0, 10),
     status: faker.helpers.arrayElement(offenderStatuses),
     practitioner: practitionerUsername,
-    createdAt: faker.date.recent({ days: 10 }).toISOString(),
+    createdAt: new Date().toISOString(),
     email: faker.internet.email(),
     phoneNumber: generateValidUKMobileNumber(),
     photoUrl: faker.image.personPortrait(),
@@ -241,10 +241,10 @@ export default {
         status: httpStatus,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: {
-          uuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-          practitioner: 'string',
-          offender: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-          createdAt: '2025-10-02T11:14:45.948Z',
+          uuid: faker.string.uuid(),
+          practitioner: practitionerUsername,
+          offender: faker.string.uuid(),
+          createdAt: new Date().toISOString(),
         },
       },
     })
@@ -297,12 +297,12 @@ export default {
       response,
     })
   },
-  stubStopCheckins: offender => {
+  stubStopCheckins: (offender: Offender) => {
     const stoppedOffender = {
       ...offender,
-      status: 'INACTIVE',
+      status: OffenderStatus.Inactive,
       deactivationEntry: {
-        comment: 'Case has been transferred.',
+        comment: faker.lorem.sentence(),
         deactivatedBy: practitionerUsername,
         deactivationDate: new Date().toISOString(),
       },

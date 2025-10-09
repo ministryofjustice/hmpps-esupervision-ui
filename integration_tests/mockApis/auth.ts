@@ -11,13 +11,13 @@ interface UserToken {
 
 const createToken = (userToken: UserToken) => {
   // authorities in the session are always prefixed by ROLE.
-  const authorities = userToken.roles?.map(role => (role.startsWith('ROLE_') ? role : `ROLE_${role}`)) || []
+  // const authorities = userToken.roles?.map(role => (role.startsWith('ROLE_') ? role : `ROLE_${role}`)) || []
   const payload = {
     name: userToken.name || 'john smith',
     user_name: 'USER1',
-    scope: ['read'],
+    scope: ['read', 'write'],
     auth_source: 'nomis',
-    authorities,
+    authorities: ['ROLE_ESUPERVISION__PRACTITIONER__RW'],
     jti: '83b50a10-cca6-41db-985f-e87efb303ddb',
     client_id: 'clientid',
   }

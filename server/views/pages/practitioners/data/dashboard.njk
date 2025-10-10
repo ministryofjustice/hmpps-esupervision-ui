@@ -18,11 +18,12 @@
       <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ site | capitalize }}</th>
     {% endfor %}
     <th scope="col" class="govuk-table__header govuk-table__header--numeric es-table__cell--highlight">Total</th>
+    <th scope="col" class="govuk-table__header govuk-table__header--numeric es-table__cell--highlight es-table__cell--extra-highlight">%</th>
   </tr>
   </thead>
   <tbody class="govuk-table__body">
   <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Number of PoPs signed up per site</th>
+    <th class="govuk-table__header" scope="row">People on probation signed up</th>
     {% set total = 0 %}
     {% for site in sites %}
       <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
@@ -31,9 +32,10 @@
       </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
   </tr>
   <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Number of check in invites sent</th>
+    <th class="govuk-table__header" scope="row">Check in invites sent</th>
     {% set total = 0 %}
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
@@ -42,9 +44,11 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
+
   </tr>
   <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Number of completed check ins</th>
+    <th class="govuk-table__header" scope="row">Completed check ins</th>
     {% set total = 0 %}
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
@@ -52,10 +56,13 @@
       {% set total = total + (completedByLocation[site] or 0) %}
     </td>
     {% endfor %}
+    {% set completedTotal = total %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
+
   </tr>
   <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Number of check ins submitted on day 1</th>
+    <th class="govuk-table__header" scope="row">Completed on day 1</th>
     {% set total = 0 %}
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
@@ -64,9 +71,11 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) }}%</td>
+
   </tr>
   <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Number of check ins submitted on day 2</th>
+    <th class="govuk-table__header" scope="row">Completed on day 2</th>
     {% set total = 0 %}
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
@@ -75,9 +84,11 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) }}%</td>
+
   </tr>
   <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Number of check ins submitted on day 3</th>
+    <th class="govuk-table__header" scope="row">Completed on day 3</th>
     {% set total = 0 %}
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
@@ -86,9 +97,37 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) }}%</td>
+
   </tr>
   <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Number of check-ins where software and PP contradict</th>
+    <th class="govuk-table__header" scope="row">Missed check-ins</th>
+    {% set total = 0 %}
+    {% for site in sites %}
+    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
+      {{ expiredTotalByLocation[site] or 0 }}
+      {% set total = total + (expiredTotalByLocation[site] or 0) %}
+    </td>
+    {% endfor %}
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / (completedTotal + total) * 100 ) | round(2) }}%</td>
+
+  </tr>
+  <tr class="govuk-table__row">
+    <th class="govuk-table__header" scope="row">% of check ins completed on time</th>
+    {% set total = 0 %}
+    {% for site in sites %}
+    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
+      {{ ontimePercentageByLocation[site] or 0 }}%
+      {% set total = total + (ontimePercentageByLocation[site] or 0) %}
+    </td>
+    {% endfor %}
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ (total / sites.length) | round(2) }}%</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
+
+  </tr>
+  <tr class="govuk-table__row">
+    <th class="govuk-table__header" scope="row">Check-ins with photo mismatch </th>
     {% set total = 0 %}
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
@@ -97,6 +136,8 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
+
   </tr>
   </tbody>
 </table>
@@ -123,7 +164,7 @@
     {% endfor %}
   </tr>
   <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Expired check ins</th>
+    <th class="govuk-table__header" scope="row">Missed check ins</th>
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
       {{ expiredAvgByLocation[site] | round(2) or 0 }}
@@ -131,7 +172,7 @@
     {% endfor %}
   </tr>
   <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Missed check ins</th>
+    <th class="govuk-table__header" scope="row">% of check ins missed</th>
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
       {{ missedPercentageByLocation[site] | round(2) or 0 }}%

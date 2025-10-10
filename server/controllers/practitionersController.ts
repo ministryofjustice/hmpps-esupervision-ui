@@ -750,6 +750,12 @@ export const renderDataDashboard: RequestHandler = async (req, res, next) => {
     )
     const mismatchByLocation = indexByLocation(stats.automatedIdCheckAccuracy, r => r.mismatchCount)
 
+    const completedAvgByLocation = indexByLocation(stats.checkinAverages, r => r.completedAvg)
+
+    const expiredAvgByLocation = indexByLocation(stats.checkinAverages, r => r.expiredAvg)
+
+    const missedPercentageByLocation = indexByLocation(stats.checkinAverages, r => r.missedPercentage)
+
     res.render('pages/practitioners/data/dashboard', {
       sites,
       offendersByLocation,
@@ -759,6 +765,9 @@ export const renderDataDashboard: RequestHandler = async (req, res, next) => {
       completedByLocationOnDay2,
       completedByLocationOnDay3,
       mismatchByLocation,
+      completedAvgByLocation,
+      expiredAvgByLocation,
+      missedPercentageByLocation,
     })
   } catch (error) {
     next(error)

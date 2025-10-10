@@ -101,5 +101,45 @@
   </tbody>
 </table>
 
+<hr class="govuk-section-break govuk-section-break--l">
+
+<table class="govuk-table es-table--responsive">
+  <caption class="govuk-table__caption govuk-table__caption--m">PoP averages per site</caption>
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th scope="col" class="govuk-table__header">&nbsp;</th>
+    {% for site in sites %}
+    <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ site | capitalize }}</th>
+    {% endfor %}
+  </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+  <tr class="govuk-table__row">
+    <th class="govuk-table__header" scope="row">Completed check ins</th>
+    {% for site in sites %}
+    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
+      {{ completedAvgByLocation[site] or 0 }}
+    </td>
+    {% endfor %}
+  </tr>
+  <tr class="govuk-table__row">
+    <th class="govuk-table__header" scope="row">Expired check ins</th>
+    {% for site in sites %}
+    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
+      {{ expiredAvgByLocation[site] or 0 }}
+    </td>
+    {% endfor %}
+  </tr>
+  <tr class="govuk-table__row">
+    <th class="govuk-table__header" scope="row">Missed check ins</th>
+    {% for site in sites %}
+    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
+      {{ missedPercentageByLocation[site] or 0 }}
+    </td>
+    {% endfor %}
+  </tr>
+  </tbody>
+</table>
+
 
 {% endblock %}

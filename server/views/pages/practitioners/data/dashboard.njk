@@ -136,7 +136,7 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
-    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) }}%</td>
 
   </tr>
   </tbody>

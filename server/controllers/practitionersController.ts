@@ -21,6 +21,7 @@ import OffenderUpdate from '../data/models/offenderUpdate'
 import OffenderUpdateError from '../data/offenderUpdateError'
 import { calculateNextCheckinDate } from '../utils/utils'
 import Offender from '../data/models/offender'
+import { indexByLocation } from '../utils/indexByLocation'
 
 const { esupervisionService } = services()
 
@@ -728,21 +729,46 @@ export const handleRegisterComplete: RequestHandler = async (req, res, next) => 
 // Data
 export const renderDataDashboard: RequestHandler = async (req, res, next) => {
   try {
-    let totalCheckinsBySite
-    const checkinsByPractitioner = await esupervisionService.getOffenderCountByPractitioner()
+    const stats = await esupervisionService.getCheckinStats()
+    // Get a list of all sites from the offendersPerSite data and sort alphabetically
+    const sites = stats.offendersPerSite.map(site => site.location).sort()
 
-    if (checkinsByPractitioner) {
-      totalCheckinsBySite = Object.entries(
-        checkinsByPractitioner.reduce<Record<string, number>>((acc, { siteName, registrationCount }) => {
-          acc[siteName] = (acc[siteName] || 0) + registrationCount
-          return acc
-        }, {}),
-      )
-        .map(([siteName, totalRegistrations]) => ({ siteName, totalRegistrations }))
-        .sort((a, b) => a.siteName.localeCompare(b.siteName))
-    }
+    const offendersByLocation = indexByLocation(stats.offendersPerSite, r => r.count)
+    const invitesByLocation = indexByLocation(stats.invitesPerSite, r => r.count)
+    const completedByLocation = indexByLocation(stats.completedCheckinsPerSite, r => r.count)
+    const completedByLocationOnDay1 = indexByLocation(
+      stats.completedCheckinsPerNth.filter(r => r.day === 1),
+      r => r.count,
+    )
+    const completedByLocationOnDay2 = indexByLocation(
+      stats.completedCheckinsPerNth.filter(r => r.day === 2),
+      r => r.count,
+    )
+    const completedByLocationOnDay3 = indexByLocation(
+      stats.completedCheckinsPerNth.filter(r => r.day === 3),
+      r => r.count,
+    )
+    const mismatchByLocation = indexByLocation(stats.automatedIdCheckAccuracy, r => r.mismatchCount)
 
-    res.render('pages/practitioners/data/dashboard', { totalCheckinsBySite })
+    const completedAvgByLocation = indexByLocation(stats.checkinAverages, r => r.completedAvg)
+
+    const expiredAvgByLocation = indexByLocation(stats.checkinAverages, r => r.expiredAvg)
+
+    const missedPercentageByLocation = indexByLocation(stats.checkinAverages, r => r.missedPercentage)
+
+    res.render('pages/practitioners/data/dashboard', {
+      sites,
+      offendersByLocation,
+      invitesByLocation,
+      completedByLocation,
+      completedByLocationOnDay1,
+      completedByLocationOnDay2,
+      completedByLocationOnDay3,
+      mismatchByLocation,
+      completedAvgByLocation,
+      expiredAvgByLocation,
+      missedPercentageByLocation,
+    })
   } catch (error) {
     next(error)
   }

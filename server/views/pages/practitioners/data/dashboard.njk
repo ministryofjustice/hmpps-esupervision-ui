@@ -118,7 +118,7 @@
     <th class="govuk-table__header" scope="row">Completed check ins</th>
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-      {{ completedAvgByLocation[site] or 0 }}
+      {{ completedAvgByLocation[site] | round(2) or 0 }}
     </td>
     {% endfor %}
   </tr>
@@ -126,7 +126,7 @@
     <th class="govuk-table__header" scope="row">Expired check ins</th>
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-      {{ expiredAvgByLocation[site] or 0 }}
+      {{ expiredAvgByLocation[site] | round(2) or 0 }}
     </td>
     {% endfor %}
   </tr>
@@ -134,7 +134,7 @@
     <th class="govuk-table__header" scope="row">Missed check ins</th>
     {% for site in sites %}
     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-      {{ missedPercentageByLocation[site] or 0 }}
+      {{ missedPercentageByLocation[site] | round(2) or 0 }}%
     </td>
     {% endfor %}
   </tr>

@@ -1,5 +1,6 @@
 import type { SuperAgentRequest } from 'superagent'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { addDays, format } from 'date-fns'
 import Offender from '../../server/data/models/offender'
 import Checkin from '../../server/data/models/checkin'
 
@@ -25,8 +26,9 @@ const checkinIntervals = [
 ]
 export const createMockOffender = (overrides: Partial<Offender> = {}): Offender => {
   const offenderStatus = overrides.status || faker.helpers.arrayElement(offenderStatuses)
+  const uuid = faker.string.uuid()
   const offender = {
-    uuid: faker.string.uuid(),
+    uuid,
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
     crn: generateValidCrn(),
@@ -57,7 +59,7 @@ export const createMockCheckin = (offender: Offender, overrides: Partial<Checkin
   const checkin: Checkin = {
     uuid: faker.string.uuid(),
     status,
-    dueDate: faker.date.future({ years: 1 }).toISOString().slice(0, 10),
+    dueDate: format(addDays(new Date(), 7), 'yyyy-MM-dd'),
     offender,
     questions: '{}',
     createdBy: practitionerUsername,
@@ -271,7 +273,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPath: `/offender_checkins/${checkin.uuid}`,
+        urlPathPattern: `/offender_checkins/${checkin.uuid}`,
       },
       response: {
         status: 200,
@@ -321,6 +323,44 @@ export default {
     })
   },
 
+  stubGetCheckinUploadLocation: (checkin: Checkin): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPathPattern: `/offender_checkins/${checkin.uuid}/upload_location`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          video: { url: 'http://localhost:9091/fake-s3-upload', contentType: 'video/mp4' },
+          snapshots: [{ url: 'http://localhost:9091/fake-s3-upload', contentType: 'image/jpeg' }],
+          references: [{ url: 'http://localhost:9091/fake-s3-upload', contentType: 'image/jpeg' }],
+        },
+      },
+    })
+  },
+  stubAutoVerifyCheckinIdentity: (checkin: Checkin, result = AutomatedIdVerificationResult.Match) => {
+    const response = { result }
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPath: `/offender_checkins/${checkin.uuid}/auto_id_verify`,
+        queryParameters: {
+          numSnapshots: {
+            equalTo: '1',
+          },
+        },
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: response,
+      },
+    })
+    return response
+  },
+
   stubReviewCheckin: (checkin: Checkin): SuperAgentRequest => {
     const reviewedCheckin = { ...checkin, status: CheckinStatus.Reviewed }
     return stubFor({
@@ -332,6 +372,20 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: reviewedCheckin,
+      },
+    })
+  },
+  stubSubmitCheckin: (checkin: Checkin): SuperAgentRequest => {
+    const submittedCheckin = { ...checkin, status: CheckinStatus.Submitted }
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPath: `/offender_checkins/${checkin.uuid}/submit`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: submittedCheckin,
       },
     })
   },

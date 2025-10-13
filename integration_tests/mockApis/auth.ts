@@ -125,6 +125,28 @@ const token = (userToken: UserToken) =>
       },
     },
   })
+const authToken = () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPathPattern: '/auth/oauth/token',
+      bodyPatterns: [
+        {
+          equalTo: 'grant_type=client_credentials',
+        },
+      ],
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        access_token: 'a-server-to-server-token',
+        token_type: 'bearer',
+        expires_in: 599,
+        scope: 'read',
+      },
+    },
+  })
 
 export default {
   getSignInUrl,
@@ -132,4 +154,5 @@ export default {
   stubAuthManageDetails: manageDetails,
   stubSignIn: (userToken: UserToken = {}): Promise<[Response, Response, Response, Response, Response]> =>
     Promise.all([favicon(), redirect(), signOut(), token(userToken), tokenVerification.stubVerifyToken()]),
+  stubAuthToken: authToken,
 }

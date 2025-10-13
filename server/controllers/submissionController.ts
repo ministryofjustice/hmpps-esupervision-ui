@@ -6,6 +6,7 @@ import MentalHealth from '../data/models/survey/mentalHealth'
 import SupportAspect from '../data/models/survey/supportAspect'
 import CallbackRequested from '../data/models/survey/callbackRequested'
 import OffenderCheckinResponse from '../data/models/offenderCheckinResponse'
+import { submissionStarted, submissionCompleted, submissionVerified } from '../events'
 
 type SubmissionLocals = { submission: OffenderCheckinResponse }
 
@@ -51,6 +52,7 @@ export const renderIndex: RequestHandler = async (req, res, next) => {
 
 export const renderVerify: RequestHandler = async (req, res, next) => {
   try {
+    submissionStarted(getSubmissionId(req))
     const errors = req.flash('error')
 
     res.render('pages/submission/verify', { ...pageParams(req), errorMessage: errors[0] })
@@ -79,6 +81,7 @@ export const handleVerify: RequestHandler = async (req, res: Response<object, Su
 
   req.session.submissionAuthorized = submissionId
   logger.info(`User is verified and check in authorised for submissionId ${submissionId}`)
+  submissionVerified(submissionId)
   return res.redirect(`/submission/${submissionId}/questions/mental-health`)
 }
 

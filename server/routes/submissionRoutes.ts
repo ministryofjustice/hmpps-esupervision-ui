@@ -31,6 +31,7 @@ import {
 
 import { Services } from '../services'
 import logger from '../../logger'
+import { submissionSurveyCompleted } from '../events'
 
 export default function routes({ esupervisionService }: Services): Router {
   const router = Router({ mergeParams: true })
@@ -93,6 +94,10 @@ export default function routes({ esupervisionService }: Services): Router {
     '/questions/callback',
     protectSubmission,
     validateFormData(callbackSchema),
+    (req, _resp, next) => {
+      submissionSurveyCompleted(req.params.submissionId)
+      next()
+    },
     handleRedirect('/video/inform'),
   )
 

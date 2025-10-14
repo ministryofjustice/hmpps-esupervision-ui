@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker'
+import { addDays, format } from 'date-fns'
 import Page from '../../pages/page'
 import DashboardPage from '../../pages/practitioner/cases/dashboardPage'
 import CheckYourAnswersPage from '../../pages/practitioner/register/checkAnswersPage'
@@ -59,7 +60,7 @@ describe('Register person', () => {
     enterEmailPage.continueButton().click()
 
     const setUpCheckInPage = Page.verifyOnPage(SetUpCheckInPage)
-    setUpCheckInPage.enterStartDate('11/10/2025')
+    setUpCheckInPage.enterStartDate(format(addDays(new Date(), 7), 'dd/MM/yyyy'))
     setUpCheckInPage.selectFrequency('TWO_WEEKS')
     setUpCheckInPage.continueButton().click()
 
@@ -108,7 +109,7 @@ describe('Register person', () => {
     enterMobilePage.continueButton().click()
 
     const setUpCheckInPage = Page.verifyOnPage(SetUpCheckInPage)
-    setUpCheckInPage.enterStartDate('11/10/2025')
+    setUpCheckInPage.enterStartDate(format(addDays(new Date(), 7), 'dd/MM/yyyy'))
     setUpCheckInPage.selectFrequency('WEEKLY')
     setUpCheckInPage.continueButton().click()
 

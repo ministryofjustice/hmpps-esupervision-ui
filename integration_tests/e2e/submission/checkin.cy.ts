@@ -100,7 +100,7 @@ describe('Start Check-in Journey', () => {
       'Yes',
     )
     checkAnswersPage.verifySummaryValue(
-      'What needs to be discussed',
+      'Tell us what you need to talk about',
       'I would like to discuss my upcoming appointment.',
     )
     checkAnswersPage.clickChangeLink('How are you feeling?')

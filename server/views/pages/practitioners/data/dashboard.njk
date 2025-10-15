@@ -4,7 +4,7 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set section = "data" %}
-{% set pageTitle = "Data" %}
+{% set pageTitle = "Online check in reporting" %}
 
 
 {% block content %}
@@ -71,7 +71,7 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
-    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) }}%</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) or 0 }}%</td>
 
   </tr>
   <tr class="govuk-table__row">
@@ -84,7 +84,7 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
-    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) }}%</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) or 0 }}%</td>
 
   </tr>
   <tr class="govuk-table__row">
@@ -97,7 +97,18 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
-    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) }}%</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) or 0 }}%</td>
+
+  </tr>
+  <tr class="govuk-table__row">
+    <th class="govuk-table__header" scope="row">Average number of completed check ins per PoP</th>
+    {% for site in sites %}
+    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
+      {{ completedAvgByLocation[site] | round(2) or 0 }}
+    </td>
+    {% endfor %}
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
 
   </tr>
   <tr class="govuk-table__row">
@@ -110,11 +121,11 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
-    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / (completedTotal + total) * 100 ) | round(2) }}%</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / (completedTotal + total) * 100 ) | round(2) or 0 }}%</td>
 
   </tr>
   <tr class="govuk-table__row">
-      <th class="govuk-table__header" scope="row">Flagged checkins</th>
+      <th class="govuk-table__header" scope="row">Check-ins with raised concern</th>
       {% set total = 0 %}
       {% for site in sites %}
       <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
@@ -123,7 +134,7 @@
       </td>
       {% endfor %}
       <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
-      <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / (completedTotal + total) * 100 ) | round(2) or 0 }}%</td>
 
     </tr>
   <tr class="govuk-table__row">
@@ -149,51 +160,12 @@
     </td>
     {% endfor %}
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ total }}</td>
-    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) }}%</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">{{ ( total / completedTotal * 100 ) | round(2) or 0 }}%</td>
 
   </tr>
   </tbody>
 </table>
 
-<hr class="govuk-section-break govuk-section-break--l">
-
-<table class="govuk-table es-table--responsive">
-  <caption class="govuk-table__caption govuk-table__caption--m">PoP averages per site</caption>
-  <thead class="govuk-table__head">
-  <tr class="govuk-table__row">
-    <th scope="col" class="govuk-table__header">&nbsp;</th>
-    {% for site in sites %}
-    <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ site | capitalize }}</th>
-    {% endfor %}
-  </tr>
-  </thead>
-  <tbody class="govuk-table__body">
-  <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Completed check ins</th>
-    {% for site in sites %}
-    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-      {{ completedAvgByLocation[site] | round(2) or 0 }}
-    </td>
-    {% endfor %}
-  </tr>
-  <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">Missed check ins</th>
-    {% for site in sites %}
-    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-      {{ expiredAvgByLocation[site] | round(2) or 0 }}
-    </td>
-    {% endfor %}
-  </tr>
-  <tr class="govuk-table__row">
-    <th class="govuk-table__header" scope="row">% of check ins missed</th>
-    {% for site in sites %}
-    <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-      {{ missedPercentageByLocation[site] | round(2) or 0 }}%
-    </td>
-    {% endfor %}
-  </tr>
-  </tbody>
-</table>
 
 
 {% endblock %}

@@ -43,4 +43,6 @@ export default class Stats {
   automatedIdCheckAccuracy: IdCheckAccuracy[]
 
   flaggedCheckinsPerSite: SiteCount[]
+
+  stoppedCheckinsPerSite: SiteCount[]
 }

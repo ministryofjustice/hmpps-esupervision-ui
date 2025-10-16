@@ -54,8 +54,8 @@ generic-service:
       REDIS_AUTH_TOKEN: 'auth_token'
     hmpps-esupervision-ui-application-insights:
       APPLICATIONINSIGHTS_CONNECTION_STRING: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-    ipinfo-token:
-      IPINFO_TOKEN: 'token'
+    ip-info-token:
+      IP_INFO_TOKEN: 'token'
     # This secret will need to be created in your namespace (note it isn't in hmpps-templates-dev)
     # IRSA configuration in your namespace will also be required, and then uncomment serviceAccountName above.
     # sqs-hmpps-audit-secret:

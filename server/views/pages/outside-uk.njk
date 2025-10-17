@@ -1,0 +1,11 @@
+{% extends "../partials/layout.njk" %}
+{% set pageTitle = "Sorry, the service is not available outside of the UK" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+    <p>You cannot use this service if you are currently outside of the UK.</p>
+  </div>
+</div>
+{% endblock %}

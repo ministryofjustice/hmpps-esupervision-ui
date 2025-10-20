@@ -763,6 +763,7 @@ export const renderDataDashboard: RequestHandler = async (req, res, next) => {
     const missedPercentageByLocation = indexByLocation(stats.checkinAverages, r => r.missedPercentage)
     const flaggedCheckinsByLocation = indexByLocation(stats.flaggedCheckinsPerSite, r => r.count)
     const stoppedCheckinsByLocation = indexByLocation(stats.stoppedCheckinsPerSite, r => r.count)
+    const averageSupportRequestsPerSite = indexByLocation(stats.averageSupportRequestsPerSite, r => r.average)
 
     res.render('pages/practitioners/data/dashboard', {
       sites,
@@ -780,6 +781,7 @@ export const renderDataDashboard: RequestHandler = async (req, res, next) => {
       missedPercentageByLocation,
       flaggedCheckinsByLocation,
       stoppedCheckinsByLocation,
+      averageSupportRequestsPerSite,
     })
   } catch (error) {
     next(error)

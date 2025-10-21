@@ -29,7 +29,7 @@ export type IdCheckAccuracy = {
   falseNegativesStdDev: number
 }
 
-export type SiteFlagAverage = {
+export type SiteAverage = {
   location: string
   average: number
 }
@@ -51,5 +51,7 @@ export default class Stats {
 
   stoppedCheckinsPerSite: SiteCount[]
 
-  averageFlagsPerCheckinPerSite: SiteFlagAverage[]
+  averageFlagsPerCheckinPerSite: SiteAverage[]
+
+  averageSupportRequestsPerSite: SiteAverage[]
 }

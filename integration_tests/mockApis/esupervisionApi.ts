@@ -152,6 +152,22 @@ export default {
       },
     })
   },
+  stubOffenderContactCheck: (): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/offenders\\?practitioner=.+?&(.+?=.+?)`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          pagination: { pageNumber: 0, pageSize: 20 },
+          content: [],
+        },
+      },
+    })
+  },
   stubGetOffender: (offender): SuperAgentRequest => {
     return stubFor({
       request: {

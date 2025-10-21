@@ -21,6 +21,7 @@ describe('Register person', () => {
     cy.task('stubOffenderCheckins')
     cy.task('stubVerifyToken')
     cy.task('stubCreateOffender')
+    cy.task('stubOffenderContactCheck')
     cy.task('stubGetProfilePhotoUploadLocation')
     cy.task('stubFakeS3Upload')
     cy.task('stubCompleteOffenderSetup')

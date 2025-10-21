@@ -20,6 +20,7 @@ import { ExternalUserId } from './models/loggedInUser'
 import PractitionerInfo from './models/practitioner'
 import PractitionerStats from './models/practitionerStats'
 import Stats from './models/stats'
+import OffenderInfoByContact from './models/offenderInfoByContact'
 
 /**
  * Specifies content types for possible upload locations for a checkin.
@@ -159,6 +160,21 @@ export default class EsupervisionApiClient extends RestClient {
       },
       asSystem(),
     ).catch((error): Promise<Offender | null> => {
+      if (error?.responseStatus === 404) {
+        return null
+      }
+      throw error
+    })
+  }
+
+  async getOffenderByContactDetail(offenderInfo: OffenderInfoByContact): Promise<Page<Offender> | null> {
+    return this.get<Page<Offender>>(
+      {
+        path: `/offenders`,
+        query: offenderInfo,
+      },
+      asSystem(),
+    ).catch((error): Promise<Page<Offender> | null> => {
       if (error?.responseStatus === 404) {
         return null
       }

@@ -51,5 +51,7 @@ export default class Stats {
 
   stoppedCheckinsPerSite: SiteCount[]
 
+  averageFlagsPerCheckinPerSite: SiteAverage[]
+
   averageSupportRequestsPerSite: SiteAverage[]
 }

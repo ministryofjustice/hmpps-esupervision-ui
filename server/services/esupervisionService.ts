@@ -15,6 +15,7 @@ import { ExternalUser } from '../data/models/loggedInUser'
 import PractitionerInfo from '../data/models/practitioner'
 import PractitionerStats from '../data/models/practitionerStats'
 import Stats from '../data/models/stats'
+import OffenderInfoByContact from '../data/models/offenderInfoByContact'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -61,6 +62,10 @@ export default class EsupervisionService {
 
   getOffender(offenderId: string): Promise<Offender | null> {
     return this.esupervisionApiClient.getOffender(offenderId)
+  }
+
+  getOffenderByContactDetail(offenderInfo: OffenderInfoByContact): Promise<Page<Offender> | null> {
+    return this.esupervisionApiClient.getOffenderByContactDetail(offenderInfo)
   }
 
   updateOffender(offenderId: string, offenderUpdate: OffenderUpdate): Promise<Offender> {

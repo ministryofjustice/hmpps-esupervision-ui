@@ -46,6 +46,7 @@ import {
   renderDataDashboard,
   renderUserInfo,
   handleGetUserInfo,
+  handleCheckIfContactDetailsExist,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -143,6 +144,7 @@ export default function routes(): Router {
   router.post(
     '/register/contact/mobile',
     validateFormData(mobileSchema),
+    handleCheckIfContactDetailsExist('phone_number'),
     handleRedirect('/practitioners/register/set-up'),
   )
 
@@ -150,6 +152,7 @@ export default function routes(): Router {
   router.post(
     '/register/contact/email',
     validateFormData(emailSchema),
+    handleCheckIfContactDetailsExist('email'),
     handleRedirect('/practitioners/register/set-up'),
   )
 

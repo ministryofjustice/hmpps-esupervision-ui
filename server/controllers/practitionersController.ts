@@ -22,6 +22,7 @@ import OffenderUpdateError from '../data/offenderUpdateError'
 import { calculateNextCheckinDate } from '../utils/utils'
 import Offender from '../data/models/offender'
 import { indexByLocation } from '../utils/indexByLocation'
+import OffenderInfoByContact from '../data/models/offenderInfoByContact'
 
 const { esupervisionService } = services()
 
@@ -632,6 +633,36 @@ export const renderEmail: RequestHandler = async (req, res, next) => {
     res.render('pages/practitioners/register/contact/email', { cya })
   } catch (error) {
     next(error)
+  }
+}
+
+export const handleCheckIfContactDetailsExist: (type: 'email' | 'phone_number') => RequestHandler = (
+  type,
+): RequestHandler => {
+  return async (req, res, next) => {
+    const contactDetail = type === 'phone_number' ? req.body.mobile : req.body.email
+    const data: OffenderInfoByContact = {
+      practitioner: res.locals.user.externalId(),
+      [type]: contactDetail,
+    }
+    try {
+      const existingRecords: Page<Offender> = await esupervisionService.getOffenderByContactDetail(data)
+      if (existingRecords.content.length === 0) {
+        next()
+      } else {
+        const validationErrors = [
+          {
+            text: `The ${type === 'phone_number' ? 'phone number' : 'email address'} you have entered is already being used to check in`,
+            href: `#${type === 'phone_number' ? 'mobile' : 'email'}`,
+          },
+        ]
+        res.render(`pages/practitioners/register/contact/${type === 'phone_number' ? 'mobile' : 'email'}`, {
+          validationErrors,
+        })
+      }
+    } catch (error) {
+      next(error)
+    }
   }
 }
 

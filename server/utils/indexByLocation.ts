@@ -6,6 +6,10 @@ export function indexByLocation<T extends WithLocation, V>(
   reducer?: (acc: V, val: V) => V,
 ): Record<string, V> {
   const out: Record<string, V> = {}
+  // Handle case where rows is not an array
+  if (rows.length === undefined) {
+    return {}
+  }
   for (const row of rows) {
     const key = row.location
     const next = mapper(row)

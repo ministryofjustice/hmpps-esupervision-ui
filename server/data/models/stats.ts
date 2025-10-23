@@ -34,6 +34,12 @@ export type SiteAverage = {
   average: number
 }
 
+export type FrequencyCount = {
+  location: string
+  intervalDays: number
+  count: number
+}
+
 export default class Stats {
   invitesPerSite: SiteCount[]
 
@@ -54,4 +60,6 @@ export default class Stats {
   averageFlagsPerCheckinPerSite: SiteAverage[]
 
   averageSupportRequestsPerSite: SiteAverage[]
+
+  checkinFrequencyPerSite: FrequencyCount[]
 }

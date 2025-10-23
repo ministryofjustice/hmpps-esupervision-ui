@@ -797,6 +797,28 @@ export const renderDataDashboard: RequestHandler = async (req, res, next) => {
     const averageFlagsPerCheckinPerSite = indexByLocation(stats.averageFlagsPerCheckinPerSite, r => r.average)
     const averageSupportRequestsPerSite = indexByLocation(stats.averageSupportRequestsPerSite, r => r.average)
 
+    const checkin7daysFrequencyPerSite = indexByLocation(
+      stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 7),
+      r => r.count,
+    )
+
+    const checkin14daysFrequencyPerSite = indexByLocation(
+      stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 14),
+      r => r.count,
+    )
+
+    const checkin28daysFrequencyPerSite = indexByLocation(
+      stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 28),
+      r => r.count,
+    )
+
+    const checkin56daysFrequencyPerSite = indexByLocation(
+      stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 56),
+      r => r.count,
+    )
+
+    console.log(stats)
+
     res.render('pages/practitioners/data/dashboard', {
       sites,
       offendersByLocation,
@@ -815,6 +837,10 @@ export const renderDataDashboard: RequestHandler = async (req, res, next) => {
       stoppedCheckinsByLocation,
       averageFlagsPerCheckinPerSite,
       averageSupportRequestsPerSite,
+      checkin7daysFrequencyPerSite,
+      checkin14daysFrequencyPerSite,
+      checkin28daysFrequencyPerSite,
+      checkin56daysFrequencyPerSite,
     })
   } catch (error) {
     next(error)

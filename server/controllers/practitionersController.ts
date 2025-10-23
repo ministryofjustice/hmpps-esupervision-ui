@@ -817,8 +817,6 @@ export const renderDataDashboard: RequestHandler = async (req, res, next) => {
       r => r.count,
     )
 
-    console.log(stats)
-
     res.render('pages/practitioners/data/dashboard', {
       sites,
       offendersByLocation,

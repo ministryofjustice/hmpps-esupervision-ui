@@ -1,16 +1,12 @@
-{% extends "../layout.njk" %}
-{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
-{%- from "moj/components/alert/macro.njk" import mojAlert -%}
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% extends "./layout.njk" %}
 
-{% set section = "data" %}
 {% set pageTitle = "Online check in reporting" %}
 
 
 {% block content %}
 
-<h1 class="govuk-heading-l">{{ pageTitle }}</h1>
-<table class="govuk-table es-table--responsive">
+<h1 class="govuk-heading-l govuk-visually-hidden">{{ pageTitle }}</h1>
+<table class="govuk-table es-table--responsive es-table--stats">
   <thead class="govuk-table__head">
   <tr class="govuk-table__row">
     <th scope="col" class="govuk-table__header">&nbsp;</th>
@@ -159,7 +155,7 @@
       {% set total = total + (ontimePercentageByLocation[site] or 0) %}
     </td>
     {% endfor %}
-    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ (total / sites.length) | round(2) }}%</td>
+    <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ (total / sites.length) | round(2) or 0 }}%</td>
     <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
 
   </tr>

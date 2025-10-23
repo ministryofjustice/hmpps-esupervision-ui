@@ -43,7 +43,6 @@ import {
   renderUpdateEmail,
   renderStopCheckins,
   handleStopCheckins,
-  renderDataDashboard,
   renderUserInfo,
   handleGetUserInfo,
   handleCheckIfContactDetailsExist,
@@ -171,7 +170,6 @@ export default function routes(): Router {
   router.post('/register/complete', handleRegisterComplete)
 
   // Data dashboard
-  get('/data', renderDataDashboard)
   get('/data/user', renderUserInfo)
   router.post('/data/user', handleGetUserInfo)
 

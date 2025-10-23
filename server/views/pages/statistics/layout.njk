@@ -1,0 +1,30 @@
+{% extends "govuk/template.njk" %}
+{% from "govuk/components/header/macro.njk" import govukHeader %}
+{% from "govuk/components/footer/macro.njk" import govukFooter %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{% block head %}
+  <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet" />
+{% endblock %}
+
+{% block header %}
+  {{
+    govukHeader()
+  }}
+  {{
+    govukServiceNavigation({
+      serviceName: "Check in with your probation officer service statistics"
+    })
+  }}
+{% endblock %}
+
+
+{% block footer %}
+{{
+  govukFooter()
+}}
+{% endblock %}
+
+{% block bodyEnd %}
+<script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
+{% endblock %}

@@ -101,7 +101,7 @@
   }
 
   @include gds.govuk-media-query($from: tablet) {
-    border-left: 2px solid gds.$govuk-border-colour;
+    border-left: 1px solid gds.$govuk-border-colour;
   }
 }
 
@@ -109,3 +109,19 @@
   background-color: #f4f8fb;
   border-color: #8eb8dc;
 }
+
+.es-table--stats {
+  @include gds.govuk-media-query($from: tablet) {
+    .govuk-table__body {
+      .govuk-table__header {
+        width: 40%;
+      }
+
+      .govuk-table__cell--numeric:not(.es-table__cell--highlight) {
+        width: 10%;
+        border-left: 1px dotted #ddd;
+      }
+    }
+  }
+}
+

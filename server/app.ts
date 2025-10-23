@@ -5,10 +5,8 @@ import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
 
-// import authorisationMiddleware from './middleware/authorisationMiddleware'
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
-// import setUpCurrentUser from './middleware/setUpCurrentUser'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
@@ -17,6 +15,7 @@ import setUpWebSession from './middleware/setUpWebSession'
 import populateValidationErrors from './middleware/populateValidationErrors'
 import storeFormDataInSession from './middleware/storeFormDataInSession'
 import routes from './routes'
+import statisticsRoutes from './routes/statisticsRoutes'
 import submissionRoutes from './routes/submissionRoutes'
 import practitionersRoutes from './routes/practitionersRoutes'
 import featureFlags from './middleware/featureFlags'
@@ -46,9 +45,7 @@ export default function createApp(services: Services): express.Application {
 
   nunjucksSetup(app)
   app.use(setUpAuthentication())
-  // app.use(authorisationMiddleware())
   app.use(setUpCsrf())
-  // app.use(setUpCurrentUser())
 
   app.use(bodyParser.json())
   app.use(storeFormDataInSession())
@@ -59,7 +56,7 @@ export default function createApp(services: Services): express.Application {
   app.use(routes())
 
   app.use('/submission/:submissionId', submissionRoutes(services))
-
+  app.use('/statistics', statisticsRoutes())
   app.use('/practitioners', practitionersRoutes())
   app.use('/practitioners', (req, res) => {
     res.status(404).render('pages/practitioners/not-found')

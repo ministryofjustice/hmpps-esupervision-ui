@@ -12,9 +12,10 @@ function SessionTimeOutModal(submissionId) {
         <div class="es-modal" role="dialog" aria-modal="true" id="${this.modalId}" tabindex="-1">
             <div class="es-modal__body" tabindex="0">
                 <h1 class="govuk-heading-m">You’re about to be signed out<span class="govuk-visually-hidden">.</span></h1>
-                <p class="govuk-body">For your security, we will sign you out in <strong aria-live="polite" aria-atomic="true">${this.formatTime(this.modalCountdownTime)}</strong>.</p>
+                <p class="govuk-body">For your security, we will sign you out in <strong>${this.formatTime(this.modalCountdownTime)}</strong>.</p>
                 <div class="es-modal__actions govuk-button-group">
                     <button class="govuk-button" id="es-timeout-action-renew" aria-label="Stay signed in">Stay signed in</button>
+                    <span class="govuk-visually-hidden">or</span>
                     <a class="govuk-link govuk-link--no-visited-state" id="es-timeout-action-logout" href="${this.urls.logout}" aria-label="Sign out">Sign out</a>
                 </div>
             </div>

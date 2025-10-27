@@ -17,6 +17,15 @@ generic-service:
     host: app-hostname.local # override per environment
     tlsSecretName: hmpps-esupervision-ui-cert
 
+    # modsecurity
+    modsecurity_enabled: true
+    modsecurity_github_team: stg-pathfinders
+    modsecurity_snippet: |
+      SecRuleEngine DetectionOnly
+      SecAuditEngine RelevantOnly
+      SecRequestBodyAccess On
+      SecDefaultAction "phase:2,pass,log,tag:github_team=stg-pathfinders,tag:namespace={{ .Release.Namespace }}"
+
   livenessProbe:
     httpGet:
       path: /ping

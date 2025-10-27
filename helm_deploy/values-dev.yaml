@@ -6,6 +6,7 @@ generic-service:
 
   ingress:
     host: esupervision-dev.hmpps.service.justice.gov.uk
+    className: modsec-non-prod
 
   allowlist:
     groups:

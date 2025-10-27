@@ -4,6 +4,7 @@
 generic-service:
   ingress:
     host: esupervision.hmpps.service.justice.gov.uk
+    className: modsec
 
   env:
     INGRESS_URL: 'https://esupervision.hmpps.service.justice.gov.uk'

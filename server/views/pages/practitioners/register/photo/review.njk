@@ -3,7 +3,7 @@
 {% extends "../../layout.njk" %}
 {% set section = "register" %}
 
-{% set backLinkHref = "/practitioners/register/photo/upload" if formData['userPhotoUpload'] else "/practitioners/register/photo" %}
+{% set backLinkHref = "/practitioners/register/photo/upload" if formData['userPhotoUpload'] == "true" else "/practitioners/register/photo" %}
 {% if cya %}
   {% set backLinkHref = "/practitioners/register/check-answers" %}
 {% endif %}

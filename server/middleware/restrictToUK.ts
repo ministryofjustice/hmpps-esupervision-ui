@@ -76,7 +76,7 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
     const cached = cache.get(ip)
     if (cached) {
       if (!isAllowed(cached.countryCode)) {
-        logger.warn({ ip, country: cached.countryCode }, 'Blocked non-UK request (cache)')
+        logger.warn({ ip, country: cached.countryCode, path: req.path }, 'Blocked non-UK request (cache)')
         return res.status(403).render('pages/outside-uk')
       }
       return next()
@@ -112,7 +112,7 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
 
       // 8) Enforce UK/GB only
       if (!isAllowed(countryCode)) {
-        logger.warn({ ip, country: countryCode }, 'Blocked non-UK request')
+        logger.warn({ ip, country: countryCode, path: req.path }, 'Blocked non-UK request')
         return res.status(403).render('pages/outside-uk')
       }
 

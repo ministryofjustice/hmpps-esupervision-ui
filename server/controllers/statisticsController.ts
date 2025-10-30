@@ -9,7 +9,6 @@ const { esupervisionService } = services()
 const renderDataDashboard: RequestHandler = async (req, res, next) => {
   try {
     const stats = await esupervisionService.getCheckinStats()
-    console.log(stats.averageReviewTimePerCheckinPerSite)
     // Get a list of all sites from the offendersPerSite statistics and sort alphabetically
     const sites = stats.offendersPerSite
       .map(site => site.location)

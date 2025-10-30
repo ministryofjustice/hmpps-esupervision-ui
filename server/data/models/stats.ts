@@ -40,6 +40,12 @@ export type FrequencyCount = {
   count: number
 }
 
+export type ReviewResponseTimeAverage = {
+  location: string
+  reviewTimeAvg: object
+  reviewTimeAvgText: string
+}
+
 export default class Stats {
   invitesPerSite: SiteCount[]
 
@@ -62,4 +68,8 @@ export default class Stats {
   averageSupportRequestsPerSite: SiteAverage[]
 
   checkinFrequencyPerSite: FrequencyCount[]
+
+  averageReviewTimePerCheckinPerSite: ReviewResponseTimeAverage[]
+
+  averageReviewTimePerCheckinTotal: string
 }

@@ -65,7 +65,7 @@ export default class Stats {
 
   averageFlagsPerCheckinPerSite: SiteAverage[]
 
-  averageSupportRequestsPerSite: SiteAverage[]
+  callbackRequestPercentagePerSite: SiteAverage[]
 
   checkinFrequencyPerSite: FrequencyCount[]
 

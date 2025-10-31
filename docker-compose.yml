@@ -1,29 +1,72 @@
 services:
   hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
+    profiles: [deps]
     networks:
       - hmpps
     container_name: hmpps-auth
     ports:
-      - '9090:8080'
+      - '8090:8080'
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/auth/health']
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
-  hmpps-template-kotlin:
-    image: ghcr.io/ministryofjustice/hmpps-template-kotlin:latest
+  api:
+    image: ghcr.io/ministryofjustice/hmpps-esupervision-api:latest
+    profiles: [deps]
     networks:
       - hmpps
-    container_name: hmpps-template-kotlin
+    container_name: api
     ports:
       - '8080:8080'
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/health/ping']
     environment:
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
-      - EXAMPLE_API_URL=http://localhost:8080
+      - HOSTED_AT=http://localhost:3000
+      - SPRING_PROFILES_ACTIVE=dev,local
+      - POSTGRES_ENDPOINT=postgres:5432
+      - POSTGRES_DATABASE=postgres
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - NOTIFY_API_KEY=${NOTIFY_API_KEY}
+      - REKOG_AWS_REGION=${REKOG_AWS_REGION}
+      - REKOG_ROLE_ARN=${REKOG_ROLE_ARN}
+      - REKOG_S3_DATA_BUCKET=${REKOG_S3_DATA_BUCKET}
+      - MANAGE_USERS_API=http://not-used/users
+      - LOCAL_PRACTITIONERS_0_USERNAME=AUTH_USER
+      - LOCAL_PRACTITIONERS_0_NAME='Test User'
+      - LOCAL_PRACTITIONERS_0_EMAIL='test.user@justice.gov.uk'
+
+  postgres:
+    image: postgres:17.5
+    profiles: [deps]
+    restart: always
+    networks:
+      - hmpps
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  localstack:
+    # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+    image: docker.io/localstack/localstack:4.5
+    profiles: [deps]
+    container_name: localstack
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+    environment:
+      - DEBUG=${DEBUG:-0}
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
   app:
     build:
@@ -32,6 +75,8 @@ services:
         BUILD_NUMBER: '1.0.0'
         GIT_REF: 'a1b2c3'
         GIT_BRANCH: main
+    profiles: [ui]
+    container_name: esupervision-ui
     networks:
       - hmpps
     ports:
@@ -42,13 +87,14 @@ services:
       - PRODUCT_ID=UNASSIGNED
       - REDIS_ENABLED=false
       - REDIS_HOST=localhost
-      - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
+      - HMPPS_AUTH_EXTERNAL_URL=http://localhost:8090/auth
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
+      - ESUPERVISION_API_URL=http://api:8080
       # These will need to match new creds in the seed auth service auth
-      - AUTH_CODE_CLIENT_ID=hmpps-typescript-template
-      - AUTH_CODE_CLIENT_SECRET=clientsecret
-      - CLIENT_CREDS_CLIENT_ID=hmpps-typescript-template-system
-      - CLIENT_CREDS_CLIENT_SECRET=clientsecret
+      - AUTH_CODE_CLIENT_ID=${AUTH_CODE_CLIENT_ID}
+      - AUTH_CODE_CLIENT_SECRET=${AUTH_CODE_CLIENT_SECRET}
+      - CLIENT_CREDS_CLIENT_ID=${CLIENT_CREDS_CLIENT_ID}
+      - CLIENT_CREDS_CLIENT_SECRET=${CLIENT_CREDS_CLIENT_SECRET}
       - SESSION_SECRET=somesecretvalue
       - TOKEN_VERIFICATION_API_URL=http://hmpps-auth:8080/auth
       - TOKEN_VERIFICATION_ENABLED=false
@@ -57,3 +103,6 @@ services:
 
 networks:
   hmpps:
+
+volumes:
+  pgdata:

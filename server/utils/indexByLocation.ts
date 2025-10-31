@@ -1,13 +1,12 @@
 export type WithLocation = { location: string }
 
 export function indexByLocation<T extends WithLocation, V>(
-  rows: T[],
+  rows: T[] | undefined,
   mapper: (row: T) => V,
   reducer?: (acc: V, val: V) => V,
 ): Record<string, V> {
   const out: Record<string, V> = {}
-  // Handle case where rows is not an array
-  if (rows.length === undefined) {
+  if (!Array.isArray(rows)) {
     return {}
   }
   for (const row of rows) {

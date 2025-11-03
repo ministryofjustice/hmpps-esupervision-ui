@@ -285,6 +285,48 @@ export default {
       },
     })
   },
+  stubGetCheckinsForOffender: ({
+    offender,
+    checkins,
+  }: {
+    offender: Offender
+    checkins: Checkin[]
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPath: '/offender_checkins',
+        queryParameters: {
+          practitioner: { matches: '.+' },
+          offenderId: { equalTo: offender.uuid },
+          page: { matches: '.*' },
+          size: { matches: '.*' },
+          direction: { matches: '.*' },
+        },
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          pagination: { pageNumber: 0, pageSize: checkins.length, totalElements: checkins.length, totalPages: 1 },
+          content: checkins,
+        },
+      },
+    })
+  },
+  stubResendCheckinInvite: (checkin: Checkin): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPathPattern: `/offender_checkins/${checkin.uuid}/invite`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: checkin,
+      },
+    })
+  },
   stubGetCheckin: (checkin: Checkin): SuperAgentRequest => {
     return stubFor({
       request: {

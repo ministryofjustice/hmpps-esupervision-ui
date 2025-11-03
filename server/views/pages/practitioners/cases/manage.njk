@@ -24,15 +24,24 @@
       }}
     </div>
     <div class="es-page-actions__actions">
-      {% if flags.debugMode == true and case.status == "VERIFIED" %}
-        <a href="{{ offenderId }}/invite" class="govuk-button govuk-button--secondary es-debug">Invite</a>
-      {% endif %}
-      {% if case.status != "INACTIVE" %}
-        <a href="/practitioners/cases/{{ offenderId }}/update/stop-checkins" class="govuk-button govuk-button--warning"
-          >Stop check ins</a
-        >
-
-      {% endif %}
+      <div class="govuk-button-group">
+        {% if flags.debugMode == true and case.status == "VERIFIED" %}
+          <a href="{{ offenderId }}/invite" class="govuk-button govuk-button--secondary es-debug">Invite</a>
+        {% endif %}
+        {% if case.status != "INACTIVE" %}
+          {% if currentCheckinUuid %}
+            <a href="/practitioners/checkin/{{ currentCheckinUuid }}/resend" class="govuk-link">
+              Resend check in link
+            </a>
+          {% endif %}
+          <a
+            href="/practitioners/cases/{{ offenderId }}/update/stop-checkins"
+            class="govuk-button govuk-button--warning"
+          >
+            Stop check ins
+          </a>
+        {% endif %}
+      </div>
     </div>
   </div>
 {% endblock %}
@@ -71,9 +80,7 @@
 
   <div class="govuk-summary-card">
     <div class="govuk-summary-card__title-wrapper">
-      <h2 class="govuk-summary-card__title">
-        Personal details
-      </h2>
+      <h2 class="govuk-summary-card__title">Personal details</h2>
       <ul class="govuk-summary-card__actions">
         <li class="govuk-summary-card__action">
           {{ changeButton(case.status, "/practitioners/cases/" + offenderId + "/update/personal-details", "the personal details for " + name) }}
@@ -102,14 +109,11 @@
     </div>
   </div>
 
-
   {# Only show photo and contact details if they are active #}
   {% if case.status != "INACTIVE" %}
     <div class="govuk-summary-card">
       <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">
-          Photo
-        </h2>
+        <h2 class="govuk-summary-card__title">Photo</h2>
       </div>
       <div class="govuk-summary-card__content">
         <dl class="govuk-summary-list">
@@ -129,9 +133,7 @@
     {% set contactPreference = "text" if case.phoneNumber else "email" %}
     <div class="govuk-summary-card">
       <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title">
-          Contact details
-        </h2>
+        <h2 class="govuk-summary-card__title">Contact details</h2>
         <ul class="govuk-summary-card__actions">
           <li class="govuk-summary-card__action">
             {{ changeButton(case.status, "/practitioners/cases/" + offenderId + "/update/contact-details", "the contact details for " + name) }}
@@ -168,9 +170,7 @@
 
   <div class="govuk-summary-card">
     <div class="govuk-summary-card__title-wrapper">
-      <h2 class="govuk-summary-card__title">
-        Check in settings
-      </h2>
+      <h2 class="govuk-summary-card__title">Check in settings</h2>
       <ul class="govuk-summary-card__actions">
         <li class="govuk-summary-card__action">
           {{ changeButton(case.status, "/practitioners/cases/" + offenderId + "/update/checkin-settings", "the check in settings for " + name) }}
@@ -185,7 +185,7 @@
             {% if case.status == "INACTIVE" %}
               Check ins stopped
             {% else %}
-            {{ nextCheckinDate | gdsDate }}
+              {{ nextCheckinDate | gdsDate }}
             {% endif %}
           </dd>
         </div>

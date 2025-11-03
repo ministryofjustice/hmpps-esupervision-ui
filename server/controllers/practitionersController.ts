@@ -1,5 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import { add, format, parse } from 'date-fns'
+import { add, format, isBefore, parse } from 'date-fns'
 
 import { v4 as uuidv4 } from 'uuid'
 import { ZodIntersection, ZodObject } from 'zod'
@@ -236,17 +236,36 @@ export const renderCases =
 export const renderCaseView: RequestHandler = async (req, res, next) => {
   try {
     const { offenderId } = req.params
+    const practitioner = res.locals.user
     const offender = await esupervisionService.getOffender(offenderId)
     if (!offender) {
-      res.status(404).redirect('/practitioners/cases') // TODO: show error once ready
+      res.status(404).redirect('/practitioners/cases')
       return
     }
+    let currentCheckinUuid: string | null = null
+    const today = new Date()
+    const latestCheckinPage = await esupervisionService.getCheckins(practitioner, 0, 1, offenderId, 'DESC')
+
+    if (latestCheckinPage.content.length > 0) {
+      const latestCheckin = latestCheckinPage.content[0]
+      const expiryDate = add(parse(latestCheckin.dueDate, 'yyyy-MM-dd', new Date()), { days: 3 })
+
+      if (latestCheckin.status === 'CREATED' && isBefore(today, expiryDate)) {
+        currentCheckinUuid = latestCheckin.uuid
+      }
+    }
+
     const nextCheckinDate = getNextCheckinDate(offender)
     // eslint-disable-next-line prefer-destructuring
     res.locals.successMessage = req.flash('success')[0]
     // eslint-disable-next-line prefer-destructuring
     res.locals.infoMessage = req.flash('info')[0]
-    res.render('pages/practitioners/cases/manage', { offenderId, case: offender, nextCheckinDate })
+    res.render('pages/practitioners/cases/manage', {
+      offenderId,
+      case: offender,
+      nextCheckinDate,
+      currentCheckinUuid,
+    })
   } catch (error) {
     next(error)
   }
@@ -429,6 +448,29 @@ export const handleCreateInvite: RequestHandler = async (req, res, next) => {
     }
 
     res.redirect(`/practitioners/cases/`)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const handleResendInvite: RequestHandler = async (req, res, next) => {
+  try {
+    const { checkinId } = req.params
+    const practitioner = res.locals.user
+
+    // Call the new service method
+    const checkin = await esupervisionService.resendCheckinInvite(checkinId, practitioner)
+
+    // Determine the contact method to display
+    const contactMethod = checkin.offender.email || checkin.offender.phoneNumber
+
+    // Set the specific success flash message with <strong> tags
+    req.flash('success', {
+      message: `<strong>Link has been sent to ${contactMethod}</strong>`,
+    })
+
+    // Redirect back to the offender's case page
+    res.redirect(`/practitioners/cases/${checkin.offender.uuid}`)
   } catch (error) {
     next(error)
   }

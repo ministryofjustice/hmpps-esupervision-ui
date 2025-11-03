@@ -46,6 +46,7 @@ import {
   renderUserInfo,
   handleGetUserInfo,
   handleCheckIfContactDetailsExist,
+  handleResendInvite,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -87,7 +88,7 @@ export default function routes(): Router {
   get('/checkin/:checkInId', renderCheckInDetail)
   router.post('/checkin/:checkInId', validateFormData(videoReviewSchema), handleCheckInReview)
   get('/checkin/:checkInId/video', renderCheckInVideoDetail)
-
+  get('/checkin/:checkinId/resend', handleResendInvite)
   get('/cases', renderCases(false))
   get('/cases/stopped', renderCases(true))
   get('/cases/:offenderId', renderCaseView)

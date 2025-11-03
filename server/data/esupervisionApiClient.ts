@@ -142,6 +142,24 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
+  /**
+   * Allows to log events related to a checkin.
+   */
+  async logCheckinEvent(
+    checkinId: string,
+    eventType: 'CHECKIN_OUTSIDE_ACCESS',
+    comment: string,
+  ): Promise<{ event: string }> {
+    return this.post<{ event: string }>(
+      {
+        path: `/offender_checkins/${checkinId}/event`,
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify({ eventType, comment }),
+      },
+      asSystem(),
+    )
+  }
+
   async createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {
     return this.post<OffenderSetup>(
       {

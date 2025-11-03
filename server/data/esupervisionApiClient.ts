@@ -36,11 +36,25 @@ export default class EsupervisionApiClient extends RestClient {
     super('eSupervision API', config.apis.esupervisionApi, logger, authenticationClient)
   }
 
-  getCheckins(practitionerId: ExternalUserId, page: number, size: number): Promise<Page<Checkin>> {
+  getCheckins(
+    practitionerId: ExternalUserId,
+    page: number,
+    size: number,
+    offenderId?: string,
+    direction?: 'ASC' | 'DESC',
+  ): Promise<Page<Checkin>> {
+    const query: Record<string, string | number> = { practitioner: practitionerId, page, size }
+    if (offenderId) {
+      query.offenderId = offenderId
+    }
+    if (direction) {
+      query.direction = direction
+    }
+
     return this.get<Page<Checkin>>(
       {
         path: '/offender_checkins',
-        query: { practitioner: practitionerId, page, size },
+        query,
       },
       asSystem(),
     )
@@ -217,6 +231,21 @@ export default class EsupervisionApiClient extends RestClient {
         path: `/offenders/${offenderId}/deactivate`,
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify({ requestedBy: practitionerId, reason: stopCheckinDetails }),
+      },
+      asSystem(),
+    )
+  }
+
+  resendCheckinInvite(checkinId: string, practitionerId: ExternalUserId): Promise<Checkin> {
+    const requestBody = {
+      practitioner: practitionerId,
+    }
+
+    return this.post<Checkin>(
+      {
+        path: `/offender_checkins/${checkinId}/invite`,
+        headers: { 'Content-Type': 'application/json' },
+        data: JSON.stringify(requestBody),
       },
       asSystem(),
     )

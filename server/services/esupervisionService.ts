@@ -20,8 +20,14 @@ import OffenderInfoByContact from '../data/models/offenderInfoByContact'
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
 
-  getCheckins(practitioner: ExternalUser, page: number, size: number): Promise<Page<Checkin>> {
-    return this.esupervisionApiClient.getCheckins(practitioner.externalId(), page, size)
+  getCheckins(
+    practitioner: ExternalUser,
+    page: number,
+    size: number,
+    offenderId?: string,
+    direction?: 'ASC' | 'DESC',
+  ): Promise<Page<Checkin>> {
+    return this.esupervisionApiClient.getCheckins(practitioner.externalId(), page, size, offenderId, direction)
   }
 
   getCheckin(submissionId: string, includeUploads?: boolean): Promise<OffenderCheckinResponse> {
@@ -82,6 +88,10 @@ export default class EsupervisionService {
 
   stopCheckins(practitioner: ExternalUser, offenderId: string, stopCheckinDetails: string): Promise<void> {
     return this.esupervisionApiClient.stopCheckins(practitioner.externalId(), offenderId, stopCheckinDetails)
+  }
+
+  resendCheckinInvite(checkinId: string, practitioner: ExternalUser): Promise<Checkin> {
+    return this.esupervisionApiClient.resendCheckinInvite(checkinId, practitioner.externalId())
   }
 
   autoVerifyCheckinIdentity(checkinId: string, numSnapshots: number): Promise<AutomaticCheckinVerificationResult> {

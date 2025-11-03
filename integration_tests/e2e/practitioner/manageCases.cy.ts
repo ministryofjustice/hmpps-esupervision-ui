@@ -1,12 +1,15 @@
 import { faker } from '@faker-js/faker'
+import { addDays, format } from 'date-fns'
 import OffenderStatus from '../../../server/data/models/offenderStatus'
-import { createMockOffender } from '../../mockApis/esupervisionApi'
+import { createMockCheckin, createMockOffender } from '../../mockApis/esupervisionApi'
 import Page from '../../pages/page'
 import ManageCasePage from '../../pages/practitioner/cases/manageCasePage'
 import UpdateCheckInSettingsPage from '../../pages/practitioner/cases/update/updateCheckinSettingsPage'
 import UpdatePersonalDetailsPage from '../../pages/practitioner/cases/update/personalDetailsPage'
 import StopCheckInsPage from '../../pages/practitioner/cases/update/stopCheckinsPage'
 import Offender from '../../../server/data/models/offender'
+import Checkin from '../../../server/data/models/checkin'
+import CheckinStatus from '../../../server/data/models/checkinStatus'
 
 const frequencyMap = {
   WEEKLY: 'Every week',
@@ -17,6 +20,7 @@ const frequencyMap = {
 
 describe('Manage Case Page', () => {
   let testOffender: Offender
+  let testCheckin: Checkin
 
   beforeEach(() => {
     cy.task('reset')
@@ -24,8 +28,14 @@ describe('Manage Case Page', () => {
     cy.task('stubVerifyToken')
     cy.signIn({ failOnStatusCode: false })
     testOffender = createMockOffender({ status: OffenderStatus.Verified })
+    testCheckin = createMockCheckin(testOffender, {
+      status: CheckinStatus.Created,
+      dueDate: format(addDays(new Date(), 2), 'yyyy-MM-dd'),
+    })
     cy.task('stubGetOffender', testOffender)
     cy.task('stubOffenderCheckins')
+    cy.task('stubGetCheckinsForOffender', { offender: testOffender, checkins: [testCheckin] })
+    cy.task('stubResendCheckinInvite', testCheckin)
     cy.task('stubUpdateOffender', testOffender)
     cy.task('stubUpdateCheckinSettings', testOffender)
     cy.task('stubStopCheckins', testOffender)
@@ -84,5 +94,37 @@ describe('Manage Case Page', () => {
     Page.verifyOnPage(ManageCasePage)
     manageCasePage.stopCheckInsButton().should('not.exist')
     manageCasePage.verifySummaryValue('Next check in', 'Check ins stopped')
+  })
+  it('should show and allow resending the check-in link', () => {
+    const manageCasePage = Page.verifyOnPage(ManageCasePage)
+    manageCasePage.resendCheckinLink().should('be.visible').and('contain.text', 'Resend check in link')
+    manageCasePage.resendCheckinLink().click()
+    Page.verifyOnPage(ManageCasePage)
+    cy.url().should('include', `/practitioners/cases/${testOffender.uuid}`)
+    const contact = testOffender.email || testOffender.phoneNumber
+    manageCasePage.successMessageBody().should('contain.html', `<strong>Link has been sent to ${contact}</strong>`)
+  })
+
+  it('should not show resend link if check-in is not in CREATED state', () => {
+    const submittedCheckin = createMockCheckin(testOffender, {
+      status: CheckinStatus.Submitted,
+    })
+    cy.task('stubGetCheckinsForOffender', { offender: testOffender, checkins: [submittedCheckin] })
+
+    cy.visit(`/practitioners/cases/${testOffender.uuid}`)
+    const manageCasePage = Page.verifyOnPage(ManageCasePage)
+
+    manageCasePage.resendCheckinLink().should('not.exist')
+  })
+
+  it('should not show resend link if check-in is expired', () => {
+    const expiredCheckin = createMockCheckin(testOffender, {
+      status: CheckinStatus.Created,
+      dueDate: format(addDays(new Date(), -5), 'yyyy-MM-dd'),
+    })
+    cy.task('stubGetCheckinsForOffender', { offender: testOffender, checkins: [expiredCheckin] })
+    cy.visit(`/practitioners/cases/${testOffender.uuid}`)
+    const manageCasePage = Page.verifyOnPage(ManageCasePage)
+    manageCasePage.resendCheckinLink().should('not.exist')
   })
 })

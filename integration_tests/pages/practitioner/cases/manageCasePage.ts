@@ -14,6 +14,10 @@ export default class ManageCasePage extends Page {
 
   stopCheckInsButton = (): PageElement => cy.contains('a.govuk-button--warning', 'Stop check ins')
 
+  resendCheckinLink = (): Cypress.Chainable => cy.get('a[href*="/resend"]')
+
+  successMessageBody = (): Cypress.Chainable => cy.get('.moj-alert--success .moj-alert__content')
+
   stoppedCheckInsAlert = (): PageElement => cy.get('.moj-alert--info')
 
   changePersonalDetailsLink = (): PageElement =>

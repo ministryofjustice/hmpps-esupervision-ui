@@ -457,19 +457,11 @@ export const handleResendInvite: RequestHandler = async (req, res, next) => {
   try {
     const { checkinId } = req.params
     const practitioner = res.locals.user
-
-    // Call the new service method
     const checkin = await esupervisionService.resendCheckinInvite(checkinId, practitioner)
-
-    // Determine the contact method to display
     const contactMethod = checkin.offender.email || checkin.offender.phoneNumber
-
-    // Set the specific success flash message with <strong> tags
     req.flash('success', {
       message: `<strong>Link has been sent to ${contactMethod}</strong>`,
     })
-
-    // Redirect back to the offender's case page
     res.redirect(`/practitioners/cases/${checkin.offender.uuid}`)
   } catch (error) {
     next(error)

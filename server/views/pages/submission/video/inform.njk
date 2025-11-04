@@ -1,5 +1,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
 {% extends "../../../partials/layout.njk" %}
 
 {% set pageTitle = "Confirm your identity" %}
@@ -31,6 +33,9 @@
         <li>your face is in the frame</li>
         <li>you are not wearing a hat or sunglasses</li>
       </ul>
+      {{ govukInsetText({
+        text: "Remember this is a probation check in and should be treated the same as a face to face meeting. You should wear appropriate clothing when taking the video."
+      }) }}
       {{
         govukButton({
         text: "Continue",

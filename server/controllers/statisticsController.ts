@@ -63,6 +63,7 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 56),
       r => r.count,
     )
+    const averageTimeToRegister = indexByLocation(stats.averageTimeToRegister, r => r.average)
 
     res.render('pages/statistics/dashboard', {
       sites,
@@ -86,6 +87,7 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       checkin14daysFrequencyPerSite,
       checkin28daysFrequencyPerSite,
       checkin56daysFrequencyPerSite,
+      averageTimeToRegister,
     })
   } catch (error) {
     next(error)

@@ -62,4 +62,6 @@ export default class Stats {
   callbackRequestPercentagePerSite: SiteAverage[]
 
   checkinFrequencyPerSite: FrequencyCount[]
+
+  averageTimeToRegister: SiteAverage[]
 }

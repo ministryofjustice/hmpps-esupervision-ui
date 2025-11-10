@@ -42,7 +42,6 @@ export type FrequencyCount = {
 
 export type ReviewResponseTimeAverage = {
   location: string
-  reviewTimeAvg: object
   reviewTimeAvgText: string
 }
 

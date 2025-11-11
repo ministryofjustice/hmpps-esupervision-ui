@@ -135,6 +135,12 @@ const friendlyCheckInStatus = (status: string) => {
 export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   try {
     const { checkInId } = req.params
+    try {
+      await esupervisionService.logCheckinEvent(checkInId, 'REVIEW_STARTED')
+    } catch (eventError) {
+      logger.warn(`Failed to send logCheckinEvent for checkin ${checkInId}`, eventError)
+    }
+
     const { checkin: checkIn, checkinLogs } = await esupervisionService.getCheckin(checkInId)
     checkIn.dueDate = add(new Date(checkIn.dueDate), { days: 3 }).toString()
     if (checkIn.status === 'SUBMITTED') {

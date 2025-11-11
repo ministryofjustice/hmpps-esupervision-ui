@@ -21,6 +21,7 @@ import PractitionerInfo from './models/practitioner'
 import PractitionerStats from './models/practitionerStats'
 import Stats from './models/stats'
 import OffenderInfoByContact from './models/offenderInfoByContact'
+import { CheckinEventType } from './models/checkinEvent'
 
 /**
  * Specifies content types for possible upload locations for a checkin.
@@ -159,11 +160,7 @@ export default class EsupervisionApiClient extends RestClient {
   /**
    * Allows to log events related to a checkin.
    */
-  async logCheckinEvent(
-    checkinId: string,
-    eventType: 'CHECKIN_OUTSIDE_ACCESS',
-    comment: string,
-  ): Promise<{ event: string }> {
+  async logCheckinEvent(checkinId: string, eventType: CheckinEventType, comment?: string): Promise<{ event: string }> {
     return this.post<{ event: string }>(
       {
         path: `/offender_checkins/${checkinId}/event`,

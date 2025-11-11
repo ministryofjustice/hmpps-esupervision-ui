@@ -2,6 +2,9 @@ import type { Request, Response, NextFunction } from 'express'
 import { LRUCache } from 'lru-cache'
 import { z } from 'zod'
 import logger from '../../logger'
+import { services } from '../services'
+
+const { esupervisionService } = services()
 
 const IP_INFO_TOKEN = process.env.IP_INFO_TOKEN ?? ''
 const ALLOWED_COUNTRY = 'GB'
@@ -53,6 +56,16 @@ function isAllowed(countryCode: string | null): boolean {
   return (countryCode ?? '').toUpperCase() === ALLOWED_COUNTRY
 }
 
+const logOutsideAccess = async (checkinId: string, ip: string, countryCode: string) => {
+  if (checkinId) {
+    await esupervisionService.logCheckinEvent(
+      checkinId,
+      'CHECKIN_OUTSIDE_ACCESS',
+      `ip=${ip} countryCode=${countryCode}`,
+    )
+  }
+}
+
 export default async function restrictToUK(req: Request, res: Response, next: NextFunction) {
   try {
     // 1) Bypass specific paths
@@ -68,6 +81,9 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
 
     // 3) Get IP
     const ip = getClientIp(req)
+    const matches = req.path.match(/\/submission\/([0-9a-z-]*)[#?]*.*/)
+    const checkinId = matches && matches[1] ? matches[1] : undefined
+    const logAccess = checkinId ? logOutsideAccess : async (_checkinId: string, _ip: string, _countryCode: string) => {}
 
     // 4) Allow local development to bypass
     if (localDevBypass(ip)) return next()
@@ -76,7 +92,8 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
     const cached = cache.get(ip)
     if (cached) {
       if (!isAllowed(cached.countryCode)) {
-        logger.warn({ ip, country: cached.countryCode, path: req.path }, 'Blocked non-UK request (cache)')
+        logger.warn({ ip, country: cached.countryCode, path: req.path, checkinId }, 'Blocked non-UK request (cache)')
+        await logAccess(checkinId, ip, cached.countryCode)
         return res.status(403).render('pages/outside-uk')
       }
       return next()
@@ -112,7 +129,8 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
 
       // 8) Enforce UK/GB only
       if (!isAllowed(countryCode)) {
-        logger.warn({ ip, country: countryCode, path: req.path }, 'Blocked non-UK request')
+        logger.warn({ ip, country: countryCode, path: req.path, checkinId }, 'Blocked non-UK request')
+        await logAccess(checkinId, ip, countryCode)
         return res.status(403).render('pages/outside-uk')
       }
 

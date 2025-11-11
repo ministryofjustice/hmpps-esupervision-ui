@@ -58,6 +58,10 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.reviewCheckin(practitioner.externalId(), checkinId, match, missedCheckinComment)
   }
 
+  logCheckinEvent(checkinId: string, eventType: 'CHECKIN_OUTSIDE_ACCESS', comment: string): Promise<{ event: string }> {
+    return this.esupervisionApiClient.logCheckinEvent(checkinId, eventType, comment)
+  }
+
   createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {
     return this.esupervisionApiClient.createOffender(offenderInfo)
   }

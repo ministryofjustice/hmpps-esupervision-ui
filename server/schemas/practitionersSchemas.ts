@@ -160,6 +160,7 @@ export const OffenderInfoInput = z.object({
   mobile: z.nullish(z.string()),
   frequency: z.enum(['WEEKLY', 'TWO_WEEKS', 'FOUR_WEEKS', 'EIGHT_WEEKS']),
   startDate: z.string(),
+  startedAt: z.iso.datetime(),
 })
 
 export const photoUploadSchema = z.object({

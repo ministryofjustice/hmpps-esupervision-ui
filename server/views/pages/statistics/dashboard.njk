@@ -374,6 +374,25 @@
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageReviewResponseTimeTotal }}</td>
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
       </tr>
+      <tr class="govuk-table__row">
+        <th class="govuk-table__header" scope="row">Average time to register PoP in seconds</th>
+        {% set total = 0 %}
+        {% for site in sites %}
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
+            {{ averageSecondsToRegister[site] or 0 }}
+            {% set total = total + (averageSecondsToRegister[site] or 0) %}
+          </td>
+        {% endfor %}
+        <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">
+          {{ total }}
+        </td>
+        <td
+          class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight"
+          data-label="%"
+        >
+          &nbsp;
+        </td>
+      </tr>
     </tbody>
   </table>
 {% endblock %}

@@ -21,4 +21,6 @@ export default class OffenderInfo {
   firstCheckinDate: string
 
   checkinInterval: CheckinInterval
+
+  startedAt: string
 }

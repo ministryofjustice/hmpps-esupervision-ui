@@ -27,6 +27,7 @@
       <p>We will use these details to verify the person when they access the service.</p>
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="startedAt" value="{{ formData["startedAt"] or startedAtValue }}" />
         {{
           govukInput({
             label: {

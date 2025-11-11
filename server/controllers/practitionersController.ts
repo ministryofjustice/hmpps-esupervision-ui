@@ -578,7 +578,9 @@ export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
 // REGISTER POP ROUTES
 
 export const handleStartRegister: RequestHandler = async (req, res, next) => {
-  req.session.formData = {}
+  req.session.formData = {
+    startedAt: new Date().toISOString(),
+  }
   res.redirect(`/practitioners/register?start=true`)
 }
 
@@ -739,7 +741,8 @@ export const handleRegisterBegin: RequestHandler = async (req, res, next) => {
     return
   }
 
-  const { firstName, lastName, day, month, year, crn, contactPreference, email, mobile, frequency } = parsed.data
+  const { firstName, lastName, day, month, year, crn, contactPreference, email, mobile, frequency, startedAt } =
+    parsed.data
   const { startDate } = parsed.data
   const firstCheckinDate = parse(startDate, 'd/M/yyyy', new Date())
 
@@ -754,6 +757,7 @@ export const handleRegisterBegin: RequestHandler = async (req, res, next) => {
     phoneNumber: contactPreference === 'TEXT' && mobile ? mobile : null,
     firstCheckinDate: format(firstCheckinDate, 'yyyy-MM-dd'),
     checkinInterval: frequency as CheckinInterval,
+    startedAt,
   }
 
   try {

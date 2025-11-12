@@ -64,6 +64,8 @@ export default class Stats {
 
   checkinAverages: SiteCheckinAverage[]
 
+  checkinOutsideAccess: SiteCount[]
+
   automatedIdCheckAccuracy: IdCheckAccuracy[]
 
   flaggedCheckinsPerSite: SiteCount[]

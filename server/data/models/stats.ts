@@ -45,8 +45,16 @@ export type ReviewResponseTimeAverage = {
   reviewTimeAvgText: string
 }
 
+export type LabeledSiteCount = {
+  location: string
+  label: string
+  count: number
+}
+
 export default class Stats {
   invitesPerSite: SiteCount[]
+
+  inviteStatusPerSite: LabeledSiteCount[]
 
   completedCheckinsPerSite: SiteCount[]
 

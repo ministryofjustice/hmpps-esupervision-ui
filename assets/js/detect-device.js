@@ -1,5 +1,14 @@
-const getPixelRatio = () => window.devicePixelRatio || 1
+const getPixelRatio = () => {
+  if (typeof window === 'undefined') {
+    return 1
+  }
+  return window.devicePixelRatio || 1
+}
+
 const getDimensionKey = () => {
+  if (typeof window === 'undefined') {
+    return '0x0'
+  }
   const { width, height } = window.screen
   return `${Math.max(width, height)}x${Math.min(width, height)}`
 }
@@ -175,6 +184,23 @@ const BROWSER_PATTERNS = [
 ]
 
 const detectDevice = () => {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return {
+      userAgent: 'N/A',
+      platform: 'N/A',
+      screenResolution: '0x0',
+      pixelRatio: 1,
+      touchSupport: false,
+      os: 'Unknown',
+      osVersion: 'Unknown',
+      deviceType: 'Unknown',
+      manufacturer: 'Unknown',
+      model: 'Unknown',
+      browser: 'Unknown',
+      browserVersion: 'Unknown',
+    }
+  }
+
   const { userAgent, platform } = navigator
   const { width, height } = window.screen
   const pixelRatio = getPixelRatio()
@@ -193,23 +219,28 @@ const detectDevice = () => {
 
 const detectOS = userAgent => {
   const osMatch = OS_PATTERNS.find(os => os.pattern.test(userAgent))
-  const versionMatch = osMatch?.versionRegex && userAgent.match(osMatch.versionRegex)
+  const versionMatch = osMatch && osMatch.versionRegex && userAgent.match(osMatch.versionRegex)
   const defaultTransform = v => v
 
   return osMatch
     ? {
         os: osMatch.name,
-        osVersion: (versionMatch && (osMatch.versionTransform ?? defaultTransform)(versionMatch[1])) || 'Unknown',
+        osVersion: (versionMatch && (osMatch.versionTransform || defaultTransform)(versionMatch[1])) || 'Unknown',
       }
     : { os: 'Unknown', osVersion: 'Unknown' }
 }
 
-const detectDeviceType = userAgent =>
-  DEVICE_PATTERNS.find(device => device.pattern.test(userAgent))?.getData(userAgent) || {
+const detectDeviceType = userAgent => {
+  const foundPattern = DEVICE_PATTERNS.find(device => device.pattern.test(userAgent))
+  if (foundPattern) {
+    return foundPattern.getData(userAgent)
+  }
+  return {
     deviceType: 'Unknown',
     manufacturer: 'Unknown',
     model: 'Unknown',
   }
+}
 
 const detectBrowser = userAgent => {
   const browserMatch = BROWSER_PATTERNS.find(browser => browser.test(userAgent))
@@ -218,14 +249,24 @@ const detectBrowser = userAgent => {
   return browserMatch
     ? {
         browser: browserMatch.name,
-        browserVersion: versionMatch?.[1] || 'Unknown',
+        browserVersion: (versionMatch && versionMatch[1]) || 'Unknown',
       }
     : { browser: 'Unknown', browserVersion: 'Unknown' }
 }
 
-const detectiPhoneModel = () => IPHONE_MODELS[getPixelRatio()]?.[getDimensionKey()] || 'iPhone'
+const detectiPhoneModel = () => {
+  const pixelRatio = getPixelRatio()
+  const models = IPHONE_MODELS[pixelRatio]
+  const dimensionKey = getDimensionKey()
+  return (models && models[dimensionKey]) || 'iPhone'
+}
 
-const detectiPadModel = () => IPAD_MODELS[getPixelRatio()]?.[getDimensionKey()] || 'iPad'
+const detectiPadModel = () => {
+  const pixelRatio = getPixelRatio()
+  const models = IPAD_MODELS[pixelRatio]
+  const dimensionKey = getDimensionKey()
+  return (models && models[dimensionKey]) || 'iPad'
+}
 
 const detectAndroidDevice = userAgent => {
   const matchedPattern = ANDROID_PATTERNS.find(pattern => pattern.test(userAgent))
@@ -239,7 +280,7 @@ const detectAndroidDevice = userAgent => {
       }
     : {
         manufacturer: 'Android',
-        model: genericMatch?.[1]?.trim() || 'Unknown',
+        model: (genericMatch && genericMatch[1] && genericMatch[1].trim()) || 'Unknown',
       }
 }
 
@@ -253,6 +294,5 @@ if (typeof document !== 'undefined') {
     if (input) {
       input.value = JSON.stringify(deviceInfo)
     }
-    // console.log('Device Info:', deviceInfo)
   })
 }

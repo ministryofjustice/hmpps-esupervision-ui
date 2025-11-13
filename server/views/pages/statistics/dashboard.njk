@@ -397,10 +397,10 @@
         <th class="govuk-table__header" scope="row">Average time taken by a PP to complete a review of a checkin </th>
         {% for site in sites %}
         <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-        {{ averageReviewResponseTime[site] or 0 }}
+        {{ averageTimeTakenToCompleteCheckinReviewPerSite[site] or 0 }}
         </td>
         {% endfor %}
-        <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageReviewResponseTimeTotal }}</td>
+        <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageTimeTakenToCompleteCheckinReviewTotal }}</td>
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
       </tr>
     </tbody>

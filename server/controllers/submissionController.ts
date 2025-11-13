@@ -6,6 +6,7 @@ import MentalHealth from '../data/models/survey/mentalHealth'
 import SupportAspect from '../data/models/survey/supportAspect'
 import CallbackRequested from '../data/models/survey/callbackRequested'
 import OffenderCheckinResponse from '../data/models/offenderCheckinResponse'
+import { DeviceInfo } from '../data/models/survey/surveyResponse'
 
 type SubmissionLocals = { submission: OffenderCheckinResponse }
 
@@ -253,6 +254,17 @@ export const handleSubmission: RequestHandler = async (req, res: Response<object
     assistance = [assistance]
   }
 
+  const { deviceData } = res.locals.formData
+  let device: DeviceInfo | null = null
+
+  if (deviceData && typeof deviceData === 'string') {
+    try {
+      device = JSON.parse(deviceData) as DeviceInfo
+    } catch (error) {
+      next(error)
+    }
+  }
+
   const submissionId = getSubmissionId(req)
   const submission = {
     offender: res.locals.submission.checkin.offender.uuid,
@@ -269,6 +281,7 @@ export const handleSubmission: RequestHandler = async (req, res: Response<object
       otherSupport: otherSupport as string,
       callback: callback as CallbackRequested,
       callbackDetails: callbackDetails as string,
+      device,
     },
   }
 

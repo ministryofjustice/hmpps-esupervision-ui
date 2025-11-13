@@ -179,6 +179,7 @@
 
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" id="device-data" name="deviceData" />
 
         {{
           govukCheckboxes({
@@ -207,4 +208,8 @@
       </form>
     </div>
   </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }} <script type="module" src="{{ '/assets/js/detect-device.js' | assetMap }}"></script>
 {% endblock %}

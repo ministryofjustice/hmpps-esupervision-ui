@@ -16,6 +16,7 @@ import PractitionerInfo from '../data/models/practitioner'
 import PractitionerStats from '../data/models/practitionerStats'
 import Stats from '../data/models/stats'
 import OffenderInfoByContact from '../data/models/offenderInfoByContact'
+import { CheckinEventType } from '../data/models/checkinEvent'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -58,7 +59,7 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.reviewCheckin(practitioner.externalId(), checkinId, match, missedCheckinComment)
   }
 
-  logCheckinEvent(checkinId: string, eventType: 'CHECKIN_OUTSIDE_ACCESS', comment: string): Promise<{ event: string }> {
+  logCheckinEvent(checkinId: string, eventType: CheckinEventType, comment?: string): Promise<{ event: string }> {
     return this.esupervisionApiClient.logCheckinEvent(checkinId, eventType, comment)
   }
 

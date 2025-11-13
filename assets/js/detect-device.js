@@ -253,6 +253,6 @@ if (typeof document !== 'undefined') {
     if (input) {
       input.value = JSON.stringify(deviceInfo)
     }
-    //   console.log('Device Info:', deviceInfo);
+    // console.log('Device Info:', deviceInfo)
   })
 }

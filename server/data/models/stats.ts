@@ -74,5 +74,7 @@ export default class Stats {
 
   averageSecondsToRegister: SiteAverage[]
 
-  averageSecondsToCompleteCheckinReviewPerSite: SiteAverage[]
+  averageTimeTakenToCompleteCheckinReviewPerSite: ReviewResponseTimeAverage[]
+
+  averageTimeTakenToCompleteCheckinReviewTotal: string
 }

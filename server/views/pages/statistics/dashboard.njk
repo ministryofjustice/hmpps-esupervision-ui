@@ -394,23 +394,14 @@
         </td>
       </tr>
       <tr class="govuk-table__row">
-        <th class="govuk-table__header" scope="row">Average time to complete review of checkin in seconds</th>
-        {% set total = 0 %}
+        <th class="govuk-table__header" scope="row">Average time taken by a PP to complete a review of a checkin </th>
         {% for site in sites %}
-          <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-            {{ averageSecondsToCompleteCheckinReviewPerSite[site] or 0 }}
-            {% set total = total + (averageSecondsToCompleteCheckinReviewPerSite[site] or 0) %}
-          </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
+        {{ averageReviewResponseTime[site] or 0 }}
+        </td>
         {% endfor %}
-        <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">
-          {{ total }}
-        </td>
-        <td
-          class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight"
-          data-label="%"
-        >
-          &nbsp;
-        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageReviewResponseTimeTotal }}</td>
+        <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
       </tr>
     </tbody>
   </table>

@@ -416,6 +416,16 @@
           &nbsp;
         </td>
       </tr>
+      <tr class="govuk-table__row">
+        <th class="govuk-table__header" scope="row">Average checkin completion time</th>
+        {% for site in sites %}
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
+            {{ averageCheckinCompletionTime[site] or 0 }}
+          </td>
+        {% endfor %}
+        <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageCheckinCompletionTimeTotal }}</td>
+        <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight" data-label="%">&nbsp;</td>
+      </tr>
     </tbody>
   </table>
 {% endblock %}

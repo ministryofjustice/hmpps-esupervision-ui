@@ -91,9 +91,6 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
     )
     const { averageCheckinCompletionTimeTotal } = stats
 
-    console.log(averageCheckinCompletionTime)
-    console.log(averageCheckinCompletionTimeTotal)
-
     res.render('pages/statistics/dashboard', {
       sites,
       offendersByLocation,

@@ -40,7 +40,7 @@ export type FrequencyCount = {
   count: number
 }
 
-export type TimeAverage = {
+export type SiteFormattedTimeAverage = {
   location: string
   averageTimeText: string
 }
@@ -76,13 +76,15 @@ export default class Stats {
 
   checkinFrequencyPerSite: FrequencyCount[]
 
-  averageReviewTimePerCheckinPerSite: TimeAverage[]
+  averageReviewTimePerCheckinPerSite: SiteFormattedTimeAverage[]
 
   averageReviewTimePerCheckinTotal: string
 
-  averageSecondsToRegister: SiteAverage[]
+  averageTimeToRegisterPerSite: SiteFormattedTimeAverage[]
 
-  averageCheckinCompletionTimePerSite: TimeAverage[]
+  averageTimeToRegisterTotal: string
+
+  averageCheckinCompletionTimePerSite: SiteFormattedTimeAverage[]
 
   averageCheckinCompletionTimeTotal: string
 }

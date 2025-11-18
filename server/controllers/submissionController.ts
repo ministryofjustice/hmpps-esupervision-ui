@@ -23,7 +23,6 @@ const pageParams = (req: Request): Record<string, string | boolean> => {
 }
 
 export const handleStart: RequestHandler = async (req, res, next) => {
-  req.session.formData = {}
   const { submissionId } = req.params
   res.redirect(`/submission/${submissionId}/verify`)
 }
@@ -44,6 +43,7 @@ export const handleRedirect = (submissionPath: string): RequestHandler => {
 
 export const renderIndex: RequestHandler = async (req, res, next) => {
   try {
+    req.session.formData = { checkinStartedAt: Date.now() }
     res.render('pages/submission/index', pageParams(req))
   } catch (error) {
     next(error)
@@ -245,6 +245,7 @@ export const handleSubmission: RequestHandler = async (req, res: Response<object
     otherSupport,
     callback,
     callbackDetails,
+    checkinStartedAt,
   } = res.locals.formData
 
   let { assistance } = res.locals.formData
@@ -282,6 +283,7 @@ export const handleSubmission: RequestHandler = async (req, res: Response<object
       callback: callback as CallbackRequested,
       callbackDetails: callbackDetails as string,
       device,
+      checkinStartedAt: checkinStartedAt as Date,
     },
   }
 

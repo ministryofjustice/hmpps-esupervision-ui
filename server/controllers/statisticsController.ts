@@ -85,6 +85,8 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
     const averageReviewResponseTime = indexByLocation(stats.averageReviewTimePerCheckinPerSite, r => r.averageTimeText)
     const averageReviewResponseTimeTotal = stats.averageReviewTimePerCheckinTotal
 
+    const checkinOutsideAccess = indexByLocation(stats.checkinOutsideAccess, r => r.count)
+
     const averageTimeToRegister = indexByLocation(stats.averageTimeToRegisterPerSite, r => r.averageTimeText)
     const { averageTimeToRegisterTotal } = stats
     res.render('pages/statistics/dashboard', {
@@ -112,6 +114,7 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       checkin56daysFrequencyPerSite,
       averageReviewResponseTime,
       averageReviewResponseTimeTotal,
+      checkinOutsideAccess,
       averageTimeToRegister,
       averageTimeToRegisterTotal,
     })

@@ -40,13 +40,21 @@ export type FrequencyCount = {
   count: number
 }
 
-export type ReviewResponseTimeAverage = {
+export type SiteFormattedTimeAverage = {
   location: string
-  reviewTimeAvgText: string
+  averageTimeText: string
+}
+
+export type LabeledSiteCount = {
+  location: string
+  label: string
+  count: number
 }
 
 export default class Stats {
   invitesPerSite: SiteCount[]
+
+  inviteStatusPerSite: LabeledSiteCount[]
 
   completedCheckinsPerSite: SiteCount[]
 
@@ -55,6 +63,8 @@ export default class Stats {
   offendersPerSite: SiteCount[]
 
   checkinAverages: SiteCheckinAverage[]
+
+  checkinOutsideAccess: SiteCount[]
 
   automatedIdCheckAccuracy: IdCheckAccuracy[]
 
@@ -68,13 +78,19 @@ export default class Stats {
 
   checkinFrequencyPerSite: FrequencyCount[]
 
-  averageReviewTimePerCheckinPerSite: ReviewResponseTimeAverage[]
+  averageReviewTimePerCheckinPerSite: SiteFormattedTimeAverage[]
 
   averageReviewTimePerCheckinTotal: string
 
-  averageSecondsToRegister: SiteAverage[]
+  averageTimeToRegisterPerSite: SiteFormattedTimeAverage[]
 
-  averageTimeTakenToCompleteCheckinReviewPerSite: ReviewResponseTimeAverage[]
+  averageTimeToRegisterTotal: string
+
+  averageCheckinCompletionTimePerSite: SiteFormattedTimeAverage[]
+
+  averageCheckinCompletionTimeTotal: string
+
+  averageTimeTakenToCompleteCheckinReviewPerSite: SiteFormattedTimeAverage[]
 
   averageTimeTakenToCompleteCheckinReviewTotal: string
 }

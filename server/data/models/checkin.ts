@@ -37,4 +37,6 @@ export default class Checkin {
   flaggedResponses: string[]
 
   reviewDueDate?: string // TODO: parse datetime
+
+  checkinStartedAt?: string // TODO: parse datetime
 }

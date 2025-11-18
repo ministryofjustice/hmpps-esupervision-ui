@@ -8,6 +8,21 @@ export interface Versioned {
   version: SurveyVersion
 }
 
+export interface DeviceInfo {
+  userAgent: string
+  platform: string
+  screenResolution: string
+  pixelRatio: number
+  touchSupport: boolean
+  os: string
+  osVersion: string
+  deviceType: string
+  manufacturer: string
+  model: string
+  browser: string
+  browserVersion: string
+}
+
 export default class SurveyResponse implements Versioned {
   version: SurveyVersion
 
@@ -32,4 +47,6 @@ export default class SurveyResponse implements Versioned {
   callback: CallbackRequested
 
   callbackDetails: string
+
+  device?: DeviceInfo
 }

@@ -6,6 +6,7 @@ import MentalHealth from '../data/models/survey/mentalHealth'
 import SupportAspect from '../data/models/survey/supportAspect'
 import CallbackRequested from '../data/models/survey/callbackRequested'
 import OffenderCheckinResponse from '../data/models/offenderCheckinResponse'
+import { DeviceInfo } from '../data/models/survey/surveyResponse'
 
 type SubmissionLocals = { submission: OffenderCheckinResponse }
 
@@ -22,7 +23,6 @@ const pageParams = (req: Request): Record<string, string | boolean> => {
 }
 
 export const handleStart: RequestHandler = async (req, res, next) => {
-  req.session.formData = {}
   const { submissionId } = req.params
   res.redirect(`/submission/${submissionId}/verify`)
 }
@@ -43,6 +43,7 @@ export const handleRedirect = (submissionPath: string): RequestHandler => {
 
 export const renderIndex: RequestHandler = async (req, res, next) => {
   try {
+    req.session.formData = { checkinStartedAt: Date.now() }
     res.render('pages/submission/index', pageParams(req))
   } catch (error) {
     next(error)
@@ -244,6 +245,7 @@ export const handleSubmission: RequestHandler = async (req, res: Response<object
     otherSupport,
     callback,
     callbackDetails,
+    checkinStartedAt,
   } = res.locals.formData
 
   let { assistance } = res.locals.formData
@@ -251,6 +253,17 @@ export const handleSubmission: RequestHandler = async (req, res: Response<object
   // If user selects a single assistance option, convert it to an array
   if (typeof assistance === 'string') {
     assistance = [assistance]
+  }
+
+  const { deviceData } = res.locals.formData
+  let device: DeviceInfo | null = null
+
+  if (deviceData && typeof deviceData === 'string') {
+    try {
+      device = JSON.parse(deviceData) as DeviceInfo
+    } catch (error) {
+      next(error)
+    }
   }
 
   const submissionId = getSubmissionId(req)
@@ -269,6 +282,8 @@ export const handleSubmission: RequestHandler = async (req, res: Response<object
       otherSupport: otherSupport as string,
       callback: callback as CallbackRequested,
       callbackDetails: callbackDetails as string,
+      device,
+      checkinStartedAt: checkinStartedAt as Date,
     },
   }
 

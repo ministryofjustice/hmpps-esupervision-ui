@@ -89,4 +89,8 @@ export default class Stats {
   averageCheckinCompletionTimePerSite: SiteFormattedTimeAverage[]
 
   averageCheckinCompletionTimeTotal: string
+
+  averageTimeTakenToCompleteCheckinReviewPerSite: SiteFormattedTimeAverage[]
+
+  averageTimeTakenToCompleteCheckinReviewTotal: string
 }

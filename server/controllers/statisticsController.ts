@@ -2,7 +2,7 @@ import { RequestHandler } from 'express'
 import { services } from '../services'
 
 import { indexByLocation } from '../utils/indexByLocation'
-import { LabeledSiteCount } from '../data/models/stats'
+import aggregateCheckinNotificationStatusSummary from '../utils/notificationStatusAggregation'
 
 const { esupervisionService } = services()
 
@@ -16,25 +16,9 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       .filter(location => location.toLowerCase() !== 'unknown')
       .sort()
 
+    const checkinNotificationStatusSummary = aggregateCheckinNotificationStatusSummary(stats)
     const offendersByLocation = indexByLocation(stats.offendersPerSite, r => r.count)
     const invitesByLocation = indexByLocation(stats.invitesPerSite, r => r.count)
-
-    const invitesGroupedByStatus = new Map<string, LabeledSiteCount[]>()
-    for (const item of stats.inviteStatusPerSite) {
-      if (invitesGroupedByStatus.has(item.label)) {
-        invitesGroupedByStatus.get(item.label)?.push(item)
-      } else {
-        invitesGroupedByStatus.set(item.label, [item])
-      }
-    }
-    const invitesByLocationStatus = new Map<string, Record<string, number>>()
-    for (const [key, value] of invitesGroupedByStatus) {
-      invitesByLocationStatus.set(
-        key,
-        indexByLocation(value, r => r.count),
-      )
-    }
-
     const completedByLocation = indexByLocation(stats.completedCheckinsPerSite, r => r.count)
     const completedByLocationOnDay1 = indexByLocation(
       stats.completedCheckinsPerNth.filter(r => r.day === 1),
@@ -106,7 +90,7 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       sites,
       offendersByLocation,
       invitesByLocation,
-      invitesByLocationStatus,
+      checkinNotificationStatusSummary,
       completedByLocation,
       completedByLocationOnDay1,
       completedByLocationOnDay2,

@@ -51,6 +51,12 @@ export type LabeledSiteCount = {
   count: number
 }
 
+export type CheckinNotificationStatusSummary = {
+  status: string
+  count: number
+  percentage: number
+}
+
 export default class Stats {
   invitesPerSite: SiteCount[]
 

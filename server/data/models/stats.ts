@@ -49,6 +49,9 @@ export type LabeledSiteCount = {
   location: string
   label: string
   count: number
+  // total for given label
+  total?: number
+  percentage?: number
 }
 
 export default class Stats {
@@ -93,4 +96,6 @@ export default class Stats {
   averageTimeTakenToCompleteCheckinReviewPerSite: SiteFormattedTimeAverage[]
 
   averageTimeTakenToCompleteCheckinReviewTotal: string
+
+  deviceType: LabeledSiteCount[]
 }

@@ -428,4 +428,45 @@
       </tr>
     </tbody>
   </table>
+
+
+   <table class="govuk-table es-table--responsive es-table--stats">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Device Type</th>
+        {% for site in sites %}
+          <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ site | capitalize }}</th>
+        {% endfor %}
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric es-table__cell--highlight">Total</th>
+        <th
+          scope="col"
+          class="govuk-table__header govuk-table__header--numeric es-table__cell--highlight es-table__cell--extra-highlight"
+        >
+          %
+        </th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+    {% for deviceType, item in deviceTypes.entries() %}
+      <tr class="govuk-table__row">
+        <th class="govuk-table__header" scope="row">{{ deviceType }}</th>
+        {% for site in sites %}
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
+            {{ item.locations.get(site).count or 0 }}
+          </td>
+        {% endfor %}
+        <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">
+            {{ item.total or 0 }}
+        </td>
+        <td
+          class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight"
+          data-label="%"
+        >
+          {{ item.percentage or 0 }}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
 {% endblock %}

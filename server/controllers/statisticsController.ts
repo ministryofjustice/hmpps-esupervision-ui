@@ -3,6 +3,7 @@ import { services } from '../services'
 
 import { indexByLocation } from '../utils/indexByLocation'
 import aggregateCheckinNotificationStatusSummary from '../utils/notificationStatusAggregation'
+import { LabeledSiteCount } from '../data/models/stats'
 
 const { esupervisionService } = services()
 

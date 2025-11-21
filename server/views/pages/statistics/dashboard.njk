@@ -60,27 +60,6 @@
         </td>
       </tr>
 
-      {% for status, invites in invitesByLocationStatus.entries() %}
-        <tr class="govuk-table__row">
-          <th class="govuk-table__header" scope="row">Check in delivery status: {{ status }}</th>
-          {% set total = 0 %}
-          {% for site in sites %}
-            <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-              {{ invites[site] or 0 }}
-              {% set total = total + (invites[site] or 0) %}
-            </td>
-          {% endfor %}
-          <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">
-            {{ total }}
-          </td>
-          <td
-            class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight"
-            data-label="%"
-          >
-            &nbsp;
-          </td>
-        </tr>
-      {% endfor %}
 
       <tr class="govuk-table__row">
         <th class="govuk-table__header" scope="row">Completed check ins</th>
@@ -429,7 +408,31 @@
     </tbody>
   </table>
 
+  <h2 class="govuk-heading-m">Check-in Message Status Summary</h2>
+  <table class="govuk-table es-table--responsive es-table--stats">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Check-in Message Status</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric es-table__cell--highlight">Total</th> 
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric es-table__cell--highlight es-table__cell--extra-highlight">%</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% set grandTotal = 0 %}
+      {% for item in checkinNotificationStatusSummary %}
+        {% set grandTotal = grandTotal + item.count %}
+      {% endfor %}
+      {% for item in checkinNotificationStatusSummary %}
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">{{ item.status }}</th> 
+          <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight">{{ item.count }}</td> 
+          <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight">{{ item.percentage }}%</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
+  <h2 class="govuk-heading-m">Device Types</h2>
    <table class="govuk-table es-table--responsive es-table--stats">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">

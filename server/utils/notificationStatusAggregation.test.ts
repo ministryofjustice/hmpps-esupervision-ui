@@ -26,6 +26,8 @@ const createMockStats = (inviteStatuses: LabeledSiteCount[]): Stats => ({
   deviceType: [],
   averageFlagsPerCheckinTotal: 0,
   callbackRequestPercentageTotal: 0,
+  ontimeCheckinPercentageTotal: 0,
+  checkinCompletedAverageTotal: 0,
 })
 
 describe('aggregateCheckinNotificationStatusSummary', () => {

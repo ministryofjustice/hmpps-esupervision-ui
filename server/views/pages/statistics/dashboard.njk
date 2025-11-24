@@ -146,7 +146,7 @@
           </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">
-          {{ total }}
+          {{ checkinCompletedAverageTotal | round(2) }}
         </td>
         <td
           class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight"
@@ -214,15 +214,13 @@
       </tr>
       <tr class="govuk-table__row">
         <th class="govuk-table__header" scope="row">% of check ins completed on time</th>
-        {% set total = 0 %}
         {% for site in sites %}
           <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
             {{ ontimePercentageByLocation[site] or 0 }}%
-            {% set total = total + (ontimePercentageByLocation[site] or 0) %}
           </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">
-          {{ (total / sites.length) | round(2) or 0 }}%
+          {{ ontimeCheckinPercentageTotal | round(2) }}%
         </td>
         <td
           class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight"

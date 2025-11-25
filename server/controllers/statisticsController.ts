@@ -3,7 +3,7 @@ import { services } from '../services'
 
 import { indexByLocation } from '../utils/indexByLocation'
 import aggregateCheckinNotificationStatusSummary from '../utils/notificationStatusAggregation'
-import { LabeledSiteCount } from '../data/models/stats'
+import formatDeviceTypeStats from '../utils/statistics'
 
 const { esupervisionService } = services()
 
@@ -72,20 +72,7 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
 
     const checkinOutsideAccess = indexByLocation(stats.checkinOutsideAccess, r => r.count)
 
-    const deviceTypes: Map<string, { locations: Map<string, LabeledSiteCount>; percentage: number; total: number }> =
-      new Map()
-    stats.deviceType.forEach(item => {
-      const found = deviceTypes.get(item.label)
-      if (found) {
-        found.locations.set(item.location, item)
-      } else {
-        deviceTypes.set(item.label, {
-          locations: new Map([[item.location, item]]),
-          percentage: item.percentage,
-          total: item.total,
-        })
-      }
-    })
+    const deviceTypes = formatDeviceTypeStats(stats.deviceType)
 
     const averageTimeToRegister = indexByLocation(stats.averageTimeToRegisterPerSite, r => r.averageTimeText)
     const { averageTimeToRegisterTotal } = stats

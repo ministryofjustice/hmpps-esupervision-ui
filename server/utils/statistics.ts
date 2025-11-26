@@ -34,8 +34,13 @@ const formatDeviceTypeStats = (deviceStats: LabeledSiteCount[]): Map<string, Dev
       deviceTypesMap.set(label, found)
     }
     found.locations.set(item.location, item)
-    if (item.total) found.total = item.total
-    if (item.percentage) found.percentage = item.percentage
+    if (item.total != null && item.total !== 0) {
+      found.total = item.total
+    }
+
+    if (item.percentage != null && item.percentage !== 0) {
+      found.percentage = item.percentage
+    }
   })
 
   return deviceTypesMap

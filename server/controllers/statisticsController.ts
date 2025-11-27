@@ -4,6 +4,7 @@ import { services } from '../services'
 import { indexByLocation } from '../utils/indexByLocation'
 import aggregateCheckinNotificationStatusSummary from '../utils/notificationStatusAggregation'
 import { LabeledSiteCount } from '../data/models/stats'
+import formatAverageTimeStats from '../utils/stats'
 
 const { esupervisionService } = services()
 
@@ -71,8 +72,10 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       r => r.count,
     )
 
-    const averageReviewResponseTime = indexByLocation(stats.averageReviewTimePerCheckinPerSite, r => r.averageTimeText)
-    const averageReviewResponseTimeTotal = stats.averageReviewTimePerCheckinTotal
+    const averageReviewResponseTime = indexByLocation(stats.averageReviewTimePerCheckinPerSite, r =>
+      formatAverageTimeStats(r.averageTimeText),
+    )
+    const averageReviewResponseTimeTotal = formatAverageTimeStats(stats.averageReviewTimePerCheckinTotal)
 
     const checkinOutsideAccess = indexByLocation(stats.checkinOutsideAccess, r => r.count)
 
@@ -90,21 +93,23 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
         })
       }
     })
-
-    const averageTimeToRegister = indexByLocation(stats.averageTimeToRegisterPerSite, r => r.averageTimeText)
-    const { averageTimeToRegisterTotal } = stats
-
-    const averageCheckinCompletionTime = indexByLocation(
-      stats.averageCheckinCompletionTimePerSite,
-      r => r.averageTimeText,
+    const averageTimeToRegister = indexByLocation(stats.averageTimeToRegisterPerSite, r =>
+      formatAverageTimeStats(r.averageTimeText),
     )
-    const { averageCheckinCompletionTimeTotal } = stats
+    const averageTimeToRegisterTotal = formatAverageTimeStats(stats.averageTimeToRegisterTotal)
+
+    const averageCheckinCompletionTime = indexByLocation(stats.averageCheckinCompletionTimePerSite, r =>
+      formatAverageTimeStats(r.averageTimeText),
+    )
+    const averageCheckinCompletionTimeTotal = formatAverageTimeStats(stats.averageCheckinCompletionTimeTotal)
 
     const averageTimeTakenToCompleteCheckinReviewPerSite = indexByLocation(
       stats.averageTimeTakenToCompleteCheckinReviewPerSite,
-      r => r.averageTimeText,
+      r => formatAverageTimeStats(r.averageTimeText),
     )
-    const { averageTimeTakenToCompleteCheckinReviewTotal } = stats
+    const averageTimeTakenToCompleteCheckinReviewTotal = formatAverageTimeStats(
+      stats.averageTimeTakenToCompleteCheckinReviewTotal,
+    )
 
     res.render('pages/statistics/dashboard', {
       sites,

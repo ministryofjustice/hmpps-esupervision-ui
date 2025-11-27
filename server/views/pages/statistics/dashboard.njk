@@ -363,7 +363,7 @@
         <th class="govuk-table__header" scope="row">Average review response time </th>
         {% for site in sites %}
         <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-        {{ averageReviewResponseTime[site] or 0 }}
+        {{ averageReviewResponseTime[site] or "No data" }}
         </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageReviewResponseTimeTotal }}</td>
@@ -373,7 +373,7 @@
         <th class="govuk-table__header" scope="row">Average time to register a PoP </th>
         {% for site in sites %}
         <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-        {{ averageTimeToRegister[site] or 0 }}
+        {{ averageTimeToRegister[site] or "No data" }}
         </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageTimeToRegisterTotal }}</td>
@@ -383,7 +383,7 @@
         <th class="govuk-table__header" scope="row">Average checkin completion time</th>
         {% for site in sites %}
           <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-            {{ averageCheckinCompletionTime[site] or 0 }}
+            {{ averageCheckinCompletionTime[site] or "No data"  }}
           </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageCheckinCompletionTimeTotal }}</td>
@@ -393,7 +393,7 @@
         <th class="govuk-table__header" scope="row">Average time taken by a PP to complete a review of a checkin </th>
         {% for site in sites %}
         <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-        {{ averageTimeTakenToCompleteCheckinReviewPerSite[site] or 0 }}
+        {{ averageTimeTakenToCompleteCheckinReviewPerSite[site] or "No data"  }}
         </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageTimeTakenToCompleteCheckinReviewTotal }}</td>

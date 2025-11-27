@@ -4,6 +4,7 @@ import { services } from '../services'
 import { indexByLocation } from '../utils/indexByLocation'
 import aggregateCheckinNotificationStatusSummary from '../utils/notificationStatusAggregation'
 import formatDeviceTypeStats from '../utils/statistics'
+import formatAverageTimeStats from '../utils/stats'
 
 const { esupervisionService } = services()
 
@@ -42,11 +43,15 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       const percentage = total > 0 ? (r.completedTotal / total) * 100 : 0
       return Number(percentage.toFixed(2))
     })
+    const { ontimeCheckinPercentageTotal } = stats
+    const { checkinCompletedAverageTotal } = stats
     const missedPercentageByLocation = indexByLocation(stats.checkinAverages, r => r.missedPercentage)
     const flaggedCheckinsByLocation = indexByLocation(stats.flaggedCheckinsPerSite, r => r.count)
     const stoppedCheckinsByLocation = indexByLocation(stats.stoppedCheckinsPerSite, r => r.count)
     const averageFlagsPerCheckinPerSite = indexByLocation(stats.averageFlagsPerCheckinPerSite, r => r.average)
+    const { averageFlagsPerCheckinTotal } = stats
     const callbackRequestPercentagePerSite = indexByLocation(stats.callbackRequestPercentagePerSite, r => r.average)
+    const { callbackRequestPercentageTotal } = stats
     const checkin7daysFrequencyPerSite = indexByLocation(
       stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 7),
       r => r.count,
@@ -67,27 +72,31 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       r => r.count,
     )
 
-    const averageReviewResponseTime = indexByLocation(stats.averageReviewTimePerCheckinPerSite, r => r.averageTimeText)
-    const averageReviewResponseTimeTotal = stats.averageReviewTimePerCheckinTotal
+    const averageReviewResponseTime = indexByLocation(stats.averageReviewTimePerCheckinPerSite, r =>
+      formatAverageTimeStats(r.averageTimeText),
+    )
+    const averageReviewResponseTimeTotal = formatAverageTimeStats(stats.averageReviewTimePerCheckinTotal)
 
     const checkinOutsideAccess = indexByLocation(stats.checkinOutsideAccess, r => r.count)
 
     const deviceTypes = formatDeviceTypeStats(stats.deviceType)
-
-    const averageTimeToRegister = indexByLocation(stats.averageTimeToRegisterPerSite, r => r.averageTimeText)
-    const { averageTimeToRegisterTotal } = stats
-
-    const averageCheckinCompletionTime = indexByLocation(
-      stats.averageCheckinCompletionTimePerSite,
-      r => r.averageTimeText,
+    const averageTimeToRegister = indexByLocation(stats.averageTimeToRegisterPerSite, r =>
+      formatAverageTimeStats(r.averageTimeText),
     )
-    const { averageCheckinCompletionTimeTotal } = stats
+    const averageTimeToRegisterTotal = formatAverageTimeStats(stats.averageTimeToRegisterTotal)
+
+    const averageCheckinCompletionTime = indexByLocation(stats.averageCheckinCompletionTimePerSite, r =>
+      formatAverageTimeStats(r.averageTimeText),
+    )
+    const averageCheckinCompletionTimeTotal = formatAverageTimeStats(stats.averageCheckinCompletionTimeTotal)
 
     const averageTimeTakenToCompleteCheckinReviewPerSite = indexByLocation(
       stats.averageTimeTakenToCompleteCheckinReviewPerSite,
-      r => r.averageTimeText,
+      r => formatAverageTimeStats(r.averageTimeText),
     )
-    const { averageTimeTakenToCompleteCheckinReviewTotal } = stats
+    const averageTimeTakenToCompleteCheckinReviewTotal = formatAverageTimeStats(
+      stats.averageTimeTakenToCompleteCheckinReviewTotal,
+    )
 
     res.render('pages/statistics/dashboard', {
       sites,
@@ -100,6 +109,8 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       completedByLocationOnDay3,
       expiredTotalByLocation,
       ontimePercentageByLocation,
+      ontimeCheckinPercentageTotal,
+      checkinCompletedAverageTotal,
       mismatchByLocation,
       completedAvgByLocation,
       expiredAvgByLocation,
@@ -107,7 +118,9 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       flaggedCheckinsByLocation,
       stoppedCheckinsByLocation,
       averageFlagsPerCheckinPerSite,
+      averageFlagsPerCheckinTotal,
       callbackRequestPercentagePerSite,
+      callbackRequestPercentageTotal,
       checkin7daysFrequencyPerSite,
       checkin14daysFrequencyPerSite,
       checkin28daysFrequencyPerSite,

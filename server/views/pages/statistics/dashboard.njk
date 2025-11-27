@@ -146,7 +146,7 @@
           </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">
-          {{ total }}
+          {{ checkinCompletedAverageTotal | round(2) }}
         </td>
         <td
           class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight"
@@ -214,15 +214,13 @@
       </tr>
       <tr class="govuk-table__row">
         <th class="govuk-table__header" scope="row">% of check ins completed on time</th>
-        {% set total = 0 %}
         {% for site in sites %}
           <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
             {{ ontimePercentageByLocation[site] or 0 }}%
-            {% set total = total + (ontimePercentageByLocation[site] or 0) %}
           </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">
-          {{ (total / sites.length) | round(2) or 0 }}%
+          {{ ontimeCheckinPercentageTotal | round(2) }}%
         </td>
         <td
           class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight"
@@ -253,15 +251,13 @@
 
       <tr class="govuk-table__row">
         <th class="govuk-table__header" scope="row">Average number of flags per check in</th>
-        {% set total = 0 %}
         {% for site in sites %}
           <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
             {{ averageFlagsPerCheckinPerSite[site] | round(2) or 0 }}
-            {% set total = total + (averageFlagsPerCheckinPerSite[site] or 0) %}
           </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">
-          {{ total | round(2) }}
+          {{ averageFlagsPerCheckinTotal | round(2) }}
         </td>
         <td
           class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight"
@@ -272,15 +268,13 @@
       </tr>
       <tr class="govuk-table__row">
         <th class="govuk-table__header" scope="row">% of check ins that request a callback</th>
-        {% set total = 0 %}
         {% for site in sites %}
           <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
             {{ callbackRequestPercentagePerSite[site] | round(2) or 0 }}%
-            {% set total = total + (callbackRequestPercentagePerSite[site] or 0) %}
           </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">
-          {{ (total / sites.length) | round(2) or 0 }}%
+          {{ callbackRequestPercentageTotal | round(2) }}%
         </td>
         <td
           class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight es-table__cell--extra-highlight"
@@ -369,7 +363,7 @@
         <th class="govuk-table__header" scope="row">Average review response time </th>
         {% for site in sites %}
         <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-        {{ averageReviewResponseTime[site] or 0 }}
+        {{ averageReviewResponseTime[site] or "No data" }}
         </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageReviewResponseTimeTotal }}</td>
@@ -379,7 +373,7 @@
         <th class="govuk-table__header" scope="row">Average time to register a PoP </th>
         {% for site in sites %}
         <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-        {{ averageTimeToRegister[site] or 0 }}
+        {{ averageTimeToRegister[site] or "No data" }}
         </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageTimeToRegisterTotal }}</td>
@@ -389,7 +383,7 @@
         <th class="govuk-table__header" scope="row">Average checkin completion time</th>
         {% for site in sites %}
           <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-            {{ averageCheckinCompletionTime[site] or 0 }}
+            {{ averageCheckinCompletionTime[site] or "No data"  }}
           </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageCheckinCompletionTimeTotal }}</td>
@@ -399,7 +393,7 @@
         <th class="govuk-table__header" scope="row">Average time taken by a PP to complete a review of a checkin </th>
         {% for site in sites %}
         <td class="govuk-table__cell govuk-table__cell--numeric" data-label="{{ site | capitalize }}">
-        {{ averageTimeTakenToCompleteCheckinReviewPerSite[site] or 0 }}
+        {{ averageTimeTakenToCompleteCheckinReviewPerSite[site] or "No data"  }}
         </td>
         {% endfor %}
         <td class="govuk-table__cell govuk-table__cell--numeric es-table__cell--highlight" data-label="Total">{{ averageTimeTakenToCompleteCheckinReviewTotal }}</td>

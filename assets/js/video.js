@@ -51,6 +51,7 @@ async function initVideo() {
     this.showScreen('record')
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
+        facingMode: { ideal: 'user' },
         advanced: [
           { height: w, width: h, aspectRatio: Math.round((h / w) * 100) / 100 },
           { height: h, width: w, aspectRatio: Math.round((w / h) * 100) / 100 },

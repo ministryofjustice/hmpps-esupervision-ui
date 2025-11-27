@@ -73,6 +73,10 @@ export default class Stats {
 
   checkinAverages: SiteCheckinAverage[]
 
+  ontimeCheckinPercentageTotal: number
+
+  checkinCompletedAverageTotal: number
+
   checkinOutsideAccess: SiteCount[]
 
   automatedIdCheckAccuracy: IdCheckAccuracy[]
@@ -83,7 +87,11 @@ export default class Stats {
 
   averageFlagsPerCheckinPerSite: SiteAverage[]
 
+  averageFlagsPerCheckinTotal: number
+
   callbackRequestPercentagePerSite: SiteAverage[]
+
+  callbackRequestPercentageTotal: number
 
   checkinFrequencyPerSite: FrequencyCount[]
 

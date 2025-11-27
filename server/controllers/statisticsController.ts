@@ -42,11 +42,15 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       const percentage = total > 0 ? (r.completedTotal / total) * 100 : 0
       return Number(percentage.toFixed(2))
     })
+    const { ontimeCheckinPercentageTotal } = stats
+    const { checkinCompletedAverageTotal } = stats
     const missedPercentageByLocation = indexByLocation(stats.checkinAverages, r => r.missedPercentage)
     const flaggedCheckinsByLocation = indexByLocation(stats.flaggedCheckinsPerSite, r => r.count)
     const stoppedCheckinsByLocation = indexByLocation(stats.stoppedCheckinsPerSite, r => r.count)
     const averageFlagsPerCheckinPerSite = indexByLocation(stats.averageFlagsPerCheckinPerSite, r => r.average)
+    const { averageFlagsPerCheckinTotal } = stats
     const callbackRequestPercentagePerSite = indexByLocation(stats.callbackRequestPercentagePerSite, r => r.average)
+    const { callbackRequestPercentageTotal } = stats
     const checkin7daysFrequencyPerSite = indexByLocation(
       stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 7),
       r => r.count,
@@ -113,6 +117,8 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       completedByLocationOnDay3,
       expiredTotalByLocation,
       ontimePercentageByLocation,
+      ontimeCheckinPercentageTotal,
+      checkinCompletedAverageTotal,
       mismatchByLocation,
       completedAvgByLocation,
       expiredAvgByLocation,
@@ -120,7 +126,9 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       flaggedCheckinsByLocation,
       stoppedCheckinsByLocation,
       averageFlagsPerCheckinPerSite,
+      averageFlagsPerCheckinTotal,
       callbackRequestPercentagePerSite,
+      callbackRequestPercentageTotal,
       checkin7daysFrequencyPerSite,
       checkin14daysFrequencyPerSite,
       checkin28daysFrequencyPerSite,

@@ -231,7 +231,7 @@ export default {
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: {
           locationInfo: {
-            url: 'http://localhost:9091/fake-s3-upload',
+            url: 'http://localhost:9091/v1/fake-s3-upload',
             method: 'PUT',
           },
         },
@@ -391,9 +391,9 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: {
-          video: { url: 'http://localhost:9091/fake-s3-upload', contentType: 'video/mp4' },
-          snapshots: [{ url: 'http://localhost:9091/fake-s3-upload', contentType: 'image/jpeg' }],
-          references: [{ url: 'http://localhost:9091/fake-s3-upload', contentType: 'image/jpeg' }],
+          video: { url: 'http://localhost:9091/v1/fake-s3-upload', contentType: 'video/mp4' },
+          snapshots: [{ url: 'http://localhost:9091/v1/fake-s3-upload', contentType: 'image/jpeg' }],
+          references: [{ url: 'http://localhost:9091/v1/fake-s3-upload', contentType: 'image/jpeg' }],
         },
       },
     })

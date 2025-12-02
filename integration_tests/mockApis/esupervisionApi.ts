@@ -140,7 +140,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPattern: `/offenders\\?practitioner=.+?`,
+        urlPattern: `/v1/offenders\\?practitioner=.+?`,
       },
       response: {
         status: 200,
@@ -156,7 +156,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPattern: `/offenders\\?practitioner=.+?&(.+?=.+?)`,
+        urlPattern: `/v1/offenders\\?practitioner=.+?&(.+?=.+?)`,
       },
       response: {
         status: 200,
@@ -172,7 +172,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPattern: `/offenders/${offender.uuid}`,
+        urlPattern: `/v1/offenders/${offender.uuid}`,
       },
       response: {
         status: 200,
@@ -190,7 +190,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPath: `/offender_setup`,
+        urlPath: `/v1/offender_setup`,
       },
       response: {
         status: 201,
@@ -214,7 +214,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPattern: `/offenders/${offender.uuid}/details`,
+        urlPattern: `/v1/offenders/${offender.uuid}/details`,
       },
       response,
     })
@@ -224,14 +224,14 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPathPattern: `/offender_setup/.+?/upload_location`,
+        urlPathPattern: `/v1/offender_setup/.+?/upload_location`,
       },
       response: {
         status: httpStatus,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: {
           locationInfo: {
-            url: 'http://localhost:9091/fake-s3-upload',
+            url: 'http://localhost:9091/v1/fake-s3-upload',
             method: 'PUT',
           },
         },
@@ -242,7 +242,7 @@ export default {
     return stubFor({
       request: {
         method: 'PUT',
-        urlPath: `/fake-s3-upload`,
+        urlPath: `/v1/fake-s3-upload`,
       },
       response: {
         status: httpStatus,
@@ -253,7 +253,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPattern: `/offender_setup/.+?/complete`,
+        urlPattern: `/v1/offender_setup/.+?/complete`,
       },
       response: {
         status: httpStatus,
@@ -273,7 +273,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPattern: `/offender_checkins\\?practitioner=.+?`,
+        urlPattern: `/v1/offender_checkins\\?practitioner=.+?`,
       },
       response: {
         status: 200,
@@ -295,7 +295,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPath: '/offender_checkins',
+        urlPath: '/v1/offender_checkins',
         queryParameters: {
           practitioner: { matches: '.+' },
           offenderId: { equalTo: offender.uuid },
@@ -318,7 +318,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPathPattern: `/offender_checkins/${checkin.uuid}/invite`,
+        urlPathPattern: `/v1/offender_checkins/${checkin.uuid}/invite`,
       },
       response: {
         status: 200,
@@ -331,7 +331,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPathPattern: `/offender_checkins/${checkin.uuid}`,
+        urlPathPattern: `/v1/offender_checkins/${checkin.uuid}`,
       },
       response: {
         status: 200,
@@ -352,7 +352,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPattern: `/offenders/${offender.uuid}/checkin-settings`,
+        urlPattern: `/v1/offenders/${offender.uuid}/checkin-settings`,
       },
       response,
     })
@@ -371,7 +371,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPattern: `/offenders/${offender.uuid}/deactivate`,
+        urlPattern: `/v1/offenders/${offender.uuid}/deactivate`,
       },
       response: {
         status: 200,
@@ -385,15 +385,15 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPathPattern: `/offender_checkins/${checkin.uuid}/upload_location`,
+        urlPathPattern: `/v1/offender_checkins/${checkin.uuid}/upload_location`,
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: {
-          video: { url: 'http://localhost:9091/fake-s3-upload', contentType: 'video/mp4' },
-          snapshots: [{ url: 'http://localhost:9091/fake-s3-upload', contentType: 'image/jpeg' }],
-          references: [{ url: 'http://localhost:9091/fake-s3-upload', contentType: 'image/jpeg' }],
+          video: { url: 'http://localhost:9091/v1/fake-s3-upload', contentType: 'video/mp4' },
+          snapshots: [{ url: 'http://localhost:9091/v1/fake-s3-upload', contentType: 'image/jpeg' }],
+          references: [{ url: 'http://localhost:9091/v1/fake-s3-upload', contentType: 'image/jpeg' }],
         },
       },
     })
@@ -403,7 +403,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        urlPath: `/offender_checkins/${checkin.uuid}/auto_id_verify`,
+        urlPath: `/v1/offender_checkins/${checkin.uuid}/auto_id_verify`,
         queryParameters: {
           numSnapshots: {
             equalTo: '1',
@@ -424,7 +424,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPathPattern: `/offender_checkins/${checkin.uuid}/review`,
+        urlPathPattern: `/v1/offender_checkins/${checkin.uuid}/review`,
       },
       response: {
         status: 200,
@@ -438,7 +438,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPath: `/offender_checkins/${checkin.uuid}/submit`,
+        urlPath: `/v1/offender_checkins/${checkin.uuid}/submit`,
       },
       response: {
         status: 200,

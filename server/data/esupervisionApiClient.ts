@@ -54,7 +54,7 @@ export default class EsupervisionApiClient extends RestClient {
 
     return this.get<Page<Checkin>>(
       {
-        path: '/offender_checkins',
+        path: '/v1/offender_checkins',
         query,
       },
       asSystem(),
@@ -64,7 +64,7 @@ export default class EsupervisionApiClient extends RestClient {
   getCheckin(checkinId: string, includeUploads?: boolean): Promise<OffenderCheckinResponse> {
     return this.get<OffenderCheckinResponse>(
       {
-        path: `/offender_checkins/${checkinId}`,
+        path: `/v1/offender_checkins/${checkinId}`,
         query: { 'include-uploads': includeUploads },
       },
       asSystem(),
@@ -74,7 +74,7 @@ export default class EsupervisionApiClient extends RestClient {
   getOffenders(practitionerId: ExternalUserId, page: number, size: number): Promise<Page<Offender>> {
     return this.get<Page<Offender>>(
       {
-        path: '/offenders',
+        path: '/v1/offenders',
         query: { practitioner: practitionerId, page, size },
       },
       asSystem(),
@@ -88,7 +88,7 @@ export default class EsupervisionApiClient extends RestClient {
     const { video, reference, snapshots } = contentTypes
     const locations = await this.post<CheckinUploadLocationResponse>(
       {
-        path: `/offender_checkins/${checkinId}/upload_location`,
+        path: `/v1/offender_checkins/${checkinId}/upload_location`,
         query: { video, reference, snapshots: snapshots.join(',') },
         headers: { 'Content-Type': 'application/json' },
       },
@@ -101,7 +101,7 @@ export default class EsupervisionApiClient extends RestClient {
   async getProfilePhotoUploadLocation(offenderSetup: OffenderSetup, photoContentType: string): Promise<LocationInfo> {
     const location = await this.post<UploadLocationResponse>(
       {
-        path: `/offender_setup/${offenderSetup.uuid}/upload_location`,
+        path: `/v1/offender_setup/${offenderSetup.uuid}/upload_location`,
         query: { 'content-type': photoContentType },
         headers: { 'Content-Type': 'application/json' },
       },
@@ -118,7 +118,7 @@ export default class EsupervisionApiClient extends RestClient {
   completeOffenderSetup(setupId: string): Promise<Offender> {
     return this.post<Offender>(
       {
-        path: `/offender_setup/${setupId}/complete`,
+        path: `/v1/offender_setup/${setupId}/complete`,
       },
       asSystem(),
     )
@@ -127,7 +127,7 @@ export default class EsupervisionApiClient extends RestClient {
   async submitCheckin(checkinId: string, submission: CheckinSubmission): Promise<Checkin> {
     return this.post<Checkin>(
       {
-        path: `/offender_checkins/${checkinId}/submit`,
+        path: `/v1/offender_checkins/${checkinId}/submit`,
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(submission),
       },
@@ -149,7 +149,7 @@ export default class EsupervisionApiClient extends RestClient {
 
     return this.post<Checkin>(
       {
-        path: `/offender_checkins/${checkinId}/review`,
+        path: `/v1/offender_checkins/${checkinId}/review`,
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(requestBody),
       },
@@ -163,7 +163,7 @@ export default class EsupervisionApiClient extends RestClient {
   async logCheckinEvent(checkinId: string, eventType: CheckinEventType, comment?: string): Promise<{ event: string }> {
     return this.post<{ event: string }>(
       {
-        path: `/offender_checkins/${checkinId}/event`,
+        path: `/v1/offender_checkins/${checkinId}/event`,
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify({ eventType, comment }),
       },
@@ -174,7 +174,7 @@ export default class EsupervisionApiClient extends RestClient {
   async createOffender(offenderInfo: OffenderInfo): Promise<OffenderSetup> {
     return this.post<OffenderSetup>(
       {
-        path: '/offender_setup',
+        path: '/v1/offender_setup',
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(offenderInfo),
       },
@@ -185,7 +185,7 @@ export default class EsupervisionApiClient extends RestClient {
   async getOffender(offenderId: string): Promise<Offender | null> {
     return this.get<Offender>(
       {
-        path: `/offenders/${offenderId}`,
+        path: `/v1/offenders/${offenderId}`,
       },
       asSystem(),
     ).catch((error): Promise<Offender | null> => {
@@ -199,7 +199,7 @@ export default class EsupervisionApiClient extends RestClient {
   async getOffenderByContactDetail(offenderInfo: OffenderInfoByContact): Promise<Page<Offender> | null> {
     return this.get<Page<Offender>>(
       {
-        path: `/offenders`,
+        path: `/v1/offenders`,
         query: offenderInfo,
       },
       asSystem(),
@@ -214,7 +214,7 @@ export default class EsupervisionApiClient extends RestClient {
   async updateOffender(offenderId: string, offenderUpdate: OffenderUpdate): Promise<Offender> {
     return this.post<Offender>(
       {
-        path: `/offenders/${offenderId}/details`,
+        path: `/v1/offenders/${offenderId}/details`,
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(offenderUpdate),
       },
@@ -232,7 +232,7 @@ export default class EsupervisionApiClient extends RestClient {
   async createCheckin(checkinInfo: CreateCheckinRequest): Promise<Checkin> {
     return this.post<Checkin>(
       {
-        path: '/offender_checkins',
+        path: '/v1/offender_checkins',
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(checkinInfo),
       },
@@ -243,7 +243,7 @@ export default class EsupervisionApiClient extends RestClient {
   async stopCheckins(practitionerId: ExternalUserId, offenderId: string, stopCheckinDetails: string): Promise<void> {
     return this.post<void>(
       {
-        path: `/offenders/${offenderId}/deactivate`,
+        path: `/v1/offenders/${offenderId}/deactivate`,
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify({ requestedBy: practitionerId, reason: stopCheckinDetails }),
       },
@@ -258,7 +258,7 @@ export default class EsupervisionApiClient extends RestClient {
 
     return this.post<Checkin>(
       {
-        path: `/offender_checkins/${checkinId}/invite`,
+        path: `/v1/offender_checkins/${checkinId}/invite`,
         headers: { 'Content-Type': 'application/json' },
         data: JSON.stringify(requestBody),
       },
@@ -272,7 +272,7 @@ export default class EsupervisionApiClient extends RestClient {
   ): Promise<AutomaticCheckinVerificationResult> {
     return this.post<AutomaticCheckinVerificationResult>(
       {
-        path: `/offender_checkins/${checkinId}/auto_id_verify`,
+        path: `/v1/offender_checkins/${checkinId}/auto_id_verify`,
         headers: { 'Content-Type': 'application/json' },
         query: { numSnapshots },
       },
@@ -283,7 +283,7 @@ export default class EsupervisionApiClient extends RestClient {
   async getPractitionerByUsername(username: string): Promise<PractitionerInfo | null> {
     return this.get<PractitionerInfo>(
       {
-        path: `/practitioners/username/${username}`,
+        path: `/v1/practitioners/username/${username}`,
       },
       asSystem(),
     ).catch((error): Promise<PractitionerInfo | null> => {
@@ -297,7 +297,7 @@ export default class EsupervisionApiClient extends RestClient {
   async getOffenderCountByPractitioner(): Promise<PractitionerStats[]> {
     return this.get<PractitionerStats[]>(
       {
-        path: '/stats/practitioner/registrations',
+        path: '/v1/stats/practitioner/registrations',
       },
       asSystem(),
     )
@@ -306,7 +306,7 @@ export default class EsupervisionApiClient extends RestClient {
   async getCheckinStats(): Promise<Stats> {
     return this.get<Stats>(
       {
-        path: '/stats/checkins',
+        path: '/v1/stats/checkins',
       },
       asSystem(),
     )

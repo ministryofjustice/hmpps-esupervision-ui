@@ -18,6 +18,7 @@ export type SiteCheckinAverage = {
   completedTotal: number
   expiredTotal: number
   missedPercentage: number
+  ontimePercentage: number
 }
 
 export type IdCheckAccuracy = {
@@ -63,13 +64,31 @@ export type CheckinNotificationStatusSummary = {
 export default class Stats {
   invitesPerSite: SiteCount[]
 
+  invitesTotal: number
+
   inviteStatusPerSite: LabeledSiteCount[]
 
   completedCheckinsPerSite: SiteCount[]
 
+  completedCheckinsTotal: number
+
   completedCheckinsPerNth: SiteCountOnNthDay[]
 
+  completedDay1Total: number
+
+  completedDay1Percentage: number
+
+  completedDay2Total: number
+
+  completedDay2Percentage: number
+
+  completedDay3Total: number
+
+  completedDay3Percentage: number
+
   offendersPerSite: SiteCount[]
+
+  offendersTotal: number
 
   checkinAverages: SiteCheckinAverage[]
 
@@ -77,13 +96,29 @@ export default class Stats {
 
   checkinCompletedAverageTotal: number
 
+  expiredCheckinsTotal: number
+
+  expiredCheckinsPercentageTotal: number
+
   checkinOutsideAccess: SiteCount[]
+
+  checkinOutsideAccessTotal: number
 
   automatedIdCheckAccuracy: IdCheckAccuracy[]
 
+  automatedIdCheckAccuracyTotal: number
+
+  automatedIdCheckAccuracyPercentageTotal: number
+
   flaggedCheckinsPerSite: SiteCount[]
 
+  flaggedCheckinsTotal: number
+
+  flaggedCheckinsPercentageTotal: number
+
   stoppedCheckinsPerSite: SiteCount[]
+
+  stoppedCheckinsTotal: number
 
   averageFlagsPerCheckinPerSite: SiteAverage[]
 
@@ -94,6 +129,14 @@ export default class Stats {
   callbackRequestPercentageTotal: number
 
   checkinFrequencyPerSite: FrequencyCount[]
+
+  frequencyWeeklyTotal: number
+
+  frequencyFortnightlyTotal: number
+
+  frequency4WeeksTotal: number
+
+  frequency8WeeksTotal: number
 
   averageReviewTimePerCheckinPerSite: SiteFormattedTimeAverage[]
 

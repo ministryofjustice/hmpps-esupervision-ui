@@ -19,78 +19,106 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
       .sort()
 
     const checkinNotificationStatusSummary = aggregateCheckinNotificationStatusSummary(stats)
+
     const offendersByLocation = indexByLocation(stats.offendersPerSite, r => r.count)
+    const { offendersTotal } = stats
+
     const invitesByLocation = indexByLocation(stats.invitesPerSite, r => r.count)
-    const completedByLocation = indexByLocation(stats.completedCheckinsPerSite, r => r.count)
-    const completedByLocationOnDay1 = indexByLocation(
+    const { invitesTotal } = stats
+
+    const completedCheckinsByLocation = indexByLocation(stats.completedCheckinsPerSite, r => r.count)
+    const { completedCheckinsTotal } = stats
+
+    const completedCheckinsPerSiteOnDay1ByLocation = indexByLocation(
       stats.completedCheckinsPerNth.filter(r => r.day === 1),
       r => r.count,
     )
-    const completedByLocationOnDay2 = indexByLocation(
+    const { completedDay1Total, completedDay1Percentage } = stats
+
+    const completedCheckinsPerSiteOnDay2ByLocation = indexByLocation(
       stats.completedCheckinsPerNth.filter(r => r.day === 2),
       r => r.count,
     )
-    const completedByLocationOnDay3 = indexByLocation(
+    const { completedDay2Total, completedDay2Percentage } = stats
+
+    const completedCheckinsPerSiteOnDay3ByLocation = indexByLocation(
       stats.completedCheckinsPerNth.filter(r => r.day === 3),
       r => r.count,
     )
+    const { completedDay3Total, completedDay3Percentage } = stats
+
     const mismatchByLocation = indexByLocation(stats.automatedIdCheckAccuracy, r => r.mismatchCount)
+    const { automatedIdCheckAccuracyTotal, automatedIdCheckAccuracyPercentageTotal } = stats
+
     const completedAvgByLocation = indexByLocation(stats.checkinAverages, r => r.completedAvg)
     const expiredAvgByLocation = indexByLocation(stats.checkinAverages, r => r.expiredAvg)
+
     const expiredTotalByLocation = indexByLocation(stats.checkinAverages, r => r.expiredTotal)
-    const ontimePercentageByLocation = indexByLocation(stats.checkinAverages, r => {
-      const total = r.completedTotal + r.expiredTotal
-      const percentage = total > 0 ? (r.completedTotal / total) * 100 : 0
-      return Number(percentage.toFixed(2))
-    })
+    const { expiredCheckinsTotal, expiredCheckinsPercentageTotal } = stats
+
+    const ontimePercentageByLocation = indexByLocation(stats.checkinAverages, r => r.ontimePercentage)
     const { ontimeCheckinPercentageTotal } = stats
     const { checkinCompletedAverageTotal } = stats
+
     const missedPercentageByLocation = indexByLocation(stats.checkinAverages, r => r.missedPercentage)
+
     const flaggedCheckinsByLocation = indexByLocation(stats.flaggedCheckinsPerSite, r => r.count)
+    const { flaggedCheckinsTotal, flaggedCheckinsPercentageTotal } = stats
+
     const stoppedCheckinsByLocation = indexByLocation(stats.stoppedCheckinsPerSite, r => r.count)
-    const averageFlagsPerCheckinPerSite = indexByLocation(stats.averageFlagsPerCheckinPerSite, r => r.average)
+    const { stoppedCheckinsTotal } = stats
+
+    const averageFlagsPerCheckinByLocation = indexByLocation(stats.averageFlagsPerCheckinPerSite, r => r.average)
     const { averageFlagsPerCheckinTotal } = stats
-    const callbackRequestPercentagePerSite = indexByLocation(stats.callbackRequestPercentagePerSite, r => r.average)
+
+    const callbackRequestPercentageByLocation = indexByLocation(stats.callbackRequestPercentagePerSite, r => r.average)
     const { callbackRequestPercentageTotal } = stats
-    const checkin7daysFrequencyPerSite = indexByLocation(
+
+    const checkin7daysFrequencyByLocation = indexByLocation(
       stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 7),
       r => r.count,
     )
+    const { frequencyWeeklyTotal } = stats
 
-    const checkin14daysFrequencyPerSite = indexByLocation(
+    const checkin14daysFrequencyByLocation = indexByLocation(
       stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 14),
       r => r.count,
     )
+    const { frequencyFortnightlyTotal } = stats
 
-    const checkin28daysFrequencyPerSite = indexByLocation(
+    const checkin28daysFrequencyByLocation = indexByLocation(
       stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 28),
       r => r.count,
     )
+    const { frequency4WeeksTotal } = stats
 
-    const checkin56daysFrequencyPerSite = indexByLocation(
+    const checkin56daysFrequencyByLocation = indexByLocation(
       stats.checkinFrequencyPerSite.filter(r => r.intervalDays === 56),
       r => r.count,
     )
+    const { frequency8WeeksTotal } = stats
 
-    const averageReviewResponseTime = indexByLocation(stats.averageReviewTimePerCheckinPerSite, r =>
+    const checkinOutsideAccessByLocation = indexByLocation(stats.checkinOutsideAccess, r => r.count)
+    const { checkinOutsideAccessTotal } = stats
+
+    const deviceTypes = formatDeviceTypeStats(stats.deviceType)
+
+    const averageReviewResponseTimeByLocation = indexByLocation(stats.averageReviewTimePerCheckinPerSite, r =>
       formatAverageTimeStats(r.averageTimeText),
     )
     const averageReviewResponseTimeTotal = formatAverageTimeStats(stats.averageReviewTimePerCheckinTotal)
 
-    const checkinOutsideAccess = indexByLocation(stats.checkinOutsideAccess, r => r.count)
-
-    const deviceTypes = formatDeviceTypeStats(stats.deviceType)
-    const averageTimeToRegister = indexByLocation(stats.averageTimeToRegisterPerSite, r =>
+    const averageTimeToRegisterByLocation = indexByLocation(stats.averageTimeToRegisterPerSite, r =>
       formatAverageTimeStats(r.averageTimeText),
     )
     const averageTimeToRegisterTotal = formatAverageTimeStats(stats.averageTimeToRegisterTotal)
 
-    const averageCheckinCompletionTime = indexByLocation(stats.averageCheckinCompletionTimePerSite, r =>
+    const averageCheckinCompletionTimeByLocation = indexByLocation(stats.averageCheckinCompletionTimePerSite, r =>
       formatAverageTimeStats(r.averageTimeText),
     )
     const averageCheckinCompletionTimeTotal = formatAverageTimeStats(stats.averageCheckinCompletionTimeTotal)
 
-    const averageTimeTakenToCompleteCheckinReviewPerSite = indexByLocation(
+    const averageTimeTakenToCompleteCheckinReviewByLocation = indexByLocation(
       stats.averageTimeTakenToCompleteCheckinReviewPerSite,
       r => formatAverageTimeStats(r.averageTimeText),
     )
@@ -101,39 +129,61 @@ const renderDataDashboard: RequestHandler = async (req, res, next) => {
     res.render('pages/statistics/dashboard', {
       sites,
       offendersByLocation,
+      offendersTotal,
       invitesByLocation,
+      invitesTotal,
       checkinNotificationStatusSummary,
-      completedByLocation,
-      completedByLocationOnDay1,
-      completedByLocationOnDay2,
-      completedByLocationOnDay3,
-      expiredTotalByLocation,
+      completedCheckinsByLocation,
+      completedCheckinsTotal,
+      completedCheckinsPerSiteOnDay1ByLocation,
+      completedDay1Total,
+      completedDay1Percentage,
+      completedCheckinsPerSiteOnDay2ByLocation,
+      completedDay2Total,
+      completedDay2Percentage,
+      completedCheckinsPerSiteOnDay3ByLocation,
+      completedDay3Total,
+      completedDay3Percentage,
+
+      missedPercentageByLocation,
+      expiredCheckinsTotal,
+      expiredCheckinsPercentageTotal,
       ontimePercentageByLocation,
       ontimeCheckinPercentageTotal,
       checkinCompletedAverageTotal,
       mismatchByLocation,
       completedAvgByLocation,
       expiredAvgByLocation,
-      missedPercentageByLocation,
+      expiredTotalByLocation,
+      automatedIdCheckAccuracyTotal,
+      automatedIdCheckAccuracyPercentageTotal,
       flaggedCheckinsByLocation,
+      flaggedCheckinsTotal,
+      flaggedCheckinsPercentageTotal,
       stoppedCheckinsByLocation,
-      averageFlagsPerCheckinPerSite,
+      stoppedCheckinsTotal,
+      averageFlagsPerCheckinByLocation,
       averageFlagsPerCheckinTotal,
-      callbackRequestPercentagePerSite,
+      callbackRequestPercentageByLocation,
       callbackRequestPercentageTotal,
-      checkin7daysFrequencyPerSite,
-      checkin14daysFrequencyPerSite,
-      checkin28daysFrequencyPerSite,
-      checkin56daysFrequencyPerSite,
-      averageReviewResponseTime,
-      averageReviewResponseTimeTotal,
-      checkinOutsideAccess,
+      checkin7daysFrequencyByLocation,
+      frequencyWeeklyTotal,
+      checkin14daysFrequencyByLocation,
+      frequencyFortnightlyTotal,
+      checkin28daysFrequencyByLocation,
+      frequency4WeeksTotal,
+      checkin56daysFrequencyByLocation,
+      frequency8WeeksTotal,
+      checkinOutsideAccessByLocation,
+      checkinOutsideAccessTotal,
       deviceTypes,
-      averageTimeToRegister,
+      averageReviewResponseTimeByLocation,
+      averageReviewResponseTimeTotal,
+      averageTimeToRegisterByLocation,
       averageTimeToRegisterTotal,
-      averageCheckinCompletionTime,
+      averageCheckinCompletionTimeByLocation,
       averageCheckinCompletionTimeTotal,
-      averageTimeTakenToCompleteCheckinReviewPerSite,
+      averageTimeTakenToCompleteCheckinReviewByLocation,
       averageTimeTakenToCompleteCheckinReviewTotal,
     })
   } catch (error) {

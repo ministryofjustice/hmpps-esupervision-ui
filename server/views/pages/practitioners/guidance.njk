@@ -1,0 +1,172 @@
+{% extends "./layout.njk" %}
+{% set pageTitle = "About online check ins" %}
+{% set privacyPolicyHref = "/privacy-notice" %}
+{% set privateTeamsChannelHref = "https://teams.microsoft.com/l/team/19%3A-GyJeX7yKgSacOagFqXw8qEH9YHmDbguakWgXIn-DZM1%40thread.tacv2/conversations?groupId=8411171f-dcd5-480b-ab6d-add492294f6b&tenantId=c6874728-71e6-41fe-a9e1-2e8c36776ad8" %}
+{% set feedbackFormHref = "https://portal.consentkit.com/consent/form/b2e85747-2989-41f8-bcd4-e6633bbca324/start" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds govuk-body">
+        <h1 class="govuk-heading-xl">About online check ins</h1>
+
+        <p class="govuk-body">Online check ins allow people on probation to update you about their needs and how they are feeling. They’ll do this by answering some questions about how they are and if they need any support, and recording a 5 second video we will use to verify their identity.</p>
+
+        <h2 class="govuk-heading-l">What online check ins mean for you</h2>
+
+
+        <p class="govuk-body">It is an organisational decision to pilot this tool, as part of wider package of digital products designed to support the probation service. We have guidance relating to who is suitable for online check ins to help you decide who on your caseload can use the service. In line with existing practice, any decisions relating to the frequency of reporting must be recorded.</p>
+        <p class="govuk-body">All decisions to use an online check in to reduce contact must be made with the approval of a senior probation officer, and will have managerial oversight.</p>
+
+        <h2 class="govuk-heading-l">How you can use online check ins</h2>
+        <p class="govuk-body">You can use online check ins to:</p>
+        <ul class="govuk-list govuk-list--bullet">
+        <li>to reduce some face-to-face contact where appropriate </li>
+        <li>in addition to face-to-face contact to give you an update between meetings </li>
+        </ul>
+        <p class="govuk-body">Once you’ve applied the criteria, you should use your judgement to decide who on your caseload is suitable.</p>
+
+
+        <h3 class="govuk-heading-m">Who may be suitable</h3>
+
+        <p class="govuk-body">People who may be most suitable for both use cases have:</p>  
+        <ul class="govuk-list govuk-list--bullet">
+            <li>agreed to use the service</li>
+            <li>stable lifestyle factors (employment, accommodation, relationships etc)</li>
+            <li>sufficient digital literacy and access to technology to use online check ins</li>
+            <li>no restrictions on device or internet use as part of their conditions</li>
+            <li>spent time on probation and understand their responsibilities</li>
+            <li>an established relationship with their practitioner</li>  
+            <li>nothing that means using online check ins could affect the completion of their sentence plan</li>
+        </ul>
+
+        <h3 class="govuk-heading-m">Who would not be suitable</h3>
+        <p class="govuk-body">People on an Intensive Court Pilot case are not suitable for online check ins.</p>
+        <p class="govuk-body">When used to reduce some face-to-face contact, online check ins may not be suitable for anyone who is: </p>  
+        <ul class="govuk-list govuk-list--bullet">
+        <li>on suspended supervision (for example, through IMPACT and Reset)</li>
+
+        <li>at very high risk of serious harm (RoSH)</li>
+
+        <li>a MAPPA eligible case level 2 and 3</li>
+
+        <li>a National Security Division case</li>     
+
+        <li>on a youth sentence</li>   
+
+        <li>subject to an active child protection order</li>     
+
+        <li>under a current domestic abuse conviction</li>  
+
+        <li>under a current sexual conviction/motivation</li> 
+
+        </ul>
+
+        <h2 class="govuk-heading-l">How data is used and who can see it</h2>
+        <p class="govuk-body">We’ll use the information the person submits to update you about how they are doing, and if they need any support. This is stored in our system securely.</p>
+        <p class="govuk-body">They should speak to you about anything relating to their data, and you can email the team at <a href="mailto:checkinwithprobation@justice.gov.uk" class="govuk-link">checkinwithprobation@justice.gov.uk</a> so we can action any data requests.</p>
+        <p class="govuk-body">You can <a class="govuk-link" href={{privacyPolicyHref}}>check our privacy policy to learn more about how we use data</a>.</p>
+    
+        <h3 class="govuk-heading-m">Subject access requests</h3>
+
+        <p class="govuk-body">If anyone you have signed up to use online check ins would like a copy of their information, you can submit a Subject Access Request on their behalf.</p>
+        <p class="govuk-body">You can also email the team at: <a href="mailto:data.access1@justice.gov.uk" class="govuk-link">data.access1@justice.gov.uk</a> to ask for a copy of the information.</p> 
+        <h2 class="govuk-heading-l">What happens if you take time off</h2>
+        <p class="govuk-body">If you have annual leave or other leave which means you’ll be unable to review completed check ins, you should talk to the practitioner who will be covering your cases and tell them when the person is expected to check in.</p>
+        <p class="govuk-body">They will not receive notifications for the person, so will need to search for them in Manage People on Probation to:</p> 
+        <ul class="govuk-list govuk-list--bullet">
+            <li>find out if they’ve checked in</li>
+            <li>review their check in</li>
+            <li>carry out any follow up tasks needed</li>
+        </ul>
+        <p class="govuk-body">We would like to hear your feedback about how this works and what could be improved.</p> 
+
+        <h2 class="govuk-heading-l">If someone’s contact details change</h2>
+
+        <p class="govuk-body">You can view and change a person’s contact details in Manage People on Probation.</p>  
+
+        <h2 class="govuk-heading-l">If you have concerns about someone’s risk</h2>
+
+        <p class="govuk-body">If you have concerns about new or escalating risk for someone on your caseload, you can stop their online check ins. The person would then revert back to in-person appointments only.</p>  
+
+        <h3 class="govuk-heading-m">If someone wants to stop using online check ins</h3> 
+
+        <p class="govuk-body">If a person on your caseload wants to stop using online check ins, you can stop their check ins which will stop the links being sent. This will not delete any data and you will still be able to access past check ins. If they decide to restart, you’ll have to set them up again. This will cause a duplication in the system. This is something we’re working on and your feedback is appreciated.</p>   
+
+        <h3 class="govuk-heading-m">If someone fails to check in</h3> 
+
+        <p class="govuk-body">There could be many reasons why someone fails to check in, including if:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>their contact details have changed and they haven’t yet updated you</li>
+            <li>they lose access to their phone or email</li>
+            <li>the link to check in is not delivered</li>
+            <li>something has gone wrong for them</li>
+        </ul>
+ 
+        <h4 class="govuk-heading-s">What to do if someone fails to check in</h4>
+
+        <p class="govuk-body">You should use your discretion when dealing with failed check ins, but you could:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>contact the person to find out why they haven’t checked in</li> 
+            <li>stop check ins so the person would revert to in-person appointments only</li> 
+            <li>raise any issues with contacting the person through the usual channels</li> 
+            <li>speak to the single point of contact for online check ins in your office, or your senior probation officer</li>
+        </ul>
+        <p class="govuk-body">For now, online check ins will not be linked to the person’s conditions, and there will be no breaches. You can use your judgement depending on the situation. If someone hasn’t checked in and there is not a reason for this, you could:</p> 
+        <ul class="govuk-list govuk-list--bullet">
+            <li>give them a verbal warning after the first failed check in</li> 
+            <li>stop check ins after a second failure to complete an online check in and revert to face-to-face contact only</li> 
+        </ul>
+
+        <h2 class="govuk-heading-l">Who to contact and when</h2>
+
+        <h3 class="govuk-heading-m">Teams channel</h3> 
+
+        <p class="govuk-body">We have set up a <a href={{privateTeamsChannelHref}} class="govuk-link">private Teams channel</a> which you will be added to when you’re onboarded to online check ins. You can use this to keep up to date with announcements.</p> 
+
+        <h3 class="govuk-heading-m">Support mailbox</h3> 
+
+        <p class="govuk-body">Use the <a href="mailto:checkinwithprobation@justice.gov.uk" class="govuk-link">checkinwithprobation@justice.gov.uk</a> mailbox to tell us if:</p> 
+            <ul class="govuk-list govuk-list--bullet">
+                <li>online check ins are not working</li> 
+                <li>something in online check ins is not working as expected</li> 
+                <li>someone you manage is struggling to use online check ins and needs support</li> 
+                <li>someone asks for their data to be deleted</li> 
+                <li>someone submits a Subject Access Request (SAR) under the Freedom of Information Act (FOIA)</li> 
+            </ul>
+        <h3 class="govuk-heading-m">Single point of contact for online check ins in your office</h3> 
+
+        <p class="govuk-body">Each site has a dedicated single point of contact. Use them if you:</p> 
+        <ul class="govuk-list govuk-list--bullet">
+            <li>want to discuss anything else that is urgent in relation to the people you manage or online check ins</li> 
+            <li>if someone wants to make a formal complaint</li>
+        </ul>
+        <h2 class="govuk-heading-l">Giving feedback</h2>  
+
+        <h3 class="govuk-heading-m">Join our monthly feedback calls</h3>
+
+        <p class="govuk-body">Each month we will be hosting 1-hour Teams meetings where you can discuss your experiences of using online check ins with us. These meetings will be open to staff from different offices so you can also learn about the experiences of others. You can attend as many or as few feedback calls as you wish.</p>  
+
+        <p class="govuk-body">If you are new to online check ins or have been involved in the first phase, we need you to <a class="govuk-link" href={{feedbackFormHref}}>complete this short form to receive an invitation to provide feedback</a>. By filling out the form, you’ll confirm that you’d like to provide feedback and understand how we’ll handle your information.</p> 
+        <p class="govuk-body">You have the right to change your mind about what we do with your information. You can also withdraw from giving feedback at any point and for any reason. If you change your mind, you can click on the link in your consent confirmation email to update your permissions or withdraw completely.</p>  
+
+        <h3 class="govuk-heading-m">Why we ask about risk management</h3> 
+
+        <p class="govuk-body">When you review each check in, you will be asked to answer an optional question of ‘Did this information help you to manage their risk?’. Answering yes or no to this question will give us information to help us learn about what value online check ins is adding to support your risk management.</p>  
+
+        <h3 class="govuk-heading-m">Feedback from people on your caseload</h3> 
+
+        <p class="govuk-body">We will have a feedback form for you to share with the people on your caseload using online check ins. This is to understand their experiences.</p>  
+        <p class="govuk-body">They will be able to access this:</p>  
+        <ul class="govuk-list govuk-list--bullet">
+            <li>when completing their check in</li> 
+            <li>using a link to it within the confirmation notification they receive when they’ve checked in</li>  
+        </ul>
+        <p class="govuk-body">You can also complete this with them in face-to-face appointments or share it with them if they want to complete this themselves.</p>
+        <p class="govuk-body">There may be other ways we contact people on probation to hear their feedback. For example, conducting short phone calls from the local Engaging People on Probation (EPOP) staff member to learn about their experience.</p> 
+        <p class="govuk-body">We will update this guidance when the new form is available.</p> 
+
+        <h3 class="govuk-heading-m">What we do with your feedback</h3> 
+        <p class="govuk-body">If something in online check ins is not working or online check ins go down, your feedback will enable us to fix these issues as soon as possible. Your feedback will also help us to improve the design and the way it works.</p>
+    </div>
+  </div>
+{% endblock %}

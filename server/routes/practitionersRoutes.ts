@@ -47,6 +47,7 @@ import {
   handleGetUserInfo,
   handleCheckIfContactDetailsExist,
   handleResendInvite,
+  renderGuidanceInfo,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -173,6 +174,9 @@ export default function routes(): Router {
   // Data dashboard
   get('/data/user', renderUserInfo)
   router.post('/data/user', handleGetUserInfo)
+
+  // Guidance for PP page
+  get('/guidance', renderGuidanceInfo)
 
   return router
 }

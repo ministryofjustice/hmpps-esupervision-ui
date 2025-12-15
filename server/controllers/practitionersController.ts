@@ -817,3 +817,11 @@ export const handleGetUserInfo: RequestHandler = async (req, res, next) => {
     next(error)
   }
 }
+
+export const renderGuidanceInfo: RequestHandler = async (req, res, next) => {
+  try {
+    res.render('pages/practitioners/guidance')
+  } catch (error) {
+    next(error)
+  }
+}

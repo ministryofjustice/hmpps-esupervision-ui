@@ -18,7 +18,9 @@ export default function routes(): Router {
   })
 
   get('/guidance', (req, res, next) => {
-    res.render('pages/guidance')
+    const { submissionId } = req.query
+    const backLink = submissionId ? `/submission/${submissionId}` : undefined
+    res.render('pages/guidance', { backLink })
   })
 
   get('/.well-known/appspecific/com.chrome.devtools.json', async (req, res, next) => {

@@ -4,16 +4,18 @@
 {% set privacyPolicyHref = "/privacy-notice" %}
 
 {% block beforeContent %}
-  <div class="es-page-actions">
-    <div class="es-page-actions__back">
-      {{
-        govukBackLink({
-          text: "Back",
-          href: "/"
-        })
-      }}
+  {% if backLink %}
+    <div class="es-page-actions">
+      <div class="es-page-actions__back">
+        {{
+          govukBackLink({
+            text: "Back",
+            href: backLink
+          })
+        }}
+      </div>
     </div>
-  </div>
+  {% endif %}
 {% endblock %}
 
 {% block content %}

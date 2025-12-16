@@ -35,6 +35,7 @@
         If you have difficulty using this service, or you do not have access to everything you need, you should contact
         your probation officer and let them know.
       </p>
+      <p class="govuk-body">You can <a href="/guidance?submissionId={{ submissionId }}" class="govuk-link">learn more about online check ins in our guidance</a>.</p>
       <form action="/submission/{{ submissionId }}/start" method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         {{

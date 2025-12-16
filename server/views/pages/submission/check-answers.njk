@@ -36,7 +36,7 @@
           </dd>
         </div>
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Is there anything you need help with?</dt>
+          <dt class="govuk-summary-list__key">Is there anything you need support with or want to let us know about?</dt>
           <dd class="govuk-summary-list__value">
             {% for a in formData['assistance'] | split(",") %}
               {{ a | userFriendlyString }}{% if not loop.last %},{% endif %}
@@ -44,7 +44,7 @@
           </dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/submission/{{ submissionId }}/questions/assistance?checkAnswers=true"
-              >Change<span class="govuk-visually-hidden"> answer for is there anything you need help with</span></a
+              >Change<span class="govuk-visually-hidden"> answer for is there anything you need support with or want to let us know about</span></a
             >
           </dd>
         </div>

@@ -13,7 +13,7 @@ export type AssistanceOption =
 
 export default class AssistancePage extends SubmissionPage {
   constructor() {
-    super('Is there anything you need help with?')
+    super('Is there anything you need support with or want to let us know about?')
   }
 
   continueButton = (): PageElement => cy.contains('button', 'Continue')

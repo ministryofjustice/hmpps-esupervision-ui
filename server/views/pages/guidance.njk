@@ -1,0 +1,138 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% set pageTitle = "About the Check in with your probation officer service" %}
+{% set privacyPolicyHref = "/privacy-notice" %}
+
+{% block beforeContent %}
+  {% if backLink %}
+    <div class="es-page-actions">
+      <div class="es-page-actions__back">
+        {{
+          govukBackLink({
+            text: "Back",
+            href: backLink
+          })
+        }}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds govuk-body">
+        <h1 class="govuk-heading-xl">{{pageTitle}}</h1>
+         <p class="govuk-body">This service will allow you to check in with your probation officer online. This could be used in between your in-person appointments, or to replace some of your in-person appointments.</p> 
+
+        <h2 class="govuk-heading-l">Choosing if online check ins are right for you</h2>
+
+        <p class="govuk-body">Your probation officer will talk with you about how online check ins work, and you can decide together if you’d like to use them or if they’re something that’s suitable for you.</p>  
+
+        <p class="govuk-body">You can stop online check ins at any time by talking to your probation officer.</p> 
+
+        <p class="govuk-body">We are working to make these online check ins as accessible as possible. We will continue this work to fix any accessibility issues that come up.</p>
+
+        <h2 class="govuk-heading-l">How you’ll be signed up to use online check ins</h2> 
+
+        <p class="govuk-body">If you choose to use online check ins, you’ll be signed up by your probation officer. They may do this in your in-person appointment. To sign up, they will need to enter:</p>  
+        <ul class="govuk-list govuk-list--bullet">
+            <li>your name and date of birth</li> 
+            <li>your phone number or email address</li>
+            <li>a photograph of your face we can use to match your identity</li> 
+            <li>the date you will start using online check ins</li>
+            <li>how often you will use online check ins</li>
+        </ul>
+        <p class="govuk-body">Once you’ve been signed up, you’ll get a message to your preferred contact method to confirm you have signed up and telling you when you’ll get a link to complete your first check in online.</p>
+
+        <h3 class="govuk-heading-m">How we use your photo to match with your submissions</h3>
+
+        <p class="govuk-body">We take a photo of you during sign up to match with a video you’ll take during your check in. This is to make sure it’s you completing a check in, just like some banking apps ask for a photo or video to check you’re the right person. Your probation officer may take this or ask you to take it and send it to them.</p>
+
+        <h2 class="govuk-heading-l">How you will complete a check in</h2>
+
+        <h3 class="govuk-heading-m">Getting the link to use online check ins</h3> 
+
+        <p class="govuk-body">When your probation officer signs you up to use online check ins, they will set a date for your first check in.</p> 
+
+        <p class="govuk-body">On this date, you’ll get a message either by text or email, whichever one you chose. This will have a link to check in, and you’ll have 3 days to complete it.</p>
+
+        <h3 class="govuk-heading-m">What you'll be asked to do</h3> 
+
+        <p class="govuk-body">During your check in you’ll be asked:</p> 
+        <ul class="govuk-list govuk-list--bullet">
+            <li>your name and date of birth</li> 
+            <li>3 questions about how you are and if you need support with anything</li> 
+            <li>to record a 5 second video (no microphone or location will be accessed - this is just visual to confirm your identity)</li>
+        </ul>
+
+        <p class="govuk-body">You should treat your online check in like any other probation appointment and make sure you’re fully and appropriately dressed for your video.</p>
+
+        <h4 class="govuk-heading-s">How we use the video to match your identity</h4>
+
+        <p class="govuk-body">The video recording will be compared to the photo of you taken when you signed up. This is to confirm it is you completing the check in.</p>  
+
+        <h4 class="govuk-heading-s">If we cannot confirm your identity</h4>
+
+        <p class="govuk-body">If we cannot confirm your identity, you can still choose to continue and submit your check in anyway. A failed identity check can be caused by lots of things, such as if you’ve changed how you look, or if you are not in a well lit area.</p>
+
+        <p class="govuk-body">Your probation officer will compare your video to your photo when they review your check in. If they have any questions about the video, they will contact you.</p>  
+
+ 
+        <h3 class="govuk-heading-m">Confirmation that you’ve completed the check in and what happens next</h3> 
+
+        <p class="govuk-body">Once you’ve submitted your check in, you’ll get a text or an email to confirm that you’ve completed a check in and that your probation officer will review it and get in touch if needed.</p>  
+
+        <h4 class="govuk-heading-s">If you have asked for support</h4> 
+
+        <p class="govuk-body">If you have asked for support with something in your check in, or said that you are not feeling great or you’re struggling, your probation officer will get in touch with you to see what they can do to help.</p> 
+
+        <h4 class="govuk-heading-s">If you fail to check in</h4>
+
+        <p class="govuk-body">If you fail to check in for any reason, your probation officer may stop your check ins and contact you to find out why you’ve not been able to complete a check in.</p>  
+
+        <p class="govuk-body">If you’re having difficulty using online check ins, you should let your probation officer know as soon as possible so they can stop check ins.</p>  
+
+        <h2 class="govuk-heading-l">What to do if you’re struggling or something goes wrong</h2>
+
+        <p class="govuk-body">Contact your probation officer or speak to them in your face-to-face appointment if you have any issues with online check ins. This could include:</p> 
+        <ul class="govuk-list govuk-list--bullet">
+
+        <li>the system not working</li>
+
+        <li>you're finding it difficult to use</li>
+
+        <li>you’ve changed your contact details</li>
+
+        <li>you've lost your phone or have an issue accessing the link</li>
+
+        <li>you forget to check in</li>
+
+        <li>you want to go back to face-to-face only</li>
+        </ul>
+        <p class="govuk-body">Any issues you have with online check ins will not result in a breach of your conditions.</p>
+
+        <h2 class="govuk-heading-l">How we will use your information</h2>
+
+        <p class="govuk-body">We’ll use the information you give us as part of your check in to update your probation officer about how you are doing, and if you need any support. This is stored in our system securely.</p>  
+
+        <p class="govuk-body">You can <a class="govuk-link" href={{privacyPolicyHref}}>check our privacy policy to learn more about how we use your data</a>.</p>  
+
+        <h3 class="govuk-heading-m">Subject access requests</h3> 
+
+        <p class="govuk-body">If you would like a copy of the information we hold about you, your probation officer can email the team and ask to see it. This is called a Subject Access Request. You can ask your probation officer and they’ll submit this on your behalf.</p>   
+
+        <p class="govuk-body">You can also email the team at: <a href="mailto:data.access1@justice.gov.uk" class="govuk-link">data.access1@justice.gov.uk</a> to ask for a copy of the information.</p>
+
+        <h2 class="govuk-heading-l">How to give feedback about online check ins</h2>
+
+        <p class="govuk-body">We will have an online feedback form for you to tell us your experience of online check ins.</p>   
+
+        <p class="govuk-body">You will be able to fill in the form yourself or with your probation officer whenever you have something to share about online check ins.</p>  
+
+        <p class="govuk-body">There’ll be other opportunities for you to give feedback, for example, you could choose to talk about your experience in short phone calls.</p> 
+
+        <p class="govuk-body">We will update this guidance when the feedback form is available.</p>  
+
+        </div>
+    </div>
+{% endblock %}

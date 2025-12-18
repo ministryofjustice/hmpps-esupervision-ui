@@ -17,6 +17,12 @@ export default function routes(): Router {
     res.render('pages/accessibility')
   })
 
+  get('/guidance', (req, res, next) => {
+    const { submissionId } = req.query
+    const backLink = submissionId ? `/submission/${submissionId}` : undefined
+    res.render('pages/guidance', { backLink })
+  })
+
   get('/.well-known/appspecific/com.chrome.devtools.json', async (req, res, next) => {
     return res.status(404).render('pages/error')
   })

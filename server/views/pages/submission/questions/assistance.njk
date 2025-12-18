@@ -5,7 +5,7 @@
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../../partials/layout.njk" %}
 
-{% set title = "Is there anything you need help with?" %}
+{% set title = "Is there anything you need support with or want to let us know about?" %}
 {% set pageTitle = title %}
 {% set mainClasses = "app-container govuk-body" %}
 
@@ -32,7 +32,7 @@
             errorMessage: validationErrors | findError("mentalHealthSupport"),
             value: formData["mentalHealthSupport"],
             label: {
-              text: "Tell us why you need help with mental health (optional)"
+              text: "Tell us what you want us to know about mental health (optional)"
             }
           })
         }}
@@ -47,7 +47,7 @@
             errorMessage: validationErrors | findError("alcoholSupport"),
             value: formData["alcoholSupport"],
             label: {
-              text: "Tell us why you need help with alcohol (optional)"
+              text: "Tell us what you want us to know about alcohol (optional)"
             }
           })
         }}
@@ -62,7 +62,7 @@
             errorMessage: validationErrors | findError("drugsSupport"),
             value: formData["drugsSupport"],
             label: {
-              text: "Tell us why you need help with drugs (optional)"
+              text: "Tell us what you want us to know about drugs (optional)"
             }
           })
         }}
@@ -77,7 +77,7 @@
             errorMessage: validationErrors | findError("moneySupport"),
             value: formData["moneySupport"],
             label: {
-              text: "Tell us why you need help with money (optional)"
+              text: "Tell us what you want us to know about money (optional)"
             }
           })
         }}
@@ -92,7 +92,7 @@
             errorMessage: validationErrors | findError("housingSupport"),
             value: formData["housingSupport"],
             label: {
-              text: "Tell us why you need help with housing (optional)"
+              text: "Tell us what you want us to know about housing (optional)"
             }
           })
         }}
@@ -107,7 +107,7 @@
             errorMessage: validationErrors | findError("supportSystemSupport"),
             value: formData["supportSystemSupport"],
             label: {
-              text: "Tell us why you need help with your support system (optional)"
+              text: "Tell us what you want us to know about your support system (optional)"
             }
           })
         }}

@@ -48,7 +48,7 @@ jobs:
   helm_lint:
     strategy:
       matrix:
-        environments: ['dev', 'preprod', 'prod']
+        environments: ['dev', 'test', 'preprod', 'prod']
     name: helm lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
@@ -65,7 +65,8 @@ jobs:
       docker_registry: 'ghcr.io'
       registry_org: 'ministryofjustice'
       additional_docker_tag: ${{ inputs.additional_docker_tag }}
-      push: ${{ inputs.push || true }}
+      # Respect manual push flag while keeping pushes on CI builds
+      push: ${{ github.event_name == 'workflow_dispatch' && inputs.push || github.event_name != 'workflow_dispatch' }}
       docker_multiplatform: false
   deploy_dev:
     name: Deploy to the development environment
@@ -77,21 +78,12 @@ jobs:
     with:
       environment: 'dev'
       app_version: '${{ needs.build.outputs.app_version }}'
-  deploy_test:
-    name: Deploy to the test environment
-    needs:
-      - build
-      - helm_lint
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
-    secrets: inherit
-    with:
-      environment: 'test'
-      app_version: '${{ needs.build.outputs.app_version }}'
   deploy_preprod:
     name: Deploy to pre-production environment
+    if: github.ref == 'refs/heads/main'
     needs:
       - build
-      - deploy_test
+      - deploy_dev
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
@@ -99,6 +91,7 @@ jobs:
       app_version: '${{ needs.build.outputs.app_version }}'
   deploy_prod:
     name: Deploy to production environment
+    if: github.ref == 'refs/heads/main'
     needs:
       - build
       - deploy_preprod

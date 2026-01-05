@@ -8,6 +8,7 @@
 {% set title = "Is there anything you need support with or want to let us know about?" %}
 {% set pageTitle = title %}
 {% set mainClasses = "app-container govuk-body" %}
+{% set hintText = "This could be anything you're worrying about, struggling with or just want to let us know." %}
 
 {% block beforeContent %}
   {{
@@ -120,7 +121,7 @@
             errorMessage: validationErrors | findError("otherSupport"),
             value: formData["otherSupport"],
             label: {
-              text: "Tell us what you need help with (optional)"
+              text: "Tell us what you want us to know about (optional)"
             }
           })
         }}
@@ -139,6 +140,9 @@
                 isPageHeading: true,
                 classes: "govuk-fieldset__legend--l"
               }
+            },
+            hint: {
+              text: hintText
             },
             items: [
               {
@@ -191,7 +195,7 @@
               },
               {
                 value: "OTHER",
-                text: "Other",
+                text: "Something else",
                 checked: checked("assistance", "OTHER"),
                 conditional: {
                   html: otherSupport

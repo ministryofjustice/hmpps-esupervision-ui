@@ -87,6 +87,11 @@ export const createMockCheckin = (offender: Offender, overrides: Partial<Checkin
     checkin.surveyResponse = {
       version: '1.0',
       mentalHealth: faker.helpers.arrayElement(Object.values(MentalHealth)),
+      mentalHealthVeryWell: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      mentalHealthWell: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      mentalHealthOk: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      mentalHealthNotGreat: faker.datatype.boolean() ? faker.lorem.sentence() : null,
+      mentalHealthStruggling: faker.datatype.boolean() ? faker.lorem.sentence() : null,
       assistance: faker.helpers.arrayElements(Object.values(SupportAspect)),
       callback: faker.helpers.arrayElement(Object.values(CallbackRequested)),
       mentalHealthSupport: faker.datatype.boolean() ? faker.lorem.sentence() : null,

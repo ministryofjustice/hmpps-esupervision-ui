@@ -2,7 +2,7 @@ import SubmissionPage, { PageElement } from './submissionPage'
 
 export default class MentalHealthPage extends SubmissionPage {
   constructor() {
-    super('How are you feeling?')
+    super('How have you been feeling since we last spoke?')
   }
 
   veryWellRadio = (): PageElement => cy.get('input[name="mentalHealth"][value="VERY_WELL"]')

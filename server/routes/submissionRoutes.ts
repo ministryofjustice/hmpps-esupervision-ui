@@ -19,6 +19,7 @@ import {
   renderVideoRecord,
   renderViewVideo,
   handleAssistance,
+  handleMentalHealth,
 } from '../controllers/submissionController'
 
 import {
@@ -83,8 +84,7 @@ export default function routes({ esupervisionService }: Services): Router {
   router.post('/verify', validateFormData(personalDetailsSchema), handleVerify)
 
   get('/questions/mental-health', protectSubmission, renderQuestionsMentalHealth)
-  router.post('/questions/mental-health', validateFormData(mentalHealthSchema), handleRedirect('/questions/assistance'))
-
+  router.post('/questions/mental-health', protectSubmission, validateFormData(mentalHealthSchema), handleMentalHealth)
   get('/questions/assistance', protectSubmission, renderAssistance)
   router.post('/questions/assistance', protectSubmission, validateFormData(assistanceSchema), handleAssistance)
 

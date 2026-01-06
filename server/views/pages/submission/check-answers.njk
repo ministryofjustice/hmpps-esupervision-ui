@@ -27,7 +27,7 @@
 
       <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">How are you feeling?</dt>
+          <dt class="govuk-summary-list__key">How have you been feeling since we last spoke?</dt>
           <dd class="govuk-summary-list__value">{{ formData['mentalHealth'] | userFriendlyString }}</dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/submission/{{ submissionId }}/questions/mental-health?checkAnswers=true"
@@ -35,6 +35,66 @@
             >
           </dd>
         </div>
+        {% if formData['mentalHealthVeryWell'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Tell us why you are very well</dt>
+            <dd class="govuk-summary-list__value">{{ formData['mentalHealthVeryWell'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission//{{ submissionId }}/questions/mental-health?checkAnswers=true">
+                Change<span class="govuk-visually-hidden"> answer for tell us why you are very well</span>
+              </a>
+            </dd>
+          </div>
+        {% endif %}
+
+        {% if formData['mentalHealthWell'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Tell us why you are well</dt>
+            <dd class="govuk-summary-list__value">{{ formData['mentalHealthWell'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/mental-health?checkAnswers=true">
+                Change<span class="govuk-visually-hidden"> answer for tell us why you are well</span>
+              </a>
+            </dd>
+          </div>
+        {% endif %}
+
+        {% if formData['mentalHealthOk'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Tell us why you are OK</dt>
+            <dd class="govuk-summary-list__value">{{ formData['mentalHealthOk'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/mental-health?checkAnswers=true">
+                Change<span class="govuk-visually-hidden"> answer for tell us why you are OK</span>
+              </a>
+            </dd>
+          </div>
+        {% endif %}
+
+        {% if formData['mentalHealthNotGreat'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Tell us why you are not great</dt>
+            <dd class="govuk-summary-list__value">{{ formData['mentalHealthNotGreat'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/mental-health?checkAnswers=true">
+                Change<span class="govuk-visually-hidden"> answer for tell us why you are not great</span>
+              </a>
+            </dd>
+          </div>
+        {% endif %}
+
+        {% if formData['mentalHealthStruggling'] %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Tell us more about struggling</dt>
+            <dd class="govuk-summary-list__value">{{ formData['mentalHealthStruggling'] }}</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link" href="/submission/{{ submissionId }}/questions/mental-health?checkAnswers=true">
+                Change<span class="govuk-visually-hidden"> answer for tell us more about struggling</span>
+              </a>
+            </dd>
+          </div>
+        {% endif %}
+        
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Is there anything you need support with or want to let us know about?</dt>
           <dd class="govuk-summary-list__value">
@@ -136,13 +196,13 @@
 
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
-            Is there anything else you need to speak with your probation officer about?
+            Would you like us to contact you about anything before your next appointment?
           </dt>
           <dd class="govuk-summary-list__value">{{ formData['callback'] | userFriendlyString }}</dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/submission/{{ submissionId }}/questions/callback?checkAnswers=true"
               >Change<span class="govuk-visually-hidden">
-                answer for is there anything else you need to speak with your probation officer about</span
+                answer for Would you like us to contact you about anything before your next appointment</span
               ></a
             >
           </dd>

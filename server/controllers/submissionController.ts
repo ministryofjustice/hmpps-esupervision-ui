@@ -217,6 +217,38 @@ export const handleAssistance: RequestHandler = async (req, res, next) => {
   res.redirect(redirectUrl)
 }
 
+export const handleMentalHealth: RequestHandler = async (req, res, next) => {
+  const { mentalHealth } = req.body
+  const { submissionId } = req.params
+
+  req.session.formData.mentalHealth = mentalHealth
+
+  const mentalHealthFieldsMap: Record<string, string> = {
+    VERY_WELL: 'mentalHealthVeryWell',
+    WELL: 'mentalHealthWell',
+    OK: 'mentalHealthOk',
+    NOT_GREAT: 'mentalHealthNotGreat',
+    STRUGGLING: 'mentalHealthStruggling',
+  }
+
+  for (const [option, fieldName] of Object.entries(mentalHealthFieldsMap)) {
+    if (mentalHealth === option) {
+      req.session.formData[fieldName] = req.body[fieldName]
+    } else {
+      req.session.formData[fieldName] = ''
+    }
+  }
+
+  const basePath = `/submission/${submissionId}`
+  let redirectUrl = `${basePath}/questions/assistance`
+
+  if (req.query.checkAnswers === 'true') {
+    redirectUrl = `${basePath}/check-your-answers`
+  }
+
+  res.redirect(redirectUrl)
+}
+
 export const renderQuestionsCallback: RequestHandler = async (req, res, next) => {
   try {
     res.render('pages/submission/questions/callback', pageParams(req))
@@ -236,6 +268,11 @@ export const renderCheckAnswers: RequestHandler = async (req, res, next) => {
 export const handleSubmission: RequestHandler = async (req, res: Response<object, SubmissionLocals>, next) => {
   const {
     mentalHealth,
+    mentalHealthVeryWell,
+    mentalHealthWell,
+    mentalHealthOk,
+    mentalHealthNotGreat,
+    mentalHealthStruggling,
     mentalHealthSupport,
     alcoholSupport,
     drugsSupport,
@@ -272,6 +309,11 @@ export const handleSubmission: RequestHandler = async (req, res: Response<object
     survey: {
       version: '2025-07-10@pilot',
       mentalHealth: mentalHealth as MentalHealth,
+      mentalHealthVeryWell: mentalHealthVeryWell as string,
+      mentalHealthWell: mentalHealthWell as string,
+      mentalHealthOk: mentalHealthOk as string,
+      mentalHealthNotGreat: mentalHealthNotGreat as string,
+      mentalHealthStruggling: mentalHealthStruggling as string,
       assistance: assistance as SupportAspect[],
       mentalHealthSupport: mentalHealthSupport as string,
       alcoholSupport: alcoholSupport as string,

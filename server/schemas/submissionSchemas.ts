@@ -36,6 +36,11 @@ const MentalHealthEnum = z
 
 export const mentalHealthSchema = z.object({
   mentalHealth: MentalHealthEnum,
+  mentalHealthVeryWell: z.string().optional(),
+  mentalHealthWell: z.string().optional(),
+  mentalHealthOk: z.string().optional(),
+  mentalHealthNotGreat: z.string().optional(),
+  mentalHealthStruggling: z.string().optional(),
 })
 
 export const assistanceSchema = z.object({

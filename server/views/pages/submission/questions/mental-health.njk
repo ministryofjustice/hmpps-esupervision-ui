@@ -2,10 +2,11 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "How are you feeling?" %}
+{% set pageTitle = "How have you been feeling since we last spoke?" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -21,7 +22,55 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ errorSummary(validationErrors) }}
+      {% set veryWellHtml %}
+        {{ govukTextarea({
+          name: "mentalHealthVeryWell",
+          id: "mentalHealthVeryWell",
+          label: { text: "Tell us why you are very well (optional)" },
+          value: formData["mentalHealthVeryWell"],
+          errorMessage: validationErrors | findError("mentalHealthVeryWell")
+        }) }}
+      {% endset -%}
 
+      {% set wellHtml %}
+        {{ govukTextarea({
+          name: "mentalHealthWell",
+          id: "mentalHealthWell",
+          label: { text: "Tell us why you are well (optional)" },
+          value: formData["mentalHealthWell"],
+          errorMessage: validationErrors | findError("mentalHealthWell")
+        }) }}
+      {% endset -%}
+
+      {% set okHtml %}
+        {{ govukTextarea({
+          name: "mentalHealthOk",
+          id: "mentalHealthOk",
+          label: { text: "Tell us why you are OK (optional)" },
+          value: formData["mentalHealthOk"],
+          errorMessage: validationErrors | findError("mentalHealthOk")
+        }) }}
+      {% endset -%}
+
+      {% set notGreatHtml %}
+        {{ govukTextarea({
+          name: "mentalHealthNotGreat",
+          id: "mentalHealthNotGreat",
+          label: { text: "Tell us why you are not great (optional)" },
+          value: formData["mentalHealthNotGreat"],
+          errorMessage: validationErrors | findError("mentalHealthNotGreat")
+        }) }}
+      {% endset -%}
+
+      {% set strugglingHtml %}
+        {{ govukTextarea({
+          name: "mentalHealthStruggling",
+          id: "mentalHealthStruggling",
+          label: { text: "Tell us why you are struggling (optional)" },
+          value: formData["mentalHealthStruggling"],
+          errorMessage: validationErrors | findError("mentalHealthStruggling")
+        }) }}
+      {% endset -%}
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
@@ -31,7 +80,7 @@
           errorMessage: validationErrors | findError("mentalHealth"),
           value: formData["mentalHealth"],
           hint: {
-            text: "Think about things like if you have noticed a change in your mood and what may have caused this. "
+            text: "Think about things like if you have noticed a change in your mood and what may have caused this."
           },
           fieldset: {
           legend: {
@@ -43,23 +92,38 @@
           items: [
               {
                 value: "VERY_WELL",
-                text: "Very well"
+                text: "Very well",
+                conditional: {
+                  html: veryWellHtml
+                }
               },
               {
                 value: "WELL",
-                text: "Well"
+                text: "Well",
+                conditional: {
+                  html: wellHtml
+                }
               },
               {
                 value: "OK",
-                text: "OK"
+                text: "OK",
+                conditional: {
+                  html: okHtml
+                }
               },
               {
                 value: "NOT_GREAT",
-                text: "Not great"
+                text: "Not great",
+                conditional: {
+                  html: notGreatHtml
+                }
               },
               {
                 value: "STRUGGLING",
-                text: "Struggling"
+                text: "Struggling",
+                conditional: {
+                  html: strugglingHtml
+                }
               }
             ]
           })

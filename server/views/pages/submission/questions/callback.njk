@@ -6,7 +6,7 @@
 {% from "../../../partials/errorSummary.njk" import errorSummary %}
 {% extends "../../../partials/layout.njk" %}
 
-{% set title = "Is there anything else you need to speak with your probation officer about?" %}
+{% set title = "Would you like us to contact you about anything before your next appointment?" %}
 {% set pageTitle = title %}
 
 {% block beforeContent %}
@@ -32,7 +32,7 @@
             errorMessage: validationErrors | findError("callbackDetails"),
             value: formData["callbackDetails"],
             label: {
-              text: "Tell us what you need to talk about (optional)"
+              text: "Tell us what you need to talk about, for example, something you're struggling with or need more information about (optional)"
             }
           })
         }}
@@ -47,7 +47,7 @@
               errorMessage: validationErrors | findError("callback"),
               value: formData["callback"],
               hint: {
-                text: "There may be a delay in your probation officer contacting you. They may refer you to support services if you have asked for help. "
+                text: "This could be something you've already asked for help with or something new."
               },
               fieldset: {
                 legend: {

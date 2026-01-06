@@ -3,7 +3,7 @@ import SubmissionPage from './submissionPage'
 
 export default class CallbackPage extends SubmissionPage {
   constructor() {
-    super('Is there anything else you need to speak with your probation officer about?')
+    super('Would you like us to contact you about anything before your next appointment?')
   }
 
   yesRadio = (): PageElement => cy.get('input[name="callback"][value="YES"]')

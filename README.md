@@ -8,6 +8,7 @@ for persistence and interaction with cloud resources.
 
 ## Running locally
 
+
 Note that running all dependencies using Docker compose is currently blocked by [ESUP-783](https://dsdmoj.atlassian.net/browse/ESUP-783).
 
 ### Install node

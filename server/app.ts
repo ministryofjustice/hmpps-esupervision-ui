@@ -4,7 +4,6 @@ import cookieParser from 'cookie-parser'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
-
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
@@ -17,6 +16,7 @@ import storeFormDataInSession from './middleware/storeFormDataInSession'
 import routes from './routes'
 import statisticsRoutes from './routes/statisticsRoutes'
 import submissionRoutes from './routes/submissionRoutes'
+import v2statisticsRoutes from './routes/v2statisticsRoutes'
 import practitionersRoutes from './routes/practitionersRoutes'
 import featureFlags from './middleware/featureFlags'
 
@@ -57,6 +57,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use('/submission/:submissionId', submissionRoutes(services))
   app.use('/statistics', statisticsRoutes())
+  app.use('/v2statistics', v2statisticsRoutes())
   app.use('/practitioners', practitionersRoutes())
   app.use('/practitioners', (req, res) => {
     res.status(404).render('pages/practitioners/not-found')

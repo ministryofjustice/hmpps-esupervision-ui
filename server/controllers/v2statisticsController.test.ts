@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { hoursToHoursAndMinutes, getUserPercentages, renderV2stats } from './v2statisticsController'
-import V2Stats from '../data/models/v2stats'
+import { hoursToHoursAndMinutes, renderV2stats } from './v2statisticsController'
 import { services } from '../services'
 
 jest.mock('../services')
@@ -32,64 +31,6 @@ describe('v2statisticsController', () => {
     })
   })
 
-  describe('getUserPercentages', () => {
-    const baseStats: V2Stats = {
-      totalSignedUp: 100,
-      activeUsers: 60,
-      inactiveUsers: 40,
-      completedCheckins: 75,
-      notCompletedOnTime: 25,
-      avgHoursToComplete: 1.5,
-      avgCompletedCheckinsPerPerson: 1,
-    }
-
-    it('calculates percentages correctly', () => {
-      const result = getUserPercentages(baseStats)
-
-      expect(result).toEqual({
-        activeUsers: '60%',
-        inactiveUsers: '40%',
-        completedCheckins: '75%',
-        notCompletedCheckins: '25%',
-      })
-    })
-
-    it('returns 0% when totalSignedUp is zero', () => {
-      const result = getUserPercentages({
-        ...baseStats,
-        totalSignedUp: 0,
-        activeUsers: 0,
-        inactiveUsers: 0,
-      })
-
-      expect(result.activeUsers).toBe('0%')
-      expect(result.inactiveUsers).toBe('0%')
-    })
-
-    it('returns 0% when totalCheckins is zero', () => {
-      const result = getUserPercentages({
-        ...baseStats,
-        completedCheckins: 0,
-        notCompletedOnTime: 0,
-      })
-
-      expect(result.completedCheckins).toBe('0%')
-      expect(result.notCompletedCheckins).toBe('0%')
-    })
-
-    it('formats percentages to 2 decimal places', () => {
-      const result = getUserPercentages({
-        ...baseStats,
-        activeUsers: 1,
-        inactiveUsers: 2,
-        totalSignedUp: 3,
-      })
-
-      expect(result.activeUsers).toBe('33.33%')
-      expect(result.inactiveUsers).toBe('66.67%')
-    })
-  })
-
   describe('renderV2stats', () => {
     const mockReq = {} as any
     const mockNext = jest.fn()
@@ -110,6 +51,12 @@ describe('v2statisticsController', () => {
         completedCheckins: 4,
         notCompletedOnTime: 1,
         avgHoursToComplete: 1.5,
+        avgCompletedCheckinsPerPerson: 2.86,
+        updatedAt: '2026-01-28T12:02:00.020175Z',
+        pctActiveUsers: 0.7,
+        pctInactiveUsers: 0.3,
+        pctCompletedCheckins: 0.9091,
+        pctExpiredCheckins: 0.0909,
       })
 
       await renderV2stats(mockReq, mockRes, mockNext)
@@ -117,14 +64,26 @@ describe('v2statisticsController', () => {
       expect(mockRes.render).toHaveBeenCalledWith(
         'pages/v2statistics/dashboard',
         expect.objectContaining({
-          stats: expect.objectContaining({
-            avgHoursToComplete: '1h 30m',
-          }),
+          formattedDateTime: '1/28/2026, 12:02:00 PM',
           percentages: {
-            activeUsers: '70%',
-            inactiveUsers: '30%',
-            completedCheckins: '80%',
-            notCompletedCheckins: '20%',
+            activeUsers: '70.00%',
+            completedCheckins: '90.91%',
+            inactiveUsers: '30.00%',
+            notCompletedCheckins: '9.09%',
+          },
+          stats: {
+            activeUsers: 7,
+            avgCompletedCheckinsPerPerson: 2.86,
+            avgHoursToComplete: '1h 30m',
+            completedCheckins: 4,
+            inactiveUsers: 3,
+            notCompletedOnTime: 1,
+            pctActiveUsers: 0.7,
+            pctCompletedCheckins: 0.9091,
+            pctExpiredCheckins: 0.0909,
+            pctInactiveUsers: 0.3,
+            totalSignedUp: 10,
+            updatedAt: '2026-01-28T12:02:00.020175Z',
           },
         }),
       )

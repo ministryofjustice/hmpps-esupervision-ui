@@ -12,4 +12,14 @@ export default class V2Stats {
   avgHoursToComplete: number
 
   avgCompletedCheckinsPerPerson: number
+
+  pctActiveUsers: number
+
+  pctInactiveUsers: number
+
+  pctCompletedCheckins: number
+
+  pctExpiredCheckins: number
+
+  updatedAt: string
 }

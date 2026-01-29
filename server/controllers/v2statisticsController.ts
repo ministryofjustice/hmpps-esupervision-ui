@@ -25,12 +25,14 @@ export const renderV2stats: RequestHandler = async (req, res, next) => {
     }
 
     const updatedAtDate = new Date(updatedAt)
-    const formattedDateTime = updatedAtDate.toLocaleString()
+    const formattedDate = updatedAtDate.toLocaleDateString()
+    const formattedTime = updatedAtDate.toLocaleTimeString()
 
     res.render('pages/v2statistics/dashboard', {
       stats: { ...v2stats, avgHoursToComplete: hoursToHoursAndMinutes(v2stats.avgHoursToComplete) },
       percentages,
-      formattedDateTime,
+      date: formattedDate,
+      time: formattedTime,
     })
   } catch (error) {
     next(error)

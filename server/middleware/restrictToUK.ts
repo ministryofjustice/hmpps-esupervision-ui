@@ -155,7 +155,7 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
 
       // console.log('reader.country')
       // console.log(reader.country(ip))
-      const response = reader.country('128.101.101.101')
+      const response = reader.country(ip)
 
       // console.log('response.country.isoCode')
       const countryCode = response.country.isoCode

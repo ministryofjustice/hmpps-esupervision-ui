@@ -148,6 +148,7 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
         await logAccess(checkinId, ip, countryCode)
         return res.status(403).render('pages/outside-uk')
       }
+      logger.warn({ ip, country: countryCode, path: req.path, checkinId }, 'Not blocked UK request')
 
       return next()
     } catch (e) {

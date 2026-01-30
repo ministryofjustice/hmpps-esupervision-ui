@@ -3,14 +3,16 @@ import type { Request, Response, NextFunction } from 'express'
 // import { z } from 'zod'
 import { Reader } from '@maxmind/geoip2-node'
 import { readFileSync } from 'fs'
+import path from 'path'
 import logger from '../../logger'
 import { services } from '../services'
 
 const { esupervisionService } = services()
 
-const IP_INFO_TOKEN = process.env.IP_INFO_TOKEN ?? ''
+// const IP_INFO_TOKEN = process.env.IP_INFO_TOKEN ?? ''
 const ALLOWED_COUNTRY = 'GB'
 const BYPASS_PATHS = ['/ping', '/assets', '/info'] // health check and static asset paths
+const file = './../../assets/geo/GeoLite2-Country.mmdb'
 // const CACHE_TTL_MS = 1000 * 60 * 60 * 24 // 1 day
 
 // const cache = new LRUCache<string, { countryCode: string | null }>({
@@ -69,6 +71,8 @@ const logOutsideAccess = async (checkinId: string, ip: string, countryCode: stri
 }
 
 export default async function restrictToUK(req: Request, res: Response, next: NextFunction) {
+  logger.info({ path: req.path }, 'Starting restrictToUK process')
+
   try {
     // 1) Bypass specific paths
     if (BYPASS_PATHS.some(prefix => req.path.startsWith(prefix))) {
@@ -76,10 +80,10 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
     }
 
     // 2) If missing token, log a warning and allow user to access the site
-    if (!IP_INFO_TOKEN) {
-      logger.warn({ path: req.path }, 'IP_INFO_TOKEN not set - allowing traffic')
-      return next()
-    }
+    // if (!IP_INFO_TOKEN) {
+    //   logger.warn({ path: req.path }, 'IP_INFO_TOKEN not set - allowing traffic')
+    //   return next()
+    // }
 
     // 3) Get IP
     const ip = getClientIp(req)
@@ -128,15 +132,34 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
 
     // Synchronous database opening
     try {
-      const dbBuffer = readFileSync('/assets/geo/GeoLite2-ASN.mmdb')
+      // Check that the file exists locally
+      // console.log("Check that the file exists locally");
+      // if(!existsSync(path.resolve(__dirname, file))) {
+      //   console.log("File not found");
+      //   return next()
+      // }
 
-      // This reader object should be reused across lookups as creation of it is
-      // expensive.
+      // console.log("Reader.open");
+      // Reader.open(path.resolve(__dirname, file)).then(reader => {
+      //   const response = reader.country(ip);
+
+      //   console.log(response.country.isoCode); // 'US'
+      // });
+
+      // console.log('readFileSync')
+      const dbBuffer = readFileSync(path.resolve(__dirname, file))
+
+      // This reader object should be reused across lookups as creation of it is expensive.
+      // console.log('Reader.openBuffer')
       const reader = Reader.openBuffer(dbBuffer)
 
-      const response = reader.city('128.101.101.101')
+      // console.log('reader.country')
+      // console.log(reader.country(ip))
+      const response = reader.country('128.101.101.101')
 
+      // console.log('response.country.isoCode')
       const countryCode = response.country.isoCode
+      logger.info({ country: countryCode, path: req.path }, 'IP from')
       // console.log(countryCode)
 
       // 7) Cache result

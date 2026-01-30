@@ -24,7 +24,9 @@ generic-service:
       SecRuleEngine DetectionOnly
       SecAuditEngine RelevantOnly
       SecRequestBodyAccess On
-      SecGeoLookupDb app/dist/assets/geo/GeoIP.dat
+      SecGeoLookupDb /app/dist/assets/geo/GeoIP.dat
+      SecRule REMOTE_ADDR "@geoLookup" "chain,id:22,drop,msg:'Non-GB IP address'"
+      SecRule GEO:COUNTRY_CODE "!@streq GB"
       SecDefaultAction "phase:2,pass,log,tag:github_team=stg-pathfinders,tag:namespace={{ .Release.Namespace }}"
 
   livenessProbe:

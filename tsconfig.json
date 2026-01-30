@@ -23,5 +23,5 @@
     "esbuild",
     "eslint.config.mjs"
   ],
-  "include": ["**/*.js", "**/*.ts", "geo"]
+  "include": ["**/*.js", "**/*.ts"]
 }

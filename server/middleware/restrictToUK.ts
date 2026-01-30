@@ -45,16 +45,16 @@ function getClientIp(req: Request): string {
   return normaliseIp(req.ip || req.socket?.remoteAddress || '')
 }
 
-// function localDevBypass(ip: string): boolean {
-//   if (!ip) return true
-//   if (ip === '::1' || ip.startsWith('127.')) return true // localhost
-//   if (ip.startsWith('10.') || ip.startsWith('192.168.')) return true // common private ranges
-//   if (ip.startsWith('172.')) {
-//     const oct = Number(ip.split('.')[1])
-//     if (oct >= 16 && oct <= 31) return true
-//   }
-//   return false
-// }
+function localDevBypass(ip: string): boolean {
+  if (!ip) return true
+  if (ip === '::1' || ip.startsWith('127.')) return true // localhost
+  if (ip.startsWith('10.') || ip.startsWith('192.168.')) return true // common private ranges
+  if (ip.startsWith('172.')) {
+    const oct = Number(ip.split('.')[1])
+    if (oct >= 16 && oct <= 31) return true
+  }
+  return false
+}
 
 function isAllowed(countryCode: string | null): boolean {
   return (countryCode ?? '').toUpperCase() === ALLOWED_COUNTRY
@@ -92,7 +92,7 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
     const logAccess = checkinId ? logOutsideAccess : async (_checkinId: string, _ip: string, _countryCode: string) => {}
 
     // 4) Allow local development to bypass
-    // if (localDevBypass(ip)) return next()
+    if (localDevBypass(ip)) return next()
 
     // 5) Cache
     // const cached = cache.get(ip)

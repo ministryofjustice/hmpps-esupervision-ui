@@ -24,7 +24,6 @@ generic-service:
       SecRuleEngine DetectionOnly
       SecAuditEngine RelevantOnly
       SecRequestBodyAccess On
-      SecGeoLookupDb /app/dist/assets/geo/GeoIP.dat
       SecDefaultAction "phase:2,pass,log,tag:github_team=stg-pathfinders,tag:namespace={{ .Release.Namespace }}"
 
   livenessProbe:

@@ -137,7 +137,7 @@ export default async function restrictToUK(req: Request, res: Response, next: Ne
       const response = reader.city('128.101.101.101')
 
       const countryCode = response.country.isoCode
-      console.log(countryCode)
+      // console.log(countryCode)
 
       // 7) Cache result
       // cache.set(ip, { countryCode })

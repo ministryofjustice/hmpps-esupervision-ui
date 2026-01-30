@@ -21,12 +21,10 @@ generic-service:
     modsecurity_enabled: true
     modsecurity_github_team: stg-pathfinders
     modsecurity_snippet: |
-      SecGeoLookupDb app/dist/assets/geo/GeoIP.dat
-      SecRule REMOTE_ADDR "@geoLookup" "chain,id:22,drop,msg:'Non-GB IP address'"
-      SecRule GEO:COUNTRY_CODE "!@streq GB"
       SecRuleEngine DetectionOnly
       SecAuditEngine RelevantOnly
       SecRequestBodyAccess On
+      SecGeoLookupDb app/dist/assets/geo/GeoIP.dat
       SecDefaultAction "phase:2,pass,log,tag:github_team=stg-pathfinders,tag:namespace={{ .Release.Namespace }}"
 
   livenessProbe:

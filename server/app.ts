@@ -51,7 +51,7 @@ export default function createApp(services: Services): express.Application {
   app.use(storeFormDataInSession())
   app.use(populateValidationErrors())
 
-  app.use(restrictToUK)
+  // app.use(restrictToUK)
 
   app.use(routes())
 

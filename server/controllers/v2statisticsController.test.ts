@@ -64,7 +64,7 @@ describe('v2statisticsController', () => {
       expect(mockRes.render).toHaveBeenCalledWith(
         'pages/v2statistics/dashboard',
         expect.objectContaining({
-          date: '1/28/2026',
+          date: '28/01/2026',
           time: '12:02:00 PM',
           percentages: {
             activeUsers: '70.00%',

@@ -25,7 +25,7 @@ export const renderV2stats: RequestHandler = async (req, res, next) => {
     }
 
     const updatedAtDate = new Date(updatedAt)
-    const formattedDate = updatedAtDate.toLocaleDateString()
+    const formattedDate = updatedAtDate.toLocaleDateString('en-GB')
     const formattedTime = updatedAtDate.toLocaleTimeString()
 
     res.render('pages/v2statistics/dashboard', {

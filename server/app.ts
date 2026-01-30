@@ -21,7 +21,6 @@ import practitionersRoutes from './routes/practitionersRoutes'
 import featureFlags from './middleware/featureFlags'
 
 import type { Services } from './services'
-import restrictToUK from './middleware/restrictToUK'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -50,8 +49,6 @@ export default function createApp(services: Services): express.Application {
   app.use(bodyParser.json())
   app.use(storeFormDataInSession())
   app.use(populateValidationErrors())
-
-  // app.use(restrictToUK)
 
   app.use(routes())
 

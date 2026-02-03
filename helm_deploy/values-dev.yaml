@@ -17,6 +17,7 @@ generic-service:
     HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
     ESUPERVISION_API_URL: 'https://esupervision-api-dev.hmpps.service.justice.gov.uk'
+    V2_FEEDBACK_URL: 'https://probation-check-in-dev.hmpps.service.justice.gov.uk/feedback'
     ENVIRONMENT_NAME: DEV
     AUDIT_ENABLED: 'false'
     AUTHORISED_USER_ROLES: 'ROLE_ESUPERVISION__PRACTITIONER__RW'

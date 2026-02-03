@@ -23,12 +23,18 @@
       serviceName: serviceName
     })
   }}
+  {% set feedbackLink %}
+    <a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="nofollow" href="{{ feedbackUrl }}">
+      feedback (opens in a new tab)
+    </a>
+  {% endset %}
+
   {{
     govukPhaseBanner({
-    tag: {
-      text: "Private Beta"
-    },
-    html: 'This is a new service – your <a class="govuk-link govuk-link--no-visited-state" target="_blank" rel="nofollow" href="https://forms.office.com/pages/responsepage.aspx?id=KEeHxuZx_kGp4S6MNndq2GF5fsslU5tImfiqSSPf6JhUQko3QVg0MkVGRTVYV0dFMEJJUzBZUTIyVCQlQCN0PWcu&route=shorturl">feedback (opens in a new tab)</a> will help us to improve it.'
+      tag: {
+        text: "Private Beta"
+      },
+      html: 'This is a new service – your ' + feedbackLink + ' will help us to improve it.'
     })
   }}
 {% endblock %}

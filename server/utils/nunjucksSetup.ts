@@ -21,7 +21,7 @@ export default function nunjucksSetup(app: express.Express): void {
   app.locals.serviceName = 'Check in with your probation officer'
   app.locals.serviceNamePractitioner = 'Manage probation check ins'
   app.locals.supportEmailAddress = 'checkinwithprobation@justice.gov.uk'
-
+  app.locals.feedbackUrl = config.v2.feedbackUrl
   app.locals.environmentName = config.environmentName
   app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
   let assetManifest: Record<string, string> = {}

@@ -1,6 +1,5 @@
 import { RequestHandler } from 'express'
 import { services } from '../services'
-
 import { indexByLocation } from '../utils/indexByLocation'
 import aggregateCheckinNotificationStatusSummary from '../utils/notificationStatusAggregation'
 import formatDeviceTypeStats from '../utils/statistics'

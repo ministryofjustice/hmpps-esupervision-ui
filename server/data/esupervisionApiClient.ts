@@ -22,6 +22,7 @@ import PractitionerStats from './models/practitionerStats'
 import Stats from './models/stats'
 import OffenderInfoByContact from './models/offenderInfoByContact'
 import { CheckinEventType } from './models/checkinEvent'
+import V2Stats from './models/v2stats'
 
 /**
  * Specifies content types for possible upload locations for a checkin.
@@ -307,6 +308,15 @@ export default class EsupervisionApiClient extends RestClient {
     return this.get<Stats>(
       {
         path: '/v1/stats/checkins',
+      },
+      asSystem(),
+    )
+  }
+
+  async getV2Stats(): Promise<V2Stats> {
+    return this.get<V2Stats>(
+      {
+        path: '/v2/stats',
       },
       asSystem(),
     )

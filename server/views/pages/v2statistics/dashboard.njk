@@ -1,0 +1,147 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{% block content %}
+  <h1 class="govuk-heading-l">Check in with your probation officer data dashboard</h1>
+  <p class="govuk-body">Missing data is where tracking had not been implemented as service went live</p>
+  <p class="govuk body">This data was last updated on {{date}} at {{time}}</p>
+
+  {{ mojSubNavigation({
+  label: "Sub navigation",
+  items: [
+    {
+      text: "Overall",
+      href: "#1",
+      active: true
+    }, 
+    {
+      text: "Data by PDU",
+      href: "#2"
+    }
+  ]
+  })}}
+
+  {{ govukTable({
+  caption: "People on probation",
+  captionClasses: "govuk-table__caption--m",
+  head: [
+    {
+      text: ""
+    },
+    {
+      text: "Total",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+    },
+    {
+      text: "Percentage of people",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "Total number of people signed up to the service",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: stats.totalSignedUp
+      },
+      {
+        text: ""
+      }
+    ],
+    [
+      {
+        text: "Number of people actively using the service",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: stats.activeUsers
+      },
+      {
+        text: percentages.activeUsers
+      }
+    ],
+    [
+      {
+        text: "Number of people who have stopped using the service",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: stats.inactiveUsers
+      },
+      {
+        text: percentages.inactiveUsers
+      }
+    ]
+  ]
+  })}}
+
+  {{ govukTable({
+  caption: "Check ins",
+  captionClasses: "govuk-table__caption--m",
+  head: [
+    {
+      text: ""
+    },
+    {
+      text: "Total",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+    },
+    {
+      text: "Percentage of delivered check ins",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "Number of check ins completed",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: stats.completedCheckins
+      },
+      {
+        text: percentages.completedCheckins
+      }
+    ],
+    [
+      {
+        text: "Number of check ins not completed on time",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: stats.notCompletedOnTime
+      },
+      {
+        text: percentages.notCompletedCheckins
+      }
+    ],
+    [
+      {
+        text: "Average time to complete a check in",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: stats.avgHoursToComplete
+      },
+      {
+        text: ""
+      }
+    ],
+    [
+      {
+        text: "Average number of completed check ins per person",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: stats.avgCompletedCheckinsPerPerson
+      },
+      {
+        text: ""
+      }
+    ]
+  ]
+  })}}
+{% endblock %}

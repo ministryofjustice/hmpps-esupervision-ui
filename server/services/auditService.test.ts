@@ -1,6 +1,11 @@
 import AuditService, { Page } from './auditService'
 import HmppsAuditClient from '../data/hmppsAuditClient'
 
+jest.mock('../../logger', () => ({
+  info: jest.fn(),
+  error: jest.fn(),
+}))
+
 jest.mock('../data/hmppsAuditClient')
 
 describe('Audit service', () => {

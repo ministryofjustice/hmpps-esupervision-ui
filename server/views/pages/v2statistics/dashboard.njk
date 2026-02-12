@@ -4,8 +4,7 @@
 {% block content %}
   <h1 class="govuk-heading-l">Check in with your probation officer data dashboard</h1>
   <p class="govuk-body">Missing data is where tracking had not been implemented as service went live</p>
-  <p class="govuk body">This data was last updated on {{date}} at {{time}}</p>
-
+  <p class="govuk body">This data was last updated on {{ date }} at {{ time }}</p>
   {{ mojSubNavigation({
   label: "Sub navigation",
   items: [
@@ -143,5 +142,330 @@
       }
     ]
   ]
-  })}}
+  }) }}
+
+  {{ govukTable({
+  caption: "Number of responses to the feedback form",
+  captionClasses: "govuk-table__caption--m",
+  head: [
+    {
+      text: ""
+    },
+    {
+      text: "Total",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "Number of responses",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.feedbackTotal
+      }
+    ]
+  ]
+  }) }}
+
+  {{ govukTable({
+  caption: "How easy was it for the person on probation to use online check ins",
+  captionClasses: "govuk-table__caption--m",
+  head: [
+    {
+      text: ""
+    },
+    {
+      text: "Total",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+    },
+    {
+      text: "Percentage of responses",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "Very easy",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.howEasyCounts.veryEasy
+      },
+      {
+        text: feedbackStats.howEasyPct.veryEasy
+      }
+    ],
+    [
+       {
+        text: "Easy",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.howEasyCounts.easy
+      },
+      {
+        text: feedbackStats.howEasyPct.easy
+      }
+    ],
+    [
+       {
+        text: "Neither easy or difficult",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.howEasyCounts.neitherEasyOrDifficult
+      },
+      {
+        text: feedbackStats.howEasyPct.neitherEasyOrDifficult
+      }
+    ],
+    [
+       {
+        text: "Difficult",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.howEasyCounts.difficult
+      },
+      {
+        text: feedbackStats.howEasyPct.difficult
+      }
+    ],
+    [
+       {
+        text: "Very difficult",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.howEasyCounts.veryDifficult
+      },
+      {
+        text: feedbackStats.howEasyPct.veryDifficult
+      }
+    ],
+    [
+       {
+        text: "Not answered",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.howEasyCounts.notAnswered
+      },
+      {
+        text: ""
+      }
+    ]
+  ]
+  }) }}
+
+  {{ govukTable({
+  caption: "Does the person on probation believe they are getting the support they need from probation",
+  captionClasses: "govuk-table__caption--m",
+  head: [
+    {
+      text: ""
+    },
+    {
+      text: "Total",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+    },
+    {
+      text: "Percentage of responses",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "Yes",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.gettingSupportCounts.yes
+      },
+      {
+        text: feedbackStats.gettingSupportPct.yes
+      }
+    ],
+     [
+      {
+        text: "No",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.gettingSupportCounts.no
+      },
+      {
+        text: feedbackStats.gettingSupportPct.no
+      }
+    ],
+     [
+      {
+        text: "Not answered",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.gettingSupportCounts.notAnswered
+      },
+      {
+        text: ""
+      }
+    ]
+  ]
+  }) }}
+
+  {{ govukTable({
+  caption: "What parts of online check ins does the person think we could improve",
+  captionClasses: "govuk-table__caption--m",
+  head: [
+    {
+      text: ""
+    },
+    {
+      text: "Total",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+    },
+    {
+      text: "Percentage of responses",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "Finding out about online check ins",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.findingOutAboutCheckIns
+      },
+      {
+        text: feedbackStats.improvementsPct.findingOutAboutCheckIns
+      }
+    ],
+    [
+      {
+        text: "Being signed up to online check ins",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.beingSignedUpToCheckIns
+      },
+      {
+        text: feedbackStats.improvementsPct.beingSignedUpToCheckIns
+      }
+    ],
+    [
+      {
+        text: "Text or email notifications",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.textOrEmailNotifications
+      },
+      {
+        text: feedbackStats.improvementsPct.textOrEmailNotifications
+      }
+    ],
+    [
+      {
+        text: "Questions within the check in",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.checkInQuestions
+      },
+      {
+        text: feedbackStats.improvementsPct.checkInQuestions
+      }
+    ],
+    [
+      {
+        text: "Taking a video to check your identity",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.takingAVideo
+      },
+      {
+        text: feedbackStats.improvementsPct.takingAVideo
+      }
+    ],
+    [
+      {
+        text: "Getting help when something goes wrong",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.gettingHelp
+      },
+      {
+        text: feedbackStats.improvementsPct.gettingHelp
+      }
+    ],
+    [
+      {
+        text: "What happened after you told probation you needed support",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.whatHappenedAfterAskingForSupport
+      },
+      {
+        text: feedbackStats.improvementsPct.whatHappenedAfterAskingForSupport
+      }
+    ],
+    [
+      {
+        text: "What happened after you asked for contact from probation ",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.whatHappenedAfterAskingForContact
+      },
+      {
+        text: feedbackStats.improvementsPct.whatHappenedAfterAskingForContact
+      }
+    ],
+    [
+      {
+        text: "Something else",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.somethingElse
+      },
+      {
+        text: feedbackStats.improvementsPct.somethingElse
+      }
+    ],
+    [
+      {
+        text: "Nothing needs to improve",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.nothingNeedsImproving
+      },
+      {
+        text: feedbackStats.improvementsPct.nothingNeedsImproving
+      }
+    ],
+    [
+      {
+        text: "Not answered",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.improvementsCounts.notAnswered
+      },
+      {
+        text: ""
+      }
+    ]
+  ]
+  }) }}
 {% endblock %}

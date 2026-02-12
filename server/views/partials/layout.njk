@@ -29,12 +29,16 @@
     </a>
   {% endset %}
 
+  {% set bannerHtml %}
+    {% if not hideFeedbackLink %}
+      This is a new service – your {{ feedbackLink | safe }} will help us to improve it.
+    {% endif %}
+  {% endset %}
+
   {{
     govukPhaseBanner({
-      tag: {
-        text: "Private Beta"
-      },
-      html: 'This is a new service – your ' + feedbackLink + ' will help us to improve it.'
+      tag: { text: "Private Beta" },
+      html: bannerHtml | safe
     })
   }}
 {% endblock %}

@@ -41,16 +41,3 @@ export interface V2FeedbackStats {
 }
 
 export type V2StatsWithFeedback = V2Stats & V2FeedbackStats
-
-export interface V2FeedbackStatsFormatted {
-  feedbackTotal: number
-
-  howEasyCounts: Record<HowEasy, number>
-  howEasyPct: Record<HowEasy, string>
-
-  gettingSupportCounts: Record<GettingSupport, number>
-  gettingSupportPct: Record<GettingSupport, string>
-
-  improvementsCounts: Record<Improvement, number>
-  improvementsPct: Record<Improvement, string>
-}

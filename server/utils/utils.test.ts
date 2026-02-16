@@ -1,5 +1,10 @@
 import { convertToTitleCase, initialiseName } from './utils'
 
+jest.mock('../../logger', () => ({
+  info: jest.fn(),
+  error: jest.fn(),
+}))
+
 describe('convert to title case', () => {
   it.each([
     [null, null, ''],

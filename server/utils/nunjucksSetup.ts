@@ -150,4 +150,10 @@ export default function nunjucksSetup(app: express.Express): void {
 
     return ''
   })
+
+  njkEnv.addFilter('percentage', (value: number, decimals = 1) => {
+    if (value === null || value === undefined) return `0.00%`
+
+    return `${(value * 100).toFixed(decimals)}%`
+  })
 }

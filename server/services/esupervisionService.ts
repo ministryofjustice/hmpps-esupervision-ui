@@ -17,7 +17,7 @@ import PractitionerStats from '../data/models/practitionerStats'
 import Stats from '../data/models/stats'
 import OffenderInfoByContact from '../data/models/offenderInfoByContact'
 import { CheckinEventType } from '../data/models/checkinEvent'
-import V2Stats from '../data/models/v2stats'
+import { V2StatsWithFeedback } from '../data/models/v2stats'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -116,7 +116,7 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getCheckinStats()
   }
 
-  getV2Stats(): Promise<V2Stats> {
+  getV2Stats(): Promise<V2StatsWithFeedback> {
     return this.esupervisionApiClient.getV2Stats()
   }
 }

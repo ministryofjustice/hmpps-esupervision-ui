@@ -1,5 +1,10 @@
 import generateOauthClientToken from './clientCredentials'
 
+jest.mock('../../logger', () => ({
+  info: jest.fn(),
+  error: jest.fn(),
+}))
+
 describe('generateOauthClientToken', () => {
   it('Token can be generated', () => {
     const base64Creds = Buffer.from('bob:secret').toString('base64')

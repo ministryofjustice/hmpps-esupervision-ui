@@ -2,6 +2,11 @@ import type { Express } from 'express'
 import request from 'supertest'
 import { appWithAllRoutes } from './routes/testutils/appSetup'
 
+jest.mock('../logger', () => ({
+  info: jest.fn(),
+  error: jest.fn(),
+}))
+
 let app: Express
 
 beforeEach(() => {

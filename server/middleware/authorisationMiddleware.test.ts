@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken'
 import type { Request, Response } from 'express'
-
 import authorisationMiddleware from './authorisationMiddleware'
+
+jest.mock('../../logger', () => ({
+  info: jest.fn(),
+  error: jest.fn(),
+}))
 
 function createToken(authorities: string[]) {
   const payload = {

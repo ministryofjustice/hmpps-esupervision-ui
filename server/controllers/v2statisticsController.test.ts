@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getFeedbackStats, hoursToHoursAndMinutes, renderV2stats } from './v2statisticsController'
+import { hoursToHoursAndMinutes, renderV2stats } from './v2statisticsController'
 import { services } from '../services'
 import { V2StatsWithFeedback } from '../data/models/v2stats'
 
@@ -113,50 +113,6 @@ describe('v2statisticsController', () => {
           date: '28/01/2026',
           feedbackStats: {
             feedbackTotal: 0,
-            gettingSupportCounts: { no: 0, notAnswered: 0, yes: 0 },
-            gettingSupportPct: { no: 0, notAnswered: 0, yes: 0 },
-            howEasyCounts: {
-              difficult: 0,
-              easy: 0,
-              neitherEasyOrDifficult: 0,
-              notAnswered: 0,
-              veryDifficult: 0,
-              veryEasy: 0,
-            },
-            howEasyPct: {
-              difficult: 0,
-              easy: 0,
-              neitherEasyOrDifficult: 0,
-              notAnswered: 0,
-              veryDifficult: 0,
-              veryEasy: 0,
-            },
-            improvementsCounts: {
-              beingSignedUpToCheckIns: 0,
-              checkInQuestions: 0,
-              findingOutAboutCheckIns: 0,
-              gettingHelp: 0,
-              notAnswered: 0,
-              nothingNeedsImproving: 0,
-              somethingElse: 0,
-              takingAVideo: 0,
-              textOrEmailNotifications: 0,
-              whatHappenedAfterAskingForContact: 0,
-              whatHappenedAfterAskingForSupport: 0,
-            },
-            improvementsPct: {
-              beingSignedUpToCheckIns: 0,
-              checkInQuestions: 0,
-              findingOutAboutCheckIns: 0,
-              gettingHelp: 0,
-              notAnswered: 0,
-              nothingNeedsImproving: 0,
-              somethingElse: 0,
-              takingAVideo: 0,
-              textOrEmailNotifications: 0,
-              whatHappenedAfterAskingForContact: 0,
-              whatHappenedAfterAskingForSupport: 0,
-            },
           },
           hideFeedbackLink: true,
           stats: {
@@ -191,24 +147,10 @@ describe('v2statisticsController', () => {
           date: '28/01/2026',
           feedbackStats: {
             feedbackTotal: 5,
-            gettingSupportCounts: { no: 1, notAnswered: 2, yes: 2 },
-            gettingSupportPct: { no: 0.3333, notAnswered: 0, yes: 0.6667 },
-            howEasyCounts: {
-              difficult: 0,
-              easy: 1,
-              neitherEasyOrDifficult: 0,
-              notAnswered: 2,
-              veryDifficult: 0,
-              veryEasy: 2,
-            },
-            howEasyPct: {
-              difficult: 0,
-              easy: 0.3333,
-              neitherEasyOrDifficult: 0,
-              notAnswered: 0,
-              veryDifficult: 0,
-              veryEasy: 0.6667,
-            },
+            gettingSupportCounts: { no: 1, notAnswered: 2, yes: 2 }, // These objects do not need to have all the keys as they are defaulted in njk
+            gettingSupportPct: { no: 0.3333, yes: 0.6667 },
+            howEasyCounts: { easy: 1, notAnswered: 2, veryEasy: 2 },
+            howEasyPct: { easy: 0.3333, veryEasy: 0.6667 },
             improvementsCounts: {
               beingSignedUpToCheckIns: 2,
               checkInQuestions: 1,
@@ -227,7 +169,6 @@ describe('v2statisticsController', () => {
               checkInQuestions: 0.3333,
               findingOutAboutCheckIns: 0.6667,
               gettingHelp: 0.3333,
-              notAnswered: 0,
               nothingNeedsImproving: 0.3333,
               somethingElse: 0.3333,
               takingAVideo: 0.3333,
@@ -296,115 +237,6 @@ describe('v2statisticsController', () => {
 
       expect(mockNext).toHaveBeenCalledWith(error)
       expect(mockRes.render).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('getFeedbackStats', () => {
-    test('formats stats correctly with full data', () => {
-      const result = getFeedbackStats(v2statsWithFeedback)
-
-      expect(result).toEqual({
-        feedbackTotal: 5,
-        howEasyCounts: {
-          difficult: 0,
-          easy: 1,
-          neitherEasyOrDifficult: 0,
-          notAnswered: 2,
-          veryDifficult: 0,
-          veryEasy: 2,
-        },
-        howEasyPct: {
-          difficult: 0,
-          easy: 0.3333,
-          neitherEasyOrDifficult: 0,
-          notAnswered: 0,
-          veryDifficult: 0,
-          veryEasy: 0.6667,
-        },
-        gettingSupportCounts: {
-          no: 1,
-          notAnswered: 2,
-          yes: 2,
-        },
-        gettingSupportPct: {
-          no: 0.3333,
-          notAnswered: 0,
-          yes: 0.6667,
-        },
-        improvementsCounts: {
-          beingSignedUpToCheckIns: 2,
-          checkInQuestions: 1,
-          findingOutAboutCheckIns: 2,
-          notAnswered: 2,
-          nothingNeedsImproving: 1,
-          somethingElse: 1,
-          takingAVideo: 1,
-          whatHappenedAfterAskingForContact: 1,
-          whatHappenedAfterAskingForSupport: 1,
-          gettingHelp: 1,
-          textOrEmailNotifications: 1,
-        },
-        improvementsPct: {
-          beingSignedUpToCheckIns: 0.6667,
-          checkInQuestions: 0.3333,
-          findingOutAboutCheckIns: 0.6667,
-          gettingHelp: 0.3333,
-          notAnswered: 0,
-          nothingNeedsImproving: 0.3333,
-          somethingElse: 0.3333,
-          takingAVideo: 0.3333,
-          textOrEmailNotifications: 0.3333,
-          whatHappenedAfterAskingForContact: 0.3333,
-          whatHappenedAfterAskingForSupport: 0.3333,
-        },
-      })
-    })
-
-    test('defaults feedbackTotal to 0 when missing', () => {
-      const result = getFeedbackStats({
-        ...v2statsWithFeedback,
-        howEasyCounts: {},
-        howEasyPct: {},
-        gettingSupportCounts: {},
-        gettingSupportPct: {},
-        improvementsCounts: {},
-        improvementsPct: {},
-        feedbackTotal: 0,
-      })
-
-      expect(result.feedbackTotal).toBe(0)
-    })
-
-    test('fills in missing options with 0 counts', () => {
-      const input = {
-        feedbackTotal: 2,
-        howEasyCounts: {
-          veryEasy: 2,
-        },
-        howEasyPct: {
-          veryEasy: 1,
-        },
-        gettingSupportCounts: {
-          yes: 2,
-        },
-        gettingSupportPct: {
-          yes: 1,
-        },
-        improvementsCounts: {},
-        improvementsPct: {},
-      }
-
-      const result = getFeedbackStats({ ...v2statsWithFeedback, ...input })
-
-      expect(result.howEasyCounts.veryEasy).toEqual(2)
-      expect(result.howEasyCounts.easy).toEqual(0)
-      expect(result.howEasyCounts.veryDifficult).toEqual(0)
-
-      expect(result.gettingSupportCounts).toEqual({
-        yes: 2,
-        no: 0,
-        notAnswered: 0,
-      })
     })
   })
 })

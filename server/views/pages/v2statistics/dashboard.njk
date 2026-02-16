@@ -163,7 +163,7 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.feedbackTotal
+        text: feedbackStats.feedbackTotal | default(0)
       }
     ]
   ]
@@ -192,10 +192,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.howEasyCounts.veryEasy
+        text: feedbackStats.howEasyCounts.veryEasy | default(0)
       },
       {
-        text: feedbackStats.howEasyPct.veryEasy | percentage(2)
+        text: feedbackStats.howEasyPct.veryEasy | default(0) | percentage(2)
       }
     ],
     [
@@ -204,10 +204,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.howEasyCounts.easy
+        text: feedbackStats.howEasyCounts.easy | default(0)
       },
       {
-        text: feedbackStats.howEasyPct.easy | percentage(2)
+        text: feedbackStats.howEasyPct.easy | default(0) | percentage(2)
       }
     ],
     [
@@ -216,10 +216,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.howEasyCounts.neitherEasyOrDifficult
+        text: feedbackStats.howEasyCounts.neitherEasyOrDifficult | default(0)
       },
       {
-        text: feedbackStats.howEasyPct.neitherEasyOrDifficult | percentage(2)
+        text: feedbackStats.howEasyPct.neitherEasyOrDifficult | default(0) | percentage(2)
       }
     ],
     [
@@ -228,10 +228,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.howEasyCounts.difficult
+        text: feedbackStats.howEasyCounts.difficult | default(0)
       },
       {
-        text: feedbackStats.howEasyPct.difficult | percentage(2)
+        text: feedbackStats.howEasyPct.difficult | default(0) | percentage(2)
       }
     ],
     [
@@ -240,10 +240,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.howEasyCounts.veryDifficult
+        text: feedbackStats.howEasyCounts.veryDifficult | default(0)
       },
       {
-        text: feedbackStats.howEasyPct.veryDifficult | percentage(2)
+        text: feedbackStats.howEasyPct.veryDifficult | default(0) | percentage(2)
       }
     ],
     [
@@ -252,7 +252,7 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.howEasyCounts.notAnswered
+        text: feedbackStats.howEasyCounts.notAnswered | default(0)
       },
       {
         text: ""
@@ -284,10 +284,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.gettingSupportCounts.yes
+        text: feedbackStats.gettingSupportCounts.yes | default(0)
       },
       {
-        text: feedbackStats.gettingSupportPct.yes | percentage(2)
+        text: feedbackStats.gettingSupportPct.yes | default(0) | percentage(2)
       }
     ],
      [
@@ -296,10 +296,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.gettingSupportCounts.no
+        text: feedbackStats.gettingSupportCounts.no | default(0)
       },
       {
-        text: feedbackStats.gettingSupportPct.no | percentage(2)
+        text: feedbackStats.gettingSupportPct.no | default(0) | percentage(2)
       }
     ],
      [
@@ -308,7 +308,7 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.gettingSupportCounts.notAnswered
+        text: feedbackStats.gettingSupportCounts.notAnswered | default(0)
       },
       {
         text: ""
@@ -340,10 +340,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.findingOutAboutCheckIns
+        text: feedbackStats.improvementsCounts.findingOutAboutCheckIns | default(0)
       },
       {
-        text: feedbackStats.improvementsPct.findingOutAboutCheckIns | percentage(2)
+        text: feedbackStats.improvementsPct.findingOutAboutCheckIns | default(0) | percentage(2)
       }
     ],
     [
@@ -352,10 +352,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.beingSignedUpToCheckIns
+        text: feedbackStats.improvementsCounts.beingSignedUpToCheckIns | default(0)
       },
       {
-        text: feedbackStats.improvementsPct.beingSignedUpToCheckIns | percentage(2)
+        text: feedbackStats.improvementsPct.beingSignedUpToCheckIns | default(0) | percentage(2)
       }
     ],
     [
@@ -364,10 +364,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.textOrEmailNotifications
+        text: feedbackStats.improvementsCounts.textOrEmailNotifications | default(0)
       },
       {
-        text: feedbackStats.improvementsPct.textOrEmailNotifications | percentage(2)
+        text: feedbackStats.improvementsPct.textOrEmailNotifications | default(0) | percentage(2)
       }
     ],
     [
@@ -376,10 +376,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.checkInQuestions
+        text: feedbackStats.improvementsCounts.checkInQuestions | default(0)
       },
       {
-        text: feedbackStats.improvementsPct.checkInQuestions | percentage(2)
+        text: feedbackStats.improvementsPct.checkInQuestions | default(0) | percentage(2)
       }
     ],
     [
@@ -388,10 +388,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.takingAVideo
+        text: feedbackStats.improvementsCounts.takingAVideo | default(0)
       },
       {
-        text: feedbackStats.improvementsPct.takingAVideo | percentage(2)
+        text: feedbackStats.improvementsPct.takingAVideo | default(0) | percentage(2)
       }
     ],
     [
@@ -400,10 +400,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.gettingHelp
+        text: feedbackStats.improvementsCounts.gettingHelp | default(0)
       },
       {
-        text: feedbackStats.improvementsPct.gettingHelp | percentage(2)
+        text: feedbackStats.improvementsPct.gettingHelp | default(0) | percentage(2)
       }
     ],
     [
@@ -412,10 +412,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.whatHappenedAfterAskingForSupport
+        text: feedbackStats.improvementsCounts.whatHappenedAfterAskingForSupport | default(0)
       },
       {
-        text: feedbackStats.improvementsPct.whatHappenedAfterAskingForSupport | percentage(2)
+        text: feedbackStats.improvementsPct.whatHappenedAfterAskingForSupport | default(0) | percentage(2)
       }
     ],
     [
@@ -424,7 +424,7 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.whatHappenedAfterAskingForContact
+        text: feedbackStats.improvementsCounts.whatHappenedAfterAskingForContact | default(0)
       },
       {
         text: feedbackStats.improvementsPct.whatHappenedAfterAskingForContact | percentage(2)
@@ -436,10 +436,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.somethingElse
+        text: feedbackStats.improvementsCounts.somethingElse | default(0)
       },
       {
-        text: feedbackStats.improvementsPct.somethingElse | percentage(2)
+        text: feedbackStats.improvementsPct.somethingElse | default(0) | percentage(2)
       }
     ],
     [
@@ -448,10 +448,10 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.nothingNeedsImproving
+        text: feedbackStats.improvementsCounts.nothingNeedsImproving | default(0)
       },
       {
-        text: feedbackStats.improvementsPct.nothingNeedsImproving | percentage(2)
+        text: feedbackStats.improvementsPct.nothingNeedsImproving | default(0) | percentage(2)
       }
     ],
     [
@@ -460,7 +460,7 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: feedbackStats.improvementsCounts.notAnswered
+        text: feedbackStats.improvementsCounts.notAnswered | default(0)
       },
       {
         text: ""

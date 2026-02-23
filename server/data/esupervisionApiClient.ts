@@ -22,7 +22,7 @@ import PractitionerStats from './models/practitionerStats'
 import Stats from './models/stats'
 import OffenderInfoByContact from './models/offenderInfoByContact'
 import { CheckinEventType } from './models/checkinEvent'
-import { V2StatsResponse, V2StatsWithFeedback } from './models/v2stats'
+import { V2StatsResponse } from './models/v2stats'
 
 /**
  * Specifies content types for possible upload locations for a checkin.

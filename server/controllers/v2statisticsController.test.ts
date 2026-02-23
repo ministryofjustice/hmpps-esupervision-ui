@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderV2stats, renderV2statsByPdu } from './v2statisticsController'
 import { services } from '../services'
-import { V2StatsResponse, V2StatsWithFeedback } from '../data/models/v2stats'
+import { V2StatsResponse } from '../data/models/v2stats'
 
 jest.mock('../services')
 

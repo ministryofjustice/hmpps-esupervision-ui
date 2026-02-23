@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { renderV2stats, renderV2statsByPdu } from './v2statisticsController'
+import { renderV2stats, renderV2statsByProvider } from './v2statisticsController'
 import { services } from '../services'
 import { V2StatsResponse } from '../data/models/v2stats'
 
@@ -59,10 +59,10 @@ describe('v2statisticsController', () => {
         whatHappenedAfterAskingForSupport: 0.3333,
       },
     },
-    pdus: [
+    providers: [
       {
-        pduCode: 'ALLUAT',
-        pduDescription: 'Unallocated',
+        providerCode: 'ALLUAT',
+        providerDescription: 'Unallocated',
         totalSignedUp: 2,
         activeUsers: 2,
         inactiveUsers: 0,
@@ -78,8 +78,8 @@ describe('v2statisticsController', () => {
         updatedAt: '2026-02-20T13:50:25.032606Z',
       },
       {
-        pduCode: 'FAKEPDU',
-        pduDescription: 'Fakeville',
+        providerCode: 'FAKEPROVIDER',
+        providerDescription: 'Fakeville',
         totalSignedUp: 33,
         activeUsers: 30,
         inactiveUsers: 3,
@@ -147,7 +147,7 @@ describe('v2statisticsController', () => {
     })
   })
 
-  describe('renderV2statsByPdu', () => {
+  describe('renderV2statsByProvider', () => {
     const mockReq = {} as any
     const mockNext = jest.fn()
 
@@ -159,17 +159,17 @@ describe('v2statisticsController', () => {
       jest.clearAllMocks()
     })
 
-    it('separates out the pdu stats, and passes it to the page in a separate key', async () => {
+    it('separates out the provider stats, and passes it to the page in a separate key', async () => {
       mockGetV2Stats.mockResolvedValue(v2stats)
 
-      await renderV2statsByPdu(mockReq, mockRes, mockNext)
+      await renderV2statsByProvider(mockReq, mockRes, mockNext)
 
       expect(mockRes.render).toHaveBeenCalledWith(
-        'pages/v2statistics/pduDashboard',
+        'pages/v2statistics/providerDashboard',
         expect.objectContaining({
           date: '28/01/2026',
           totalStats: v2stats.total,
-          pduStats: v2stats.pdus,
+          providerStats: v2stats.providers,
           hideFeedbackLink: true,
           time: '12:02:00 PM',
         }),

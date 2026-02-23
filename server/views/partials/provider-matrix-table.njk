@@ -1,7 +1,7 @@
-{% macro pduMatrixTable(params) %}
+{% macro providerMatrixTable(params) %}
   {% set title = params.title %}
   {% set totalStats = params.totalStats %}
-  {% set pduStats = params.pduStats %}
+  {% set providerStats = params.providerStats %}
   {% set rows = params.rows %}
   {% set ariaLabel = params.ariaLabel or title %}
 
@@ -18,8 +18,8 @@
           <th scope="col" class="govuk-table__header esup-matrix__group" colspan="2">Total</th>
           <th class="esup-matrix__spacer" aria-hidden="true"></th>
 
-          {% for pdu in pduStats %}
-            <th scope="col" class="govuk-table__header esup-matrix__group" colspan="2">{{ pdu.pduDescription }}</th>
+          {% for provider in providerStats %}
+            <th scope="col" class="govuk-table__header esup-matrix__group" colspan="2">{{ provider.providerDescription }}</th>
             {% if not loop.last %}
               <th class="esup-matrix__spacer" aria-hidden="true"></th>
             {% endif %}
@@ -32,7 +32,7 @@
           <th scope="col" class="govuk-table__header esup-matrix__minihead">%</th>
           <th class="esup-matrix__spacer" aria-hidden="true"></th>
 
-          {% for pdu in pduStats %}
+          {% for provider in providerStats %}
             <th scope="col" class="govuk-table__header esup-matrix__minihead">No.</th>
             <th scope="col" class="govuk-table__header esup-matrix__minihead">%</th>
             {% if not loop.last %}
@@ -71,18 +71,18 @@
 
             <td class="esup-matrix__spacer" aria-hidden="true"></td>
 
-            {% for pdu in pduStats %}
+            {% for provider in providerStats %}
               <td class="govuk-table__cell esup-matrix__num">
                 {% if hoursAndMinutes %}
-                  {{ pdu[valueKey] | hoursToHoursAndMinutes }}
+                  {{ provider[valueKey] | hoursToHoursAndMinutes }}
                 {% else %}
-                  {{ pdu[valueKey] }}
+                  {{ provider[valueKey] }}
                 {% endif %}
               </td>
 
               <td class="govuk-table__cell esup-matrix__pct">
                 {% if pctKey %}
-                  {{ pdu[pctKey] | percentage(2) }}
+                  {{ provider[pctKey] | percentage(2) }}
                 {% else %}
                   —
                 {% endif %}

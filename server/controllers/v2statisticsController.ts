@@ -46,18 +46,18 @@ export const renderV2stats: RequestHandler = async (_req, res, next) => {
   }
 }
 
-export const renderV2statsByPdu: RequestHandler = async (_req, res, next) => {
+export const renderV2statsByProvider: RequestHandler = async (_req, res, next) => {
   try {
     const { esupervisionService } = services()
     const response: V2StatsResponse = await esupervisionService.getV2Stats()
-    const { total, pdus } = response
+    const { total, providers } = response
     const updatedAtDate = new Date(total.updatedAt)
     const formattedDate = updatedAtDate.toLocaleDateString('en-GB')
     const formattedTime = updatedAtDate.toLocaleTimeString()
 
-    res.render('pages/v2statistics/pduDashboard', {
+    res.render('pages/v2statistics/providerDashboard', {
       totalStats: total,
-      pduStats: pdus,
+      providerStats: providers,
       date: formattedDate,
       time: formattedTime,
       hideFeedbackLink: true,

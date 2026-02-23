@@ -125,3 +125,120 @@
   }
 }
 
+/* ---------------------------------------
+   Scroll container
+---------------------------------------- */
+
+.moj-scrollable-pane {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* ---------------------------------------
+   Table layout
+---------------------------------------- */
+
+.esup-matrix {
+  width: max-content;     /* allow table to grow wider than container */
+  min-width: 100%;        /* but still fill container if small */
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+
+/* ---------------------------------------
+   Base cell styling
+---------------------------------------- */
+
+.esup-matrix .govuk-table__header,
+.esup-matrix .govuk-table__cell {
+  border-bottom: 1px solid #d8dde0;  /* subtle horizontal rule */
+  vertical-align: top;
+}
+
+
+/* ---------------------------------------
+   Sticky first column (question text)
+---------------------------------------- */
+
+.esup-matrix__question-col,
+.esup-matrix__rowhead {
+  position: sticky;
+  left: 0;
+  background: #ffffff;     /* prevent content bleeding through */
+  z-index: 2;
+}
+
+/* Make the top-left header sit above everything */
+.esup-matrix__question-col {
+  z-index: 3;
+}
+
+
+/* Control question column width */
+.esup-matrix__question-col,
+.esup-matrix__rowhead {
+  line-height: 1.2;
+  padding-right: 20px;
+}
+
+
+/* ---------------------------------------
+   Group headers (Total, PDU1, etc)
+---------------------------------------- */
+
+.esup-matrix__group {
+  text-align: center;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+
+/* ---------------------------------------
+   "No." and "%" subheaders
+---------------------------------------- */
+
+.esup-matrix__subhead .govuk-table__header {
+  font-weight: 700;
+}
+
+.esup-matrix__minihead {
+  text-align: center;
+  white-space: nowrap;
+}
+
+
+/* ---------------------------------------
+   Data cells
+---------------------------------------- */
+
+.esup-matrix__num,
+.esup-matrix__pct {
+  text-align: center;
+  white-space: nowrap;
+}
+
+
+/* ---------------------------------------
+   Spacer columns between PDU groups
+---------------------------------------- */
+
+.esup-matrix__spacer {
+  width: 20px;          /* controls gap size between groups */
+  min-width: 20px;
+  padding: 0;
+  border-bottom: 1px solid #d8dde0;
+  background: #ffffff;
+}
+
+
+/* ---------------------------------------
+   Optional: tidy up heading spacing
+---------------------------------------- */
+
+.esup-matrix + .govuk-table__caption {
+  margin-bottom: 8px;
+}
+
+

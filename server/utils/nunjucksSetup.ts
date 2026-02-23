@@ -156,4 +156,12 @@ export default function nunjucksSetup(app: express.Express): void {
 
     return `${(value * 100).toFixed(decimals)}%`
   })
+
+  njkEnv.addFilter('hoursToHoursAndMinutes', (hours: number): string => {
+    const totalMinutes = Math.round(hours * 60)
+    const h = Math.floor(totalMinutes / 60)
+    const m = totalMinutes % 60
+
+    return `${h}h ${m}m`
+  })
 }

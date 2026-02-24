@@ -48,9 +48,9 @@ export interface ProviderInfo {
 
 export type V2StatsWithFeedback = V2Stats & V2FeedbackStats
 
-export type V2providerStats = V2Stats & ProviderInfo
+export type V2ProviderStats = V2Stats & ProviderInfo
 
 export interface V2StatsResponse {
   total: V2StatsWithFeedback
-  providers: V2providerStats[]
+  providers: V2ProviderStats[]
 }

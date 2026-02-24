@@ -1,14 +1,6 @@
 import { RequestHandler } from 'express'
 import { services } from '../services'
-import { V2FeedbackStats, V2StatsWithFeedback } from '../data/models/v2stats'
-
-export const hoursToHoursAndMinutes = (hours: number): string => {
-  const totalMinutes = Math.round(hours * 60)
-  const h = Math.floor(totalMinutes / 60)
-  const m = totalMinutes % 60
-
-  return `${h}h ${m}m`
-}
+import { V2FeedbackStats, V2StatsResponse, V2StatsWithFeedback } from '../data/models/v2stats'
 
 const getFeedbackStats = (v2Stats: V2StatsWithFeedback): V2FeedbackStats => {
   const {
@@ -32,19 +24,40 @@ const getFeedbackStats = (v2Stats: V2StatsWithFeedback): V2FeedbackStats => {
   }
 }
 
-export const renderV2stats: RequestHandler = async (req, res, next) => {
+export const renderV2stats: RequestHandler = async (_req, res, next) => {
   try {
     const { esupervisionService } = services()
-    const v2stats: V2StatsWithFeedback = await esupervisionService.getV2Stats()
-    const feedbackStats = getFeedbackStats(v2stats)
-    const { updatedAt } = v2stats
-    const updatedAtDate = new Date(updatedAt)
+    const response: V2StatsResponse = await esupervisionService.getV2Stats()
+    const { total } = response
+    const feedbackStats = getFeedbackStats(total)
+    const updatedAtDate = new Date(total.updatedAt)
     const formattedDate = updatedAtDate.toLocaleDateString('en-GB')
     const formattedTime = updatedAtDate.toLocaleTimeString()
 
     res.render('pages/v2statistics/dashboard', {
       feedbackStats,
-      stats: { ...v2stats, avgHoursToComplete: hoursToHoursAndMinutes(v2stats.avgHoursToComplete) },
+      stats: total,
+      date: formattedDate,
+      time: formattedTime,
+      hideFeedbackLink: true,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const renderV2statsByProvider: RequestHandler = async (_req, res, next) => {
+  try {
+    const { esupervisionService } = services()
+    const response: V2StatsResponse = await esupervisionService.getV2Stats()
+    const { total, providers } = response
+    const updatedAtDate = new Date(total.updatedAt)
+    const formattedDate = updatedAtDate.toLocaleDateString('en-GB')
+    const formattedTime = updatedAtDate.toLocaleTimeString()
+
+    res.render('pages/v2statistics/providerDashboard', {
+      totalStats: total,
+      providerStats: providers,
       date: formattedDate,
       time: formattedTime,
       hideFeedbackLink: true,

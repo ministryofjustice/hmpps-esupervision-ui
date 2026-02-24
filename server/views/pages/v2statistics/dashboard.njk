@@ -10,12 +10,11 @@
   items: [
     {
       text: "Overall",
-      href: "#1",
       active: true
     }, 
     {
-      text: "Data by PDU",
-      href: "#2"
+      text: "Data by Region",
+      href: "/v2statistics/region"
     }
   ]
   })}}
@@ -123,7 +122,7 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: stats.avgHoursToComplete
+        text: stats.avgHoursToComplete | hoursToHoursAndMinutes()
       },
       {
         text: ""

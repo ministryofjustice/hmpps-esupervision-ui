@@ -40,4 +40,17 @@ export interface V2FeedbackStats {
   improvementsPct: Partial<Record<Improvement, number>>
 }
 
+export interface ProviderInfo {
+  providerCode: string
+  providerDescription: string
+  pctSignedUpOfTotal: number
+}
+
 export type V2StatsWithFeedback = V2Stats & V2FeedbackStats
+
+export type V2ProviderStats = V2Stats & ProviderInfo
+
+export interface V2StatsResponse {
+  total: V2StatsWithFeedback
+  providers: V2ProviderStats[]
+}

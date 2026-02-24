@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import { VerificationClient, AuthenticatedRequest } from '@ministryofjustice/hmpps-auth-clients'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import config from '../config'
-import { renderV2stats } from '../controllers/v2statisticsController'
+import { renderV2stats, renderV2statsByProvider } from '../controllers/v2statisticsController'
 import logger from '../../logger'
 
 export default function routes(): Router {
@@ -21,6 +21,8 @@ export default function routes(): Router {
   const get = (routePath: string | string[], handler: RequestHandler) => router.get(routePath, asyncMiddleware(handler))
 
   get('/', renderV2stats)
+
+  get('/region', renderV2statsByProvider)
 
   return router
 }

@@ -1,0 +1,77 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{% from "../../partials/provider-matrix-table.njk" import providerMatrixTable %}
+{% block content %}
+  <h1 class="govuk-heading-l">Check in with your probation officer data dashboard</h1>
+  <p class="govuk-body">Missing data is where tracking had not been implemented as service went live</p>
+  <p class="govuk body">This data was last updated on {{ date }} at {{ time }}</p>
+
+    {{ mojSubNavigation({
+    label: "Sub navigation",
+    items: [
+      {
+        text: "Overall",
+        href: "/v2statistics"
+      }, 
+      {
+        text: "Data by Region",
+        active: true
+      }
+    ]
+    }) }}
+
+  {% set peopleOnProbationRows = [
+  {
+    label: "Total number of<br>people signed up to<br>the service",
+    valueKey: "totalSignedUp",
+    pctKey: "pctSignedUpOfTotal"
+  },
+  {
+    label: "Number of people<br>actively using the<br>service",
+    valueKey: "activeUsers",
+    pctKey: "pctActiveUsers"
+  },
+  {
+    label: "Number of people<br>who have stopped<br>using the service",
+    valueKey: "inactiveUsers",
+    pctKey: "pctInactiveUsers"
+  }
+] %}
+    {{ providerMatrixTable({
+    title: "People on probation",
+    totalStats: totalStats,
+    providerStats: providerStats,
+    rows: peopleOnProbationRows
+  }) }}
+
+  {% set checkInRows = [
+  {
+    label: "Number of check ins<br>completed",
+    valueKey: "completedCheckins",
+    pctKey: "pctCompletedCheckins"
+  },
+  {
+    label: "Number of check ins<br>not completed on<br>time",
+    valueKey: "notCompletedOnTime",
+    pctKey: "pctExpiredCheckins"
+  },
+  {
+    label: "Average time to<br>complete a check in",
+    valueKey: "avgHoursToComplete",
+    hoursAndMinutes: true,
+    pctKey: ""
+  },
+  {
+    label: "Average number of<br>completed check ins<br>per person",
+    valueKey: "avgCompletedCheckinsPerPerson",
+    pctKey: ""
+  }
+] %}
+  {{ providerMatrixTable({
+  title: "Check ins",
+  totalStats: totalStats,
+  providerStats: providerStats,
+  rows: checkInRows
+}) }}
+{% endblock %}

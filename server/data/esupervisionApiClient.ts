@@ -22,7 +22,7 @@ import PractitionerStats from './models/practitionerStats'
 import Stats from './models/stats'
 import OffenderInfoByContact from './models/offenderInfoByContact'
 import { CheckinEventType } from './models/checkinEvent'
-import { V2StatsResponse } from './models/v2stats'
+import { V2StatsResponse, YearMonth } from './models/v2stats'
 
 /**
  * Specifies content types for possible upload locations for a checkin.
@@ -313,10 +313,19 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  async getV2Stats(): Promise<V2StatsResponse> {
+  async getV2StatsForOneMonth(yearMonth: YearMonth): Promise<V2StatsResponse> {
     return this.get<V2StatsResponse>(
       {
-        path: '/v2/stats',
+        path: `/v2/stats?month=${yearMonth}`,
+      },
+      asSystem(),
+    )
+  }
+
+  async getV2StatsBetweenDateRange(fromMonth: YearMonth, toMonth: YearMonth): Promise<V2StatsResponse> {
+    return this.get<V2StatsResponse>(
+      {
+        path: `/v2/stats?fromMonth=${fromMonth}&toMonth=${toMonth}`,
       },
       asSystem(),
     )

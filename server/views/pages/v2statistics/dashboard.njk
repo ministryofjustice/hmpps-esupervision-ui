@@ -1,11 +1,58 @@
 {% extends "../../partials/layout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% block content %}
   <h1 class="govuk-heading-l">Check in with your probation officer data dashboard</h1>
   <p class="govuk-body">Missing data is where tracking had not been implemented as service went live</p>
   <p class="govuk body">This data was last updated on {{ date }} at {{ time }}</p>
-  {{ mojSubNavigation({
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          {
+            text: errors.monthRange,
+            href: "#monthFrom"
+          }
+        ]
+      }) }}
+  {% endif %}
+  {% set monthRangeError = null %}
+  {% if errors and errors.monthRange %}
+    {% set monthRangeError = { text: errors.monthRange } %}
+  {% endif %}
+  <form method="get" action="{{ formAction }}">
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          {{ govukSelect({
+              id: "monthFrom",
+              name: "monthFrom",
+              label: { text: "From" },
+              items: fromMonthOptions,
+              errorMessage: monthRangeError
+            }) }}
+        </div>
+        <div class="govuk-grid-column-one-quarter">
+          {{ govukSelect({
+              id: "monthTo",
+              name: "monthTo",
+              label: { text: "To" },
+              items: toMonthOptions
+            }) }}
+        </div>
+        <div class="govuk-grid-column-one-half">
+          <div class="govuk-button-group">
+            {{ govukButton({ text: "Apply filters", classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-6" }) }}
+            {{ govukButton({ text: "Reset filters", classes: "govuk-button--secondary govuk-!-margin-bottom-0 govuk-!-margin-top-6", href: "/v2statistics" }) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+    {{ mojSubNavigation({
   label: "Sub navigation",
   items: [
     {
@@ -14,12 +61,11 @@
     }, 
     {
       text: "Data by Region",
-      href: "/v2statistics/region"
+      href: "/v2statistics/region?monthFrom=" + monthFrom + "&monthTo=" + monthTo
     }
   ]
-  })}}
-
-  {{ govukTable({
+  }) }}
+    {{ govukTable({
   caption: "People on probation",
   captionClasses: "govuk-table__caption--m",
   head: [
@@ -73,9 +119,8 @@
       }
     ]
   ]
-  })}}
-
-  {{ govukTable({
+  }) }}
+    {{ govukTable({
   caption: "Check ins",
   captionClasses: "govuk-table__caption--m",
   head: [
@@ -142,8 +187,7 @@
     ]
   ]
   }) }}
-
-  {{ govukTable({
+    {{ govukTable({
   caption: "Number of responses to the feedback form",
   captionClasses: "govuk-table__caption--m",
   head: [
@@ -167,8 +211,7 @@
     ]
   ]
   }) }}
-
-  {{ govukTable({
+    {{ govukTable({
   caption: "How easy was it for the person on probation to use online check ins",
   captionClasses: "govuk-table__caption--m",
   head: [
@@ -259,8 +302,7 @@
     ]
   ]
   }) }}
-
-  {{ govukTable({
+    {{ govukTable({
   caption: "Does the person on probation believe they are getting the support they need from probation",
   captionClasses: "govuk-table__caption--m",
   head: [
@@ -315,8 +357,7 @@
     ]
   ]
   }) }}
-
-  {{ govukTable({
+    {{ govukTable({
   caption: "What parts of online check ins does the person think we could improve",
   captionClasses: "govuk-table__caption--m",
   head: [
@@ -467,4 +508,4 @@
     ]
   ]
   }) }}
-{% endblock %}
+  {% endblock %}

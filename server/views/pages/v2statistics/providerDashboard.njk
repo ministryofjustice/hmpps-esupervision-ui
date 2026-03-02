@@ -2,17 +2,63 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {% from "../../partials/provider-matrix-table.njk" import providerMatrixTable %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% block content %}
   <h1 class="govuk-heading-l">Check in with your probation officer data dashboard</h1>
   <p class="govuk-body">Missing data is where tracking had not been implemented as service went live</p>
   <p class="govuk body">This data was last updated on {{ date }} at {{ time }}</p>
-
-    {{ mojSubNavigation({
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: errors.monthRange,
+          href: "#monthFrom"
+        }
+      ]
+    }) }}
+  {% endif %}
+  {% set monthRangeError = null %}
+  {% if errors and errors.monthRange %}
+    {% set monthRangeError = { text: errors.monthRange } %}
+  {% endif %}
+  <form method="get" action="{{ formAction }}">
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          {{ govukSelect({
+              id: "monthFrom",
+              name: "monthFrom",
+              label: { text: "From" },
+              items: fromMonthOptions,
+              errorMessage: monthRangeError
+            }) }}
+        </div>
+        <div class="govuk-grid-column-one-quarter">
+          {{ govukSelect({
+              id: "monthTo",
+              name: "monthTo",
+              label: { text: "To" },
+              items: toMonthOptions
+            }) }}
+        </div>
+        <div class="govuk-grid-column-one-half">
+          <div class="govuk-button-group">
+            {{ govukButton({ text: "Apply filters", classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-6" }) }}
+            {{ govukButton({ text: "Reset filters", classes: "govuk-button--secondary govuk-!-margin-bottom-0 govuk-!-margin-top-6", href: "/v2statistics/region" }) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  {{ mojSubNavigation({
     label: "Sub navigation",
     items: [
       {
         text: "Overall",
-        href: "/v2statistics"
+        href: "/v2statistics?monthFrom=" + monthFrom + "&monthTo=" + monthTo
       }, 
       {
         text: "Data by Region",
@@ -20,58 +66,62 @@
       }
     ]
     }) }}
-
-  {% set peopleOnProbationRows = [
-  {
-    label: "Total number of<br>people signed up to<br>the service",
-    valueKey: "totalSignedUp",
-    pctKey: "pctSignedUpOfTotal"
-  },
-  {
-    label: "Number of people<br>actively using the<br>service",
-    valueKey: "activeUsers",
-    pctKey: "pctActiveUsers"
-  },
-  {
-    label: "Number of people<br>who have stopped<br>using the service",
-    valueKey: "inactiveUsers",
-    pctKey: "pctInactiveUsers"
-  }
-] %}
+  {% if providerStats and providerStats.length > 0 %}
+    {% set peopleOnProbationRows = [
+    {
+      label: "Total number of<br>people signed up to<br>the service",
+      valueKey: "totalSignedUp",
+      pctKey: "pctSignedUpOfTotal"
+    },
+    {
+      label: "Number of people<br>actively using the<br>service",
+      valueKey: "activeUsers",
+      pctKey: "pctActiveUsers"
+    },
+    {
+      label: "Number of people<br>who have stopped<br>using the service",
+      valueKey: "inactiveUsers",
+      pctKey: "pctInactiveUsers"
+    }
+  ] %}
     {{ providerMatrixTable({
     title: "People on probation",
     totalStats: totalStats,
     providerStats: providerStats,
     rows: peopleOnProbationRows
   }) }}
-
-  {% set checkInRows = [
-  {
-    label: "Number of check ins<br>completed",
-    valueKey: "completedCheckins",
-    pctKey: "pctCompletedCheckins"
-  },
-  {
-    label: "Number of check ins<br>not completed on<br>time",
-    valueKey: "notCompletedOnTime",
-    pctKey: "pctExpiredCheckins"
-  },
-  {
-    label: "Average time to<br>complete a check in",
-    valueKey: "avgHoursToComplete",
-    hoursAndMinutes: true,
-    pctKey: ""
-  },
-  {
-    label: "Average number of<br>completed check ins<br>per person",
-    valueKey: "avgCompletedCheckinsPerPerson",
-    pctKey: ""
-  }
-] %}
-  {{ providerMatrixTable({
-  title: "Check ins",
-  totalStats: totalStats,
-  providerStats: providerStats,
-  rows: checkInRows
-}) }}
+    {% set checkInRows = [
+    {
+      label: "Number of check ins<br>completed",
+      valueKey: "completedCheckins",
+      pctKey: "pctCompletedCheckins"
+    },
+    {
+      label: "Number of check ins<br>not completed on<br>time",
+      valueKey: "notCompletedOnTime",
+      pctKey: "pctExpiredCheckins"
+    },
+    {
+      label: "Average time to<br>complete a check in",
+      valueKey: "avgHoursToComplete",
+      hoursAndMinutes: true,
+      pctKey: ""
+    },
+    {
+      label: "Average number of<br>completed check ins<br>per person",
+      valueKey: "avgCompletedCheckinsPerPerson",
+      pctKey: ""
+    }
+  ] %}
+    {{ providerMatrixTable({
+    title: "Check ins",
+    totalStats: totalStats,
+    providerStats: providerStats,
+    rows: checkInRows
+  }) }}
+  {% else %}
+    <div class="govuk-inset-text">
+      There is no data available for the selected date range. Try choosing a different month range using the filters above.
+    </div>
+  {% endif %}
 {% endblock %}

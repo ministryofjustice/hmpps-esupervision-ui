@@ -129,11 +129,11 @@
    Scroll container
 ---------------------------------------- */
 
+/* ensure the scrollbar is always visible */
 .moj-scrollable-pane {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow-x: scroll !important;
+  overflow-y: hidden;
 }
-
 
 /* ---------------------------------------
    Table layout
@@ -141,7 +141,7 @@
 
 .esup-matrix {
   width: max-content;     /* allow table to grow wider than container */
-  min-width: 100%;        /* but still fill container if small */
+  min-width: max-content;
   border-collapse: separate;
   border-spacing: 0;
 }

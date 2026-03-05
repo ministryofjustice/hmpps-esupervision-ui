@@ -17,6 +17,7 @@ import routes from './routes'
 import statisticsRoutes from './routes/statisticsRoutes'
 import submissionRoutes from './routes/submissionRoutes'
 import v2statisticsRoutes from './routes/v2statisticsRoutes'
+import checkinRoutes from './routes/resolveUrlRoutes'
 import practitionersRoutes from './routes/practitionersRoutes'
 import featureFlags from './middleware/featureFlags'
 
@@ -58,6 +59,7 @@ export default function createApp(services: Services): express.Application {
   app.use('/submission/:submissionId', submissionRoutes(services))
   app.use('/statistics', statisticsRoutes())
   app.use('/v2statistics', v2statisticsRoutes())
+  app.use('/resolve', checkinRoutes())
   app.use('/practitioners', practitionersRoutes())
   app.use('/practitioners', (req, res) => {
     res.status(404).render('pages/practitioners/not-found')

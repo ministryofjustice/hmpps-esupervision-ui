@@ -23,6 +23,7 @@ import Stats from './models/stats'
 import OffenderInfoByContact from './models/offenderInfoByContact'
 import { CheckinEventType } from './models/checkinEvent'
 import { V2StatsResponse, YearMonth } from './models/v2stats'
+import MediaUrlType from './models/mediaUrlType'
 
 /**
  * Specifies content types for possible upload locations for a checkin.
@@ -302,6 +303,50 @@ export default class EsupervisionApiClient extends RestClient {
       },
       asSystem(),
     )
+  }
+
+  async resolveUrl(
+    urlType: MediaUrlType,
+    uuid: string,
+    { snapshotIndex = 0 }: { snapshotIndex?: number },
+  ): Promise<string> {
+    type ProxiedUrl = { url: string }
+    let response: ProxiedUrl | null = null
+
+    switch (urlType) {
+      case MediaUrlType.CheckinSnapshot:
+        response = await this.get<ProxiedUrl>(
+          {
+            path: `/v2/offender_checkins/${uuid}/proxy/snapshot`,
+            query: { index: snapshotIndex },
+          },
+          asSystem(),
+        )
+        break
+      case MediaUrlType.CheckinVideo:
+        response = await this.get<ProxiedUrl>(
+          {
+            path: `/v2/offender_checkins/${uuid}/proxy/video`,
+          },
+          asSystem(),
+        )
+        break
+      case MediaUrlType.OffenderReferencePhoto:
+        response = await this.get<ProxiedUrl>(
+          {
+            path: `/v2/offenders/${uuid}/proxy/photo`,
+          },
+          asSystem(),
+        )
+        break
+      default:
+        throw Error(`Unhandled media type: ${urlType}`)
+    }
+
+    if (!response) {
+      throw new Error(`Failed to resolve URL for ${urlType} with UUID ${uuid}`)
+    }
+    return response.url
   }
 
   async getCheckinStats(): Promise<Stats> {

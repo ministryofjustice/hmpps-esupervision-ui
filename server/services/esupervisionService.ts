@@ -18,6 +18,7 @@ import Stats from '../data/models/stats'
 import OffenderInfoByContact from '../data/models/offenderInfoByContact'
 import { CheckinEventType } from '../data/models/checkinEvent'
 import { V2StatsResponse, YearMonth } from '../data/models/v2stats'
+import MediaUrlType from '../data/models/mediaUrlType'
 
 export default class EsupervisionService {
   constructor(private readonly esupervisionApiClient: EsupervisionApiClient) {}
@@ -110,6 +111,10 @@ export default class EsupervisionService {
 
   getOffenderCountByPractitioner(): Promise<PractitionerStats[]> {
     return this.esupervisionApiClient.getOffenderCountByPractitioner()
+  }
+
+  resolveUrl(urlType: MediaUrlType, uuid: string, { snapshotIndex = 0 }: { snapshotIndex?: number }): Promise<string> {
+    return this.esupervisionApiClient.resolveUrl(urlType, uuid, { snapshotIndex })
   }
 
   getCheckinStats(): Promise<Stats> {

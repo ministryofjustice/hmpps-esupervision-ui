@@ -5,12 +5,10 @@ import { V2StatsResponse } from '../data/models/v2stats'
 
 jest.mock('../services')
 
-const mockGetV2StatsForOneMonth = jest.fn()
 const mockGetV2StatsBetweenDateRange = jest.fn()
 
 ;(services as jest.Mock).mockReturnValue({
   esupervisionService: {
-    getV2StatsForOneMonth: mockGetV2StatsForOneMonth,
     getV2StatsBetweenDateRange: mockGetV2StatsBetweenDateRange,
   },
 })
@@ -129,8 +127,7 @@ describe('v2statisticsController', () => {
 
       await renderV2stats(mockReq, mockRes, mockNext)
 
-      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledWith('2025-08', '2026-02')
-      expect(mockGetV2StatsForOneMonth).not.toHaveBeenCalled()
+      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledWith('2025-08', '2026-03')
 
       expect(mockRes.render).toHaveBeenCalledWith(
         'pages/v2statistics/dashboard',
@@ -175,12 +172,10 @@ describe('v2statisticsController', () => {
 
     it('uses monthFrom/monthTo from query, and calls one-month service when monthFrom === monthTo', async () => {
       const mockReq = { query: { monthFrom: '2026-01', monthTo: '2026-01' } } as any
-      mockGetV2StatsForOneMonth.mockResolvedValue(v2stats)
 
       await renderV2stats(mockReq, mockRes, mockNext)
 
-      expect(mockGetV2StatsForOneMonth).toHaveBeenCalledWith('2026-01')
-      expect(mockGetV2StatsBetweenDateRange).not.toHaveBeenCalled()
+      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledWith('2026-01', '2026-02')
 
       expect(mockRes.render).toHaveBeenCalledWith(
         'pages/v2statistics/dashboard',
@@ -208,7 +203,6 @@ describe('v2statisticsController', () => {
 
       await renderV2stats(mockReq, mockRes, mockNext)
 
-      expect(mockGetV2StatsForOneMonth).not.toHaveBeenCalled()
       expect(mockGetV2StatsBetweenDateRange).not.toHaveBeenCalled()
 
       expect(mockRes.render).toHaveBeenCalledWith(
@@ -257,8 +251,7 @@ describe('v2statisticsController', () => {
 
       await renderV2statsByProvider(mockReq, mockRes, mockNext)
 
-      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledWith('2025-08', '2026-02')
-      expect(mockGetV2StatsForOneMonth).not.toHaveBeenCalled()
+      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledWith('2025-08', '2026-03')
 
       expect(mockRes.render).toHaveBeenCalledWith(
         'pages/v2statistics/providerDashboard',
@@ -287,7 +280,6 @@ describe('v2statisticsController', () => {
 
       await renderV2statsByProvider(mockReq, mockRes, mockNext)
 
-      expect(mockGetV2StatsForOneMonth).not.toHaveBeenCalled()
       expect(mockGetV2StatsBetweenDateRange).not.toHaveBeenCalled()
 
       expect(mockRes.render).toHaveBeenCalledWith(

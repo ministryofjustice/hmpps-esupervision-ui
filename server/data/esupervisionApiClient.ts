@@ -358,15 +358,6 @@ export default class EsupervisionApiClient extends RestClient {
     )
   }
 
-  async getV2StatsForOneMonth(yearMonth: YearMonth): Promise<V2StatsResponse> {
-    return this.get<V2StatsResponse>(
-      {
-        path: `/v2/stats?month=${yearMonth}`,
-      },
-      asSystem(),
-    )
-  }
-
   async getV2StatsBetweenDateRange(fromMonth: YearMonth, toMonth: YearMonth): Promise<V2StatsResponse> {
     return this.get<V2StatsResponse>(
       {

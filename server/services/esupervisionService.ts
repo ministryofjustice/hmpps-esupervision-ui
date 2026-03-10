@@ -124,8 +124,4 @@ export default class EsupervisionService {
   getV2StatsBetweenDateRange(fromMonth: YearMonth, toMonth: YearMonth): Promise<V2StatsResponse> {
     return this.esupervisionApiClient.getV2StatsBetweenDateRange(fromMonth, toMonth)
   }
-
-  getV2StatsForOneMonth(month: YearMonth): Promise<V2StatsResponse> {
-    return this.esupervisionApiClient.getV2StatsForOneMonth(month)
-  }
 }

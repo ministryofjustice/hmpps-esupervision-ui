@@ -5,11 +5,11 @@ import { V2StatsResponse } from '../data/models/v2stats'
 
 jest.mock('../services')
 
-const mockGetV2Stats = jest.fn()
+const mockGetV2StatsBetweenDateRange = jest.fn()
 
 ;(services as jest.Mock).mockReturnValue({
   esupervisionService: {
-    getV2Stats: mockGetV2Stats,
+    getV2StatsBetweenDateRange: mockGetV2StatsBetweenDateRange,
   },
 })
 
@@ -97,27 +97,49 @@ describe('v2statisticsController', () => {
     ],
   }
 
+  const updatedAt = new Date(v2stats.total.updatedAt as string)
+  const expectedDate = updatedAt.toLocaleDateString('en-GB')
+  const expectedTime = updatedAt.toLocaleTimeString()
+
+  beforeAll(() => {
+    jest.useFakeTimers()
+    jest.setSystemTime(new Date('2026-02-15T10:00:00.000Z'))
+  })
+
+  afterAll(() => {
+    jest.useRealTimers()
+  })
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   describe('renderV2stats', () => {
-    const mockReq = {} as any
     const mockNext = jest.fn()
 
     const mockRes = {
       render: jest.fn(),
     } as any
 
-    beforeEach(() => {
-      jest.clearAllMocks()
-    })
-
-    it('separates out the feedback stats, and passes it to the page in a separate key', async () => {
-      mockGetV2Stats.mockResolvedValue(v2stats)
+    it('defaults monthFrom to Aug 2025, monthTo to current month, fetches date-range stats, and renders dashboard with real month options', async () => {
+      const mockReq = { query: {} } as any
+      mockGetV2StatsBetweenDateRange.mockResolvedValue(v2stats)
 
       await renderV2stats(mockReq, mockRes, mockNext)
+
+      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledWith('2025-08', '2026-03')
 
       expect(mockRes.render).toHaveBeenCalledWith(
         'pages/v2statistics/dashboard',
         expect.objectContaining({
-          date: '28/01/2026',
+          date: expectedDate,
+          time: expectedTime,
+          hideFeedbackLink: true,
+          monthFrom: '2025-08',
+          monthTo: '2026-02',
+          fromMonthOptions: expect.any(Array), // Asserted properly below
+          toMonthOptions: expect.any(Array),
+          stats: v2stats.total,
           feedbackStats: {
             feedbackTotal: 5,
             gettingSupportCounts: v2stats.total.gettingSupportCounts,
@@ -127,18 +149,87 @@ describe('v2statisticsController', () => {
             improvementsCounts: v2stats.total.improvementsCounts,
             improvementsPct: v2stats.total.improvementsPct,
           },
-          hideFeedbackLink: true,
-          stats: v2stats.total,
-          time: '12:02:00 PM',
         }),
+      )
+
+      const props = (mockRes.render as jest.Mock).mock.calls[0][1]
+
+      expect(props.fromMonthOptions).toHaveLength(7)
+      expect(props.toMonthOptions).toHaveLength(7)
+
+      expect(props.fromMonthOptions[0]).toEqual(
+        expect.objectContaining({ value: '2025-08', text: 'August 2025', selected: true }),
+      )
+      expect(props.fromMonthOptions[1]).toEqual(
+        expect.objectContaining({ value: '2025-09', text: 'September 2025', selected: false }),
+      )
+      expect(props.toMonthOptions[6]).toEqual(
+        expect.objectContaining({ value: '2026-02', text: 'February 2026', selected: true }),
+      )
+
+      expect(mockNext).not.toHaveBeenCalled()
+    })
+
+    it('uses monthFrom/monthTo from query, and calls one-month service when monthFrom === monthTo', async () => {
+      const mockReq = { query: { monthFrom: '2026-01', monthTo: '2026-01' } } as any
+
+      await renderV2stats(mockReq, mockRes, mockNext)
+
+      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledWith('2026-01', '2026-02')
+
+      expect(mockRes.render).toHaveBeenCalledWith(
+        'pages/v2statistics/dashboard',
+        expect.objectContaining({
+          monthFrom: '2026-01',
+          monthTo: '2026-01',
+          stats: v2stats.total,
+          feedbackStats: expect.any(Object),
+        }),
+      )
+
+      const renderArg = (mockRes.render as jest.Mock).mock.calls[0][1]
+      expect(renderArg.fromMonthOptions).toEqual(
+        expect.arrayContaining([expect.objectContaining({ value: '2026-01', text: 'January 2026', selected: true })]),
+      )
+      expect(renderArg.toMonthOptions).toEqual(
+        expect.arrayContaining([expect.objectContaining({ value: '2026-01', text: 'January 2026', selected: true })]),
+      )
+
+      expect(mockNext).not.toHaveBeenCalled()
+    })
+
+    it("renders validation error when 'From' month is after 'To' month, and does not call the service", async () => {
+      const mockReq = { query: { monthFrom: '2026-03', monthTo: '2026-02' } } as any
+
+      await renderV2stats(mockReq, mockRes, mockNext)
+
+      expect(mockGetV2StatsBetweenDateRange).not.toHaveBeenCalled()
+
+      expect(mockRes.render).toHaveBeenCalledWith(
+        'pages/v2statistics/dashboard',
+        expect.objectContaining({
+          hideFeedbackLink: true,
+          fromMonthOptions: expect.any(Array),
+          toMonthOptions: expect.any(Array),
+          errors: {
+            monthRange: "The 'From' month must be before the 'To' month",
+          },
+        }),
+      )
+
+      const renderArg = (mockRes.render as jest.Mock).mock.calls[0][1]
+      expect(renderArg.fromMonthOptions).toEqual(
+        expect.arrayContaining([expect.objectContaining({ value: '2026-02', text: 'February 2026' })]),
       )
 
       expect(mockNext).not.toHaveBeenCalled()
     })
 
     it('calls next with error when service throws', async () => {
+      const mockReq = { query: { monthFrom: '2025-08', monthTo: '2026-02' } } as any
       const error = new Error('Boom')
-      mockGetV2Stats.mockRejectedValue(error)
+
+      mockGetV2StatsBetweenDateRange.mockRejectedValue(error)
 
       await renderV2stats(mockReq, mockRes, mockNext)
 
@@ -148,30 +239,58 @@ describe('v2statisticsController', () => {
   })
 
   describe('renderV2statsByProvider', () => {
-    const mockReq = {} as any
     const mockNext = jest.fn()
 
     const mockRes = {
       render: jest.fn(),
     } as any
 
-    beforeEach(() => {
-      jest.clearAllMocks()
-    })
-
-    it('separates out the provider stats, and passes it to the page in a separate key', async () => {
-      mockGetV2Stats.mockResolvedValue(v2stats)
+    it('uses query months, fetches stats, and renders provider dashboard with totals + providerStats', async () => {
+      const mockReq = { query: { monthFrom: '2025-08', monthTo: '2026-02' } } as any
+      mockGetV2StatsBetweenDateRange.mockResolvedValue(v2stats)
 
       await renderV2statsByProvider(mockReq, mockRes, mockNext)
+
+      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledWith('2025-08', '2026-03')
 
       expect(mockRes.render).toHaveBeenCalledWith(
         'pages/v2statistics/providerDashboard',
         expect.objectContaining({
-          date: '28/01/2026',
+          date: expectedDate,
+          time: expectedTime,
+          hideFeedbackLink: true,
+          monthFrom: mockReq.query.monthFrom,
+          monthTo: mockReq.query.monthTo,
+          fromMonthOptions: expect.any(Array),
+          toMonthOptions: expect.any(Array),
           totalStats: v2stats.total,
           providerStats: v2stats.providers,
+        }),
+      )
+
+      const renderArg = (mockRes.render as jest.Mock).mock.calls[0][1]
+      expect(renderArg.fromMonthOptions).toHaveLength(7)
+      expect(renderArg.toMonthOptions).toHaveLength(7)
+
+      expect(mockNext).not.toHaveBeenCalled()
+    })
+
+    it("renders validation error when 'From' month is after 'To' month, and does not call the service", async () => {
+      const mockReq = { query: { monthFrom: '2026-03', monthTo: '2026-02' } } as any
+
+      await renderV2statsByProvider(mockReq, mockRes, mockNext)
+
+      expect(mockGetV2StatsBetweenDateRange).not.toHaveBeenCalled()
+
+      expect(mockRes.render).toHaveBeenCalledWith(
+        'pages/v2statistics/providerDashboard',
+        expect.objectContaining({
           hideFeedbackLink: true,
-          time: '12:02:00 PM',
+          fromMonthOptions: expect.any(Array),
+          toMonthOptions: expect.any(Array),
+          errors: {
+            monthRange: "The 'From' month must be before the 'To' month",
+          },
         }),
       )
 
@@ -179,10 +298,12 @@ describe('v2statisticsController', () => {
     })
 
     it('calls next with error when service throws', async () => {
+      const mockReq = { query: { monthFrom: '2025-08', monthTo: '2026-02' } } as any
       const error = new Error('Boom')
-      mockGetV2Stats.mockRejectedValue(error)
 
-      await renderV2stats(mockReq, mockRes, mockNext)
+      mockGetV2StatsBetweenDateRange.mockRejectedValue(error)
+
+      await renderV2statsByProvider(mockReq, mockRes, mockNext)
 
       expect(mockNext).toHaveBeenCalledWith(error)
       expect(mockRes.render).not.toHaveBeenCalled()

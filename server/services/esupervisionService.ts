@@ -17,7 +17,7 @@ import PractitionerStats from '../data/models/practitionerStats'
 import Stats from '../data/models/stats'
 import OffenderInfoByContact from '../data/models/offenderInfoByContact'
 import { CheckinEventType } from '../data/models/checkinEvent'
-import { V2StatsResponse } from '../data/models/v2stats'
+import { V2StatsResponse, YearMonth } from '../data/models/v2stats'
 import MediaUrlType from '../data/models/mediaUrlType'
 
 export default class EsupervisionService {
@@ -121,7 +121,7 @@ export default class EsupervisionService {
     return this.esupervisionApiClient.getCheckinStats()
   }
 
-  getV2Stats(): Promise<V2StatsResponse> {
-    return this.esupervisionApiClient.getV2Stats()
+  getV2StatsBetweenDateRange(fromMonth: YearMonth, toMonth: YearMonth): Promise<V2StatsResponse> {
+    return this.esupervisionApiClient.getV2StatsBetweenDateRange(fromMonth, toMonth)
   }
 }

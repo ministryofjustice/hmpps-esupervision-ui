@@ -1,5 +1,6 @@
-import { addDays, format, isValid, parseISO, startOfDay, differenceInDays, isAfter } from 'date-fns'
+import { addDays, format, isValid, parseISO, startOfDay, differenceInDays, isAfter, addMonths } from 'date-fns'
 import CheckinInterval from '../data/models/checkinInterval'
+import { YearMonth } from '../data/models/v2stats'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -81,4 +82,10 @@ export const calculateNextCheckinDate = (
   }
 
   return result
+}
+
+export const advanceMonths = (d: YearMonth, numMonths: number): YearMonth => {
+  const [year, month] = d.split('-') as [string, string]
+  const date = addMonths(new Date(Number(year), Number(month) - 1), numMonths)
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}` as YearMonth
 }

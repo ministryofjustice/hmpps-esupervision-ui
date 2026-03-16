@@ -54,3 +54,9 @@ export interface V2StatsResponse {
   total: V2StatsWithFeedback
   providers: V2ProviderStats[]
 }
+
+type Month = '01' | '02' | '03' | '04' | '05' | '06' | '07' | '08' | '09' | '10' | '11' | '12'
+
+type Year = `${number}${number}${number}${number}`
+
+export type YearMonth = `${Year}-${Month}`

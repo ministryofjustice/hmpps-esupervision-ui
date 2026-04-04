@@ -8,10 +8,6 @@ generic-service:
     host: esupervision-dev.hmpps.service.justice.gov.uk
     className: modsec-non-prod
 
-  allowlist:
-    groups:
-      - internal
-
   env:
     INGRESS_URL: 'https://esupervision-dev.hmpps.service.justice.gov.uk'
     HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'

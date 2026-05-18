@@ -53,7 +53,7 @@ export const renderDashboard: RequestHandler = async (req, res, next) => {
 
 export const renderDashboardFiltered: RequestHandler = async (req, res, next) => {
   try {
-    const { filter } = req.params
+    const { filter } = req.params as { filter: string }
     const practitioner = res.locals.user
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 0
     const size = req.query.size ? parseInt(req.query.size as string, 10) : 60
@@ -134,7 +134,7 @@ const friendlyCheckInStatus = (status: string) => {
 
 export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
   try {
-    const { checkInId } = req.params
+    const { checkInId } = req.params as { checkInId: string }
     try {
       await esupervisionService.logCheckinEvent(checkInId, 'REVIEW_STARTED')
     } catch (eventError) {
@@ -159,7 +159,7 @@ export const renderCheckInDetail: RequestHandler = async (req, res, next) => {
 
 export const renderCheckInVideoDetail: RequestHandler = async (req, res, next) => {
   try {
-    const { checkInId } = req.params
+    const { checkInId } = req.params as { checkInId: string }
     const { checkin: checkIn, checkinLogs } = await esupervisionService.getCheckin(checkInId)
     res.render('pages/practitioners/checkins/video', { checkIn, checkinLogs })
   } catch (error) {
@@ -174,7 +174,7 @@ interface CheckInFormData {
 
 export const handleCheckInReview: RequestHandler = async (req, res, next) => {
   try {
-    const { checkInId } = req.params
+    const { checkInId } = req.params as { checkInId: string }
     const formData = res.locals.formData as CheckInFormData
     const { idVerification, missedCheckinComment } = formData
     const practitioner = res.locals.user
@@ -241,7 +241,7 @@ export const renderCases =
 
 export const renderCaseView: RequestHandler = async (req, res, next) => {
   try {
-    const { offenderId } = req.params
+    const { offenderId } = req.params as { offenderId: string }
     const practitioner = res.locals.user
     const offender = await esupervisionService.getOffender(offenderId)
     if (!offender) {
@@ -287,7 +287,7 @@ export const renderCreateInvite: RequestHandler = async (req, res, next) => {
 
 export const renderUpdatePersonalDetails: RequestHandler = async (req, res, next) => {
   try {
-    const { offenderId } = req.params
+    const { offenderId } = req.params as { offenderId: string }
     const offender = await esupervisionService.getOffender(offenderId)
     const { firstName, lastName, dateOfBirth, crn } = offender
     const data = {
@@ -307,7 +307,7 @@ export const renderUpdatePersonalDetails: RequestHandler = async (req, res, next
 
 export const renderUpdatePhoto: RequestHandler = async (req, res, next) => {
   try {
-    const { offenderId } = req.params
+    const { offenderId } = req.params as { offenderId: string }
     const offender = await esupervisionService.getOffender(offenderId)
     const { firstName, lastName, phoneNumber } = offender
     const data = {
@@ -323,7 +323,7 @@ export const renderUpdatePhoto: RequestHandler = async (req, res, next) => {
 
 export const renderUpdateContactDetails: RequestHandler = async (req, res, next) => {
   try {
-    const { offenderId } = req.params
+    const { offenderId } = req.params as { offenderId: string }
     const offender = await esupervisionService.getOffender(offenderId)
     const { firstName, lastName, phoneNumber } = offender
     const data = {
@@ -340,7 +340,7 @@ export const renderUpdateContactDetails: RequestHandler = async (req, res, next)
 export const renderUpdateMobile: RequestHandler = async (req, res, next) => {
   try {
     res.locals.formData.email = undefined
-    const { offenderId } = req.params
+    const { offenderId } = req.params as { offenderId: string }
     const offender = await esupervisionService.getOffender(offenderId)
     res.render('pages/practitioners/cases/update/mobile', { offender })
   } catch (error) {
@@ -351,7 +351,7 @@ export const renderUpdateMobile: RequestHandler = async (req, res, next) => {
 export const renderUpdateEmail: RequestHandler = async (req, res, next) => {
   try {
     res.locals.formData.mobile = undefined
-    const { offenderId } = req.params
+    const { offenderId } = req.params as { offenderId: string }
     const offender = await esupervisionService.getOffender(offenderId)
     res.render('pages/practitioners/cases/update/email', { offender })
   } catch (error) {
@@ -361,7 +361,7 @@ export const renderUpdateEmail: RequestHandler = async (req, res, next) => {
 
 export const renderUpdateCheckinSettings: RequestHandler = async (req, res, next) => {
   try {
-    const { offenderId } = req.params
+    const { offenderId } = req.params as { offenderId: string }
     const offender = await esupervisionService.getOffender(offenderId)
     const { firstName, lastName, firstCheckin, checkinInterval } = offender
     const data = {
@@ -385,7 +385,7 @@ export const renderUpdateCheckinSettings: RequestHandler = async (req, res, next
 
 export const renderStopCheckins: RequestHandler = async (req, res, next) => {
   try {
-    const { offenderId } = req.params
+    const { offenderId } = req.params as { offenderId: string }
     const offender = await esupervisionService.getOffender(offenderId)
     const { firstName, lastName } = offender
     const data = {
@@ -400,7 +400,7 @@ export const renderStopCheckins: RequestHandler = async (req, res, next) => {
 
 export const handleStopCheckins: RequestHandler = async (req, res, next) => {
   try {
-    const { offenderId } = req.params
+    const { offenderId } = req.params as { offenderId: string }
     const practitioner = res.locals.user
     const data = req.body
     const validation = stopCheckinsSchema.safeParse(data)
@@ -436,7 +436,7 @@ export const handleStopCheckins: RequestHandler = async (req, res, next) => {
 
 export const handleCreateInvite: RequestHandler = async (req, res, next) => {
   try {
-    const { offenderId } = req.params
+    const { offenderId } = req.params as { offenderId: string }
     const { dueDate } = req.body
     const parsedDate = parse(dueDate, 'd/M/yyyy', new Date())
 
@@ -461,7 +461,7 @@ export const handleCreateInvite: RequestHandler = async (req, res, next) => {
 
 export const handleResendInvite: RequestHandler = async (req, res, next) => {
   try {
-    const { checkinId } = req.params
+    const { checkinId } = req.params as { checkinId: string }
     const practitioner = res.locals.user
     const checkin = await esupervisionService.resendCheckinInvite(checkinId, practitioner)
     const contactMethod = checkin.offender.email || checkin.offender.phoneNumber
@@ -486,7 +486,7 @@ export const renderUpdateOffender = (view: string, schema: string) => {
     const formData = req.body
     const validation = selectedSchema.safeParse(formData)
     if (!validation.success) {
-      const { offenderId } = req.params
+      const { offenderId } = req.params as { offenderId: string }
       const offenderDb = await esupervisionService.getOffender(offenderId)
       const validationErrors = validation.error.issues.map(err => {
         return {
@@ -509,7 +509,7 @@ export const renderUpdateOffender = (view: string, schema: string) => {
 
 export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
   try {
-    const offender = await esupervisionService.getOffender(req.params.offenderId)
+    const offender = await esupervisionService.getOffender(req.params.offenderId as string)
     const { firstName, lastName, crn, day, month, year, email, mobile, startDate, frequency } = req.body
 
     // If contact preference changes, then need to set the previous field to null
@@ -530,7 +530,7 @@ export const handleUpdateOffender: RequestHandler = async (req, res, next) => {
       checkinInterval: frequency || offender.checkinInterval,
     }
 
-    const result = esupervisionService.updateOffender(req.params.offenderId, data)
+    const result = esupervisionService.updateOffender(req.params.offenderId as string, data)
     try {
       await result
     } catch (error) {

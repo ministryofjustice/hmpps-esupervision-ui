@@ -12,7 +12,7 @@ const entityToMediaTypeMapping = new Map<string, MediaUrlType>([
 
 const resolveUrl: RequestHandler = async (req, res, next) => {
   try {
-    const { entityType, attribute, uuid } = req.params
+    const { entityType, attribute, uuid } = req.params as { entityType: string; attribute: string; uuid: string }
     const snapshotIndex = req.query.snapshotIndex ? parseInt(req.query.snapshotIndex as string, 10) : 0
     const mediaType = entityToMediaTypeMapping.get(`${entityType}|${attribute}`)
     if (mediaType === undefined) {

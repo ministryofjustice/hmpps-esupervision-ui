@@ -3,6 +3,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "isolatedModules": true,
+    "ignoreDeprecations": "6.0",
     "outDir": "./dist",
     "sourceMap": true,
     "noEmit": false,

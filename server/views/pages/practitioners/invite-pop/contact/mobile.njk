@@ -1,0 +1,54 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "../../../../partials/errorSummary.njk" import errorSummary %}
+{% extends "../../layout.njk" %}
+{% set section = "invite-pop" %}
+
+{% set title = "What is their mobile number?" %}
+{% set pageTitle = title %}
+
+{% block beforeContent %}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/practitioners/invite-pop/contact?checkAnswers=true" if cya else "/practitioners/invite-pop/contact"
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
+
+      <form method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukInput({
+            label: {
+              text: title,
+              classes: "govuk-label--l",
+              isPageHeading: true
+            },
+            id: "mobile",
+            name: "mobile",
+            errorMessage: validationErrors | findError("mobile") | default(null),
+            value: formData["mobile"],
+            type: "tel",
+            classes: "govuk-input--width-20",
+            hint: {
+              text: "This is where we’ll send a text message with the invite link"
+            }
+          })
+        }}
+
+        {{
+          govukButton({
+            text: "Continue"
+          })
+        }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% extends "../layout.njk" %}
+{% set section = "invite-pop" %}
+
+{% set title = "Check their details before sending the invite" %}
+{% set pageTitle = title %}
+
+{% set contactPreferenceLabel = "Email" if formData['contactPreference'] == 'EMAIL' else "Text message" %}
+{% set contactValueRow = {
+  key: { text: "Email address" if formData['contactPreference'] == 'EMAIL' else "Mobile number" },
+  value: { text: formData['email'] if formData['contactPreference'] == 'EMAIL' else formData['mobile'] },
+  actions: {
+    items: [
+      {
+        href: ("/practitioners/invite-pop/contact/email?checkAnswers=true" if formData['contactPreference'] == 'EMAIL' else "/practitioners/invite-pop/contact/mobile?checkAnswers=true"),
+        text: "Change",
+        visuallyHiddenText: " contact details"
+      }
+    ]
+  }
+} %}
+
+{% block beforeContent %}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/practitioners/invite-pop/contact/email" if formData['contactPreference'] == 'EMAIL' else "/practitioners/invite-pop/contact/mobile"
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+
+      {{
+        govukSummaryList({
+          rows: [
+            {
+              key: { text: "Case reference number (CRN)" },
+              value: { text: formData['crn'] },
+              actions: {
+                items: [
+                  {
+                    href: "/practitioners/invite-pop?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: " case reference number"
+                  }
+                ]
+              }
+            },
+            {
+              key: { text: "Contact method" },
+              value: { text: contactPreferenceLabel },
+              actions: {
+                items: [
+                  {
+                    href: "/practitioners/invite-pop/contact?checkAnswers=true",
+                    text: "Change",
+                    visuallyHiddenText: " the contact method"
+                  }
+                ]
+              }
+            },
+            contactValueRow
+          ]
+        })
+      }}
+
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukButton({
+            text: "Send invite"
+          })
+        }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

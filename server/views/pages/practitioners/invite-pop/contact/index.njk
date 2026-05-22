@@ -1,0 +1,64 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "../../../../partials/errorSummary.njk" import errorSummary %}
+{% extends "../../layout.njk" %}
+{% set section = "invite-pop" %}
+
+{% set title = "How should we send the invite?" %}
+{% set pageTitle = title %}
+
+{% block beforeContent %}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: "/practitioners/invite-pop/check-answers" if cya else "/practitioners/invite-pop"
+    })
+  }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
+
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="checkYourAnswers" value="{{ cya }}" />
+        {{
+          govukRadios({
+            name: "contactPreference",
+            errorMessage: validationErrors | findError("contactPreference") | default(null),
+            value: formData["contactPreference"],
+            fieldset: {
+              legend: {
+                text: title,
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            hint: {
+              text: "Choose the person’s preferred contact method"
+            },
+            items: [
+              {
+                value: "TEXT",
+                text: "Text message"
+              },
+              {
+                value: "EMAIL",
+                text: "Email"
+              }
+            ]
+          })
+        }}
+
+        {{
+          govukButton({
+            text: "Continue"
+          })
+        }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

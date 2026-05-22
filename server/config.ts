@@ -92,6 +92,15 @@ export default {
       },
       agent: new AgentConfig(Number(get('EXAMPLE_API_TIMEOUT_RESPONSE', 5000))),
     },
+    popApi: {
+      url: get('POP_API_URL', 'http://localhost:8080', requiredInProduction),
+      healthPath: '/health/ping',
+      timeout: {
+        response: Number(get('POP_API_TIMEOUT_RESPONSE', 5000)),
+        deadline: Number(get('POP_API_TIMEOUT_DEADLINE', 5000)),
+      },
+      agent: new AgentConfig(Number(get('POP_API_TIMEOUT_RESPONSE', 5000))),
+    },
   },
   v2: {
     feedbackUrl: get(

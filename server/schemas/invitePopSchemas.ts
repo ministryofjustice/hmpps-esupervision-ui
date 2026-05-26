@@ -17,21 +17,3 @@ export const inviteContactPreferenceSchema = z.object({
 })
 
 export { emailSchema as inviteEmailSchema, mobileSchema as inviteMobileSchema }
-
-export const inviteSubmissionSchema = z
-  .object({
-    crn: z.string().regex(crnRegex),
-    contactPreference: z.enum(['EMAIL', 'TEXT']),
-    email: z.string().optional(),
-    mobile: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.contactPreference === 'EMAIL' && !data.email) {
-      ctx.addIssue({ code: 'custom', path: ['email'], message: 'Enter an email address in the correct format' })
-    }
-    if (data.contactPreference === 'TEXT' && !data.mobile) {
-      ctx.addIssue({ code: 'custom', path: ['mobile'], message: 'Enter a mobile number in the correct format' })
-    }
-  })
-
-export type InvitePopSubmission = z.infer<typeof inviteSubmissionSchema>

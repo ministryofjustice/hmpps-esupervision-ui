@@ -12,7 +12,7 @@
     {{
       govukPanel({
         titleText: "Invite sent to",
-        html: "<strong>" + contactValue + "</strong>"
+        html: "<strong>" + ( contactValue | escape ) + "</strong>"
       })
     }}
 

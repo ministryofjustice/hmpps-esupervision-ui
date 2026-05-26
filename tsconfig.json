@@ -3,6 +3,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "isolatedModules": true,
+    "ignoreDeprecations": "6.0",
     "outDir": "./dist",
     "sourceMap": true,
     "noEmit": false,
@@ -12,7 +13,9 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
-    "typeRoots": ["./server/@types", "./node_modules/@types"]
+    "typeRoots": ["./server/@types", "./node_modules/@types"],
+    "types": ["jest", "node", "express"],
+    "rootDir": "."
   },
   "exclude": [
     "node_modules",

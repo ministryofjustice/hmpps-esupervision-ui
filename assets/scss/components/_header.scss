@@ -5,6 +5,10 @@
   @include gds.govuk-responsive-padding(3, 'bottom');
   background-color: gds.govuk-colour('black');
 
+  &--border {
+    border-bottom: 10px solid var(--govuk-brand-colour, #1d70b8);
+  }
+
   &__container {
     @include gds.govuk-width-container;
 

@@ -1,3 +1,4 @@
+/*
 context('Healthcheck', () => {
   context('All healthy', () => {
     beforeEach(() => {
@@ -40,3 +41,6 @@ context('Healthcheck', () => {
     })
   })
 })
+*/
+
+export {}

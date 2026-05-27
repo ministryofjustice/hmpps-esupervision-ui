@@ -1,0 +1,31 @@
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% extends "./layout.njk" %}
+{% set section = "invite-pop" %}
+
+{% set title = "Invite sent" %}
+{% set pageTitle = title %}
+
+{% set contactType = "email" if contactPreference == 'EMAIL' else "text message" %}
+
+{% block content %}
+
+    {{
+      govukPanel({
+        titleText: "Invite sent to",
+        html: "<strong>" + ( contactValue | escape ) + "</strong>"
+      })
+    }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m">What happens next</h2>
+      <p class="govuk-body">Ask the person to accept the invite by clicking the link in the {{ contactType }}.</p>
+      <p class="govuk-body">To access their probation account, they will need to sign in or register using <a href="https://www.gov.uk/using-your-gov-uk-one-login" class="govuk-link">GOV.UK One Login</a>. </p>
+      <h2 class="govuk-heading-m">Invite someone else</h2>
+      <p class="govuk-body">You can now invite someone else to access their online probation account. </p>
+      <p class="govuk-body">
+        <a class="govuk-button" href="/practitioners/invite-pop">Send another invite </a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

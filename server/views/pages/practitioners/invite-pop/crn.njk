@@ -1,0 +1,44 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "../../../partials/errorSummary.njk" import errorSummary %}
+{% extends "./layout.njk" %}
+{% set section = "invite-pop" %}
+
+{% set title = "Invite someone to access their online probation account" %}
+{% set pageTitle = title %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ errorSummary(validationErrors) }}
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{
+          govukInput({
+            label: {
+              text: "What is the person’s case reference number (CRN)?",
+              classes: "govuk-label--m",
+              isPageHeading: false
+            },
+            hint: {
+              text: "This lets their probation account show relevant information from nDelius"
+            },
+            classes: "govuk-input--width-10 govuk-input--extra-letter-spacing",
+            id: "crn",
+            name: "crn",
+            errorMessage: validationErrors | findError("crn") | default(null),
+            value: formData["crn"]
+          })
+        }}
+
+        {{
+          govukButton({
+            text: "Continue"
+          })
+        }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

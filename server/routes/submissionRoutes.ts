@@ -41,7 +41,7 @@ export default function routes({ esupervisionService }: Services): Router {
   // fetch from the API and return a 404 if the submission doesn't exist
   router.use(
     asyncMiddleware(async (req, res, next) => {
-      const { submissionId } = req.params
+      const { submissionId } = req.params as { submissionId: string }
       const notFound = () => {
         res.render('pages/submission/not-found')
       }

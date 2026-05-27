@@ -12,7 +12,7 @@ type SubmissionLocals = { submission: OffenderCheckinResponse }
 
 const { esupervisionService } = services()
 
-const getSubmissionId = (req: Request): string => req.params.submissionId
+const getSubmissionId = (req: Request): string => req.params.submissionId as string
 const pageParams = (req: Request): Record<string, string | boolean> => {
   const cya = req.query.checkAnswers === 'true'
   return {
@@ -61,7 +61,7 @@ export const renderVerify: RequestHandler = async (req, res, next) => {
 }
 
 export const handleVerify: RequestHandler = async (req, res: Response<object, SubmissionLocals>, next) => {
-  const { submissionId } = req.params
+  const { submissionId } = req.params as { submissionId: string }
   const { firstName, lastName, day, month, year } = req.body
   const dateOfBirth = new Date(`${year}-${month}-${day} 00:00 UTC`)
 
@@ -93,7 +93,7 @@ export const renderVideoInform: RequestHandler = async (req, res, next) => {
 
 export const renderVideoRecord: RequestHandler = async (req, res: Response<object, SubmissionLocals>, next) => {
   try {
-    const { submissionId } = req.params
+    const { submissionId } = req.params as { submissionId: string }
     const videoContentType = 'video/mp4'
     const frameContentType = 'image/jpeg'
 

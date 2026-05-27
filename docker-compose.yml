@@ -1,14 +1,13 @@
 services:
   hmpps-auth:
-    image: quay.io/hmpps/hmpps-auth:latest
-    profiles: [deps]
+    image: ghcr.io/ministryofjustice/hmpps-auth:latest
     networks:
       - hmpps
     container_name: hmpps-auth
     ports:
-      - '8090:8080'
+      - "9090:8080"
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:8080/auth/health']
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/8080"]
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0

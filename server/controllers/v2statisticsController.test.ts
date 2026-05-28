@@ -16,7 +16,7 @@ const mockGetV2StatsBetweenDateRange = jest.fn()
 describe('v2statisticsController', () => {
   const v2stats: V2StatsResponse = {
     total: {
-      totalSignedUp: 10,
+      signedUp: 10,
       activeUsers: 7,
       inactiveUsers: 3,
       completedCheckins: 4,
@@ -63,7 +63,7 @@ describe('v2statisticsController', () => {
       {
         providerCode: 'ALLUAT',
         providerDescription: 'Unallocated',
-        totalSignedUp: 2,
+        signedUp: 2,
         activeUsers: 2,
         inactiveUsers: 0,
         completedCheckins: 1,
@@ -80,7 +80,7 @@ describe('v2statisticsController', () => {
       {
         providerCode: 'FAKEPROVIDER',
         providerDescription: 'Fakeville',
-        totalSignedUp: 33,
+        signedUp: 33,
         activeUsers: 30,
         inactiveUsers: 3,
         completedCheckins: 12,

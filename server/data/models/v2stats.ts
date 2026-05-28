@@ -16,7 +16,7 @@ export type Improvement =
   | 'notAnswered'
 
 export interface V2Stats {
-  totalSignedUp: number
+  signedUp: number
   activeUsers: number
   inactiveUsers: number
   completedCheckins: number

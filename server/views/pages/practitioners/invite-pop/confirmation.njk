@@ -11,14 +11,13 @@
 
     {{
       govukPanel({
-        titleText: "Invite sent to",
-        html: "<strong>" + ( contactValue | escape ) + "</strong>"
+        titleHtml: "Invite sent to <br />" + ( contactValue | escape )
       })
     }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h2 class="govuk-heading-m">What happens next</h2>
+      <h2 class="govuk-heading-m govuk-!-margin-top-2">What happens next</h2>
       <p class="govuk-body">Ask the person to accept the invite by clicking the link in the {{ contactType }}.</p>
       <p class="govuk-body">To access their probation account, they will need to sign in or register using <a href="https://www.gov.uk/using-your-gov-uk-one-login" class="govuk-link">GOV.UK One Login</a>. </p>
       <h2 class="govuk-heading-m">Invite someone else</h2>

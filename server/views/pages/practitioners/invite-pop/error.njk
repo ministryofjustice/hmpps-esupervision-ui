@@ -1,0 +1,23 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% extends "./layout.njk" %}
+{% set section = "invite-pop" %}
+
+{% set title = "This person has already been invited" %}
+{% set pageTitle = title %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <p class="govuk-body">{{ message if message else "An invite has already been sent for CRN " + crn + "." }}</p>
+      <p class="govuk-body">You do not need to send another one. If you think this is wrong, check the CRN and try again.</p>
+
+      {{
+        govukButton({
+          text: "Invite someone else",
+          href: "/practitioners/invite-pop"
+        })
+      }}
+    </div>
+  </div>
+{% endblock %}

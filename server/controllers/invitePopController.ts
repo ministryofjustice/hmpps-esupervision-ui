@@ -86,20 +86,20 @@ export const renderInviteCheckAnswers: RequestHandler = (req, res, next) => {
 }
 
 export const handleInviteSubmit: RequestHandler = async (req, res, next) => {
+  const formData = res.locals.formData || {}
+  const { crn, contactPreference, email, mobile } = formData as {
+    crn?: string
+    contactPreference?: 'EMAIL' | 'TEXT'
+    email?: string
+    mobile?: string
+  }
+
+  if (!crn || !contactPreference) {
+    res.redirect(INVITE_BASE)
+    return
+  }
+
   try {
-    const formData = res.locals.formData || {}
-    const { crn, contactPreference, email, mobile } = formData as {
-      crn?: string
-      contactPreference?: 'EMAIL' | 'TEXT'
-      email?: string
-      mobile?: string
-    }
-
-    if (!crn || !contactPreference) {
-      res.redirect(INVITE_BASE)
-      return
-    }
-
     const contactValue = contactPreference === 'EMAIL' ? email : mobile
 
     await popService.invitePop({
@@ -115,6 +115,14 @@ export const handleInviteSubmit: RequestHandler = async (req, res, next) => {
     }
     res.redirect(`${INVITE_BASE}/confirmation`)
   } catch (error) {
+    if (error?.responseStatus === 409) {
+      logger.info(`An invite has already been submitted for CRN ${crn}`)
+      res.status(409).render('pages/practitioners/invite-pop/error', {
+        crn,
+        message: error?.data?.userMessage,
+      })
+      return
+    }
     logger.error('Failed to send invite', error)
     next(error)
   }

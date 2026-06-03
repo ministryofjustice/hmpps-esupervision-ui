@@ -1,8 +1,6 @@
 @use 'govuk-frontend/dist/govuk/index' as gds;
 
 .hmpps-header {
-  @include gds.govuk-responsive-padding(3, 'top');
-  @include gds.govuk-responsive-padding(3, 'bottom');
   background-color: gds.govuk-colour('black');
 
   &--border {

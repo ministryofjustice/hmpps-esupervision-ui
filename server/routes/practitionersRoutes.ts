@@ -68,6 +68,7 @@ import {
   handleInviteRedirect,
   handleInviteSubmit,
   handleStartInvitePop,
+  renderGuidance,
   renderInviteCheckAnswers,
   renderInviteConfirmation,
   renderInviteContact,
@@ -222,6 +223,7 @@ export default function routes(): Router {
   router.post('/invite-pop/check-answers', handleInviteSubmit)
 
   get('/invite-pop/confirmation', renderInviteConfirmation)
+  get('/invite-pop/guidance', renderGuidance)
 
   return router
 }

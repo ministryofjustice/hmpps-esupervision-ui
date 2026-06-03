@@ -150,3 +150,11 @@ export const renderInviteConfirmation: RequestHandler = (req, res, next) => {
     next(error)
   }
 }
+
+export const renderGuidance: RequestHandler = (req, res, next) => {
+  try {
+    res.render('pages/practitioners/invite-pop/guidance')
+  } catch (error) {
+    next(error)
+  }
+}

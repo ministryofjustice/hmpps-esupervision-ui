@@ -143,25 +143,8 @@
 
           <ul class="govuk-footer__inline-list">
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/practitioners/accessibility"> Accessibility statement </a>
+              <a class="govuk-footer__link" href="/practitioners/invite-pop/guidance"> About probation accounts </a>
             </li>
-            <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/practitioners/privacy-notice"> Privacy </a>
-            </li>
-            {% if user %}
-              {% if flags.debugMode != true %}
-                <li class="govuk-footer__inline-list-item">
-                  <a class="govuk-footer__link" href="?es-debugMode=on"> Debug </a>
-                </li>
-              {% else %}
-                <li class="govuk-footer__inline-list-item">
-                  <a class="es-debug govuk-footer__link" href="?es-debugMode=off"> Hide debug </a>
-                </li>
-                <li class="govuk-footer__inline-list-item">
-                  <span class="es-debug"> Logged in as: <code>{{ user.userId }}</code> </span>
-                </li>
-              {% endif %}
-            {% endif %}
           </ul>
 
           <svg

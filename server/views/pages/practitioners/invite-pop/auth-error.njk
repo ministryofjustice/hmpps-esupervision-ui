@@ -1,0 +1,12 @@
+{% extends "./layout.njk" %}
+{% set section = "invite-pop" %}
+{% set pageTitle = "You cannot use this service" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+      <p>You do not have permission to access it.</p>
+    </div>
+  </div>
+{% endblock %}

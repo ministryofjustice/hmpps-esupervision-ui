@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "hmpps-precommit-hooks-prepare",
     "watch-ts": "tsc -w",
-    "build": "node esbuild/esbuild.config.js --build",
+    "build": "node esbuild/esbuild",
     "start": "node $NODE_OPTIONS dist/server.js | bunyan -o short",
     "start:dev": "node esbuild/esbuild --watch",
     "start-feature": " node $NODE_DEBUG_OPTION --env-file=feature.env dist/server.js | bunyan -o short",
@@ -148,7 +148,6 @@
     "esbuild-plugin-manifest": "^1.0.5",
     "esbuild-sass-plugin": "^3.7.0",
     "glob": "^11.1.0",
-    "husky": "^9.1.7",
     "jest": "^29.7.0",
     "jest-html-reporter": "^4.4.0",
     "jest-junit": "^16.0.0",

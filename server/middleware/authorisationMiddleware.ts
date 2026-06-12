@@ -28,7 +28,7 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
           logger.error(`User ${name} (${userName}) is not authorised to access dashboard`)
           logger.error(`User has roles '${roles}', required one of ${authorisedAuthorities}`)
           if (authorisedAuthorities.includes('ROLE_ESUPERVISION__PRACTITIONER__INVITE_POP')) {
-            return res.redirect('/practitioners/auth-error')
+            return res.redirect('/practitioners/invite-pop/permissions')
           }
           return res.redirect('/authError')
         }

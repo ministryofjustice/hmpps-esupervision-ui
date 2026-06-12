@@ -47,6 +47,7 @@ import {
   handleGetUserInfo,
   handleCheckIfContactDetailsExist,
   handleResendInvite,
+  renderAuthErrorInvitePoP,
 } from '../controllers/practitionersController'
 import {
   personsDetailsSchema,
@@ -193,7 +194,14 @@ export default function routes(): Router {
   get('/data/user', renderUserInfo)
   router.post('/data/user', handleGetUserInfo)
 
-  // Invite PoP journey
+  // Invite PoP journey - not authorised
+  get('/invite-pop/permissions', renderAuthErrorInvitePoP)
+
+  // Guidance page is open to any practitioner
+  get('/invite-pop/guidance', renderGuidance)
+
+  // Invite PoP journey — requires the dedicated invite-pop role in addition to the practitioner role
+  router.use('/invite-pop', authorisationMiddleware(['ROLE_ESUPERVISION__PRACTITIONER__INVITE_POP']))
   get('/invite-pop/start', handleStartInvitePop)
   get('/invite-pop', renderInviteCrn)
   router.post(
@@ -223,7 +231,6 @@ export default function routes(): Router {
   router.post('/invite-pop/check-answers', handleInviteSubmit)
 
   get('/invite-pop/confirmation', renderInviteConfirmation)
-  get('/invite-pop/guidance', renderGuidance)
 
   return router
 }

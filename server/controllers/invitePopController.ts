@@ -132,10 +132,11 @@ export const handleInviteSubmit: RequestHandler = async (req, res, next) => {
 
 export const renderInviteConfirmation: RequestHandler = async (req, res, next) => {
   try {
-    const { invitedCrn, invitedContactPreference, invitedContactValue } = (res.locals.formData || {}) as {
+    const { invitedCrn, invitedContactPreference, invitedContactValue, auditEmitted } = (res.locals.formData || {}) as {
       invitedCrn?: string
       invitedContactPreference?: 'EMAIL' | 'TEXT'
       invitedContactValue?: string
+      auditEmitted?: boolean
     }
 
     if (!invitedCrn || !invitedContactValue) {
@@ -143,14 +144,27 @@ export const renderInviteConfirmation: RequestHandler = async (req, res, next) =
       return
     }
 
-    await auditService.sendAuditMessage({
-      action: 'COMPLETED_INVITE_POP_JOURNEY',
-      who: res.locals.user.username,
-      subjectId: invitedCrn,
-      subjectType: 'CRN',
-      correlationId: v4(),
-      service: 'hmpps-esupervision-ui',
-    })
+    // Audit only the first view of the confirmation page so refreshing or revisiting does not emit
+    // duplicate COMPLETED_INVITE_POP_JOURNEY events. The flag is only set on a successful send, so a
+    // genuine audit failure can retry on refresh. Audit failures must never block the render, since
+    // the invite has already succeeded by this point.
+    if (!auditEmitted) {
+      try {
+        await auditService.sendAuditMessage({
+          action: 'COMPLETED_INVITE_POP_JOURNEY',
+          who: res.locals.user.username,
+          subjectId: invitedCrn,
+          subjectType: 'CRN',
+          correlationId: v4(),
+          service: 'hmpps-esupervision-ui',
+        })
+        if (req.session.formData) {
+          req.session.formData.auditEmitted = true
+        }
+      } catch (error) {
+        logger.error('Failed to send COMPLETED_INVITE_POP_JOURNEY audit message', error)
+      }
+    }
 
     res.render('pages/practitioners/invite-pop/confirmation', {
       crn: invitedCrn,

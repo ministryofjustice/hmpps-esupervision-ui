@@ -1,4 +1,6 @@
+import { auditService } from '@ministryofjustice/hmpps-audit-client'
 import { RequestHandler } from 'express'
+import { v4 } from 'uuid'
 import logger from '../../logger'
 import { services } from '../services'
 
@@ -128,7 +130,7 @@ export const handleInviteSubmit: RequestHandler = async (req, res, next) => {
   }
 }
 
-export const renderInviteConfirmation: RequestHandler = (req, res, next) => {
+export const renderInviteConfirmation: RequestHandler = async (req, res, next) => {
   try {
     const { invitedCrn, invitedContactPreference, invitedContactValue } = (res.locals.formData || {}) as {
       invitedCrn?: string
@@ -140,6 +142,15 @@ export const renderInviteConfirmation: RequestHandler = (req, res, next) => {
       res.redirect(INVITE_BASE)
       return
     }
+
+    await auditService.sendAuditMessage({
+      action: 'COMPLETED_INVITE_POP_JOURNEY',
+      who: res.locals.user.username,
+      subjectId: invitedCrn,
+      subjectType: 'CRN',
+      correlationId: v4(),
+      service: 'hmpps-esupervision-ui',
+    })
 
     res.render('pages/practitioners/invite-pop/confirmation', {
       crn: invitedCrn,

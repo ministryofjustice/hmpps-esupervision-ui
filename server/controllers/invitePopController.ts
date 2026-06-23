@@ -150,13 +150,12 @@ export const renderInviteConfirmation: RequestHandler = async (req, res, next) =
     // the invite has already succeeded by this point.
     if (!auditEmitted) {
       try {
-        await auditService.sendAuditMessage({
-          action: 'COMPLETED_INVITE_POP_JOURNEY',
+        await auditService.logAuditEvent({
+          what: 'COMPLETED_INVITE_POP_JOURNEY',
           who: res.locals.user.username,
           subjectId: invitedCrn,
           subjectType: 'CRN',
           correlationId: v4(),
-          service: 'hmpps-esupervision-ui',
         })
         if (req.session.formData) {
           req.session.formData.auditEmitted = true

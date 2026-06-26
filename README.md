@@ -5,6 +5,7 @@
 
 An internal use only front end for E-supervision project. Provides the following:
 - statistics dashboard
+- offender invite journey - allows practitioners to invite offenders to sign up for a probation account
 - a proxy for check-in related media URLs
 
 _Historical note_: During the project's pilot phase, this project was used as both a practitioner-facing and offender-facing (e.g., externally accessible) web application. Since then, we've split the offender and practitioner parts into their own projects:

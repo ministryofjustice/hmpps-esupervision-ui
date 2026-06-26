@@ -12,7 +12,7 @@ _Historical note_: During the project's pilot phase, this project was used as bo
 - offender facing app: [hmpps-probation-check-in-ui](https://github.com/ministryofjustice/hmpps-probation-check-in-ui)
 - practitioner facing app: [hmpps-manage-online-check-ins-ui](https://github.com/ministryofjustice/hmpps-manage-online-check-ins-ui) (in process of being split from [MPOP](https://github.com/ministryofjustice/hmpps-manage-people-on-probation-ui))
 
-Front end for the E-supervision project. It relies on the [E-supervision API](https://github.com/ministryofjustice/hmpps-esupervision-api)
+The project relies on the [E-supervision API](https://github.com/ministryofjustice/hmpps-esupervision-api)
 for persistence and interaction with cloud resources.
 
 ## Running locally

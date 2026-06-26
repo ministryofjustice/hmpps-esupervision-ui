@@ -7,8 +7,8 @@ An internal use only front end for E-supervision project. Provides the following
 - statistics dashboard
 - a proxy for check-in related media URLs
 
-_Historical note_: During the project's pilot phase this project was used as both practitioner facing and offender facing (e.g., extrnally accessible) web application. Since then the we split the offender and practitioner parts into their own projects:
-- offender facing app: [hmpps-probation-check-in-ui]https://github.com/ministryofjustice/hmpps-probation-check-in-ui
+_Historical note_: During the project's pilot phase, this project was used as both a practitioner-facing and offender-facing (e.g., externally accessible) web application. Since then, we've split the offender and practitioner parts into their own projects:
+- offender facing app: [hmpps-probation-check-in-ui](https://github.com/ministryofjustice/hmpps-probation-check-in-ui)
 - practitioner facing app: [hmpps-manage-online-check-ins-ui](https://github.com/ministryofjustice/hmpps-manage-online-check-ins-ui) (in process of being split from [MPOP](https://github.com/ministryofjustice/hmpps-manage-people-on-probation-ui))
 
 Front end for the E-supervision project. It relies on the [E-supervision API](https://github.com/ministryofjustice/hmpps-esupervision-api)

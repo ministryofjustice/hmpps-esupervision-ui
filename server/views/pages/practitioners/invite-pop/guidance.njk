@@ -5,27 +5,56 @@
 {% set pageTitle = title %}
 
 {% block content %}
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
       <h1 class="govuk-heading-xl">{{ title }}</h1>
 
       <p class="govuk-body">
-        ‘Check your probation account’ is an optional online service, where people can see information about their
-        probation arrangements.
+        'Check your probation account' is an online service, where people can see information about their probation
+        arrangements.
       </p>
+
+      <h2 class="govuk-heading-l">Invite someone to access their probation account</h2>
+      <p class="govuk-body">Before you invite someone, ask for their consent.</p>
       <p class="govuk-body">
-        The information shown in a probation account is sourced from nDelius and ARNS.
+        If they consent, explain someone from Engaging People on Probation will call them to ask for feedback. They will
+        call before 31 August 2026.
       </p>
+      <p class="govuk-body">The feedback call is optional, and will not affect their probation.</p>
+      <p class="govuk-body">
+        <a class="govuk-button" role="button" href="/practitioners/invite-pop">Invite someone</a>
+      </p>
+
+      <h3 class="govuk-heading-m">Walkthrough video</h3>
+      <p class="govuk-body">This video shows an overview of probation accounts.</p>
+      <p class="govuk-body">You can also show or send the video to people on probation.</p>
+      <iframe
+        class="govuk-!-margin-bottom-4"
+        src="https://www.veed.io/embed/00dc0b23-2d92-4136-8ab7-bebae086cc21"
+        title="Walkthrough video showing an overview of probation accounts"
+        width="100%"
+        height="315"
+        allow="fullscreen; picture-in-picture"
+      ></iframe>
+      <p class="govuk-body">
+        <a
+          class="govuk-link"
+          href="https://www.veed.io/view/00dc0b23-2d92-4136-8ab7-bebae086cc21"
+          rel="noreferrer noopener"
+          target="_blank"
+          >Open video in new tab</a
+        >
+      </p>
+
+      <h2 class="govuk-heading-l">Information shown in a probation account</h2>
+      <p class="govuk-body">The information shown in a probation account is sourced from nDelius and ARNS.</p>
       <p class="govuk-body">Probation accounts show specific, limited information, including:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>appointments and activities</li>
-        <li>sentence plan and requirements progress</li>
-        <li>order requirements</li>
-        <li>expectations people need to meet while on probation</li>
+        <li>progress in their requirements and sentence plan</li>
+        <li>what's expected of them while on probation</li>
         <li>what they can expect from the Probation Service</li>
-        <li>their probation officer’s contact details</li>
+        <li>their probation officer's contact details</li>
       </ul>
       <p class="govuk-body">Information that will not be shown to the person on probation:</p>
       <ul class="govuk-list govuk-list--bullet">
@@ -35,98 +64,59 @@
       </ul>
 
       <h2 class="govuk-heading-l">Benefits of probation accounts</h2>
-      <p class="govuk-body">
-        By allowing people to access their probation account online, we expect to:
-      </p>
+      <p class="govuk-body">By allowing people to access their probation account online, we expect to:</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>reduce staff time spent on responding to queries from people on probation. People can see relevant information in their online account.</li>
-        <li>make it easier and more accessible for a person on probation to access their records. This also helps with compliance.</li>
+        <li>
+          reduce staff time spent on responding to queries from people on probation. People can see relevant information
+          in their online account.
+        </li>
+        <li>
+          make it easier and more accessible for a person on probation to access their records. This also helps with
+          compliance.
+        </li>
         <li>help motivate people on probation by making progress more visible</li>
       </ul>
 
       <h2 class="govuk-heading-l">Limitations of probation accounts</h2>
-      <p class="govuk-body">
-        The information shown in online probation accounts comes from MPOP, nDelius and ARNS. Make sure you keep those
-        systems up to date, so people on probation see the right information, and staff spend less time answering queries.
-      </p>
-      <p class="govuk-body">
-        Only appointments and activities facilitated by the Probation Service are shown on a probation account. Other
-        activities will not be shown – for example, tag appointments, or appointments relating to treatment requirements.
-        To prevent confusion, we have explained this limitation to users on the ‘appointments and activities’ page.
-      </p>
-      <p class="govuk-body">
-        People on probation cannot change information on their account.
-      </p>
-      <p class="govuk-body">
-        Probation accounts might not be accessible for some people. For example, people who struggle to access the
-        internet, or have requirements that restrict their internet use.
-      </p>
-
-      <h2 class="govuk-heading-l">Managing access to probation accounts</h2>
-      <p class="govuk-body">
-        This pilot is optional for both practitioners and people on probation.
-      </p>
-      <p class="govuk-body">
-        If people on probation choose not to use their probation account, it will not affect their probation arrangements.
-      </p>
-
-      <h3 class="govuk-heading-m">Invite someone to access their probation account</h3>
-      <p class="govuk-body">
-        For a person on probation to access their probation account, they need to be invited by their probation officer.
-      </p>
-      <p class="govuk-body">
-        Ask for their verbal consent before inviting them.
-      </p>
-      <p class="govuk-body">
-        To invite them to access their online probation account, send them an invite.
-      </p>
-      <p class="govuk-body">
-        Invites need to be accepted within 7 days of sending, otherwise the link will expire. If this happens, send the
-        person a new invite.
-      </p>
-
-      <h3 class="govuk-heading-m">Signing in using GOV.UK One Login</h3>
-      <p class="govuk-body">
-        To access a probation account, the person on probation has to sign in or register to GOV.UK One Login using their
-        email address.
-      </p>
-
-      <h3 class="govuk-heading-m">Removing access to a probation account</h3>
-      <p class="govuk-body">
-        You can remove someone from accessing their online probation account at any time.
-      </p>
-      <p class="govuk-body">Examples of why you might remove access:</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>the person has gone into Reset, or suspended supervision</li>
-        <li>the person’s sentence has ended</li>
-        <li>the person has gone back to court, or prison</li>
-        <li>the person no longer wants to access their account online</li>
+        <li>
+          The information shown in online probation accounts comes from MPOP, nDelius and ARNS. Make sure you keep those
+          systems up to date, so people on probation see the right information, and staff spend less time answering
+          queries.
+        </li>
+        <li>
+          Only appointments and activities facilitated by the Probation Service are shown on a probation account. Other
+          activities will not be shown - for example, tag appointments, or appointments relating to treatment
+          requirements. To prevent confusion, we have explained this limitation to users on the 'appointments and
+          activities' page.
+        </li>
+        <li>People on probation cannot change information on their account.</li>
+        <li>
+          Probation accounts might not be accessible for some people. For example, people who struggle to access the
+          internet, or have requirements that restrict their internet use.
+        </li>
       </ul>
 
       <h2 class="govuk-heading-l">Eligibility</h2>
       <h3 class="govuk-heading-m">Who is eligible to access their probation account</h3>
       <p class="govuk-body">
-        Currently, probation accounts is in pilot phase. During the pilot phase, you can invite people to use the service
-        who are:
+        Currently, probation accounts is in pilot phase. During the pilot phase, you can invite people to use the
+        service who are:
       </p>
       <ul class="govuk-list govuk-list--bullet">
         <li>based in Kent, Surrey and Sussex (KSS); East of England; and London</li>
         <li>on a community order</li>
         <li>on a single order community order, with 1 or more requirements</li>
       </ul>
-      <p class="govuk-body">
-        During this pilot, we especially encourage you to invite people who:
-      </p>
+      <p class="govuk-body">During this pilot, we especially encourage you to invite people who:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>are not consistently engaging with probation, or are at risk of breach</li>
         <li>might struggle to use digital services or technology</li>
         <li>have more complex lives. For example: housing instability, poor mental health, addiction.</li>
       </ul>
 
-      <h2 class="govuk-heading-l">Who is not eligible to access their probation account</h2>
-      <p class="govuk-body">
-        People are not eligible to access their online probation account if they:
-      </p>
+      <h3 class="govuk-heading-m">Who is not eligible to access their probation account</h3>
+      <p class="govuk-body">People are not eligible to access their online probation account if they:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>have had their supervision suspended, for example through IMPACT or Reset</li>
         <li>are on a Suspended Sentence Order, or on licence</li>
@@ -134,21 +124,49 @@
         <li>are on the Intensive Supervision Court pilot</li>
       </ul>
 
-      <h2 class="govuk-heading-l">How data is used and who can see it</h2>
+      <h2 class="govuk-heading-l">Managing access to probation accounts</h2>
+      <p class="govuk-body">This pilot is optional for both practitioners and people on probation.</p>
       <p class="govuk-body">
-        Learn more about how we use data in our <a href="#" class="govuk-link">privacy policy</a>.
+        If people on probation choose not to use their probation account, it will not affect their probation
+        arrangements.
       </p>
+      <p class="govuk-body">
+        Invites need to be accepted within 7 days of sending. If the invite link expires, send them a new invite.
+      </p>
+
+      <h3 class="govuk-heading-m">Signing in using GOV.UK One Login</h3>
+      <p class="govuk-body">
+        To access a probation account, the person on probation has to sign in or register to
+        <a
+          class="govuk-link"
+          href="https://www.gov.uk/using-your-gov-uk-one-login"
+          rel="noreferrer noopener"
+          target="_blank"
+          >GOV.UK One Login</a
+        >.
+      </p>
+      <p class="govuk-body">They will need an email address.</p>
+
+      <h3 class="govuk-heading-m">Removing access to a probation account</h3>
+      <p class="govuk-body">You can remove someone's access to their online probation account at any time.</p>
+      <p class="govuk-body">Examples of why you might remove access:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>the person has gone into Reset, or suspended supervision</li>
+        <li>the person's sentence has ended</li>
+        <li>the person has gone back to court, or prison</li>
+        <li>the person no longer wants to access their account online</li>
+      </ul>
 
       <h2 class="govuk-heading-l">Help and support</h2>
       <p class="govuk-body">
-        Email us at <a href="mailto:probationaccounts@justice.gov.uk" class="govuk-link">probationaccounts@justice.gov.uk</a> if:
+        Email us at
+        <a href="mailto:probationaccounts@justice.gov.uk" class="govuk-link">probationaccounts@justice.gov.uk</a> if:
       </p>
       <ul class="govuk-list govuk-list--bullet">
         <li>you have questions or feedback about the service</li>
         <li>probation accounts are not working, or something seems broken</li>
         <li>someone needs help using their probation account</li>
       </ul>
-
     </div>
   </div>
 {% endblock %}

@@ -27,6 +27,7 @@ export default function setUpWebSecurity(): Router {
           scriptSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           styleSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           mediaSrc: "'self' data: blob localhost",
+          frameSrc: ["'self'", 'https://www.veed.io'],
           fontSrc: ["'self'"],
           formAction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
         },

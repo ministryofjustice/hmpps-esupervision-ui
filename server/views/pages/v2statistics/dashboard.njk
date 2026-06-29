@@ -58,7 +58,7 @@
     {
       text: "Overall",
       active: true
-    }, 
+    },
     {
       text: "Data by Region",
       href: "/v2statistics/region?monthFrom=" + monthFrom + "&monthTo=" + monthTo
@@ -167,12 +167,24 @@
         classes: "govuk-!-font-weight-bold"
       },
       {
-        text: stats.avgHoursToComplete | hoursToHoursAndMinutes()
+        html: stats.medianHoursToComplete | hoursToHoursAndMinutes() + " (median) <br />" + stats.p90HoursToComplete | hoursToHoursAndMinutes() + " (P90)"
       },
       {
         text: ""
       }
     ],
+    [
+          {
+            text: "Number of check ins over 12hrs",
+            classes: "govuk-!-font-weight-bold"
+          },
+          {
+            text: stats.delayedSubmissions
+          },
+          {
+            text: ""
+          }
+        ],
     [
       {
         text: "Average number of completed check ins per person",

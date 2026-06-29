@@ -30,7 +30,7 @@ import {
 export default function routes(): Router {
   const router = Router()
 
-  // practitioner routes all require a login
+  // invite-pop routes all require a login
   const tokenVerificationClient = new VerificationClient(config.apis.tokenVerification, logger)
   router.use(async (req, res, next) => {
     if (req.isAuthenticated() && (await tokenVerificationClient.verifyToken(req as unknown as AuthenticatedRequest))) {

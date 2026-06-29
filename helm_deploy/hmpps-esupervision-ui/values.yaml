@@ -1,6 +1,7 @@
 generic-service:
   nameOverride: hmpps-esupervision-ui
   productId: 'HMPPS9999' # productId for the product that this belongs too, i.e. DPS001, see README.md for details
+  serviceAccountName: hmpps-esupervision
 
   # the IRSA service account name for accessing AWS resources
   # serviceAccountName: "hmpps-esupervision-api"
@@ -41,7 +42,7 @@ generic-service:
     REDIS_TLS_ENABLED: 'true'
     TOKEN_VERIFICATION_ENABLED: 'true'
     AUDIT_SQS_REGION: 'eu-west-2'
-    AUDIT_SERVICE_NAME: 'UNASSIGNED' # Your audit service name
+    AUDIT_SERVICE_NAME: 'hmpps-esupervision'
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -65,6 +66,11 @@ generic-service:
       APPLICATIONINSIGHTS_CONNECTION_STRING: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
     ip-info-token:
       IP_INFO_TOKEN: 'token'
+    hmpps-esupervision:
+      sqs-hmpps-audit-secret:
+        AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
+        AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
+
     # This secret will need to be created in your namespace (note it isn't in hmpps-templates-dev)
     # IRSA configuration in your namespace will also be required, and then uncomment serviceAccountName above.
     # sqs-hmpps-audit-secret:

@@ -817,3 +817,11 @@ export const handleGetUserInfo: RequestHandler = async (req, res, next) => {
     next(error)
   }
 }
+
+export const renderAuthErrorInvitePoP: RequestHandler = async (req, res, next) => {
+  try {
+    res.status(403).render('pages/practitioners/invite-pop/auth-error')
+  } catch (error) {
+    next(error)
+  }
+}

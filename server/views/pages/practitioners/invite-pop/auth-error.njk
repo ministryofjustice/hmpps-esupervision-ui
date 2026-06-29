@@ -1,0 +1,15 @@
+{% extends "./layout.njk" %}
+{% set section = "invite-pop" %}
+{% set pageTitle = "You cannot use this service" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+      <p class="govuk-body">You do not have permission to invite someone to access their probation account.
+          If you think you should have access, contact the support inbox at
+          <a href="mailto:probationaccounts@justice.gov.uk" class="govuk-link">probationaccounts@justice.gov.uk</a>.
+       </p>
+    </div>
+  </div>
+{% endblock %}

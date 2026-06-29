@@ -57,25 +57,6 @@ import {
   photoUploadSchema,
   videoReviewSchema,
 } from '../schemas/practitionersSchemas'
-import {
-  inviteCrnSchema,
-  inviteContactPreferenceSchema,
-  inviteEmailSchema,
-  inviteMobileSchema,
-} from '../schemas/invitePopSchemas'
-import {
-  handleInviteContactPreferences,
-  handleInviteRedirect,
-  handleInviteSubmit,
-  handleStartInvitePop,
-  renderGuidance,
-  renderInviteCheckAnswers,
-  renderInviteConfirmation,
-  renderInviteContact,
-  renderInviteCrn,
-  renderInviteEmail,
-  renderInviteMobile,
-} from '../controllers/invitePopController'
 
 export default function routes(): Router {
   const router = Router()
@@ -192,38 +173,6 @@ export default function routes(): Router {
   // Data dashboard
   get('/data/user', renderUserInfo)
   router.post('/data/user', handleGetUserInfo)
-
-  // Invite PoP journey
-  get('/invite-pop/start', handleStartInvitePop)
-  get('/invite-pop', renderInviteCrn)
-  router.post(
-    '/invite-pop',
-    validateFormData(inviteCrnSchema),
-    handleInviteRedirect('/practitioners/invite-pop/contact'),
-  )
-
-  get('/invite-pop/contact', renderInviteContact)
-  router.post('/invite-pop/contact', validateFormData(inviteContactPreferenceSchema), handleInviteContactPreferences)
-
-  get('/invite-pop/contact/email', renderInviteEmail)
-  router.post(
-    '/invite-pop/contact/email',
-    validateFormData(inviteEmailSchema),
-    handleInviteRedirect('/practitioners/invite-pop/check-answers'),
-  )
-
-  get('/invite-pop/contact/mobile', renderInviteMobile)
-  router.post(
-    '/invite-pop/contact/mobile',
-    validateFormData(inviteMobileSchema),
-    handleInviteRedirect('/practitioners/invite-pop/check-answers'),
-  )
-
-  get('/invite-pop/check-answers', renderInviteCheckAnswers)
-  router.post('/invite-pop/check-answers', handleInviteSubmit)
-
-  get('/invite-pop/confirmation', renderInviteConfirmation)
-  get('/invite-pop/guidance', renderGuidance)
 
   return router
 }

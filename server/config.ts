@@ -36,6 +36,14 @@ function getAuthorisedUserRoles(): Array<string> {
   })
 }
 
+function getInvitePopUserRoles(): Array<string> {
+  const roles = get('INVITE_POP_USER_ROLES', '')
+  return roles.split(',').flatMap(roleStr => {
+    const role = roleStr.trim()
+    return role === '' ? [] : [role]
+  })
+}
+
 export default {
   serviceName: 'Submit a remote check-in',
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
@@ -46,6 +54,7 @@ export default {
   https: process.env.NO_HTTPS === 'true' ? false : production,
   staticResourceCacheDuration: '1h',
   authorisedUserRoles: getAuthorisedUserRoles(),
+  invitePopUserRoles: getInvitePopUserRoles(),
   redis: {
     enabled: get('REDIS_ENABLED', 'false', requiredInProduction) === 'true',
     host: get('REDIS_HOST', 'localhost', requiredInProduction),

@@ -1,11 +1,27 @@
 import { RequestHandler } from 'express'
+import { auditService } from '@ministryofjustice/hmpps-audit-client'
 import logger from '../../logger'
 import { services } from '../services'
 
 const { popService } = services()
 
-const INVITE_BASE = '/practitioners/invite-pop'
+const INVITE_BASE = '/invite-pop'
 const CHECK_ANSWERS_PATH = `${INVITE_BASE}/check-answers`
+
+async function sendAuditEvent(action: string, user: string, crn: string) {
+  try {
+    await auditService.sendAuditMessage({
+      action,
+      who: user,
+      subjectId: crn,
+      subjectType: 'CRN',
+      service: 'hmpps-esupervision-ui',
+    })
+    logger.debug('Audit event sent successfully')
+  } catch (error) {
+    logger.error('Error sending audit event:', error)
+  }
+}
 
 export const handleInviteRedirect = (nextUrl: string): RequestHandler => {
   return (req, res) => {
@@ -107,6 +123,8 @@ export const handleInviteSubmit: RequestHandler = async (req, res, next) => {
       email: contactPreference === 'EMAIL' ? email : undefined,
       mobile: contactPreference === 'TEXT' ? mobile : undefined,
     })
+
+    sendAuditEvent('POP_ACCOUNT_INVITE_SENT', req.user.username, crn)
 
     req.session.formData = {
       invitedCrn: crn,

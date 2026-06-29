@@ -58,26 +58,6 @@ import {
   videoReviewSchema,
 } from '../schemas/practitionersSchemas'
 
-import {
-  inviteCrnSchema,
-  inviteContactPreferenceSchema,
-  inviteEmailSchema,
-  inviteMobileSchema,
-} from '../schemas/invitePopSchemas'
-import {
-  handleInviteContactPreferences,
-  handleInviteRedirect,
-  handleInviteSubmit,
-  handleStartInvitePop,
-  renderGuidance,
-  renderInviteCheckAnswers,
-  renderInviteConfirmation,
-  renderInviteContact,
-  renderInviteCrn,
-  renderInviteEmail,
-  renderInviteMobile,
-} from '../controllers/invitePopController'
-
 export default function routes(): Router {
   const router = Router()
 
@@ -91,9 +71,7 @@ export default function routes(): Router {
     return res.redirect('/sign-in')
   })
 
-  // router.use(authorisationMiddleware(config.authorisedUserRoles))
-  // Use invitePopUserRoles restrictions until it is confirmed that new endpoint routes can be used
-  router.use(authorisationMiddleware(config.invitePopUserRoles))
+  router.use(authorisationMiddleware(config.authorisedUserRoles))
   router.use(setUpCurrentUser())
 
   const get = (routePath: string | string[], handler: RequestHandler) => router.get(routePath, asyncMiddleware(handler))
@@ -195,30 +173,6 @@ export default function routes(): Router {
   // Data dashboard
   get('/data/user', renderUserInfo)
   router.post('/data/user', handleGetUserInfo)
-
-  // Invite PoP journey
-  get('/start', handleStartInvitePop)
-  get('/', renderInviteCrn)
-  router.post('/', validateFormData(inviteCrnSchema), handleInviteRedirect('/invite-pop/contact'))
-
-  get('/contact', renderInviteContact)
-  router.post('/contact', validateFormData(inviteContactPreferenceSchema), handleInviteContactPreferences)
-
-  get('/contact/email', renderInviteEmail)
-  router.post('/contact/email', validateFormData(inviteEmailSchema), handleInviteRedirect('/invite-pop/check-answers'))
-
-  get('/contact/mobile', renderInviteMobile)
-  router.post(
-    '/contact/mobile',
-    validateFormData(inviteMobileSchema),
-    handleInviteRedirect('/invite-pop/check-answers'),
-  )
-
-  get('/check-answers', renderInviteCheckAnswers)
-  router.post('/check-answers', handleInviteSubmit)
-
-  get('/confirmation', renderInviteConfirmation)
-  get('/guidance', renderGuidance)
 
   return router
 }

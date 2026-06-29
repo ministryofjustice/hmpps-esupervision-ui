@@ -14,7 +14,7 @@
   actions: {
     items: [
       {
-        href: ("/practitioners/invite-pop/contact/email?checkAnswers=true" if formData['contactPreference'] == 'EMAIL' else "/practitioners/invite-pop/contact/mobile?checkAnswers=true"),
+        href: ("/invite-pop/contact/email?checkAnswers=true" if formData['contactPreference'] == 'EMAIL' else "/invite-pop/contact/mobile?checkAnswers=true"),
         text: "Change",
         visuallyHiddenText: " contact details"
       }
@@ -26,7 +26,7 @@
   {{
     govukBackLink({
       text: "Back",
-      href: "/practitioners/invite-pop/contact/email" if formData['contactPreference'] == 'EMAIL' else "/practitioners/invite-pop/contact/mobile"
+      href: "/invite-pop/contact/email" if formData['contactPreference'] == 'EMAIL' else "/invite-pop/contact/mobile"
     })
   }}
 {% endblock %}
@@ -45,7 +45,7 @@
               actions: {
                 items: [
                   {
-                    href: "/practitioners/invite-pop?checkAnswers=true",
+                    href: "/invite-pop?checkAnswers=true",
                     text: "Change",
                     visuallyHiddenText: " case reference number"
                   }
@@ -58,7 +58,7 @@
               actions: {
                 items: [
                   {
-                    href: "/practitioners/invite-pop/contact?checkAnswers=true",
+                    href: "/invite-pop/contact?checkAnswers=true",
                     text: "Change",
                     visuallyHiddenText: " the contact method"
                   }

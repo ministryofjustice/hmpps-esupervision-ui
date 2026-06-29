@@ -5,7 +5,7 @@ import { services } from '../services'
 
 const { popService } = services()
 
-const INVITE_BASE = '/practitioners/invite-pop'
+const INVITE_BASE = '/invite-pop'
 const CHECK_ANSWERS_PATH = `${INVITE_BASE}/check-answers`
 
 async function sendAuditEvent(action: string, user: string, crn: string) {

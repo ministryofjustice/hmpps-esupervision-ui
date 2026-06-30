@@ -4,6 +4,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import config from '../config'
 import validateFormData from '../middleware/validateFormData'
 import authorisationMiddleware from '../middleware/authorisationMiddleware'
+import invitePopUsernameAllowlistMiddleware from '../middleware/invitePopUsernameAllowlistMiddleware'
 import setUpCurrentUser from '../middleware/setUpCurrentUser'
 import logger from '../../logger'
 
@@ -40,7 +41,11 @@ export default function routes(): Router {
     return res.redirect('/sign-in')
   })
 
-  router.use(authorisationMiddleware(config.invitePopUserRoles))
+  if (config.invitePopRestrictByUsername) {
+    router.use(invitePopUsernameAllowlistMiddleware(config.invitePopAllowedUsernames))
+  } else {
+    router.use(authorisationMiddleware(config.invitePopUserRoles))
+  }
   router.use(setUpCurrentUser())
 
   const get = (routePath: string | string[], handler: RequestHandler) => router.get(routePath, asyncMiddleware(handler))

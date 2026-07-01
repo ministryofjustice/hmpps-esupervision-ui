@@ -43,6 +43,8 @@ generic-service:
     TOKEN_VERIFICATION_ENABLED: 'true'
     AUDIT_SQS_REGION: 'eu-west-2'
     AUDIT_SERVICE_NAME: 'hmpps-esupervision'
+    # TEMPORARY: Set back to 'false' to revert invite-pop access to the role-based check.
+    INVITE_POP_RESTRICT_BY_USERNAME: 'true'
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -74,6 +76,11 @@ generic-service:
     # IRSA configuration in your namespace will also be required, and then uncomment serviceAccountName above.
     # sqs-hmpps-audit-secret:
     #   AUDIT_SQS_QUEUE_URL: 'sqs_queue_url'
+
+    # TEMPORARY: backs the temporary invite-pop username allowlist
+    # This secret key holding a comma-separated list of HMPPS usernames
+    hmpps-esupervision-ui-invite-pop-allowlist:
+      INVITE_POP_ALLOWED_USERNAMES: 'ALLOWED_USERNAMES'
 
 
 generic-prometheus-alerts:

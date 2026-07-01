@@ -44,6 +44,16 @@ function getInvitePopUserRoles(): Array<string> {
   })
 }
 
+// TEMPORARY: allows restricting invite-pop access to a fixed list of HMPPS usernames instead of the
+// usual role check.
+function getInvitePopAllowedUsernames(): Array<string> {
+  const usernames = get('INVITE_POP_ALLOWED_USERNAMES', '')
+  return usernames.split(',').flatMap(usernameStr => {
+    const username = usernameStr.trim().toUpperCase()
+    return username === '' ? [] : [username]
+  })
+}
+
 export default {
   serviceName: 'Submit a remote check-in',
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
@@ -55,6 +65,10 @@ export default {
   staticResourceCacheDuration: '1h',
   authorisedUserRoles: getAuthorisedUserRoles(),
   invitePopUserRoles: getInvitePopUserRoles(),
+  // TEMPORARY: see getInvitePopAllowedUsernames() above. Remove invitePopRestrictByUsername and
+  // invitePopAllowedUsernames once invite-pop access reverts to the role-based check.
+  invitePopRestrictByUsername: get('INVITE_POP_RESTRICT_BY_USERNAME', 'false') === 'true',
+  invitePopAllowedUsernames: getInvitePopAllowedUsernames(),
   redis: {
     enabled: get('REDIS_ENABLED', 'false', requiredInProduction) === 'true',
     host: get('REDIS_HOST', 'localhost', requiredInProduction),

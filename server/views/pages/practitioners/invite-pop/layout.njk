@@ -95,6 +95,7 @@
 {% endblock %}
 
 {% block footer %}
+  {% if hideFeedback !== true %}
   <div class="govuk-phase-banner es-footer__phase-banner">
     <p class="govuk-phase-banner__content">
       <span class="govuk-phase-banner__text">
@@ -110,6 +111,7 @@
       </span>
     </p>
   </div>
+  {% endif %}
   <footer class="govuk-footer">
     <div class="govuk-width-container">
       <svg

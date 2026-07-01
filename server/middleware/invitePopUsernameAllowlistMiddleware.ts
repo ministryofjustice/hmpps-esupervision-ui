@@ -18,7 +18,7 @@ export default function invitePopUsernameAllowlistMiddleware(allowedUsernames: s
       }
 
       logger.error(`User ${name} (${userName}) is not authorised to access invite-pop`)
-      return res.redirect('/authError')
+      return res.render('./pages/practitioners/invite-pop/auth-error')
     }
 
     req.session.returnTo = req.originalUrl

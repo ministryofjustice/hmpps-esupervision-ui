@@ -24,6 +24,7 @@
   {% if errors and errors.monthRange %}
     {% set monthRangeError = { text: errors.monthRange } %}
   {% endif %}
+
   <form method="get" action="{{ formAction }}">
     <div class="govuk-width-container">
       <div class="govuk-grid-row">
@@ -59,7 +60,7 @@
       {
         text: "Overall",
         href: "/v2statistics?monthFrom=" + monthFrom + "&monthTo=" + monthTo
-      }, 
+      },
       {
         text: "Data by Region",
         active: true
@@ -102,9 +103,20 @@
       pctKey: "pctExpiredCheckins"
     },
     {
-      label: "Average time to<br>complete a check in",
-      valueKey: "avgHoursToComplete",
+      label: "Average time to<br>complete a check in (median)",
+      valueKey: "medianHoursToComplete",
       hoursAndMinutes: true,
+      pctKey: ""
+    },
+    {
+      label: "Average time to<br>complete a check in (P90)",
+      valueKey: "p90HoursToComplete",
+      hoursAndMinutes: true,
+      pctKey: ""
+    },
+    {
+      label: "Number of check ins over 12hrs",
+      valueKey: "delayedSubmissions",
       pctKey: ""
     },
     {

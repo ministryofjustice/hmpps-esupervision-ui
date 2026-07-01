@@ -163,16 +163,28 @@
     ],
     [
       {
-        text: "Average time to complete a check in",
+        text: "Average time to complete a check in (median)",
         classes: "govuk-!-font-weight-bold"
       },
       {
-        html: stats.medianHoursToComplete | hoursToHoursAndMinutes() + " (median) <br />" + stats.p90HoursToComplete | hoursToHoursAndMinutes() + " (P90)"
+        text: stats.medianHoursToComplete | hoursToHoursAndMinutes()
       },
       {
         text: ""
       }
     ],
+     [
+          {
+            text: "Average time to complete a check in (P90)",
+            classes: "govuk-!-font-weight-bold"
+          },
+          {
+            text: stats.p90HoursToComplete | hoursToHoursAndMinutes()
+          },
+          {
+            text: ""
+          }
+        ],
     [
           {
             text: "Number of check ins over 12hrs",

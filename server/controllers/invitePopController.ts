@@ -122,6 +122,7 @@ export const handleInviteSubmit: RequestHandler = async (req, res, next) => {
       crn,
       email: contactPreference === 'EMAIL' ? email : undefined,
       mobile: contactPreference === 'TEXT' ? mobile : undefined,
+      createdByUsername: req.user.username,
     })
 
     sendAuditEvent('POP_ACCOUNT_INVITE_SENT', req.user.username, crn)

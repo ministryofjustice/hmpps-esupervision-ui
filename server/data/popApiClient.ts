@@ -7,6 +7,7 @@ export type RegistrationInviteRequest = {
   personReference: string
   email?: string
   mobileNumber?: string
+  createdByUsername: string
 }
 
 export default class PopApiClient extends RestClient {

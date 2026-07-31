@@ -166,7 +166,9 @@
     "@jgoz/esbuild-plugin-typecheck": {
       "esbuild": "$esbuild"
     },
-    "@opentelemetry/core": "2.10.0",
+    "applicationinsights": {
+      "@opentelemetry/core": "2.10.0"
+    },
     "brace-expansion": "5.0.9",
     "mocha": {
       "diff": "^8.0.4",

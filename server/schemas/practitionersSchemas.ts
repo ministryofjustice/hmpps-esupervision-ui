@@ -22,7 +22,7 @@ export const personsDetailsSchema = z
   .and(
     z.object({
       crn: z.string().regex(crnRegeex, {
-        message: 'Enter their case reference number, like A123456',
+        message: 'Enter a valid case reference number, like A123456',
       }),
     }),
   )
@@ -74,7 +74,7 @@ export const emailSchema = z.object({
       if (!val) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Enter the person’s email address',
+          message: 'Enter an email address in the correct format, like name@example.com',
         })
         return
       }
@@ -102,7 +102,7 @@ export const mobileSchema = z.object({
       if (!/^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/.test(val)) {
         ctx.addIssue({
           code: 'custom',
-          message: 'Enter a phone number, like 07700 900 982',
+          message: 'Enter a UK mobile number',
         })
       }
     }),

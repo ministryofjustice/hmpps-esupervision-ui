@@ -135,6 +135,11 @@ export default {
   sqs: {
     audit: auditConfig(),
   },
+  chatbot: {
+    enabled: get('CHATBOT_ENABLED', 'false') === 'true',
+    apiUrl: get('CHATBOT_API_URL', '', { requireInProduction: false } as any),
+    apiKey: get('CHATBOT_API_KEY', '', { requireInProduction: false } as any),
+  },
   ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
 }

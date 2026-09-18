@@ -82,6 +82,9 @@ generic-service:
     hmpps-esupervision-ui-invite-pop-allowlist:
       INVITE_POP_ALLOWED_USERNAMES: 'ALLOWED_USERNAMES'
 
+    hmpps-esupervision-ui-chatbot:
+      CHATBOT_API_KEY: 'CHATBOT_API_KEY'
+
 
 generic-prometheus-alerts:
   targetApplication: hmpps-esupervision-ui

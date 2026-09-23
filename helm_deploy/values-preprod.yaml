@@ -17,7 +17,8 @@ generic-service:
     V2_FEEDBACK_URL: 'https://probation-check-in-preprod.hmpps.service.justice.gov.uk/feedback'
     ENVIRONMENT_NAME: PRE-PRODUCTION
     AUDIT_ENABLED: 'false'
-    INVITE_POP_USER_ROLES: 'ROLE_ESUPERVISION__PRACTITIONER__INVITE_POP'
+    # Leave empty so any authenticated user can access the invite journey and guidance.
+    INVITE_POP_USER_ROLES: ''
 
 generic-prometheus-alerts:
   alertSeverity: hmpps_esupervision_alerts_nonprod

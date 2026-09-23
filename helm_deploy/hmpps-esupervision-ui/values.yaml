@@ -43,8 +43,9 @@ generic-service:
     TOKEN_VERIFICATION_ENABLED: 'true'
     AUDIT_SQS_REGION: 'eu-west-2'
     AUDIT_SERVICE_NAME: 'hmpps-esupervision'
-    # TEMPORARY: Set back to 'false' to revert invite-pop access to the role-based check.
-    INVITE_POP_RESTRICT_BY_USERNAME: 'true'
+    # Keep invite-pop open to any authenticated HMPPS user. Set to 'true' to restore the temporary
+    # username allowlist; when false, INVITE_POP_USER_ROLES controls any role restriction.
+    INVITE_POP_RESTRICT_BY_USERNAME: 'false'
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:

@@ -16,7 +16,7 @@ generic-service:
     POP_API_URL: 'https://people-on-probation-api-dev.hmpps.service.justice.gov.uk'
     V2_FEEDBACK_URL: 'https://probation-check-in-test.hmpps.service.justice.gov.uk/feedback'
     ENVIRONMENT_NAME: TEST
-    AUDIT_ENABLED: 'false'
+    AUDIT_ENABLED: 'true'
     AUTHORISED_USER_ROLES: 'ROLE_ESUPERVISION__PRACTITIONER__RW'
 
 generic-prometheus-alerts:

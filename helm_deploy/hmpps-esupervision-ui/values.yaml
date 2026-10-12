@@ -1,6 +1,6 @@
 generic-service:
   nameOverride: hmpps-esupervision-ui
-  productId: 'HMPPS557' # productId for the product that this belongs too, i.e. DPS001, see README.md for details
+  productId: 'HMPPS561' # productId for online check ins
   serviceAccountName: hmpps-esupervision
 
   # the IRSA service account name for accessing AWS resources

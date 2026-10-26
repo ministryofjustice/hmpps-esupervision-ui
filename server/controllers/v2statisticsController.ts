@@ -14,18 +14,26 @@ const getFeedbackStats = (v2Stats: V2StatsWithFeedback): V2FeedbackStats => {
     howEasyPct,
     gettingSupportCounts,
     gettingSupportPct,
+    helpsFeelSupportedCounts,
+    helpsFeelSupportedPct,
+    lessContactNeededCounts,
+    lessContactNeededPct,
     improvementsCounts,
     improvementsPct,
   } = v2Stats
 
   return {
     feedbackTotal: feedbackTotal ?? 0,
-    howEasyCounts,
-    howEasyPct,
-    gettingSupportCounts,
-    gettingSupportPct,
-    improvementsCounts,
-    improvementsPct,
+    howEasyCounts: howEasyCounts ?? {},
+    howEasyPct: howEasyPct ?? {},
+    gettingSupportCounts: gettingSupportCounts ?? {},
+    gettingSupportPct: gettingSupportPct ?? {},
+    helpsFeelSupportedCounts: helpsFeelSupportedCounts ?? {},
+    helpsFeelSupportedPct: helpsFeelSupportedPct ?? {},
+    lessContactNeededCounts: lessContactNeededCounts ?? {},
+    lessContactNeededPct: lessContactNeededPct ?? {},
+    improvementsCounts: improvementsCounts ?? {},
+    improvementsPct: improvementsPct ?? {},
   }
 }
 

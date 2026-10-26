@@ -31,6 +31,10 @@ describe('v2statisticsController', () => {
       feedbackTotal: 5,
       gettingSupportCounts: { no: 1, notAnswered: 2, yes: 2 },
       gettingSupportPct: { no: 0.3333, yes: 0.6667 },
+      helpsFeelSupportedCounts: { yes: 3, no: 1, notAnswered: 1 },
+      helpsFeelSupportedPct: { yes: 0.75, no: 0.25 },
+      lessContactNeededCounts: { yes: 1, no: 2, notAnswered: 2 },
+      lessContactNeededPct: { yes: 0.3333, no: 0.6667 },
       howEasyCounts: { easy: 1, notAnswered: 2, veryEasy: 2 },
       howEasyPct: { easy: 0.3333, veryEasy: 0.6667 },
       improvementsCounts: {
@@ -144,6 +148,10 @@ describe('v2statisticsController', () => {
             feedbackTotal: 5,
             gettingSupportCounts: v2stats.total.gettingSupportCounts,
             gettingSupportPct: v2stats.total.gettingSupportPct,
+            helpsFeelSupportedCounts: v2stats.total.helpsFeelSupportedCounts,
+            helpsFeelSupportedPct: v2stats.total.helpsFeelSupportedPct,
+            lessContactNeededCounts: v2stats.total.lessContactNeededCounts,
+            lessContactNeededPct: v2stats.total.lessContactNeededPct,
             howEasyCounts: v2stats.total.howEasyCounts,
             howEasyPct: v2stats.total.howEasyPct,
             improvementsCounts: v2stats.total.improvementsCounts,
@@ -222,6 +230,31 @@ describe('v2statisticsController', () => {
         expect.arrayContaining([expect.objectContaining({ value: '2026-02', text: 'February 2026' })]),
       )
 
+      expect(mockNext).not.toHaveBeenCalled()
+    })
+
+    it('defaults missing feedback maps to empty objects, e.g. for periods before the new questions existed', async () => {
+      const mockReq = { query: { monthFrom: '2025-08', monthTo: '2025-09' } } as any
+      const historicTotal = { ...v2stats.total }
+      delete historicTotal.helpsFeelSupportedCounts
+      delete historicTotal.helpsFeelSupportedPct
+      delete historicTotal.lessContactNeededCounts
+      delete historicTotal.lessContactNeededPct
+      mockGetV2StatsBetweenDateRange.mockResolvedValue({ ...v2stats, total: historicTotal })
+
+      await renderV2stats(mockReq, mockRes, mockNext)
+
+      const props = (mockRes.render as jest.Mock).mock.calls[0][1]
+      expect(props.feedbackStats).toEqual(
+        expect.objectContaining({
+          gettingSupportCounts: v2stats.total.gettingSupportCounts,
+          gettingSupportPct: v2stats.total.gettingSupportPct,
+          helpsFeelSupportedCounts: {},
+          helpsFeelSupportedPct: {},
+          lessContactNeededCounts: {},
+          lessContactNeededPct: {},
+        }),
+      )
       expect(mockNext).not.toHaveBeenCalled()
     })
 

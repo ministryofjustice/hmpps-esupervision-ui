@@ -382,6 +382,116 @@
   ]
   }) }}
     {{ govukTable({
+  caption: "Do online check ins help the person feel supported by probation",
+  captionClasses: "govuk-table__caption--m",
+  head: [
+    {
+      text: ""
+    },
+    {
+      text: "Total",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+    },
+    {
+      text: "Percentage of responses",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "Yes",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.helpsFeelSupportedCounts.yes | default(0)
+      },
+      {
+        text: feedbackStats.helpsFeelSupportedPct.yes | default(0) | percentage(2)
+      }
+    ],
+     [
+      {
+        text: "No",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.helpsFeelSupportedCounts.no | default(0)
+      },
+      {
+        text: feedbackStats.helpsFeelSupportedPct.no | default(0) | percentage(2)
+      }
+    ],
+     [
+      {
+        text: "Not answered",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.helpsFeelSupportedCounts.notAnswered | default(0)
+      },
+      {
+        text: ""
+      }
+    ]
+  ]
+  }) }}
+    {{ govukTable({
+  caption: "Does using online check ins mean the person needs to get in touch with their probation officer less",
+  captionClasses: "govuk-table__caption--m",
+  head: [
+    {
+      text: ""
+    },
+    {
+      text: "Total",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+    },
+    {
+      text: "Percentage of responses",
+      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "Yes",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.lessContactNeededCounts.yes | default(0)
+      },
+      {
+        text: feedbackStats.lessContactNeededPct.yes | default(0) | percentage(2)
+      }
+    ],
+     [
+      {
+        text: "No",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.lessContactNeededCounts.no | default(0)
+      },
+      {
+        text: feedbackStats.lessContactNeededPct.no | default(0) | percentage(2)
+      }
+    ],
+     [
+      {
+        text: "Not answered",
+        classes: "govuk-!-font-weight-bold"
+      },
+      {
+        text: feedbackStats.lessContactNeededCounts.notAnswered | default(0)
+      },
+      {
+        text: ""
+      }
+    ]
+  ]
+  }) }}
+    {{ govukTable({
   caption: "What parts of online check ins does the person think we could improve",
   captionClasses: "govuk-table__caption--m",
   head: [

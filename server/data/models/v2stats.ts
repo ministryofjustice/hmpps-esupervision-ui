@@ -1,6 +1,8 @@
 export type HowEasy = 'veryEasy' | 'easy' | 'neitherEasyOrDifficult' | 'difficult' | 'veryDifficult' | 'notAnswered'
 
-export type GettingSupport = 'yes' | 'no' | 'notAnswered'
+export type YesNo = 'yes' | 'no' | 'notAnswered'
+
+export type GettingSupport = YesNo
 
 export type Improvement =
   | 'findingOutAboutCheckIns'
@@ -36,6 +38,10 @@ export interface V2FeedbackStats {
   howEasyPct: Partial<Record<HowEasy, number>>
   gettingSupportCounts: Partial<Record<GettingSupport, number>>
   gettingSupportPct: Partial<Record<GettingSupport, number>>
+  helpsFeelSupportedCounts: Partial<Record<YesNo, number>>
+  helpsFeelSupportedPct: Partial<Record<YesNo, number>>
+  lessContactNeededCounts: Partial<Record<YesNo, number>>
+  lessContactNeededPct: Partial<Record<YesNo, number>>
   improvementsCounts: Partial<Record<Improvement, number>>
   improvementsPct: Partial<Record<Improvement, number>>
 }
@@ -46,7 +52,8 @@ export interface ProviderInfo {
   pctSignedUpOfTotal: number
 }
 
-export type V2StatsWithFeedback = V2Stats & V2FeedbackStats
+// Feedback maps may be absent, e.g. for periods before a question was introduced
+export type V2StatsWithFeedback = V2Stats & Partial<V2FeedbackStats>
 
 export type V2ProviderStats = V2Stats & ProviderInfo
 

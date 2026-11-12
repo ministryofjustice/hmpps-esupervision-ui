@@ -16,19 +16,17 @@ const compareVersions = (version: string, minimum: string): number => {
   return diff ?? 0
 }
 
-describe('app insights compatibility', () => {
+describe('telemetry compatibility', () => {
   it('uses bunyan v1', () => {
-    // See https://github.com/Microsoft/node-diagnostic-channel/blob/master/src/diagnostic-channel-publishers/README.md
+    // @opentelemetry/instrumentation-bunyan, used by @ministryofjustice/hmpps-azure-telemetry, supports bunyan v1
     // eslint-disable-next-line no-useless-escape
     expect(packageData.dependencies.bunyan).toMatch(/[^\.]1\..*/)
   })
 
   it('resolves a patched @opentelemetry/core', () => {
-    // applicationinsights v2 declares @opentelemetry/core ^1.19.0, but every published 1.x is
-    // vulnerable to GHSA-8988-4f7v-96qf, so package.json overrides it to v2 within the
-    // applicationinsights subtree only. That is safe because applicationinsights calls exactly
-    // one core function at runtime (hrTimeToMilliseconds) and never requires
-    // @opentelemetry/resources or sdk-trace-base outside of type declarations.
+    // Parts of the @ministryofjustice/hmpps-azure-telemetry tree (e.g. @azure/monitor-opentelemetry-exporter)
+    // pin @opentelemetry/core versions vulnerable to GHSA-8988-4f7v-96qf, so package.json overrides it to a
+    // patched v2 within that subtree only.
     expect(compareVersions(installedVersion('@opentelemetry/core'), '2.8.0')).toBeGreaterThanOrEqual(0)
   })
 })
@@ -48,7 +46,7 @@ describe('brace-expansion override', () => {
     const matches = globSync('server/utils/*.{ts,js}')
 
     expect(matches).toContain('server/utils/utils.ts')
-    expect(matches).toContain('server/utils/azureAppInsights.ts')
+    expect(matches).toContain('server/utils/telemetry.ts')
   })
 
   it('does not configure a coverageThreshold glob containing braces', () => {

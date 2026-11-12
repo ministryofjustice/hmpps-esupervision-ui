@@ -19,11 +19,11 @@ const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING
 const debug = process.env.DEBUG_TELEMETRY === 'true'
 
 /*
- * Backstop for the shutdown flush. The library already bounds each shutdown stage (at most ~20s in
- * total), so this only guards against a hang outside those stages, and stays under Kubernetes' default
- * 30s termination grace period.
+ * Backstop for the shutdown flush. The library already bounds each shutdown stage, so this only guards
+ * against a hang outside those stages. Together with the request drain in gracefulShutdown.ts it stays
+ * under Kubernetes' default 30s termination grace period.
  */
-const FLUSH_TIMEOUT_MS = 25_000
+const FLUSH_TIMEOUT_MS = 15_000
 
 let userMetadataMiddleware: RequestHandler = (_req, _res, next) => next()
 let flush: () => Promise<void> = () => Promise.resolve()

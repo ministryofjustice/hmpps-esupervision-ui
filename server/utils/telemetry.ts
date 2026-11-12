@@ -18,10 +18,15 @@ type TelemetryModule = typeof import('@ministryofjustice/hmpps-azure-telemetry')
 const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING
 const debug = process.env.DEBUG_TELEMETRY === 'true'
 
-// How long to wait for the shutdown flush before exiting regardless.
-const FLUSH_TIMEOUT_MS = 5_000
+/*
+ * Backstop for the shutdown flush. The library already bounds each shutdown stage (at most ~20s in
+ * total), so this only guards against a hang outside those stages, and stays under Kubernetes' default
+ * 30s termination grace period.
+ */
+const FLUSH_TIMEOUT_MS = 25_000
 
 let userMetadataMiddleware: RequestHandler = (_req, _res, next) => next()
+let flush: () => Promise<void> = () => Promise.resolve()
 
 if (connectionString || debug) {
   /* eslint-disable-next-line @typescript-eslint/no-require-imports, global-require --
@@ -45,26 +50,7 @@ if (connectionString || debug) {
   // Tags the request span with res.locals.user.userId and res.locals.user.userUuid
   userMetadataMiddleware = telemetryMiddleware.addUserMetadataToTelemetry()
 
-  process.on('SIGTERM', () => {
-    /*
-     * Registering a SIGTERM listener replaces Node's default termination, so this handler is now
-     * solely responsible for exiting. A rejection or a flush that hangs on the network must not
-     * leave the process alive until the container runtime resorts to SIGKILL - hence both the
-     * catch and the timeout.
-     */
-    const flushed = Promise.resolve()
-      .then(() => flushTelemetry())
-      .catch(error => console.error('Telemetry: flush failed during shutdown', error)) // eslint-disable-line no-console
-
-    const timedOut = new Promise<void>(resolve => {
-      setTimeout(() => {
-        console.error(`Telemetry: flush did not complete within ${FLUSH_TIMEOUT_MS}ms, exiting anyway`) // eslint-disable-line no-console
-        resolve()
-      }, FLUSH_TIMEOUT_MS).unref()
-    })
-
-    Promise.race([flushed, timedOut]).finally(() => process.exit(0))
-  })
+  flush = flushTelemetry
 }
 
 /**
@@ -73,4 +59,23 @@ if (connectionString || debug) {
  */
 export default function addUserMetadataToTelemetry(): RequestHandler {
   return (req, res, next) => userMetadataMiddleware(req, res, next)
+}
+
+/**
+ * Flushes pending telemetry and shuts down the provider. Never rejects, and resolves after at most
+ * FLUSH_TIMEOUT_MS so that shutdown cannot hang. Resolves immediately when telemetry is switched off.
+ */
+export function shutdownTelemetry(): Promise<void> {
+  const flushed = Promise.resolve()
+    .then(() => flush())
+    .catch(error => console.error('Telemetry: flush failed during shutdown', error)) // eslint-disable-line no-console
+
+  const timedOut = new Promise<void>(resolve => {
+    setTimeout(() => {
+      console.error(`Telemetry: flush did not complete within ${FLUSH_TIMEOUT_MS}ms, exiting anyway`) // eslint-disable-line no-console
+      resolve()
+    }, FLUSH_TIMEOUT_MS).unref()
+  })
+
+  return Promise.race([flushed, timedOut])
 }

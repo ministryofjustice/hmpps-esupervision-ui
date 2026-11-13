@@ -1,6 +1,7 @@
 import http, { type Server } from 'http'
 import type { AddressInfo } from 'net'
-import gracefulShutdown from './gracefulShutdown'
+import { once } from 'events'
+import enableGracefulShutdown from './gracefulShutdown'
 
 jest.mock('../../logger')
 
@@ -10,9 +11,11 @@ const startServer = (handler: http.RequestListener): Promise<Server> =>
     server.listen(0, () => resolve(server))
   })
 
-const request = (server: Server): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const { port } = server.address() as AddressInfo
+// Resolves once the server has received the request, so shutdown starts with it genuinely in flight
+const sendRequest = async (server: Server): Promise<{ outcome: Promise<string> }> => {
+  const received = once(server, 'request')
+  const { port } = server.address() as AddressInfo
+  const outcome = new Promise<string>((resolve, reject) => {
     http
       .get(`http://localhost:${port}`, res => {
         res.resume()
@@ -21,6 +24,9 @@ const request = (server: Server): Promise<string> =>
       .on('error', () => resolve('aborted'))
       .on('timeout', reject)
   })
+  await received
+  return { outcome }
+}
 
 describe('gracefulShutdown', () => {
   it('waits for in-flight requests to finish before flushing telemetry', async () => {
@@ -32,36 +38,39 @@ describe('gracefulShutdown', () => {
         res.end('ok')
       }
     })
-    const inFlight = request(server)
-    await new Promise(resolve => {
-      setTimeout(resolve, 50)
-    })
-
-    const shutdown = gracefulShutdown(server, async () => {
+    const shutdown = enableGracefulShutdown(server, async () => {
       events.push('telemetry flushed')
     })
+    const { outcome } = await sendRequest(server)
+
+    const shuttingDown = shutdown()
     expect(server.listening).toBe(false)
 
     finishRequest()
-    await shutdown
+    await shuttingDown
 
-    expect(await inFlight).toEqual('completed')
+    expect(await outcome).toEqual('completed')
     expect(events).toEqual(['request finished', 'telemetry flushed'])
   })
 
-  it('stops waiting for requests after the drain timeout and still flushes telemetry', async () => {
-    const server = await startServer(() => {
+  it('after the drain timeout, closes connections and runs their close handlers before flushing telemetry', async () => {
+    const events: string[] = []
+    const server = await startServer((_req, res) => {
       // never responds
+      res.on('close', () => events.push('response closed'))
     })
-    const inFlight = request(server)
-    await new Promise(resolve => {
-      setTimeout(resolve, 50)
-    })
-    const flushTelemetry = jest.fn().mockResolvedValue(undefined)
+    const shutdown = enableGracefulShutdown(
+      server,
+      async () => {
+        events.push('telemetry flushed')
+      },
+      100,
+    )
+    const { outcome } = await sendRequest(server)
 
-    await gracefulShutdown(server, flushTelemetry, 100)
+    await shutdown()
 
-    expect(flushTelemetry).toHaveBeenCalled()
-    expect(await inFlight).toEqual('aborted')
+    expect(await outcome).toEqual('aborted')
+    expect(events).toEqual(['response closed', 'telemetry flushed'])
   })
 })

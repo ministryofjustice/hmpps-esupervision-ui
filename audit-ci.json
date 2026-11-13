@@ -2,5 +2,12 @@
   "low": true,
   "package-manager": "auto",
   "registry": "https://registry.npmjs.org",
-  "allowlist": ["GHSA-vfj7-8cjw-p6xm", "GHSA-hp3w-g68c-fv3c"]
+  "allowlist": [
+    {
+      "GHSA-gcqx-w48m-w2h4": {
+        "active": true,
+        "notes": "deepmerge via jest-config (dev only); merges local jest config, not untrusted input; no patched release yet"
+      }
+    }
+  ]
 }

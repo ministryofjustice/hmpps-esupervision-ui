@@ -10,10 +10,12 @@
  * them untouched. The package is required lazily behind the check below so that telemetry stays
  * entirely inert when it is switched off.
  */
-import type { RequestHandler } from 'express'
+import type { Request, RequestHandler, Response } from 'express'
 import applicationName from '../applicationName'
 
 type TelemetryModule = typeof import('@ministryofjustice/hmpps-azure-telemetry')
+
+export type UserTelemetryAttributes = (req: Request, res: Response) => Record<string, string | undefined>
 
 const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING
 const debug = process.env.DEBUG_TELEMETRY === 'true'
@@ -25,7 +27,9 @@ const debug = process.env.DEBUG_TELEMETRY === 'true'
  */
 const FLUSH_TIMEOUT_MS = 15_000
 
-let userMetadataMiddleware: RequestHandler = (_req, _res, next) => next()
+let createUserMetadataMiddleware = (_getAttributes: UserTelemetryAttributes): RequestHandler => {
+  return (_req, _res, next) => next()
+}
 let flush: () => Promise<void> = () => Promise.resolve()
 
 if (connectionString || debug) {
@@ -47,18 +51,17 @@ if (connectionString || debug) {
     .addModifier(telemetry.processors.enrichSpanNameWithHttpRoute())
     .startRecording()
 
-  // Tags the request span with res.locals.user.userId and res.locals.user.userUuid
-  userMetadataMiddleware = telemetryMiddleware.addUserMetadataToTelemetry()
+  createUserMetadataMiddleware = getAttributes => telemetryMiddleware.addUserMetadataToTelemetry({ getAttributes })
 
   flush = flushTelemetry
 }
 
 /**
- * Adds the logged in user's ids to the current request's telemetry. Must run after
- * res.locals.user has been populated from the user token. A no-op when telemetry is switched off.
+ * Tags the current request's span with the attributes returned by getAttributes, omitting
+ * undefined and empty values. A no-op when telemetry is switched off.
  */
-export default function addUserMetadataToTelemetry(): RequestHandler {
-  return (req, res, next) => userMetadataMiddleware(req, res, next)
+export default function addUserMetadataToTelemetry(getAttributes: UserTelemetryAttributes): RequestHandler {
+  return createUserMetadataMiddleware(getAttributes)
 }
 
 /**

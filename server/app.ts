@@ -20,6 +20,7 @@ import checkinRoutes from './routes/resolveUrlRoutes'
 import practitionersRoutes from './routes/practitionersRoutes'
 import invitePopRoutes from './routes/invitePopRoutes'
 import featureFlags from './middleware/featureFlags'
+import addUserToTelemetry from './middleware/addUserToTelemetry'
 
 import type { Services } from './services'
 import restrictToUK from './middleware/restrictToUK'
@@ -45,6 +46,7 @@ export default function createApp(services: Services): express.Application {
 
   nunjucksSetup(app)
   app.use(setUpAuthentication())
+  app.use(addUserToTelemetry())
   app.use(setUpCsrf())
 
   app.use(bodyParser.json())

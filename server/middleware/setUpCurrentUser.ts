@@ -1,7 +1,6 @@
 import express from 'express'
 import logger from '../../logger'
 import LoggedInUser from '../data/models/loggedInUser'
-import addUserMetadataToTelemetry from '../utils/telemetry'
 
 export default function setUpCurrentUser() {
   const router = express.Router()
@@ -16,7 +15,6 @@ export default function setUpCurrentUser() {
       next(error)
     }
   })
-  router.use(addUserMetadataToTelemetry())
 
   return router
 }

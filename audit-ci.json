@@ -8,6 +8,12 @@
         "active": true,
         "notes": "deepmerge via jest-config (dev only); merges local jest config, not untrusted input; no patched release yet"
       }
+    },
+    {
+      "GHSA-fc5q-39xc-vjpf": {
+        "active": true,
+        "notes": "picomatch ReDoS via attacker-supplied extglob patterns; no patched release (<=4.0.7). Only reached via dev/build tooling (jest, lint-staged, chokidar watch) with developer-authored patterns, never user input"
+      }
     }
   ]
 }

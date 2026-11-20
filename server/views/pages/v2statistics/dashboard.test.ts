@@ -95,4 +95,69 @@ describe('v2statistics dashboard view', () => {
     expect(tableRows(html, HELPS_FEEL_SUPPORTED)[0]).toEqual(['Yes', '0', '0.00%'])
     expect(tableRows(html, LESS_CONTACT_NEEDED)[0]).toEqual(['Yes', '0', '0.00%'])
   })
+
+  describe('dashboard layout', () => {
+    const stats = {
+      completedCheckins: 1843,
+      notCompletedOnTime: 342,
+      signedUp: 1001,
+      activeUsers: 780,
+      inactiveUsers: 34,
+    }
+    const textOf = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
+
+    it('puts the filters in a details reveal with date and region filters', async () => {
+      const html = await render({
+        stats,
+        feedbackStats: emptyFeedbackStats,
+        regionOptions: [{ value: '', text: 'All regions', selected: true }],
+      })
+
+      expect(html).toContain('govuk-details')
+      expect(textOf(html)).toContain('Filter data')
+      expect(textOf(html)).toContain('Filter date')
+      expect(html).toContain('name="region"')
+      expect(textOf(html)).toContain('All regions')
+    })
+
+    it('shows the key data at a glance cards', async () => {
+      const html = await render({ stats, feedbackStats: emptyFeedbackStats })
+
+      expect(html).toMatch(/<h2[^>]*>Key data at a glance<\/h2>/)
+      const cards = (html.match(/<li class="app-stat-card">[\s\S]*?<\/li>/g) ?? []).map(card => textOf(card).trim())
+      expect(cards).toEqual([
+        '1843 check ins completed',
+        '342 check ins missed',
+        '1001 people signed up to the service',
+        '780 people actively using the service',
+        '34 people who have stopped using the service',
+      ])
+    })
+
+    it('shows eight theme tabs, each telling screen reader users where they are', async () => {
+      const html = await render({ stats, feedbackStats: emptyFeedbackStats })
+
+      expect(html).toMatch(/<h2[^>]*>View data by theme<\/h2>/)
+      const tabs = (html.match(/<a class="govuk-tabs__tab"[^>]*>[\s\S]*?<\/a>/g) ?? []).map(tab => textOf(tab).trim())
+      expect(tabs).toEqual([
+        'How the service is used',
+        'Managing risk',
+        'Scheduling',
+        'Links',
+        'Additional questions',
+        'Device use',
+        'Time',
+        'Feedback',
+      ])
+      expect(html).toContain('<span class="govuk-visually-hidden">, tab 1 of 8</span>')
+      expect(html).toContain('<span class="govuk-visually-hidden">, tab 8 of 8</span>')
+    })
+
+    it('replaces the feedback tables with a message when a region is selected', async () => {
+      const html = await render({ stats, feedbackStats: emptyFeedbackStats, feedbackAvailable: false })
+
+      expect(textOf(html)).toContain('Feedback is not yet available by region')
+      expect(html).not.toContain(HELPS_FEEL_SUPPORTED)
+    })
+  })
 })

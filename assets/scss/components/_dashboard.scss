@@ -1,0 +1,27 @@
+@use 'govuk-frontend/dist/govuk/index' as gds;
+
+.app-filter-row {
+  @include gds.govuk-media-query($from: tablet) {
+    display: flex;
+    gap: gds.govuk-spacing(3);
+  }
+}
+
+.app-stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: gds.govuk-spacing(3);
+  margin: 0 0 gds.govuk-spacing(8);
+  padding: 0;
+  list-style: none;
+}
+
+.app-stat-card {
+  padding: gds.govuk-spacing(4);
+  border: 1px solid gds.$govuk-border-colour;
+  border-bottom-width: 4px;
+}
+
+.app-stat-card__value {
+  display: block;
+}

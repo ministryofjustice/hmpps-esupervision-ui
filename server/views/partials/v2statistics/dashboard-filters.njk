@@ -1,0 +1,62 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+
+{#
+  Filters shared by the statistics dashboards.
+  Pass regionOptions to show the region select, and resetHref for the page's unfiltered URL.
+#}
+{% macro dashboardFilters(params) %}
+  {% set monthRangeError = null %}
+  {% if params.errors and params.errors.monthRange %}
+    {% set monthRangeError = { text: params.errors.monthRange } %}
+  {% endif %}
+
+  {% set filterForm %}
+    <form method="get" action="{{ params.formAction }}" novalidate>
+      {% call govukFieldset({
+        legend: {
+          text: "Filter date",
+          classes: "govuk-fieldset__legend--s"
+        }
+      }) %}
+        <div class="app-filter-row">
+          {{ govukSelect({
+            id: "monthFrom",
+            name: "monthFrom",
+            label: { text: "From" },
+            items: params.fromMonthOptions,
+            errorMessage: monthRangeError
+          }) }}
+          {{ govukSelect({
+            id: "monthTo",
+            name: "monthTo",
+            label: { text: "To" },
+            items: params.toMonthOptions
+          }) }}
+        </div>
+      {% endcall %}
+
+      {% if params.regionOptions %}
+        {{ govukSelect({
+          id: "region",
+          name: "region",
+          label: { text: "Select region" },
+          items: params.regionOptions
+        }) }}
+      {% endif %}
+
+      <div class="govuk-button-group">
+        {{ govukButton({ text: "Apply filters", preventDoubleClick: true }) }}
+        {{ govukButton({ text: "Reset filters", classes: "govuk-button--secondary", href: params.resetHref }) }}
+      </div>
+    </form>
+  {% endset %}
+
+  {{ govukDetails({
+    summaryText: "Filter data",
+    html: filterForm,
+    open: params.open
+  }) }}
+{% endmacro %}

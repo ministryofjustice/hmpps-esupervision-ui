@@ -111,11 +111,22 @@ const monthRangeFromQuerySchema = (endDefault: YearMonth) => {
     })
 }
 
-const getMonthRangeFromQuery = (
+// Keep the region the user picked when the dates are invalid, so they only need to fix the dates
+const getRegionOptionsForError = async (req: Request, endDefault: YearMonth) => {
+  const requestedRegion = asOptionalQueryString(req.query.region)
+  try {
+    const { providers } = await getV2Stats(START_DEFAULT, endDefault)
+    return buildRegionOptions(providers, requestedRegion)
+  } catch {
+    return buildRegionOptions([])
+  }
+}
+
+const getMonthRangeFromQuery = async (
   req: Request,
   res: Response,
   fromProviderDashboard?: boolean,
-): { monthFrom: YearMonth; monthTo: YearMonth; region?: string } | null => {
+): Promise<{ monthFrom: YearMonth; monthTo: YearMonth; region?: string } | null> => {
   const endDefault = toMonthValue(new Date()) // current month
   const parsed = monthRangeFromQuerySchema(endDefault).safeParse(req.query)
 
@@ -128,9 +139,10 @@ const getMonthRangeFromQuery = (
   res.render(`pages/v2statistics/${dashboardName}`, {
     ...formatUpdatedAt(new Date()),
     hideFeedbackLink: true,
-    fromMonthOptions: buildMonthOptions(START_DEFAULT),
-    toMonthOptions: buildMonthOptions(endDefault),
-    ...(fromProviderDashboard ? {} : { regionOptions: buildRegionOptions([]) }),
+    // Keep the months the user picked, so they can see what to fix
+    fromMonthOptions: buildMonthOptions(asOptionalQueryString(req.query.monthFrom) ?? START_DEFAULT),
+    toMonthOptions: buildMonthOptions(asOptionalQueryString(req.query.monthTo) ?? endDefault),
+    ...(fromProviderDashboard ? {} : { regionOptions: await getRegionOptionsForError(req, endDefault) }),
     filtersApplied: true,
     errors: {
       monthRange: parsed.error.issues[0]?.message ?? "The 'From' month must be before the 'To' month",
@@ -150,7 +162,7 @@ const formatUpdatedAt = (updatedAt: string | number | Date) => {
 
 export const renderV2stats: RequestHandler = async (req, res, next) => {
   try {
-    const monthRange = getMonthRangeFromQuery(req, res)
+    const monthRange = await getMonthRangeFromQuery(req, res)
     if (!monthRange) {
       return
     }
@@ -180,7 +192,7 @@ export const renderV2stats: RequestHandler = async (req, res, next) => {
 
 export const renderV2statsByProvider: RequestHandler = async (req, res, next) => {
   try {
-    const monthRange = getMonthRangeFromQuery(req, res, true)
+    const monthRange = await getMonthRangeFromQuery(req, res, true)
     if (!monthRange) {
       return
     }

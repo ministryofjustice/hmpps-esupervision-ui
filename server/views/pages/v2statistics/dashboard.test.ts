@@ -142,15 +142,113 @@ describe('v2statistics dashboard view', () => {
       expect(tabs).toEqual([
         'How the service is used',
         'Managing risk',
-        'Scheduling',
-        'Links',
-        'Additional questions',
+        'Scheduling check ins',
+        'Link status',
+        'Additional Questions',
         'Device use',
         'Time',
         'Feedback',
       ])
       expect(html).toContain('<span class="govuk-visually-hidden">, tab 1 of 8</span>')
       expect(html).toContain('<span class="govuk-visually-hidden">, tab 8 of 8</span>')
+    })
+
+    it('shows "Questions" on the tab, with "Additional" for screen readers', async () => {
+      const html = await render({ stats, feedbackStats: emptyFeedbackStats })
+
+      expect(html).toContain('<span class="govuk-visually-hidden">Additional </span>Questions')
+    })
+
+    it('shows the additional questions tables with zeros until the data is available', async () => {
+      const html = await render({ stats, feedbackStats: emptyFeedbackStats })
+
+      expect(tableRows(html, 'Check ins with additional questions')).toEqual([
+        ['Number of check ins that include additional questions', '0', '0.00%'],
+        ['Number of check ins that don’t include additional questions', '0', '0.00%'],
+        ['Number of check ins with 1 additional question', '0', '0.00%'],
+        ['Number of check ins with 2 additional questions', '0', '0.00%'],
+        ['Number of check ins with 3 additional questions', '0', '0.00%'],
+      ])
+      expect(tableRows(html, 'Type of additional questions added')).toEqual([
+        ['Number of check ins that include only write your own questions', '0', '0.00%'],
+        ['Number of check ins that include write your own and fill in the blank questions', '0', '0.00%'],
+        ['Number of check ins that include only fill in the blank questions', '0', '0.00%'],
+      ])
+    })
+
+    it('shows 0 rather than a blank when a value is missing', async () => {
+      const html = await render({
+        stats: { ...stats, delayedSubmissions: undefined },
+        feedbackStats: emptyFeedbackStats,
+      })
+
+      expect(tableRows(html, 'How long it takes people to complete check ins')).toContainEqual([
+        'Number of check ins taking over 12 hours to complete',
+        '0',
+        '',
+      ])
+    })
+
+    it('shows each theme with the tables from the designs', async () => {
+      const html = await render({ stats, feedbackStats: emptyFeedbackStats })
+      const captions = (html.match(/<caption[^>]*>[\s\S]*?<\/caption>/g) ?? []).map(caption => textOf(caption).trim())
+
+      expect(captions).toEqual(
+        expect.arrayContaining([
+          'People signed up and using the service',
+          'Number of check ins completed and missed',
+          'Stopping, restarting and cancelling check ins',
+          'Recurring vs one at a time check ins scheduled',
+          'Did the check in help the practitioner with risk management',
+          'Check ins needing attention',
+          'Identity review',
+          'Frequency of check ins',
+          'Check in link delivery status',
+          'Check ins with additional questions',
+          'Type of additional questions added',
+          'What devices people on probation use',
+          'How long tasks take for practitioners',
+          'How long it takes people to complete check ins',
+          'Which day check ins are completed',
+        ]),
+      )
+      expect(tableRows(html, 'Number of check ins completed and missed')).toEqual([
+        ['Number of check ins completed', '1843', '0.00%'],
+        ['Number of check ins missed', '342', '0.00%'],
+      ])
+      expect(tableRows(html, 'What devices people on probation use')).toEqual([
+        ['Smartphone', '0', '0.00%'],
+        ['Tablet', '0', '0.00%'],
+        ['Desktop or laptop', '0', '0.00%'],
+        ['Data missing', '0', '0.00%'],
+      ])
+    })
+
+    it('shows times in hours, minutes and seconds', async () => {
+      const html = await render({ stats: { ...stats, medianHoursToComplete: 2.5 }, feedbackStats: emptyFeedbackStats })
+
+      expect(tableRows(html, 'How long it takes people to complete check ins')).toContainEqual([
+        'Median time to complete check ins',
+        '2h 30m 0s',
+        '',
+      ])
+    })
+
+    it('lines up the number of responses with the Total column of the other tables', async () => {
+      const html = await render({ stats, feedbackStats: { ...emptyFeedbackStats, feedbackTotal: 45 } })
+
+      expect(tableRows(html, 'Number of responses to the feedback form')).toEqual([['Number of responses', '45', '']])
+    })
+
+    it('hides the data when the date filter has an error', async () => {
+      const html = await render({
+        feedbackStats: emptyFeedbackStats,
+        errors: { monthRange: "The 'From' month must be before the 'To' month" },
+      })
+
+      expect(textOf(html)).toContain('There is a problem')
+      expect(html).not.toContain('Key data at a glance')
+      expect(html).not.toContain('govuk-tabs')
     })
 
     it('replaces the feedback tables with a message when a region is selected', async () => {

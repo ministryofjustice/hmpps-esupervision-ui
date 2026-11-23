@@ -240,6 +240,13 @@ describe('v2statistics dashboard view', () => {
       expect(tableRows(html, 'Number of responses to the feedback form')).toEqual([['Number of responses', '45', '']])
     })
 
+    it('renders the metric labels as row headers for screen readers', async () => {
+      const html = await render({ stats, feedbackStats: emptyFeedbackStats })
+
+      expect(html).toContain('<th scope="row" class="govuk-table__header govuk-!-font-weight-bold">')
+      expect(html).toContain('Number of people actively using the service</th>')
+    })
+
     it('has no Overall or Data by Region navigation, as region is now a filter', async () => {
       const html = await render({ stats, feedbackStats: emptyFeedbackStats })
 

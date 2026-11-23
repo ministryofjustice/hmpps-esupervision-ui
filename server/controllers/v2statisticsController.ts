@@ -177,7 +177,7 @@ export const renderV2stats: RequestHandler = async (req, res, next) => {
 
     // Feedback is only reported nationally, so it can't be broken down by region yet
     res.render('pages/v2statistics/dashboard', {
-      ...buildCommonViewModel(monthFrom, monthTo, total.updatedAt),
+      ...buildCommonViewModel(monthFrom, monthTo, (selectedProvider ?? total).updatedAt),
       region,
       regionOptions: buildRegionOptions(providers, region),
       filtersApplied: Object.keys(req.query).length > 0,

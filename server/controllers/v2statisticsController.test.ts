@@ -323,6 +323,9 @@ describe('v2statisticsController', () => {
       expect(props.filtersApplied).toBe(true)
       expect(props.feedbackAvailable).toBe(false)
       expect(props.feedbackStats.feedbackTotal).toBe(0)
+      const providerUpdatedAt = new Date(v2stats.providers[1].updatedAt as string)
+      expect(props.date).toBe(providerUpdatedAt.toLocaleDateString('en-GB'))
+      expect(props.time).toBe(providerUpdatedAt.toLocaleTimeString())
       expect(props.regionOptions).toEqual(
         expect.arrayContaining([
           { value: '', text: 'All regions', selected: false },

@@ -240,6 +240,13 @@ describe('v2statistics dashboard view', () => {
       expect(tableRows(html, 'Number of responses to the feedback form')).toEqual([['Number of responses', '45', '']])
     })
 
+    it('has no Overall or Data by Region navigation, as region is now a filter', async () => {
+      const html = await render({ stats, feedbackStats: emptyFeedbackStats })
+
+      expect(html).not.toContain('moj-sub-navigation')
+      expect(textOf(html)).not.toContain('Data by Region')
+    })
+
     it('hides the data when the date filter has an error', async () => {
       const html = await render({
         feedbackStats: emptyFeedbackStats,

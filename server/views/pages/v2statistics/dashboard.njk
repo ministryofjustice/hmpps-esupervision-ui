@@ -1,7 +1,6 @@
 {% extends "../../partials/layout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
-{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "../../partials/v2statistics/dashboard-filters.njk" import dashboardFilters %}
 
@@ -83,19 +82,6 @@
     open: filtersApplied
   }) }}
 
-  {{ mojSubNavigation({
-    label: "Sub navigation",
-    items: [
-      {
-        text: "Overall",
-        active: true
-      },
-      {
-        text: "Data by Region",
-        href: "/v2statistics/region?monthFrom=" + monthFrom + "&monthTo=" + monthTo
-      }
-    ]
-  }) }}
 
   {% if not errors %}
   <h2 class="govuk-heading-m">Key data at a glance</h2>

@@ -1,0 +1,83 @@
+@use 'govuk-frontend/dist/govuk/index' as gds;
+
+.app-filter-row {
+  @include gds.govuk-media-query($from: tablet) {
+    display: flex;
+    gap: gds.govuk-spacing(3);
+  }
+}
+
+.app-stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: gds.govuk-spacing(3);
+  margin: 0 0 gds.govuk-spacing(8);
+  padding: 0;
+  list-style: none;
+}
+
+.app-stat-card {
+  padding: gds.govuk-spacing(4);
+  border: 1px solid gds.$govuk-border-colour;
+  border-bottom-width: 4px;
+}
+
+.app-stat-card__value {
+  display: block;
+}
+
+.govuk-frontend-supported .app-tabs {
+  @include gds.govuk-media-query($from: tablet) {
+    .govuk-tabs__list {
+      border-bottom: 0;
+      box-shadow: inset 0 -1px 0 gds.$govuk-border-colour;
+    }
+
+    .govuk-tabs__list-item,
+    .govuk-tabs__list-item--selected {
+      margin: 0 gds.govuk-spacing(4) 0 0;
+      padding: 0;
+      border: 0;
+      background-color: transparent;
+      text-align: left;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .govuk-tabs__tab {
+      @include gds.govuk-link-style-default;
+      display: block;
+      position: relative;
+      padding: 12px 0;
+      text-decoration: none;
+    }
+
+    .govuk-tabs__list-item--selected .govuk-tabs__tab {
+      &:link,
+      &:visited {
+        color: gds.govuk-functional-colour(text);
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 5px;
+        background-color: gds.govuk-functional-colour(link);
+      }
+
+      &:focus::before {
+        background-color: gds.govuk-functional-colour(focus-text);
+      }
+    }
+
+    .govuk-tabs__panel {
+      padding: gds.govuk-spacing(6) 0 0;
+      border: 0;
+    }
+  }
+}

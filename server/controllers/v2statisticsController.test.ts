@@ -206,12 +206,15 @@ describe('v2statisticsController', () => {
       expect(mockNext).not.toHaveBeenCalled()
     })
 
-    it("renders validation error when 'From' month is after 'To' month, and does not call the service", async () => {
+    it("renders validation error when 'From' month is after 'To' month, without fetching the stats for that range", async () => {
       const mockReq = { query: { monthFrom: '2026-03', monthTo: '2026-02' } } as any
+      mockGetV2StatsBetweenDateRange.mockResolvedValue(v2stats)
 
       await renderV2stats(mockReq, mockRes, mockNext)
 
-      expect(mockGetV2StatsBetweenDateRange).not.toHaveBeenCalled()
+      // Only the full default range is fetched, to list the regions
+      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledTimes(1)
+      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledWith('2025-08', expect.any(String))
 
       expect(mockRes.render).toHaveBeenCalledWith(
         'pages/v2statistics/dashboard',
@@ -255,6 +258,92 @@ describe('v2statisticsController', () => {
           lessContactNeededPct: {},
         }),
       )
+      expect(mockNext).not.toHaveBeenCalled()
+    })
+
+    it('keeps the selected months and region when the dates are invalid', async () => {
+      const mockReq = { query: { monthFrom: '2025-12', monthTo: '2025-10', region: 'FAKEPROVIDER' } } as any
+      mockGetV2StatsBetweenDateRange.mockResolvedValue(v2stats)
+
+      await renderV2stats(mockReq, mockRes, mockNext)
+
+      const props = (mockRes.render as jest.Mock).mock.calls[0][1]
+      expect(props.errors.monthRange).toBe("The 'From' month must be before the 'To' month")
+      expect(props.stats).toBeUndefined()
+      expect(props.fromMonthOptions.find((option: { selected: boolean }) => option.selected)?.value).toBe('2025-12')
+      expect(props.toMonthOptions.find((option: { selected: boolean }) => option.selected)?.value).toBe('2025-10')
+      expect(props.regionOptions).toEqual(
+        expect.arrayContaining([
+          { value: '', text: 'All regions', selected: false },
+          { value: 'FAKEPROVIDER', text: 'Fakeville', selected: true },
+        ]),
+      )
+    })
+
+    it('still shows the date error, with all regions, if the regions cannot be loaded', async () => {
+      const mockReq = { query: { monthFrom: '2026-03', monthTo: '2026-02', region: 'FAKEPROVIDER' } } as any
+      mockGetV2StatsBetweenDateRange.mockRejectedValue(new Error('Boom'))
+
+      await renderV2stats(mockReq, mockRes, mockNext)
+
+      const props = (mockRes.render as jest.Mock).mock.calls[0][1]
+      expect(props.errors.monthRange).toBeDefined()
+      expect(props.regionOptions).toEqual([{ value: '', text: 'All regions', selected: true }])
+      expect(mockNext).not.toHaveBeenCalled()
+    })
+
+    it('lists regions from the provider stats, with all regions selected by default', async () => {
+      const mockReq = { query: {} } as any
+      mockGetV2StatsBetweenDateRange.mockResolvedValue(v2stats)
+
+      await renderV2stats(mockReq, mockRes, mockNext)
+
+      const props = (mockRes.render as jest.Mock).mock.calls[0][1]
+      expect(props.regionOptions).toEqual([
+        { value: '', text: 'All regions', selected: true },
+        { value: 'FAKEPROVIDER', text: 'Fakeville', selected: false },
+        { value: 'ALLUAT', text: 'Unallocated', selected: false },
+      ])
+      expect(props.region).toBeUndefined()
+      expect(props.filtersApplied).toBe(false)
+      expect(props.feedbackAvailable).toBe(true)
+    })
+
+    it('shows stats for the selected region and hides feedback, which is only reported nationally', async () => {
+      const mockReq = { query: { monthFrom: '2025-08', monthTo: '2026-02', region: 'FAKEPROVIDER' } } as any
+      mockGetV2StatsBetweenDateRange.mockResolvedValue(v2stats)
+
+      await renderV2stats(mockReq, mockRes, mockNext)
+
+      expect(mockGetV2StatsBetweenDateRange).toHaveBeenCalledWith('2025-08', '2026-03')
+
+      const props = (mockRes.render as jest.Mock).mock.calls[0][1]
+      expect(props.stats).toEqual(v2stats.providers[1])
+      expect(props.region).toBe('FAKEPROVIDER')
+      expect(props.filtersApplied).toBe(true)
+      expect(props.feedbackAvailable).toBe(false)
+      expect(props.feedbackStats.feedbackTotal).toBe(0)
+      const providerUpdatedAt = new Date(v2stats.providers[1].updatedAt as string)
+      expect(props.date).toBe(providerUpdatedAt.toLocaleDateString('en-GB'))
+      expect(props.time).toBe(providerUpdatedAt.toLocaleTimeString())
+      expect(props.regionOptions).toEqual(
+        expect.arrayContaining([
+          { value: '', text: 'All regions', selected: false },
+          { value: 'FAKEPROVIDER', text: 'Fakeville', selected: true },
+        ]),
+      )
+    })
+
+    it.each([['UNKNOWN'], [''], ['<script>']])('falls back to all regions when region is %p', async region => {
+      const mockReq = { query: { region } } as any
+      mockGetV2StatsBetweenDateRange.mockResolvedValue(v2stats)
+
+      await renderV2stats(mockReq, mockRes, mockNext)
+
+      const props = (mockRes.render as jest.Mock).mock.calls[0][1]
+      expect(props.stats).toEqual(v2stats.total)
+      expect(props.region).toBeUndefined()
+      expect(props.feedbackAvailable).toBe(true)
       expect(mockNext).not.toHaveBeenCalled()
     })
 

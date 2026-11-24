@@ -1,7 +1,13 @@
 import { RequestHandler, Response, Request } from 'express'
 import { z } from 'zod'
 import { services } from '../services'
-import { V2FeedbackStats, V2StatsResponse, V2StatsWithFeedback, YearMonth } from '../data/models/v2stats'
+import {
+  V2FeedbackStats,
+  V2ProviderStats,
+  V2StatsResponse,
+  V2StatsWithFeedback,
+  YearMonth,
+} from '../data/models/v2stats'
 import { buildMonthOptions, toMonthValue } from '../utils/statsDateFiltering'
 import { advanceMonths } from '../utils/utils'
 
@@ -37,6 +43,19 @@ const getFeedbackStats = (v2Stats: V2StatsWithFeedback): V2FeedbackStats => {
   }
 }
 
+const emptyFeedbackStats = (): V2FeedbackStats => getFeedbackStats({} as V2StatsWithFeedback)
+
+const buildRegionOptions = (providers: V2ProviderStats[], selectedRegion?: string) => [
+  { value: '', text: 'All regions', selected: !selectedRegion },
+  ...providers
+    .map(({ providerCode, providerDescription }) => ({
+      value: providerCode,
+      text: providerDescription || providerCode,
+      selected: providerCode === selectedRegion,
+    }))
+    .sort((a, b) => a.text.localeCompare(b.text)),
+]
+
 const getV2Stats = (monthFrom: YearMonth, monthTo: YearMonth) => {
   const { esupervisionService } = services()
   return esupervisionService.getV2StatsBetweenDateRange(monthFrom, advanceMonths(monthTo, 1))
@@ -68,15 +87,23 @@ const asOptionalQueryString = (value: unknown): string | undefined => {
   return typeof value === 'string' ? value.trim() : undefined
 }
 
+const regionCodePattern = /^[A-Za-z0-9]{1,20}$/
+
 const monthRangeFromQuerySchema = (endDefault: YearMonth) => {
   return z
     .strictObject({
       monthFrom: z.preprocess(asOptionalQueryString, yearMonthSchema.optional()),
       monthTo: z.preprocess(asOptionalQueryString, yearMonthSchema.optional()),
+      // An unknown or malformed region shouldn't block the page, so fall back to all regions
+      region: z.preprocess(
+        value => asOptionalQueryString(value) || undefined,
+        z.string().regex(regionCodePattern).optional().catch(undefined),
+      ),
     })
     .transform(data => ({
       monthFrom: (data.monthFrom ?? START_DEFAULT) as YearMonth,
       monthTo: (data.monthTo ?? endDefault) as YearMonth,
+      region: data.region,
     }))
     .refine(data => data.monthFrom <= data.monthTo, {
       path: ['monthRange'],
@@ -84,11 +111,22 @@ const monthRangeFromQuerySchema = (endDefault: YearMonth) => {
     })
 }
 
-const getMonthRangeFromQuery = (
+// Keep the region the user picked when the dates are invalid, so they only need to fix the dates
+const getRegionOptionsForError = async (req: Request, endDefault: YearMonth) => {
+  const requestedRegion = asOptionalQueryString(req.query.region)
+  try {
+    const { providers } = await getV2Stats(START_DEFAULT, endDefault)
+    return buildRegionOptions(providers, requestedRegion)
+  } catch {
+    return buildRegionOptions([])
+  }
+}
+
+const getMonthRangeFromQuery = async (
   req: Request,
   res: Response,
   fromProviderDashboard?: boolean,
-): { monthFrom: YearMonth; monthTo: YearMonth } | null => {
+): Promise<{ monthFrom: YearMonth; monthTo: YearMonth; region?: string } | null> => {
   const endDefault = toMonthValue(new Date()) // current month
   const parsed = monthRangeFromQuerySchema(endDefault).safeParse(req.query)
 
@@ -101,8 +139,11 @@ const getMonthRangeFromQuery = (
   res.render(`pages/v2statistics/${dashboardName}`, {
     ...formatUpdatedAt(new Date()),
     hideFeedbackLink: true,
-    fromMonthOptions: buildMonthOptions(START_DEFAULT),
-    toMonthOptions: buildMonthOptions(endDefault),
+    // Keep the months the user picked, so they can see what to fix
+    fromMonthOptions: buildMonthOptions(asOptionalQueryString(req.query.monthFrom) ?? START_DEFAULT),
+    toMonthOptions: buildMonthOptions(asOptionalQueryString(req.query.monthTo) ?? endDefault),
+    ...(fromProviderDashboard ? {} : { regionOptions: await getRegionOptionsForError(req, endDefault) }),
+    filtersApplied: true,
     errors: {
       monthRange: parsed.error.issues[0]?.message ?? "The 'From' month must be before the 'To' month",
     },
@@ -121,7 +162,7 @@ const formatUpdatedAt = (updatedAt: string | number | Date) => {
 
 export const renderV2stats: RequestHandler = async (req, res, next) => {
   try {
-    const monthRange = getMonthRangeFromQuery(req, res)
+    const monthRange = await getMonthRangeFromQuery(req, res)
     if (!monthRange) {
       return
     }
@@ -129,12 +170,20 @@ export const renderV2stats: RequestHandler = async (req, res, next) => {
     const { monthFrom, monthTo } = monthRange
 
     const response: V2StatsResponse = await getV2Stats(monthFrom, monthTo)
-    const { total } = response
+    const { total, providers } = response
 
+    const selectedProvider = providers.find(provider => provider.providerCode === monthRange.region)
+    const region = selectedProvider?.providerCode
+
+    // Feedback is only reported nationally, so it can't be broken down by region yet
     res.render('pages/v2statistics/dashboard', {
-      ...buildCommonViewModel(monthFrom, monthTo, total.updatedAt),
-      feedbackStats: getFeedbackStats(total),
-      stats: total,
+      ...buildCommonViewModel(monthFrom, monthTo, (selectedProvider ?? total).updatedAt),
+      region,
+      regionOptions: buildRegionOptions(providers, region),
+      filtersApplied: Object.keys(req.query).length > 0,
+      feedbackStats: selectedProvider ? emptyFeedbackStats() : getFeedbackStats(total),
+      feedbackAvailable: !selectedProvider,
+      stats: selectedProvider ?? total,
     })
   } catch (error) {
     next(error)
@@ -143,7 +192,7 @@ export const renderV2stats: RequestHandler = async (req, res, next) => {
 
 export const renderV2statsByProvider: RequestHandler = async (req, res, next) => {
   try {
-    const monthRange = getMonthRangeFromQuery(req, res, true)
+    const monthRange = await getMonthRangeFromQuery(req, res, true)
     if (!monthRange) {
       return
     }
@@ -155,6 +204,7 @@ export const renderV2statsByProvider: RequestHandler = async (req, res, next) =>
 
     res.render('pages/v2statistics/providerDashboard', {
       ...buildCommonViewModel(monthFrom, monthTo, total.updatedAt),
+      filtersApplied: Object.keys(req.query).length > 0,
       totalStats: total,
       providerStats: providers,
     })

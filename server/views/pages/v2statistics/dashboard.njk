@@ -1,13 +1,66 @@
 {% extends "../../partials/layout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "../../partials/v2statistics/dashboard-filters.njk" import dashboardFilters %}
+
+{% set themeCount = 8 %}
+
+{# Tab panel heading. The position is read out so screen reader users know which tab they are on. #}
+{% macro themeHeading(title, position) %}
+  <h2 class="govuk-heading-m">
+    {{ title }}<span class="govuk-visually-hidden">, tab {{ position }} of {{ themeCount }}</span>
+  </h2>
+{% endmacro %}
+
+{#
+  A theme table with a row label column, a value column and an optional percentage column.
+  rows: [label, value] or [label, value, percentage]. A row without a percentage leaves that cell empty.
+  With no percentageHeading the third column stays empty, so values line up with the other tables.
+  Missing values show as 0, or 0.00% for percentages.
+#}
+{% macro statsTable(caption, percentageHeading, rows, valueHeading = "Total") %}
+  {% set tableRows = [] %}
+  {% for row in rows %}
+    {% set cells = [
+      { text: row[0], classes: "govuk-!-font-weight-bold" },
+      { text: row[1] | default(0) }
+    ] %}
+    {% set _ = cells.push({ text: (row[2] | percentage(2)) if row.length > 2 else "" }) %}
+    {% set _ = tableRows.push(cells) %}
+  {% endfor %}
+  {{ govukTable({
+    caption: caption,
+    captionClasses: "govuk-table__caption--s",
+    firstCellIsHeader: true,
+    head: [
+      { text: "" },
+      { text: valueHeading, classes: "govuk-!-width-one-quarter" },
+      { text: percentageHeading or "", classes: "govuk-!-width-one-third" }
+    ],
+    rows: tableRows
+  }) }}
+{% endmacro %}
+
+{# Shown on both How the service is used and Scheduling, as in the Figma #}
+{% macro recurringCheckinsTable(stats) %}
+  {{ statsTable("Recurring vs one at a time check ins scheduled", "Percentage of people", [
+    ["Number of people actively using the service scheduled for recurring check ins", stats.peopleOnRecurringCheckins, stats.pctPeopleOnRecurringCheckins],
+    ["Number of people actively using the service scheduled for ad-hoc check ins", stats.peopleOnAdHocCheckins, stats.pctPeopleOnAdHocCheckins]
+  ]) }}
+{% endmacro %}
+
+{# Visible tab name, with extra words only screen readers hear #}
+{% macro tabLabel(text, hiddenBefore = "", hiddenAfter = "") -%}
+  {%- if hiddenBefore %}<span class="govuk-visually-hidden">{{ hiddenBefore }} </span>{% endif -%}
+  {{ text }}
+  {%- if hiddenAfter %}<span class="govuk-visually-hidden"> {{ hiddenAfter }}</span>{% endif -%}
+{%- endmacro %}
+
 {% block content %}
   <h1 class="govuk-heading-l">Check in with your probation officer data dashboard</h1>
-  <p class="govuk-body">Missing data is where tracking had not been implemented as service went live</p>
-  <p class="govuk body">This data was last updated on {{ date }} at {{ time }}</p>
+  <p class="govuk-body">Missing data is where tracking had not been implemented as service went live.</p>
+  <p class="govuk-body">This data was last updated on {{ date }} at {{ time }}.</p>
   {% if errors %}
     {{ govukErrorSummary({
         titleText: "There is a problem",
@@ -19,627 +72,583 @@
         ]
       }) }}
   {% endif %}
-  {% set monthRangeError = null %}
-  {% if errors and errors.monthRange %}
-    {% set monthRangeError = { text: errors.monthRange } %}
+
+  {{ dashboardFilters({
+    formAction: formAction,
+    fromMonthOptions: fromMonthOptions,
+    toMonthOptions: toMonthOptions,
+    regionOptions: regionOptions,
+    resetHref: "/v2statistics",
+    errors: errors,
+    open: filtersApplied
+  }) }}
+
+
+  {% if not errors %}
+  <h2 class="govuk-heading-m">Key data at a glance</h2>
+  {% set keyData = [
+    { value: stats.completedCheckins, text: "check ins completed" },
+    { value: stats.notCompletedOnTime, text: "check ins missed" },
+    { value: stats.signedUp, text: "people signed up to the service" },
+    { value: stats.activeUsers, text: "people actively using the service" },
+    { value: stats.inactiveUsers, text: "people who have stopped using the service" }
+  ] %}
+  <ul class="app-stat-cards" role="list">
+    {% for item in keyData %}
+      <li class="app-stat-card">
+        <p class="govuk-body govuk-!-margin-bottom-0">
+          <span class="app-stat-card__value govuk-heading-m govuk-!-margin-bottom-2">{{ item.value | default(0) }}</span>
+          {{ item.text }}
+        </p>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h2 class="govuk-heading-m">View data by theme</h2>
+
+  {#
+    Tables follow the Figma for each theme. Values the stats API doesn't return yet
+    (most of the new data points) show as 0 until it does.
+  #}
+  {% set serviceUsePanel %}
+    {{ themeHeading("How the service is used", 1) }}
+    {{ statsTable("People signed up and using the service", "Percentage of people", [
+      ["Number of people actively using the service", stats.activeUsers, stats.pctActiveUsers],
+      ["Number of people signed up to the service", stats.signedUp]
+    ]) }}
+    {{ statsTable("Number of check ins completed and missed", "Percentage of delivered check ins", [
+      ["Number of check ins completed", stats.completedCheckins, stats.pctCompletedCheckins],
+      ["Number of check ins missed", stats.notCompletedOnTime, stats.pctExpiredCheckins]
+    ]) }}
+    {{ statsTable("Stopping, restarting and cancelling check ins", "Percentage of people", [
+      ["Number of check ins cancelled by the practitioner", stats.checkinsCancelledByPractitioner],
+      ["Number of people who have been automatically stopped", stats.peopleAutomaticallyStopped, stats.pctPeopleAutomaticallyStopped],
+      ["Number of people who have been stopped by their practitioner", stats.peopleStoppedByPractitioner, stats.pctPeopleStoppedByPractitioner],
+      ["Number of people who have been restarted by their practitioner", stats.peopleRestartedByPractitioner, stats.pctPeopleRestartedByPractitioner]
+    ]) }}
+    {{ recurringCheckinsTable(stats) }}
+  {% endset %}
+
+  {% set managingRiskPanel %}
+    {{ themeHeading("Managing risk", 2) }}
+    {{ statsTable("Did the check in help the practitioner with risk management", "Percentage of all check ins", [
+      ["Yes", stats.riskManagementHelpCounts.yes, stats.riskManagementHelpPct.yes],
+      ["No", stats.riskManagementHelpCounts.no, stats.riskManagementHelpPct.no],
+      ["Not answered", stats.riskManagementHelpCounts.notAnswered, stats.riskManagementHelpPct.notAnswered],
+      ["Data missing", stats.riskManagementHelpCounts.dataMissing, stats.riskManagementHelpPct.dataMissing]
+    ]) }}
+    {{ statsTable("Check ins needing attention", "Percentage of completed check ins", [
+      ["Number of check ins with items that need attention", stats.checkinsNeedingAttention, stats.pctCheckinsNeedingAttention],
+      ["Average number of items that need attention per check in", stats.avgItemsNeedingAttentionPerCheckin],
+      ["Check ins where ID check was failed by the system", stats.idCheckFailed, stats.pctIdCheckFailed],
+      ["Check ins where liveness check was failed by the system", stats.livenessCheckFailed, stats.pctLivenessCheckFailed]
+    ]) }}
+    {{ statsTable("Identity review", "Percentage of completed check ins", [
+      ["Check ins where practitioner and system review of photo were different", stats.photoReviewMismatch, stats.pctPhotoReviewMismatch],
+      ["Check ins where practitioner has identified something concerning in the check in image", stats.concerningImage, stats.pctConcerningImage],
+      ["Check ins where practitioner has identified the person is not who is expected", stats.unexpectedPerson, stats.pctUnexpectedPerson]
+    ]) }}
+  {% endset %}
+
+  {% set schedulingPanel %}
+    {{ themeHeading("How check ins are scheduled", 3) }}
+    {{ statsTable("Frequency of check ins", "Percentage of people signed up", [
+      ["Number of people scheduled to check in weekly", stats.scheduledWeekly, stats.pctScheduledWeekly],
+      ["Number of people scheduled to check in every 2 weeks", stats.scheduledEvery2Weeks, stats.pctScheduledEvery2Weeks],
+      ["Number of people scheduled to check in every 4 weeks", stats.scheduledEvery4Weeks, stats.pctScheduledEvery4Weeks],
+      ["Number of people scheduled to check in every 8 weeks", stats.scheduledEvery8Weeks, stats.pctScheduledEvery8Weeks]
+    ]) }}
+    {{ recurringCheckinsTable(stats) }}
+  {% endset %}
+
+  {% set linksPanel %}
+    {{ themeHeading("Link status", 4) }}
+    {{ statsTable("Check in link delivery status", "Percentage of all check ins", [
+      ["Number of check in links sent", stats.linksSent],
+      ["Successfully delivered", stats.linksDelivered, stats.pctLinksDelivered],
+      ["Failed to deliver (will not retry)", stats.linksFailedPermanently, stats.pctLinksFailedPermanently],
+      ["Failed to deliver (could retry)", stats.linksFailedTemporarily, stats.pctLinksFailedTemporarily],
+      ["Sending in progress", stats.linksSending, stats.pctLinksSending]
+    ]) }}
+  {% endset %}
+
+  {% set additionalQuestionsPanel %}
+    {{ themeHeading("Additional questions and how they’re used", 5) }}
+    {{ statsTable("Check ins with additional questions", "Percentage of check ins", [
+      ["Number of check ins that include additional questions", stats.withAdditionalQuestions, stats.pctWithAdditionalQuestions],
+      ["Number of check ins that don’t include additional questions", stats.withoutAdditionalQuestions, stats.pctWithoutAdditionalQuestions],
+      ["Number of check ins with 1 additional question", stats.withOneAdditionalQuestion, stats.pctWithOneAdditionalQuestion],
+      ["Number of check ins with 2 additional questions", stats.withTwoAdditionalQuestions, stats.pctWithTwoAdditionalQuestions],
+      ["Number of check ins with 3 additional questions", stats.withThreeAdditionalQuestions, stats.pctWithThreeAdditionalQuestions]
+    ]) }}
+    {{ statsTable("Type of additional questions added", "Percentage of check ins", [
+      ["Number of check ins that include only write your own questions", stats.onlyWriteYourOwnQuestions, stats.pctOnlyWriteYourOwnQuestions],
+      ["Number of check ins that include write your own and fill in the blank questions", stats.writeYourOwnAndFillInTheBlankQuestions, stats.pctWriteYourOwnAndFillInTheBlankQuestions],
+      ["Number of check ins that include only fill in the blank questions", stats.onlyFillInTheBlankQuestions, stats.pctOnlyFillInTheBlankQuestions]
+    ]) }}
+  {% endset %}
+
+  {% set deviceUsePanel %}
+    {{ themeHeading("Device use", 6) }}
+    {{ statsTable("What devices people on probation use", "Percentage of completed check ins", [
+      ["Smartphone", stats.deviceCounts.smartphone, stats.devicePct.smartphone],
+      ["Tablet", stats.deviceCounts.tablet, stats.devicePct.tablet],
+      ["Desktop or laptop", stats.deviceCounts.desktopOrLaptop, stats.devicePct.desktopOrLaptop],
+      ["Data missing", stats.deviceCounts.dataMissing, stats.devicePct.dataMissing]
+    ]) }}
+  {% endset %}
+
+  {% set timePanel %}
+    {{ themeHeading("Time taken to complete tasks", 7) }}
+    {{ statsTable("How long tasks take for practitioners", false, [
+      ["Average time to register a person", stats.avgHoursToRegister | default(0) | hoursToHoursMinutesAndSeconds],
+      ["Average time between submission and review of a check in", stats.avgHoursFromSubmissionToReview | default(0) | hoursToHoursMinutesAndSeconds],
+      ["Average time to review a check in", stats.avgHoursToReview | default(0) | hoursToHoursMinutesAndSeconds]
+    ], "Time") }}
+    {{ statsTable("How long it takes people to complete check ins", false, [
+      ["Time it takes 90% of check ins to be completed", stats.p90HoursToComplete | default(0) | hoursToHoursMinutesAndSeconds],
+      ["Median time to complete check ins", stats.medianHoursToComplete | default(0) | hoursToHoursMinutesAndSeconds],
+      ["Number of check ins taking over 12 hours to complete", stats.delayedSubmissions]
+    ], "Time") }}
+    {{ statsTable("Which day check ins are completed", "Percentage of completed check ins", [
+      ["Number of check ins completed on day 1", stats.completedOnDay1, stats.pctCompletedOnDay1],
+      ["Number of check ins completed on day 2", stats.completedOnDay2, stats.pctCompletedOnDay2],
+      ["Number of check ins completed on day 3", stats.completedOnDay3, stats.pctCompletedOnDay3]
+    ]) }}
+  {% endset %}
+
+  {% set feedbackPanel %}
+    {{ themeHeading("Feedback form responses", 8) }}
+    {% if feedbackAvailable === false %}
+      <div class="govuk-inset-text">Feedback is not yet available by region. Select all regions to see feedback.</div>
+    {% else %}
+      {{ statsTable("Number of responses to the feedback form", false, [
+        ["Number of responses", feedbackStats.feedbackTotal]
+      ]) }}
+      {{ govukTable({
+        caption: "How easy was it for the person on probation to use online check ins",
+        captionClasses: "govuk-table__caption--s",
+        head: [
+          {
+            text: ""
+          },
+          {
+            text: "Total",
+            classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+          },
+          {
+            text: "Percentage of responses",
+            classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+          }
+        ],
+        rows: [
+          [
+            {
+              text: "Very easy",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.howEasyCounts.veryEasy | default(0)
+            },
+            {
+              text: feedbackStats.howEasyPct.veryEasy | default(0) | percentage(2)
+            }
+          ],
+          [
+             {
+              text: "Easy",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.howEasyCounts.easy | default(0)
+            },
+            {
+              text: feedbackStats.howEasyPct.easy | default(0) | percentage(2)
+            }
+          ],
+          [
+             {
+              text: "Neither easy or difficult",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.howEasyCounts.neitherEasyOrDifficult | default(0)
+            },
+            {
+              text: feedbackStats.howEasyPct.neitherEasyOrDifficult | default(0) | percentage(2)
+            }
+          ],
+          [
+             {
+              text: "Difficult",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.howEasyCounts.difficult | default(0)
+            },
+            {
+              text: feedbackStats.howEasyPct.difficult | default(0) | percentage(2)
+            }
+          ],
+          [
+             {
+              text: "Very difficult",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.howEasyCounts.veryDifficult | default(0)
+            },
+            {
+              text: feedbackStats.howEasyPct.veryDifficult | default(0) | percentage(2)
+            }
+          ],
+          [
+             {
+              text: "Not answered",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.howEasyCounts.notAnswered | default(0)
+            },
+            {
+              text: ""
+            }
+          ]
+        ]
+      }) }}
+      {{ govukTable({
+        caption: "Does the person on probation believe they are getting the support they need from probation",
+        captionClasses: "govuk-table__caption--s",
+        head: [
+          {
+            text: ""
+          },
+          {
+            text: "Total",
+            classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+          },
+          {
+            text: "Percentage of responses",
+            classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+          }
+        ],
+        rows: [
+          [
+            {
+              text: "Yes",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.gettingSupportCounts.yes | default(0)
+            },
+            {
+              text: feedbackStats.gettingSupportPct.yes | default(0) | percentage(2)
+            }
+          ],
+           [
+            {
+              text: "No",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.gettingSupportCounts.no | default(0)
+            },
+            {
+              text: feedbackStats.gettingSupportPct.no | default(0) | percentage(2)
+            }
+          ],
+           [
+            {
+              text: "Not answered",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.gettingSupportCounts.notAnswered | default(0)
+            },
+            {
+              text: ""
+            }
+          ]
+        ]
+      }) }}
+      {{ govukTable({
+        caption: "Do online check ins help the person feel supported by probation",
+        captionClasses: "govuk-table__caption--s",
+        head: [
+          {
+            text: ""
+          },
+          {
+            text: "Total",
+            classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+          },
+          {
+            text: "Percentage of responses",
+            classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+          }
+        ],
+        rows: [
+          [
+            {
+              text: "Yes",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.helpsFeelSupportedCounts.yes | default(0)
+            },
+            {
+              text: feedbackStats.helpsFeelSupportedPct.yes | default(0) | percentage(2)
+            }
+          ],
+           [
+            {
+              text: "No",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.helpsFeelSupportedCounts.no | default(0)
+            },
+            {
+              text: feedbackStats.helpsFeelSupportedPct.no | default(0) | percentage(2)
+            }
+          ],
+           [
+            {
+              text: "Not answered",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.helpsFeelSupportedCounts.notAnswered | default(0)
+            },
+            {
+              text: ""
+            }
+          ]
+        ]
+      }) }}
+      {{ govukTable({
+        caption: "Does using online check ins mean the person needs to get in touch with their probation officer less",
+        captionClasses: "govuk-table__caption--s",
+        head: [
+          {
+            text: ""
+          },
+          {
+            text: "Total",
+            classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+          },
+          {
+            text: "Percentage of responses",
+            classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+          }
+        ],
+        rows: [
+          [
+            {
+              text: "Yes",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.lessContactNeededCounts.yes | default(0)
+            },
+            {
+              text: feedbackStats.lessContactNeededPct.yes | default(0) | percentage(2)
+            }
+          ],
+           [
+            {
+              text: "No",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.lessContactNeededCounts.no | default(0)
+            },
+            {
+              text: feedbackStats.lessContactNeededPct.no | default(0) | percentage(2)
+            }
+          ],
+           [
+            {
+              text: "Not answered",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.lessContactNeededCounts.notAnswered | default(0)
+            },
+            {
+              text: ""
+            }
+          ]
+        ]
+      }) }}
+      {{ govukTable({
+        caption: "What parts of online check ins does the person think we could improve",
+        captionClasses: "govuk-table__caption--s",
+        head: [
+          {
+            text: ""
+          },
+          {
+            text: "Total",
+            classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
+          },
+          {
+            text: "Percentage of responses",
+            classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
+          }
+        ],
+        rows: [
+          [
+            {
+              text: "Finding out about online check ins",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.findingOutAboutCheckIns | default(0)
+            },
+            {
+              text: feedbackStats.improvementsPct.findingOutAboutCheckIns | default(0) | percentage(2)
+            }
+          ],
+          [
+            {
+              text: "Being signed up to online check ins",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.beingSignedUpToCheckIns | default(0)
+            },
+            {
+              text: feedbackStats.improvementsPct.beingSignedUpToCheckIns | default(0) | percentage(2)
+            }
+          ],
+          [
+            {
+              text: "Text or email notifications",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.textOrEmailNotifications | default(0)
+            },
+            {
+              text: feedbackStats.improvementsPct.textOrEmailNotifications | default(0) | percentage(2)
+            }
+          ],
+          [
+            {
+              text: "Questions within the check in",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.checkInQuestions | default(0)
+            },
+            {
+              text: feedbackStats.improvementsPct.checkInQuestions | default(0) | percentage(2)
+            }
+          ],
+          [
+            {
+              text: "Taking a video to check your identity",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.takingAVideo | default(0)
+            },
+            {
+              text: feedbackStats.improvementsPct.takingAVideo | default(0) | percentage(2)
+            }
+          ],
+          [
+            {
+              text: "Getting help when something goes wrong",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.gettingHelp | default(0)
+            },
+            {
+              text: feedbackStats.improvementsPct.gettingHelp | default(0) | percentage(2)
+            }
+          ],
+          [
+            {
+              text: "What happened after you told probation you needed support",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.whatHappenedAfterAskingForSupport | default(0)
+            },
+            {
+              text: feedbackStats.improvementsPct.whatHappenedAfterAskingForSupport | default(0) | percentage(2)
+            }
+          ],
+          [
+            {
+              text: "What happened after you asked for contact from probation ",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.whatHappenedAfterAskingForContact | default(0)
+            },
+            {
+              text: feedbackStats.improvementsPct.whatHappenedAfterAskingForContact | percentage(2)
+            }
+          ],
+          [
+            {
+              text: "Something else",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.somethingElse | default(0)
+            },
+            {
+              text: feedbackStats.improvementsPct.somethingElse | default(0) | percentage(2)
+            }
+          ],
+          [
+            {
+              text: "Nothing needs to improve",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.nothingNeedsImproving | default(0)
+            },
+            {
+              text: feedbackStats.improvementsPct.nothingNeedsImproving | default(0) | percentage(2)
+            }
+          ],
+          [
+            {
+              text: "Not answered",
+              classes: "govuk-!-font-weight-bold"
+            },
+            {
+              text: feedbackStats.improvementsCounts.notAnswered | default(0)
+            },
+            {
+              text: ""
+            }
+          ]
+        ]
+      }) }}
+    {% endif %}
+  {% endset %}
+
+  {{ govukTabs({
+    id: "data-by-theme",
+    title: "Themes",
+    classes: "app-tabs",
+    items: [
+      { label: "How the service is used", id: "how-the-service-is-used", panel: { html: serviceUsePanel } },
+      { label: "Managing risk", id: "managing-risk", panel: { html: managingRiskPanel } },
+      { label: tabLabel("Scheduling", hiddenAfter = "check ins"), id: "scheduling", panel: { html: schedulingPanel } },
+      { label: "Link status", id: "link-status", panel: { html: linksPanel } },
+      { label: tabLabel("Questions", hiddenBefore = "Additional"), id: "additional-questions", panel: { html: additionalQuestionsPanel } },
+      { label: "Device use", id: "device-use", panel: { html: deviceUsePanel } },
+      { label: "Time", id: "time", panel: { html: timePanel } },
+      { label: "Feedback", id: "feedback", panel: { html: feedbackPanel } }
+    ]
+  }) }}
   {% endif %}
-  <form method="get" action="{{ formAction }}">
-    <div class="govuk-width-container">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          {{ govukSelect({
-              id: "monthFrom",
-              name: "monthFrom",
-              label: { text: "From" },
-              items: fromMonthOptions,
-              errorMessage: monthRangeError
-            }) }}
-        </div>
-        <div class="govuk-grid-column-one-quarter">
-          {{ govukSelect({
-              id: "monthTo",
-              name: "monthTo",
-              label: { text: "To" },
-              items: toMonthOptions
-            }) }}
-        </div>
-        <div class="govuk-grid-column-one-half">
-          <div class="govuk-button-group">
-            {{ govukButton({ text: "Apply filters", classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-6" }) }}
-            {{ govukButton({ text: "Reset filters", classes: "govuk-button--secondary govuk-!-margin-bottom-0 govuk-!-margin-top-6", href: "/v2statistics" }) }}
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
-    {{ mojSubNavigation({
-  label: "Sub navigation",
-  items: [
-    {
-      text: "Overall",
-      active: true
-    },
-    {
-      text: "Data by Region",
-      href: "/v2statistics/region?monthFrom=" + monthFrom + "&monthTo=" + monthTo
-    }
-  ]
-  }) }}
-    {{ govukTable({
-  caption: "People on probation",
-  captionClasses: "govuk-table__caption--m",
-  head: [
-    {
-      text: ""
-    },
-    {
-      text: "Total",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
-    },
-    {
-      text: "Percentage of people",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
-    }
-  ],
-  rows: [
-    [
-      {
-        text: "Total number of people signed up to the service",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: stats.signedUp
-      },
-      {
-        text: ""
-      }
-    ],
-    [
-      {
-        text: "Number of people actively using the service",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: stats.activeUsers
-      },
-      {
-        text: stats.pctActiveUsers | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Number of people who have stopped using the service",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: stats.inactiveUsers
-      },
-      {
-        text: stats.pctInactiveUsers | percentage(2)
-      }
-    ]
-  ]
-  }) }}
-    {{ govukTable({
-  caption: "Check ins",
-  captionClasses: "govuk-table__caption--m",
-  head: [
-    {
-      text: ""
-    },
-    {
-      text: "Total",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
-    },
-    {
-      text: "Percentage of delivered check ins",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
-    }
-  ],
-  rows: [
-    [
-      {
-        text: "Number of check ins completed",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: stats.completedCheckins
-      },
-      {
-        text: stats.pctCompletedCheckins | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Number of check ins not completed on time",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: stats.notCompletedOnTime
-      },
-      {
-        text: stats.pctExpiredCheckins | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Average time to complete a check in (median)",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: stats.medianHoursToComplete | hoursToHoursAndMinutes()
-      },
-      {
-        text: ""
-      }
-    ],
-     [
-          {
-            text: "Average time to complete a check in (P90)",
-            classes: "govuk-!-font-weight-bold"
-          },
-          {
-            text: stats.p90HoursToComplete | hoursToHoursAndMinutes()
-          },
-          {
-            text: ""
-          }
-        ],
-    [
-          {
-            text: "Number of check ins over 12hrs",
-            classes: "govuk-!-font-weight-bold"
-          },
-          {
-            text: stats.delayedSubmissions
-          },
-          {
-            text: ""
-          }
-        ],
-    [
-      {
-        text: "Average number of completed check ins per person",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: stats.avgCompletedCheckinsPerPerson
-      },
-      {
-        text: ""
-      }
-    ]
-  ]
-  }) }}
-    {{ govukTable({
-  caption: "Number of responses to the feedback form",
-  captionClasses: "govuk-table__caption--m",
-  head: [
-    {
-      text: ""
-    },
-    {
-      text: "Total",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
-    }
-  ],
-  rows: [
-    [
-      {
-        text: "Number of responses",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.feedbackTotal | default(0)
-      }
-    ]
-  ]
-  }) }}
-    {{ govukTable({
-  caption: "How easy was it for the person on probation to use online check ins",
-  captionClasses: "govuk-table__caption--m",
-  head: [
-    {
-      text: ""
-    },
-    {
-      text: "Total",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
-    },
-    {
-      text: "Percentage of responses",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
-    }
-  ],
-  rows: [
-    [
-      {
-        text: "Very easy",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.howEasyCounts.veryEasy | default(0)
-      },
-      {
-        text: feedbackStats.howEasyPct.veryEasy | default(0) | percentage(2)
-      }
-    ],
-    [
-       {
-        text: "Easy",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.howEasyCounts.easy | default(0)
-      },
-      {
-        text: feedbackStats.howEasyPct.easy | default(0) | percentage(2)
-      }
-    ],
-    [
-       {
-        text: "Neither easy or difficult",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.howEasyCounts.neitherEasyOrDifficult | default(0)
-      },
-      {
-        text: feedbackStats.howEasyPct.neitherEasyOrDifficult | default(0) | percentage(2)
-      }
-    ],
-    [
-       {
-        text: "Difficult",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.howEasyCounts.difficult | default(0)
-      },
-      {
-        text: feedbackStats.howEasyPct.difficult | default(0) | percentage(2)
-      }
-    ],
-    [
-       {
-        text: "Very difficult",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.howEasyCounts.veryDifficult | default(0)
-      },
-      {
-        text: feedbackStats.howEasyPct.veryDifficult | default(0) | percentage(2)
-      }
-    ],
-    [
-       {
-        text: "Not answered",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.howEasyCounts.notAnswered | default(0)
-      },
-      {
-        text: ""
-      }
-    ]
-  ]
-  }) }}
-    {{ govukTable({
-  caption: "Does the person on probation believe they are getting the support they need from probation",
-  captionClasses: "govuk-table__caption--m",
-  head: [
-    {
-      text: ""
-    },
-    {
-      text: "Total",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
-    },
-    {
-      text: "Percentage of responses",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
-    }
-  ],
-  rows: [
-    [
-      {
-        text: "Yes",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.gettingSupportCounts.yes | default(0)
-      },
-      {
-        text: feedbackStats.gettingSupportPct.yes | default(0) | percentage(2)
-      }
-    ],
-     [
-      {
-        text: "No",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.gettingSupportCounts.no | default(0)
-      },
-      {
-        text: feedbackStats.gettingSupportPct.no | default(0) | percentage(2)
-      }
-    ],
-     [
-      {
-        text: "Not answered",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.gettingSupportCounts.notAnswered | default(0)
-      },
-      {
-        text: ""
-      }
-    ]
-  ]
-  }) }}
-    {{ govukTable({
-  caption: "Do online check ins help the person feel supported by probation",
-  captionClasses: "govuk-table__caption--m",
-  head: [
-    {
-      text: ""
-    },
-    {
-      text: "Total",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
-    },
-    {
-      text: "Percentage of responses",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
-    }
-  ],
-  rows: [
-    [
-      {
-        text: "Yes",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.helpsFeelSupportedCounts.yes | default(0)
-      },
-      {
-        text: feedbackStats.helpsFeelSupportedPct.yes | default(0) | percentage(2)
-      }
-    ],
-     [
-      {
-        text: "No",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.helpsFeelSupportedCounts.no | default(0)
-      },
-      {
-        text: feedbackStats.helpsFeelSupportedPct.no | default(0) | percentage(2)
-      }
-    ],
-     [
-      {
-        text: "Not answered",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.helpsFeelSupportedCounts.notAnswered | default(0)
-      },
-      {
-        text: ""
-      }
-    ]
-  ]
-  }) }}
-    {{ govukTable({
-  caption: "Does using online check ins mean the person needs to get in touch with their probation officer less",
-  captionClasses: "govuk-table__caption--m",
-  head: [
-    {
-      text: ""
-    },
-    {
-      text: "Total",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
-    },
-    {
-      text: "Percentage of responses",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
-    }
-  ],
-  rows: [
-    [
-      {
-        text: "Yes",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.lessContactNeededCounts.yes | default(0)
-      },
-      {
-        text: feedbackStats.lessContactNeededPct.yes | default(0) | percentage(2)
-      }
-    ],
-     [
-      {
-        text: "No",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.lessContactNeededCounts.no | default(0)
-      },
-      {
-        text: feedbackStats.lessContactNeededPct.no | default(0) | percentage(2)
-      }
-    ],
-     [
-      {
-        text: "Not answered",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.lessContactNeededCounts.notAnswered | default(0)
-      },
-      {
-        text: ""
-      }
-    ]
-  ]
-  }) }}
-    {{ govukTable({
-  caption: "What parts of online check ins does the person think we could improve",
-  captionClasses: "govuk-table__caption--m",
-  head: [
-    {
-      text: ""
-    },
-    {
-      text: "Total",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-quarter"
-    },
-    {
-      text: "Percentage of responses",
-      classes: "govuk-!-font-weight-bold govuk-!-width-one-third"
-    }
-  ],
-  rows: [
-    [
-      {
-        text: "Finding out about online check ins",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.findingOutAboutCheckIns | default(0)
-      },
-      {
-        text: feedbackStats.improvementsPct.findingOutAboutCheckIns | default(0) | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Being signed up to online check ins",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.beingSignedUpToCheckIns | default(0)
-      },
-      {
-        text: feedbackStats.improvementsPct.beingSignedUpToCheckIns | default(0) | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Text or email notifications",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.textOrEmailNotifications | default(0)
-      },
-      {
-        text: feedbackStats.improvementsPct.textOrEmailNotifications | default(0) | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Questions within the check in",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.checkInQuestions | default(0)
-      },
-      {
-        text: feedbackStats.improvementsPct.checkInQuestions | default(0) | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Taking a video to check your identity",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.takingAVideo | default(0)
-      },
-      {
-        text: feedbackStats.improvementsPct.takingAVideo | default(0) | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Getting help when something goes wrong",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.gettingHelp | default(0)
-      },
-      {
-        text: feedbackStats.improvementsPct.gettingHelp | default(0) | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "What happened after you told probation you needed support",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.whatHappenedAfterAskingForSupport | default(0)
-      },
-      {
-        text: feedbackStats.improvementsPct.whatHappenedAfterAskingForSupport | default(0) | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "What happened after you asked for contact from probation ",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.whatHappenedAfterAskingForContact | default(0)
-      },
-      {
-        text: feedbackStats.improvementsPct.whatHappenedAfterAskingForContact | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Something else",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.somethingElse | default(0)
-      },
-      {
-        text: feedbackStats.improvementsPct.somethingElse | default(0) | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Nothing needs to improve",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.nothingNeedsImproving | default(0)
-      },
-      {
-        text: feedbackStats.improvementsPct.nothingNeedsImproving | default(0) | percentage(2)
-      }
-    ],
-    [
-      {
-        text: "Not answered",
-        classes: "govuk-!-font-weight-bold"
-      },
-      {
-        text: feedbackStats.improvementsCounts.notAnswered | default(0)
-      },
-      {
-        text: ""
-      }
-    ]
-  ]
-  }) }}
-  {% endblock %}
+{% endblock %}

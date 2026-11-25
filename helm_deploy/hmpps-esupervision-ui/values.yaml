@@ -27,6 +27,10 @@ generic-service:
       SecRequestBodyAccess On
       SecDefaultAction "phase:2,pass,log,tag:github_team=stg-pathfinders,tag:namespace={{ .Release.Namespace }}"
 
+  allowlist:
+    groups:
+      - internal
+
   livenessProbe:
     httpGet:
       path: /ping
